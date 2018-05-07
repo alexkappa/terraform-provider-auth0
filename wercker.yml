@@ -14,9 +14,4 @@ build:
     - script:
         name: run tests
         code: |
-          make test
-
-    - script:
-        name: run acceptance tests
-        code: |
           make testacc
