@@ -2,3 +2,4 @@
 *.tfstate
 *.tfstate.backup
 terraform-provider-auth0
+.wercker

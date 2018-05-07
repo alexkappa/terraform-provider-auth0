@@ -1,0 +1,22 @@
+box: golang
+
+build:
+
+  steps:
+
+    - setup-go-workspace
+
+    - script:
+        name: build
+        code: |
+          make build
+
+    - script:
+        name: run tests
+        code: |
+          make test
+
+    - script:
+        name: run acceptance tests
+        code: |
+          make testacc
