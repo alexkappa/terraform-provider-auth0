@@ -26,6 +26,7 @@ func Provider() *schema.Provider {
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"auth0_client":          newClient(),
+			"auth0_client_grant":    newClientGrant(),
 			"auth0_resource_server": newResourceServer(),
 		},
 		ConfigureFunc: configure,

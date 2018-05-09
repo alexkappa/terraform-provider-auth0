@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/PuerkitoBio/rehttp"
+  packages = ["."]
+  revision = "11cf6ea5d3e9afda34846e1db511aa218049471c"
+
+[[projects]]
   name = "github.com/agext/levenshtein"
   packages = ["."]
   revision = "5f10fee965225ac1eecdc234c09daf5cd9e7f7b6"
@@ -482,6 +488,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "67a5f504ee7ea65a3924ed1753c85cbf5663ba552fe5600e46e0d273e3b47cde"
+  inputs-digest = "d314456b678741b5ec3ee4d2c4b260fd496cded8fddc634c74e5df6b283d4d34"
   solver-name = "gps-cdcl"
   solver-version = 1
