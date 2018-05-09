@@ -60,6 +60,9 @@ type Management struct {
 	// Client manages Auth0 Client (also known as Application) resources.
 	Client *ClientManager
 
+	// ClientGrant manages Auth0 ClientGrant resources.
+	ClientGrant *ClientGrantManager
+
 	// ResourceServer manages Auth0 Resource Server (also known as API)
 	// resources.
 	ResourceServer *ResourceServerManager
@@ -117,8 +120,10 @@ func New(domain, clientID, clientSecret string) (*Management, error) {
 		Expiry:      time.Now().Add(time.Duration(token.ExpiresIn) * time.Second),
 	})
 
-	m.http = oauth2.NewClient(context.Background(), ts)
+	m.http = rateLimit(oauth2.NewClient(context.Background(), ts))
+
 	m.Client = NewClientManager(m)
+	m.ClientGrant = NewClientGrantManager(m)
 	m.ResourceServer = NewResourceServerManager(m)
 
 	return m, nil
