@@ -28,11 +28,11 @@ const testAccClientGrantConfig = `
 provider "auth0" {}
 
 resource "auth0_client" "my_client" {
-  name = "Test Application"
+  name = "Application - Client Grant - Acceptance Test"
 }
 
 resource "auth0_resource_server" "my_resource_server" {
-  name = "Test Resource Server"
+  name = "Resource Server - Client Grant - Acceptance Test"
   identifier = "https://api.example.com/client-grant-test"
   scopes = {
   	value = "create:foo"
