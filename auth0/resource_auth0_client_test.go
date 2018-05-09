@@ -17,7 +17,7 @@ func TestAccClient(t *testing.T) {
 			resource.TestStep{
 				Config: testAccClientConfig,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Test Application"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Application - Acceptance Test"),
 				),
 			},
 		},
