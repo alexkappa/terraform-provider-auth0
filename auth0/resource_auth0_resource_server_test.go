@@ -17,7 +17,7 @@ func TestAccResourceServer(t *testing.T) {
 			resource.TestStep{
 				Config: testAccResourceServerConfig,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "name", "Test Resource Server"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "name", "Resource Server - Acceptance Test"),
 				),
 			},
 		},
