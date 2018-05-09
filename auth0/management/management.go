@@ -80,7 +80,7 @@ func New(domain, clientID, clientSecret string) (*Management, error) {
 	m := &Management{
 		domain:   domain,
 		basePath: "/api/v2",
-		timeout:  1 * time.Second,
+		timeout:  1 * time.Minute,
 	}
 
 	config := Config{

@@ -28,7 +28,7 @@ const testAccResourceServerConfig = `
 provider "auth0" {}
 
 resource "auth0_resource_server" "my_resource_server" {
-  name = "Test Resource Server"
+  name = "Resource Server - Acceptance Test"
   identifier = "https://api.example.com/v2"
   signing_alg = "RS256"
   scopes = {

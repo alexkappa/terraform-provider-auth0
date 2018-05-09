@@ -28,7 +28,7 @@ const testAccClientConfig = `
 provider "auth0" {}
 
 resource "auth0_client" "my_client" {
-  name = "Test Application"
+  name = "Application - Acceptance Test"
   description = "Test Applications Long Description"
   app_type = "non_interactive"
   is_first_party = false
