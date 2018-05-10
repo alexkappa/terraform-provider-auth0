@@ -44,7 +44,7 @@ provider "auth0" {
 
 These variables can also be accessed via the `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID` and `AUTH0_CLIENT_SECRET` environment variables respectively.
 
-Examples of resources can be found in the [examples directory](examples/). The currently supported Auth0 resources are described in the following table.
+Examples of resources can be found in the [examples directory](example/). The currently supported Auth0 resources are described in the following table.
 
 | Resource      | Supported |
 | ------------- |:---------:|
