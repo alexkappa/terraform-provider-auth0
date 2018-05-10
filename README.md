@@ -1,5 +1,5 @@
-Terraform Provider [![wercker status](https://app.wercker.com/status/a660ce322102e732b9c53a690f6c7078/s/master "wercker status")](https://app.wercker.com/project/byKey/a660ce322102e732b9c53a690f6c7078)
-==================
+Auth0 Terraform Provider [![wercker status](https://app.wercker.com/status/a660ce322102e732b9c53a690f6c7078/s/master "wercker status")](https://app.wercker.com/project/byKey/a660ce322102e732b9c53a690f6c7078)
+========================
 
 - Website: https://www.terraform.io
 - Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
@@ -30,7 +30,7 @@ $ make build
 ```
 
 Using the provider
-----------------------
+------------------
 
 To use the provider define the `auth0` provider in your `*.tf` file.
 
@@ -46,29 +46,25 @@ These variables can also be accessed via the `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID` a
 
 Examples of resources can be found in the [examples directory](example/). The currently supported Auth0 resources are described in the following table.
 
-| Resource      | Supported |
-| ------------- |:---------:|
-| [Clients (Applications)](https://auth0.com/docs/api/management/v2#!/Clients/get_clients) | Yes |
-| [Client Grants](https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants) | Yes |
-| [Connections](https://auth0.com/docs/api/management/v2#!/Connections/get_connections) | No |
-| [Custom Domains](https://auth0.com/docs/api/management/v2#!/Custom_Domains/get_custom_domains) | No |
-| [Device Credentials](https://auth0.com/docs/api/management/v2#!/Device_Credentials/get_device_credentials) | No |
-| [Grants](https://auth0.com/docs/api/management/v2#!/Grants/get_grants) | No |
-| [Resource Servers (APIs)](https://auth0.com/docs/api/management/v2#!/Resource_Servers/get_resource_servers) | Yes |
-| [Rules](https://auth0.com/docs/api/management/v2#!/Rules/get_rules) | No |
-| [Rules Configs](https://auth0.com/docs/api/management/v2#!/Rules_Configs/get_rules_configs) | No |
-| [User Blocks](https://auth0.com/docs/api/management/v2#!/User_Blocks/get_user_blocks) | No |
-| [Users](https://auth0.com/docs/api/management/v2#!/Users/get_users) | No |
-| [Users By Email](https://auth0.com/docs/api/management/v2#!/Users_By_Email/get_users_by_email) | No |
-| [Blacklists](https://auth0.com/docs/api/management/v2#!/Blacklists/get_tokens) | No |
-| [Email Templates](https://auth0.com/docs/api/management/v2#!/Email_Templates/get_email_templates_by_templateName) | No |
-| [Emails](https://auth0.com/docs/api/management/v2#!/Emails/get_provider) | No |
-| [Guardian](https://auth0.com/docs/api/management/v2#!/Guardian/get_factors) | No |
-| [Jobs](https://auth0.com/docs/api/management/v2#!/Jobs/get_jobs_by_id) | No |
-| [Tenants](https://auth0.com/docs/api/management/v2#!/Tenants/get_settings) | No |
-| [Tickets](https://auth0.com/docs/api/management/v2#!/Tickets/post_email_verification) | No |
-
-If you need resources that are not available yet, please consider helping the project by contributing.
+- [x] [Clients (Applications)](https://auth0.com/docs/api/management/v2#!/Clients/get_clients)
+- [x] [Client Grants](https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants)
+- [x] [Connections](https://auth0.com/docs/api/management/v2#!/Connections/get_connections)
+- [ ] [Custom Domains](https://auth0.com/docs/api/management/v2#!/Custom_Domains/get_custom_domains)
+- [ ] [Device Credentials](https://auth0.com/docs/api/management/v2#!/Device_Credentials/get_device_credentials)
+- [ ] [Grants](https://auth0.com/docs/api/management/v2#!/Grants/get_grants)
+- [x] [Resource Servers (APIs)](https://auth0.com/docs/api/management/v2#!/Resource_Servers/get_resource_servers)
+- [ ] [Rules](https://auth0.com/docs/api/management/v2#!/Rules/get_rules)
+- [ ] [Rules Configs](https://auth0.com/docs/api/management/v2#!/Rules_Configs/get_rules_configs)
+- [ ] [User Blocks](https://auth0.com/docs/api/management/v2#!/User_Blocks/get_user_blocks)
+- [ ] [Users](https://auth0.com/docs/api/management/v2#!/Users/get_users)
+- [ ] [Users By Email](https://auth0.com/docs/api/management/v2#!/Users_By_Email/get_users_by_email)
+- [ ] [Blacklists](https://auth0.com/docs/api/management/v2#!/Blacklists/get_tokens)
+- [ ] [Email Templates](https://auth0.com/docs/api/management/v2#!/Email_Templates/get_email_templates_by_templateName)
+- [ ] [Emails](https://auth0.com/docs/api/management/v2#!/Emails/get_provider)
+- [ ] [Guardian](https://auth0.com/docs/api/management/v2#!/Guardian/get_factors)
+- [ ] [Jobs](https://auth0.com/docs/api/management/v2#!/Jobs/get_jobs_by_id)
+- [ ] [Tenants](https://auth0.com/docs/api/management/v2#!/Tenants/get_settings)
+- [ ] [Tickets](https://auth0.com/docs/api/management/v2#!/Tickets/post_email_verification)
 
 Developing the Provider
 ---------------------------
