@@ -1,13 +1,5 @@
 package management
 
-type ClientGrantManager struct {
-	m *Management
-}
-
-func NewClientGrantManager(m *Management) *ClientGrantManager {
-	return &ClientGrantManager{m}
-}
-
 type ClientGrant struct {
 
 	// A generated string identifying the client grant.
@@ -20,6 +12,14 @@ type ClientGrant struct {
 	Audience string `json:"audience,omitempty"`
 
 	Scope []interface{} `json:"scope,omitempty"`
+}
+
+type ClientGrantManager struct {
+	m *Management
+}
+
+func NewClientGrantManager(m *Management) *ClientGrantManager {
+	return &ClientGrantManager{m}
 }
 
 func (r *ClientGrantManager) Create(g *ClientGrant) (err error) {

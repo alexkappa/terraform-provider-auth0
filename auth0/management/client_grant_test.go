@@ -24,7 +24,7 @@ func TestClientGrant(t *testing.T) {
 	defer m.Client.Delete(c.ClientID)
 
 	s := &ResourceServer{
-		Name: fmt.Sprintf("Terraform Test - Client Grant (%s)",
+		Name: fmt.Sprintf("Test Client Grant (%s)",
 			time.Now().Format(time.StampMilli)),
 		Identifier: "https://api.example.com/client-grant",
 		Scopes: []*ResourceServerScope{

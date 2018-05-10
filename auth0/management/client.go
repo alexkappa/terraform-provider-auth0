@@ -1,13 +1,5 @@
 package management
 
-type ClientManager struct {
-	m *Management
-}
-
-func NewClientManager(m *Management) *ClientManager {
-	return &ClientManager{m}
-}
-
 type Client struct {
 	// The name of the client
 	Name string `json:"name,omitempty"`
@@ -93,6 +85,14 @@ type ClientJWTConfiguration struct {
 
 	// Algorithm used to sign JWTs. Can be "HS256" or "RS256"
 	Algorithm string `json:"alg,omitempty"`
+}
+
+type ClientManager struct {
+	m *Management
+}
+
+func NewClientManager(m *Management) *ClientManager {
+	return &ClientManager{m}
 }
 
 func (cm *ClientManager) Create(c *Client) (err error) {

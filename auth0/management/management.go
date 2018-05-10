@@ -67,6 +67,9 @@ type Management struct {
 	// resources.
 	ResourceServer *ResourceServerManager
 
+	// Connection manages Auth0 Connection resources.
+	Connection *ConnectionManager
+
 	domain   string
 	basePath string
 	timeout  time.Duration
@@ -124,6 +127,7 @@ func New(domain, clientID, clientSecret string) (*Management, error) {
 
 	m.Client = NewClientManager(m)
 	m.ClientGrant = NewClientGrantManager(m)
+	m.Connection = NewConnectionManager(m)
 	m.ResourceServer = NewResourceServerManager(m)
 
 	return m, nil

@@ -9,10 +9,9 @@ import (
 func TestResourceServer(t *testing.T) {
 
 	s := &ResourceServer{
-		Name:                                      fmt.Sprintf("Terraform Test (%s)", time.Now().Format(time.StampMilli)),
-		Identifier:                                "https://api.example.com/",
-		SigningAlgorithm:                          "HS256",
-		SkipConsentForVerifiableFirstPartyClients: true,
+		Name:             fmt.Sprintf("Test Resource Server (%s)", time.Now().Format(time.StampMilli)),
+		Identifier:       "https://api.example.com/",
+		SigningAlgorithm: "HS256",
 		Scopes: []*ResourceServerScope{
 			{
 				Value:       "create:resource",
@@ -45,7 +44,7 @@ func TestResourceServer(t *testing.T) {
 		s.Identifier = "" // read-only
 		s.AllowOfflineAccess = true
 		s.SigningAlgorithm = "RS256"
-		s.SkipConsentForVerifiableFirstPartyClients = false
+		s.SkipConsentForVerifiableFirstPartyClients = true
 		s.Scopes = append(s.Scopes, &ResourceServerScope{
 			Value:       "update:resource",
 			Description: "Update Resource",

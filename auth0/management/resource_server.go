@@ -1,13 +1,5 @@
 package management
 
-type ResourceServerManager struct {
-	m *Management
-}
-
-func NewResourceServerManager(m *Management) *ResourceServerManager {
-	return &ResourceServerManager{m}
-}
-
 type ResourceServer struct {
 
 	// A generated string identifying the resource server.
@@ -53,6 +45,14 @@ type ResourceServerScope struct {
 
 	// Description of the scope
 	Description string `json:"description,omitempty"`
+}
+
+type ResourceServerManager struct {
+	m *Management
+}
+
+func NewResourceServerManager(m *Management) *ResourceServerManager {
+	return &ResourceServerManager{m}
 }
 
 func (r *ResourceServerManager) Create(rs *ResourceServer) (err error) {
