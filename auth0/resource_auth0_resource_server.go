@@ -2,7 +2,7 @@ package auth0
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/yieldr/terraform-provider-auth0/auth0/management"
+	"github.com/yieldr/go-auth0/management"
 )
 
 func newResourceServer() *schema.Resource {

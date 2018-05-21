@@ -3,7 +3,7 @@ package auth0
 import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
-	"github.com/yieldr/terraform-provider-auth0/auth0/management"
+	"github.com/yieldr/go-auth0/management"
 )
 
 func newConnection() *schema.Resource {
@@ -177,7 +177,7 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 				PasswordHistory:        options["password_history"].(map[string]interface{}),
 				PasswordNoPersonalInfo: options["password_no_personal_info"].(map[string]interface{}),
 				PasswordDictionary:     options["password_dictionary"].(map[string]interface{}),
-				ApiEnableUsers:         options["api_enable_users"].(bool),
+				APIEnableUsers:         options["api_enable_users"].(bool),
 				BasicProfile:           options["basic_profile"].(bool),
 				ExtAdmin:               options["ext_admin"].(bool),
 				ExtIsSuspended:         options["ext_is_suspended"].(bool),
