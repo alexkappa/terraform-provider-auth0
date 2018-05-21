@@ -62,8 +62,8 @@
     "service/s3",
     "service/sts"
   ]
-  revision = "31bd69f7db00cbf3d85d129e16d42304cb6e455f"
-  version = "v1.13.44"
+  revision = "5f796043d63bfddca929cfbcffce01e5a894aad5"
+  version = "v1.13.52"
 
 [[projects]]
   branch = "master"
@@ -92,8 +92,8 @@
 [[projects]]
   name = "github.com/fatih/color"
   packages = ["."]
-  revision = "507f6050b8568533fb3f5504de8e5205fa62a114"
-  version = "v1.6.0"
+  revision = "5b77d2a35fb0ede96d138fc9a99f5c9b6aef11b4"
+  version = "v1.7.0"
 
 [[projects]]
   name = "github.com/go-ini/ini"
@@ -313,7 +313,7 @@
   branch = "master"
   name = "github.com/mitchellh/mapstructure"
   packages = ["."]
-  revision = "00c29f56e2386353d58c599509e8dc3801b0d716"
+  revision = "bb74f1db0675b241733089d5a1faa5dd8b0ef57b"
 
 [[projects]]
   branch = "master"
@@ -351,6 +351,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/yieldr/go-auth0"
+  packages = ["management"]
+  revision = "defc007f906e84bef0395659fc3f155bcc0088fb"
+
+[[projects]]
+  branch = "master"
   name = "github.com/zclconf/go-cty"
   packages = [
     "cty",
@@ -377,7 +383,7 @@
     "openpgp/packet",
     "openpgp/s2k"
   ]
-  revision = "21052ae46654ecf18dfdba0f7c12701a1e2b3164"
+  revision = "1a580b3eff7814fc9b40602fd35256c63b50f491"
 
 [[projects]]
   branch = "master"
@@ -394,7 +400,7 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "f73e4c9ed3b7ebdd5f699a16a880c2b1994e50dd"
+  revision = "57065200b4b034a1c8ad54ff77069408c2218ae6"
 
 [[projects]]
   branch = "master"
@@ -409,7 +415,7 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "7db1c3b1a98089d0071c84f646ff5c96aad43682"
+  revision = "7c87d13f8e835d2fb3a70a2912c811ed0c1d241b"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -450,7 +456,7 @@
   branch = "master"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
-  revision = "86e600f69ee4704c6efbf6a2a40a5c10700e76c2"
+  revision = "11a468237815f3a3ddf9f7c6e8b6b3b382a24d15"
 
 [[projects]]
   name = "google.golang.org/grpc"
@@ -488,6 +494,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d314456b678741b5ec3ee4d2c4b260fd496cded8fddc634c74e5df6b283d4d34"
+  inputs-digest = "b9f95f1aa0d7a35d96fcbf3e086e891f5e5048c5bd854ec7976b225dab5099f7"
   solver-name = "gps-cdcl"
   solver-version = 1

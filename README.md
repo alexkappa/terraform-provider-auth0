@@ -44,17 +44,17 @@ provider "auth0" {
 
 These variables can also be accessed via the `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID` and `AUTH0_CLIENT_SECRET` environment variables respectively.
 
-Examples of resources can be found in the [examples directory](example/). The currently supported Auth0 resources are described in the following table.
+Examples of resources can be found in the [examples directory](example/). The currently supported Auth0 resources are described below.
 
 - [x] [Clients (Applications)](https://auth0.com/docs/api/management/v2#!/Clients/get_clients)
 - [x] [Client Grants](https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants)
 - [x] [Connections](https://auth0.com/docs/api/management/v2#!/Connections/get_connections)
-- [ ] [Custom Domains](https://auth0.com/docs/api/management/v2#!/Custom_Domains/get_custom_domains)
+- [x] [Custom Domains](https://auth0.com/docs/api/management/v2#!/Custom_Domains/get_custom_domains)
 - [ ] [Device Credentials](https://auth0.com/docs/api/management/v2#!/Device_Credentials/get_device_credentials)
 - [ ] [Grants](https://auth0.com/docs/api/management/v2#!/Grants/get_grants)
 - [x] [Resource Servers (APIs)](https://auth0.com/docs/api/management/v2#!/Resource_Servers/get_resource_servers)
-- [ ] [Rules](https://auth0.com/docs/api/management/v2#!/Rules/get_rules)
-- [ ] [Rules Configs](https://auth0.com/docs/api/management/v2#!/Rules_Configs/get_rules_configs)
+- [x] [Rules](https://auth0.com/docs/api/management/v2#!/Rules/get_rules)
+- [x] [Rules Configs](https://auth0.com/docs/api/management/v2#!/Rules_Configs/get_rules_configs)
 - [ ] [User Blocks](https://auth0.com/docs/api/management/v2#!/User_Blocks/get_user_blocks)
 - [ ] [Users](https://auth0.com/docs/api/management/v2#!/Users/get_users)
 - [ ] [Users By Email](https://auth0.com/docs/api/management/v2#!/Users_By_Email/get_users_by_email)
