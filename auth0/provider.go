@@ -2,7 +2,7 @@ package auth0
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/yieldr/terraform-provider-auth0/auth0/management"
+	"github.com/yieldr/go-auth0/management"
 )
 
 func Provider() *schema.Provider {
@@ -28,7 +28,10 @@ func Provider() *schema.Provider {
 			"auth0_client":          newClient(),
 			"auth0_client_grant":    newClientGrant(),
 			"auth0_connection":      newConnection(),
+			"auth0_custom_domain":   newCustomDomain(),
 			"auth0_resource_server": newResourceServer(),
+			"auth0_rule":            newRule(),
+			"auth0_rule_config":     newRuleConfig(),
 		},
 		ConfigureFunc: configure,
 	}
