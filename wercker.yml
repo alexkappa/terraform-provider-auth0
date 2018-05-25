@@ -15,3 +15,6 @@ build:
         name: run tests
         code: |
           make testacc
+
+    - yieldr/test-reporter:
+        id: $CODECLIMATE_REPO_TOKEN
