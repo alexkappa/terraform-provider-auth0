@@ -10,4 +10,4 @@ test:
 	@go test $(PKGS)
 
 testacc:
-	@TF_ACC=1 go test $(PKGS) -v
+	@TF_ACC=1 go test $(PKGS) -v -coverprofile=c.out
