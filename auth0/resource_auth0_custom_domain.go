@@ -48,8 +48,8 @@ func newCustomDomain() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"methods": {
 							Type:     schema.TypeList,
-							Required: true,
 							Elem:     schema.TypeMap,
+							Computed: true,
 						},
 					},
 				},
@@ -65,6 +65,12 @@ func createCustomDomain(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(c.ID)
+	verification := []map[string]interface{}{
+		{"methods": c.Verification.Methods},
+	}
+	if err := d.Set("verification", verification); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -80,6 +86,7 @@ func readCustomDomain(d *schema.ResourceData, m interface{}) error {
 
 func updateCustomDomain(d *schema.ResourceData, m interface{}) error {
 	c := buildCustomDomain(d)
+	c.Verification = nil
 	api := m.(*management.Management)
 	err := api.CustomDomain.Update(d.Id(), c)
 	if err != nil {
