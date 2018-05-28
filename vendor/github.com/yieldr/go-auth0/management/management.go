@@ -77,8 +77,14 @@ type Management struct {
 	// RuleManager manages Auth0 Rules.
 	Rule *RuleManager
 
-	// RuleManager manages Auth0 Rules Configs.
+	// RuleManager manages Auth0 Rule Configurations.
 	RuleConfig *RuleConfigManager
+
+	// Email manages Auth0 Email Providers.
+	Email *EmailManager
+
+	// EmailTemplate manages Auth0 Email Templates.
+	EmailTemplate *EmailTemplateManager
 
 	domain   string
 	basePath string
@@ -149,6 +155,8 @@ func New(domain, clientID, clientSecret string) (*Management, error) {
 	m.ResourceServer = NewResourceServerManager(m)
 	m.Rule = NewRuleManager(m)
 	m.RuleConfig = NewRuleConfigManager(m)
+	m.EmailTemplate = NewEmailTemplateManager(m)
+	m.Email = NewEmailManager(m)
 
 	return m, nil
 }
@@ -218,7 +226,7 @@ func (m *Management) post(uri string, v interface{}) error {
 		m.dump(req, res)
 	}
 
-	if res.StatusCode != http.StatusCreated {
+	if res.StatusCode < http.StatusOK && res.StatusCode >= http.StatusBadRequest {
 		return newError(res.Body)
 	}
 
@@ -323,7 +331,7 @@ func (m *Management) delete(uri string) error {
 func (m *Management) dump(req *http.Request, res *http.Response) {
 	b1, _ := httputil.DumpRequest(req, true)
 	b2, _ := httputil.DumpResponse(res, true)
-	fmt.Printf("%s\n%s\b", b1, b2)
+	fmt.Printf("%s\n%s\b\n", b1, b2)
 }
 
 type Error interface {
