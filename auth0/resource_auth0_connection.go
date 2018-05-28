@@ -17,7 +17,7 @@ func newConnection() *schema.Resource {
 			State: func(data *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
 				results := make([]*schema.ResourceData, 1, 1)
 				results[0] = data
-				readConnect(data, i)
+				readConnection(data, i)
 				return results, nil
 			},
 		},
