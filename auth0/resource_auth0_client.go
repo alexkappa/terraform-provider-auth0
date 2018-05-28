@@ -258,7 +258,7 @@ func buildClient(d *schema.ResourceData) *management.Client {
 		IsFirstParty:            d.Get("is_first_party").(bool),
 		OIDCConformant:          d.Get("oidc_conformant").(bool),
 		Callbacks:               d.Get("callbacks").([]interface{}),
-		AllowedLogoutURLs:       d.Get("allowed_logout_urls").([]interface{}) ,
+		AllowedLogoutURLs:       d.Get("allowed_logout_urls").([]interface{}),
 		AllowedOrigins:          d.Get("allowed_origins").([]interface{}),
 		WebOrigins:              d.Get("web_origins").([]interface{}),
 		SSO:                     d.Get("sso").(bool),
