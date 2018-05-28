@@ -4,12 +4,13 @@ build:
 
   steps:
 
-    - setup-go-workspace
+    - setup-go-workspace:
+        package-dir: github.com/yieldr/terraform-provider-auth0
 
     - script:
         name: build
         code: |
-          make build
+            make clean packages BUILD_PATH=$WERCKER_OUTPUT_DIR
 
     - script:
         name: run tests
@@ -18,3 +19,25 @@ build:
 
     - yieldr/test-reporter:
         id: $CODECLIMATE_REPO_TOKEN
+    
+deploy:
+
+  steps:
+
+    - github-create-release:
+        token: $GITHUB_TOKEN
+        tag: v1.0.0
+
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: ./terraform-provider-auth0_darwin_amd64.tar.gz
+        filename: terraform-provider-auth0_darwin_amd64.tar.gz
+        content-type: application/x-gzip
+
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: ./terraform-provider-auth0_linux_amd64.tar.gz
+        filename: terraform-provider-auth0_linux_amd64.tar.gz
+        content-type: application/x-gzip
+
+    
