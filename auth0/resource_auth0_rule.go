@@ -15,6 +15,14 @@ func newRule() *schema.Resource {
 		Read:   readRule,
 		Update: updateRule,
 		Delete: deleteRule,
+		Importer: &schema.ResourceImporter{
+			State: func(data *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+				results := make([]*schema.ResourceData, 1, 1)
+				results[0] = data
+				readRule(data, i)
+				return results, nil
+			},
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {
