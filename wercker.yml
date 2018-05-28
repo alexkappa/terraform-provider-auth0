@@ -6,9 +6,14 @@ build:
 
     - setup-go-workspace:
         package-dir: github.com/yieldr/terraform-provider-auth0
-
+    
     - script:
         name: build
+        code: |
+          make build
+
+    - script:
+        name: package
         code: |
           make clean packages BUILD_PATH=$WERCKER_OUTPUT_DIR
 
