@@ -1,4 +1,6 @@
 PKGS ?= $(shell go list ./...)
+TESTS ?= ".*"
+COVERS ?= "c.out"
 
 build:
 	@go build $(PKGS)
@@ -10,4 +12,4 @@ test:
 	@go test $(PKGS)
 
 testacc:
-	@TF_ACC=1 go test $(PKGS) -v -coverprofile=c.out
+	@TF_ACC=1 go test $(PKGS) -v -coverprofile=$(COVERS) -run ^$(TESTS)$

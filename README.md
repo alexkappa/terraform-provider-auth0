@@ -5,11 +5,6 @@ Auth0 Terraform Provider
 [![Maintainability](https://api.codeclimate.com/v1/badges/67528c42e943f9939f54/maintainability)](https://codeclimate.com/github/yieldr/terraform-provider-auth0/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/67528c42e943f9939f54/test_coverage)](https://codeclimate.com/github/yieldr/terraform-provider-auth0/test_coverage)
 
-- Website: https://www.terraform.io
-- Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
-
-<img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="600px">
-
 Requirements
 ------------
 
