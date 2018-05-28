@@ -10,7 +10,7 @@ build:
     - script:
         name: build
         code: |
-            make clean packages BUILD_PATH=$WERCKER_OUTPUT_DIR
+          make clean packages BUILD_PATH=$WERCKER_OUTPUT_DIR
 
     - script:
         name: run tests
