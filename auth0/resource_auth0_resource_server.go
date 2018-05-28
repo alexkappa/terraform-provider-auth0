@@ -12,6 +12,14 @@ func newResourceServer() *schema.Resource {
 		Read:   readResourceServer,
 		Update: updateResourceServer,
 		Delete: deleteResourceServer,
+		Importer: &schema.ResourceImporter{
+			State: func(data *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+				results := make([]*schema.ResourceData, 1, 1)
+				results[0] = data
+				readResourceServer(data, i)
+				return results, nil
+			},
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {

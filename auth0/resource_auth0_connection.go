@@ -13,6 +13,14 @@ func newConnection() *schema.Resource {
 		Read:   readConnection,
 		Update: updateConnection,
 		Delete: deleteConnection,
+		Importer: &schema.ResourceImporter{
+			State: func(data *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
+				results := make([]*schema.ResourceData, 1, 1)
+				results[0] = data
+				readConnect(data, i)
+				return results, nil
+			},
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {
