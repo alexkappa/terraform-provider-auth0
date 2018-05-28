@@ -28,8 +28,9 @@ func newClient() *schema.Resource {
 				Computed: true,
 			},
 			"client_secret": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:      schema.TypeString,
+				Computed:  true,
+				Sensitive: true,
 			},
 			"app_type": {
 				Type:     schema.TypeString,
@@ -200,6 +201,8 @@ func createClient(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(c.ClientID)
+	d.Set("client_id", c.ClientID)
+	d.Set("client_secret", c.ClientSecret)
 	return nil
 }
 
@@ -210,6 +213,8 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(c.ClientID)
+	d.Set("client_id", c.ClientID)
+	d.Set("client_secret", c.ClientSecret)
 	return nil
 }
 
@@ -220,6 +225,8 @@ func updateClient(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	d.Set("client_id", c.ClientID)
+	d.Set("client_secret", c.ClientSecret)
 	return nil
 }
 
@@ -290,8 +297,8 @@ func buildClient(d *schema.ResourceData) *management.Client {
 
 		c.ClientMetadata = make(map[string]string)
 
-		for key, val := range v.(map[string]string) {
-			c.ClientMetadata[key] = val
+		for key, val := range v.(map[string]interface{}) {
+			c.ClientMetadata[key] = val.(string)
 		}
 
 	}
