@@ -13,12 +13,7 @@ func newEmail() *schema.Resource {
 		Update: updateEmail,
 		Delete: deleteEmail,
 		Importer: &schema.ResourceImporter{
-			State: func(data *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
-				results := make([]*schema.ResourceData, 1, 1)
-				results[0] = data
-				readEmail(data, i)
-				return results, nil
-			},
+			State: schema.ImportStatePassthrough,
 		},
 
 		Schema: map[string]*schema.Schema{
