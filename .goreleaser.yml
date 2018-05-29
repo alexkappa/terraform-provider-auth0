@@ -1,7 +1,6 @@
 builds:
   - binary: terraform-provider-auth0
     goos:
-      - windows
       - darwin
       - linux
     goarch:
