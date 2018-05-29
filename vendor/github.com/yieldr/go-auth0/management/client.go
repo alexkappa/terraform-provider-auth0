@@ -51,6 +51,9 @@ type Client struct {
 	// requests, false otherwise (default: false)
 	CrossOriginAuth bool `json:"cross_origin_auth,omitempty"`
 
+	// List of acceptable Grant Types for this Client
+	GrantTypes []interface{} `json:"grant_types,omitempty"`
+
 	// URL for the location in your site where the cross origin verification
 	// takes place for the cross-origin auth flow when performing Auth in your
 	// own domain instead of Auth0 hosted login page
