@@ -226,7 +226,7 @@ func (m *Management) post(uri string, v interface{}) error {
 		m.dump(req, res)
 	}
 
-	if res.StatusCode < http.StatusOK && res.StatusCode >= http.StatusBadRequest {
+	if res.StatusCode < http.StatusOK || res.StatusCode >= http.StatusBadRequest {
 		return newError(res.Body)
 	}
 
