@@ -13,12 +13,7 @@ func newResourceServer() *schema.Resource {
 		Update: updateResourceServer,
 		Delete: deleteResourceServer,
 		Importer: &schema.ResourceImporter{
-			State: func(data *schema.ResourceData, i interface{}) ([]*schema.ResourceData, error) {
-				results := make([]*schema.ResourceData, 1, 1)
-				results[0] = data
-				readResourceServer(data, i)
-				return results, nil
-			},
+			State: schema.ImportStatePassthrough,
 		},
 
 		Schema: map[string]*schema.Schema{
