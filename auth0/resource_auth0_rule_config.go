@@ -12,6 +12,9 @@ func newRuleConfig() *schema.Resource {
 		Read:   readRuleConfig,
 		Update: updateRuleConfig,
 		Delete: deleteRuleConfig,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"key": {

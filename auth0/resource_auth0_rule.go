@@ -15,6 +15,9 @@ func newRule() *schema.Resource {
 		Read:   readRule,
 		Update: updateRule,
 		Delete: deleteRule,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {
