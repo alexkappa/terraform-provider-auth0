@@ -27,4 +27,4 @@ release:
   - script:
       name: release
       code: |
-        curl -sL https://git.io/goreleaser | bash
+        curl -sL https://git.io/goreleaser | bash -s -- --skip-validate
