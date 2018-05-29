@@ -56,6 +56,8 @@ func readClientGrant(d *schema.ResourceData, m interface{}) error {
 
 func updateClientGrant(d *schema.ResourceData, m interface{}) error {
 	g := buildClientGrant(d)
+	g.Audience = ""
+	g.ClientID = ""
 	api := m.(*management.Management)
 	err := api.ClientGrant.Update(d.Id(), g)
 	if err != nil {
