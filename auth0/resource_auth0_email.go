@@ -12,6 +12,9 @@ func newEmail() *schema.Resource {
 		Read:   readEmail,
 		Update: updateEmail,
 		Delete: deleteEmail,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {

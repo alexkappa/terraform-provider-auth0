@@ -12,6 +12,9 @@ func newClientGrant() *schema.Resource {
 		Read:   readClientGrant,
 		Update: updateClientGrant,
 		Delete: deleteClientGrant,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"client_id": {

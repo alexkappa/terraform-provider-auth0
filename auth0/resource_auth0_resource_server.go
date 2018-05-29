@@ -12,6 +12,9 @@ func newResourceServer() *schema.Resource {
 		Read:   readResourceServer,
 		Update: updateResourceServer,
 		Delete: deleteResourceServer,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {
@@ -94,6 +97,7 @@ func readResourceServer(d *schema.ResourceData, m interface{}) error {
 
 func updateResourceServer(d *schema.ResourceData, m interface{}) error {
 	s := buildResourceServer(d)
+	s.Identifier = ""
 	api := m.(*management.Management)
 	err := api.ResourceServer.Update(d.Id(), s)
 	if err != nil {

@@ -13,6 +13,9 @@ func newConnection() *schema.Resource {
 		Read:   readConnection,
 		Update: updateConnection,
 		Delete: deleteConnection,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": {
