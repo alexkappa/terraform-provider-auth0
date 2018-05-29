@@ -24,6 +24,8 @@ release:
   # current commit.
   steps:
 
+  - setup-go-workspace
+
   - script:
       name: release
       code: |
