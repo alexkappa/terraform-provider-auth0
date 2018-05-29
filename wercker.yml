@@ -14,7 +14,7 @@ build:
     - script:
         name: run tests
         code: |
-          make testacc OPTS=-coverprofile=c.out
+          make testacc
 
     - yieldr/test-reporter:
         id: $CODECLIMATE_REPO_TOKEN
