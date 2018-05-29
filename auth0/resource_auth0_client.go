@@ -208,9 +208,7 @@ func createClient(d *schema.ResourceData, m interface{}) error {
 	if err := api.Client.Create(c); err != nil {
 		return err
 	}
-	d.SetId(c.ClientID)
-	d.Set("client_id", c.ClientID)
-	d.Set("client_secret", c.ClientSecret)
+	buildSchema(c, d)
 	return nil
 }
 
@@ -220,9 +218,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.SetId(c.ClientID)
-	d.Set("client_id", c.ClientID)
-	d.Set("client_secret", c.ClientSecret)
+	buildSchema(c, d)
 	return nil
 }
 
@@ -233,8 +229,7 @@ func updateClient(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.Set("client_id", c.ClientID)
-	d.Set("client_secret", c.ClientSecret)
+	buildSchema(c, d)
 	return nil
 }
 
@@ -329,4 +324,51 @@ func buildClient(d *schema.ResourceData) *management.Client {
 	}
 
 	return c
+}
+
+func buildSchema(c *management.Client, d *schema.ResourceData) {
+	d.SetId(c.ClientID)
+	d.Set("client_id", c.ClientID)
+	d.Set("client_secret", c.ClientSecret)
+	d.Set("name", c.Name)
+	d.Set("description", c.Description)
+	d.Set("app_type", c.AppType)
+	d.Set("logo_uri", c.LogoURI)
+	d.Set("is_first_party", c.IsFirstParty)
+	d.Set("oidc_compliant", c.OIDCConformant)
+	d.Set("callbacks", c.Callbacks)
+	d.Set("allowed_logout_urls", c.AllowedLogoutURLs)
+	d.Set("allowed_origins", c.AllowedOrigins)
+	d.Set("web_origins", c.WebOrigins)
+	d.Set("sso", c.SSO)
+	d.Set("sso_disabled", c.SSODisabled)
+	d.Set("cross_origin_auth", c.CrossOriginAuth)
+	d.Set("cross_origin_loc", c.CrossOriginLocation)
+	d.Set("custom_login_page_on", c.CustomLoginPageOn)
+	d.Set("custom_login_page", c.CustomLoginPage)
+	d.Set("custom_login_page_preview", c.CustomLoginPagePreview)
+	d.Set("form_template", c.FormTemplate)
+	d.Set("token_endpoint_auth_method", c.TokenEndpointAuthMethod)
+
+	if c.JWTConfiguration != nil {
+		d.Set("jwt_configuration", c.JWTConfiguration)
+	}
+
+	if c.EncryptionKey != nil {
+		d.Set("encryption_key", c.EncryptionKey)
+	}
+
+	if c.Addons != nil {
+		d.Set("addons", c.Addons)
+	}
+
+	if c.ClientMetadata != nil {
+		d.Set("client_metadata", c.ClientMetadata)
+	}
+
+	if c.Mobile != nil {
+		d.Set("mobile", c.Mobile)
+	}
+
+	return
 }
