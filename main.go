@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/90poe/terraform-provider-auth0/auth0"
 	"github.com/hashicorp/terraform/plugin"
 	"github.com/hashicorp/terraform/terraform"
-	"github.com/yieldr/terraform-provider-auth0/auth0"
 )
 
 func main() {
