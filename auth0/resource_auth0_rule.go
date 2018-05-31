@@ -3,9 +3,9 @@ package auth0
 import (
 	"regexp"
 
+	"github.com/90poe/go-auth0/management"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
-	"github.com/yieldr/go-auth0/management"
 )
 
 func newRule() *schema.Resource {

@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  name = "github.com/90poe/go-auth0"
+  packages = ["management"]
+  revision = "eb985efcba7ce9d3ada6a1ef08b86e6b199bb830"
+  version = "v0.1.3"
+
+[[projects]]
   branch = "master"
   name = "github.com/PuerkitoBio/rehttp"
   packages = ["."]
@@ -62,8 +68,8 @@
     "service/s3",
     "service/sts"
   ]
-  revision = "5f796043d63bfddca929cfbcffce01e5a894aad5"
-  version = "v1.13.52"
+  revision = "827e7eac8c2680d5bdea7bc3ef29c596eabe1eae"
+  version = "v1.13.59"
 
 [[projects]]
   branch = "master"
@@ -98,8 +104,8 @@
 [[projects]]
   name = "github.com/go-ini/ini"
   packages = ["."]
-  revision = "6529cf7c58879c08d927016dde4477f18a0634cb"
-  version = "v1.36.0"
+  revision = "06f5f3d67269ccec1fe5fe4134ba6e982984f7f5"
+  version = "v1.37.0"
 
 [[projects]]
   name = "github.com/golang/protobuf"
@@ -197,7 +203,7 @@
     "hcldec",
     "hclparse"
   ]
-  revision = "9db880accff19d9bd953958df738ef0c02b4a311"
+  revision = "36446359d27574bf110611001414da561731b62d"
 
 [[projects]]
   branch = "master"
@@ -289,7 +295,7 @@
   branch = "master"
   name = "github.com/mitchellh/go-homedir"
   packages = ["."]
-  revision = "b8bc1bf767474819792c23f32d8286a45736f1c6"
+  revision = "3864e76763d94a6df2f9960b16a20a33da9f9a66"
 
 [[projects]]
   branch = "master"
@@ -351,12 +357,6 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/yieldr/go-auth0"
-  packages = ["management"]
-  revision = "41407bcd3e8106fd5bea82b543b7c0736848d9de"
-
-[[projects]]
-  branch = "master"
   name = "github.com/zclconf/go-cty"
   packages = [
     "cty",
@@ -367,7 +367,7 @@
     "cty/json",
     "cty/set"
   ]
-  revision = "d006e4534bc4fbc512383aa98d04d641ea951ba5"
+  revision = "ba988ce11d9994867838957d4c40bb1ad78b433d"
 
 [[projects]]
   branch = "master"
@@ -383,7 +383,7 @@
     "openpgp/packet",
     "openpgp/s2k"
   ]
-  revision = "1a580b3eff7814fc9b40602fd35256c63b50f491"
+  revision = "ab813273cd59e1333f7ae7bff5d027d4aadf528c"
 
 [[projects]]
   branch = "master"
@@ -400,7 +400,7 @@
     "internal/timeseries",
     "trace"
   ]
-  revision = "57065200b4b034a1c8ad54ff77069408c2218ae6"
+  revision = "1e491301e022f8f977054da4c2d852decd59571f"
 
 [[projects]]
   branch = "master"
@@ -409,13 +409,13 @@
     ".",
     "internal"
   ]
-  revision = "cdc340f7c179dbbfa4afd43b7614e8fcadde4269"
+  revision = "ec22f46f877b4505e0117eeaab541714644fdd28"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "7c87d13f8e835d2fb3a70a2912c811ed0c1d241b"
+  revision = "c11f84a56e43e20a78cee75a7c034031ecf57d1f"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -456,7 +456,7 @@
   branch = "master"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
-  revision = "11a468237815f3a3ddf9f7c6e8b6b3b382a24d15"
+  revision = "694d95ba50e67b2e363f3483057db5d4910c18f9"
 
 [[projects]]
   name = "google.golang.org/grpc"
@@ -494,6 +494,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "b9f95f1aa0d7a35d96fcbf3e086e891f5e5048c5bd854ec7976b225dab5099f7"
+  inputs-digest = "f28bd547e131c9db04f84b4bb094f73b35a495e649e2fb63fecdf07f0c46dd51"
   solver-name = "gps-cdcl"
   solver-version = 1
