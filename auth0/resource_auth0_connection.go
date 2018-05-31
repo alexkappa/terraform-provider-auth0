@@ -107,6 +107,45 @@ func newConnection() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},
+
+						// waad options
+						"client_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"client_secret": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"tenant_domain": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"domain_aliases": {
+							Type:     schema.TypeList,
+							Elem:     &schema.Schema{Type: schema.TypeString},
+							Optional: true,
+						},
+						"use_wsfed": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
+						"waad_protocol": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"waad_common_endpoint": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
+						"app_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"app_domain": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
 					},
 				},
 			},
@@ -210,6 +249,15 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 				ExtGroups:              options["ext_groups"].(bool),
 				ExtAssignedPlans:       options["ext_assigned_plans"].(bool),
 				ExtProfile:             options["ext_profile"].(bool),
+				ClientID:               options["client_id"].(string),
+				ClientSecret:           options["client_secret"].(string),
+				TenantDomain:           options["tenant_domain"].(string),
+				DomainAliases:          options["domain_aliases"].([]interface{}),
+				UseWsfed:               options["use_wsfed"].(bool),
+				WaadProtocol:           options["waad_protocol"].(string),
+				WaadCommonEndpoint:     options["waad_common_endpoint"].(bool),
+				AppID:                  options["app_id"].(string),
+				AppDomain:              options["app_domain"].(string),
 			}
 		}
 	}
