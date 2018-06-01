@@ -84,7 +84,6 @@ func createResourceServer(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(s.ID)
-	d.Set("identifier", s.Identifier)
 	return readResourceServer(d, m)
 }
 
