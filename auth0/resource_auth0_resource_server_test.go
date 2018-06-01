@@ -18,6 +18,11 @@ func TestAccResourceServer(t *testing.T) {
 				Config: testAccResourceServerConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "name", "Resource Server - Acceptance Test"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "identifier", "https://api.example.com/v2"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "signing_alg", "RS256"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "allow_offline_access", "true"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "token_lifetime", "8600"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "skip_consent_for_verifiable_first_party_clients", "true"),
 				),
 			},
 		},
