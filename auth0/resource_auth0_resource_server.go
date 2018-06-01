@@ -45,6 +45,7 @@ func newResourceServer() *schema.Resource {
 			"signing_alg": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"signing_secret": {
 				Type:     schema.TypeString,
@@ -57,6 +58,7 @@ func newResourceServer() *schema.Resource {
 			"token_lifetime": {
 				Type:     schema.TypeInt,
 				Optional: true,
+				Computed: true,
 			},
 			"skip_consent_for_verifiable_first_party_clients": {
 				Type:     schema.TypeBool,
