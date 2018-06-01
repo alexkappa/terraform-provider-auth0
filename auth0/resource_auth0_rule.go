@@ -35,6 +35,7 @@ func newRule() *schema.Resource {
 			"order": {
 				Type:     schema.TypeInt,
 				Optional: true,
+				Computed: true,
 			},
 			"enabled": {
 				Type:     schema.TypeBool,
@@ -51,7 +52,7 @@ func createRule(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(c.ID)
-	return nil
+	return readRule(d, m)
 }
 
 func readRule(d *schema.ResourceData, m interface{}) error {
@@ -60,7 +61,10 @@ func readRule(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.SetId(c.ID)
+	d.Set("name", c.Name)
+	d.Set("script", c.Script)
+	d.Set("order", c.Order)
+	d.Set("enabled", c.Enabled)
 	return nil
 }
 
@@ -71,7 +75,7 @@ func updateRule(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	return nil
+	return readRule(d, m)
 }
 
 func deleteRule(d *schema.ResourceData, m interface{}) error {
