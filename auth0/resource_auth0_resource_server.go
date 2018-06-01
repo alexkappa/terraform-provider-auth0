@@ -12,6 +12,7 @@ func newResourceServer() *schema.Resource {
 		Read:   readResourceServer,
 		Update: updateResourceServer,
 		Delete: deleteResourceServer,
+
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -82,7 +83,7 @@ func createResourceServer(d *schema.ResourceData, m interface{}) error {
 	}
 	d.SetId(s.ID)
 	d.Set("identifier", s.Identifier)
-	return nil
+	return readResourceServer(d, m)
 }
 
 func readResourceServer(d *schema.ResourceData, m interface{}) error {
@@ -92,6 +93,24 @@ func readResourceServer(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(s.ID)
+	d.Set("name", s.Name)
+	d.Set("identifier", s.Identifier)
+	d.Set("scopes", func() (m []map[string]interface{}) {
+		for _, scope := range s.Scopes {
+			m = append(m, map[string]interface{}{
+				"value":       scope.Value,
+				"description": scope.Description,
+			})
+		}
+		return m
+	}())
+	d.Set("signing_alg", s.SigningAlgorithm)
+	d.Set("signing_secret", s.SigningSecret)
+	d.Set("allow_offline_access", s.AllowOfflineAccess)
+	d.Set("token_lifetime", s.TokenLifetime)
+	d.Set("skip_consent_for_verifiable_first_party_clients", s.SkipConsentForVerifiableFirstPartyClients)
+	d.Set("verification_location", s.VerificationLocation)
+	d.Set("options", s.Options)
 	return nil
 }
 
@@ -103,7 +122,7 @@ func updateResourceServer(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	return nil
+	return readResourceServer(d, m)
 }
 
 func deleteResourceServer(d *schema.ResourceData, m interface{}) error {
