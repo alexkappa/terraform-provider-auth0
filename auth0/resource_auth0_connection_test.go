@@ -19,6 +19,7 @@ func TestAccConnection(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-Connection"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "strategy", "auth0"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.password_policy", "fair"),
 				),
 			},
 		},
