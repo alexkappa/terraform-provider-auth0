@@ -353,7 +353,7 @@
   branch = "master"
   name = "github.com/yieldr/go-auth0"
   packages = ["management"]
-  revision = "41407bcd3e8106fd5bea82b543b7c0736848d9de"
+  revision = "c0651c25dc756addbf61f74c3ff92830baf72a6c"
 
 [[projects]]
   branch = "master"
