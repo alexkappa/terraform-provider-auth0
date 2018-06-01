@@ -119,6 +119,7 @@ func newConnection() *schema.Resource {
 				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
+				Computed: true,
 			},
 		},
 	}
@@ -131,7 +132,7 @@ func createConnection(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(c.ID)
-	return nil
+	return readConnection(d, m)
 }
 
 func readConnection(d *schema.ResourceData, m interface{}) error {
@@ -141,6 +142,27 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(c.ID)
+	d.Set("name", c.Name)
+	d.Set("strategy", c.Strategy)
+	d.Set("options", []map[string]interface{}{
+		{
+			"validation":                c.Options.Validation,
+			"password_policy":           c.Options.PasswordPolicy,
+			"password_history":          c.Options.PasswordHistory,
+			"password_no_personal_info": c.Options.PasswordNoPersonalInfo,
+			"password_dictionary":       c.Options.PasswordDictionary,
+			"api_enable_users":          c.Options.APIEnableUsers,
+			"basic_profile":             c.Options.BasicProfile,
+			"ext_admin":                 c.Options.ExtAdmin,
+			"ext_is_suspended":          c.Options.ExtIsSuspended,
+			"ext_agreed_terms":          c.Options.ExtAgreedTerms,
+			"ext_groups":                c.Options.ExtGroups,
+			"ext_assigned_plans":        c.Options.ExtAssignedPlans,
+			"ext_profile":               c.Options.ExtProfile,
+		},
+	})
+	d.Set("enabled_clients", c.EnabledClients)
+	d.Set("realms", c.Realms)
 	return nil
 }
 
@@ -151,7 +173,7 @@ func updateConnection(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	return nil
+	return readConnection(d, m)
 }
 
 func deleteConnection(d *schema.ResourceData, m interface{}) error {
