@@ -18,6 +18,7 @@ func TestAccClientGrant(t *testing.T) {
 				Config: testAccClientGrantConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_client_grant.my_client_grant", "audience", "https://api.example.com/client-grant-test"),
+					resource.TestCheckResourceAttr("auth0_client_grant.my_client_grant", "scope.0", "create:foo"),
 				),
 			},
 		},

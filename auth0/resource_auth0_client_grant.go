@@ -41,7 +41,7 @@ func createClientGrant(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(g.ID)
-	return nil
+	return readClientGrant(d, m)
 }
 
 func readClientGrant(d *schema.ResourceData, m interface{}) error {
@@ -51,6 +51,9 @@ func readClientGrant(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(g.ID)
+	d.Set("client_id", g.ClientID)
+	d.Set("audience", g.Audience)
+	d.Set("scope", g.Scope)
 	return nil
 }
 
@@ -63,7 +66,7 @@ func updateClientGrant(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	return nil
+	return readClientGrant(d, m)
 }
 
 func deleteClientGrant(d *schema.ResourceData, m interface{}) error {
