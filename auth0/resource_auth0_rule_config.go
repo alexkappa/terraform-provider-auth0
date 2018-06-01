@@ -47,7 +47,7 @@ func readRuleConfig(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.SetId(r.Key)
+	d.Set("key", r.Key)
 	return nil
 }
 
@@ -59,7 +59,7 @@ func updateRuleConfig(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	return nil
+	return readRuleConfig(d, m)
 }
 
 func deleteRuleConfig(d *schema.ResourceData, m interface{}) error {
