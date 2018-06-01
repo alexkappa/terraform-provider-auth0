@@ -38,7 +38,7 @@ func createRuleConfig(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(r.Key)
-	return nil
+	return readRuleConfig(d, m)
 }
 
 func readRuleConfig(d *schema.ResourceData, m interface{}) error {
