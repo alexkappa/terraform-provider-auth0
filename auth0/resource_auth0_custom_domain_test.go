@@ -19,7 +19,7 @@ func TestAccCustomDomain(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_custom_domain.my_custom_domain", "domain", "auth.example.com"),
 					resource.TestCheckResourceAttr("auth0_custom_domain.my_custom_domain", "type", "auth0_managed_certs"),
-					resource.TestCheckResourceAttr("auth0_custom_domain.my_custom_domain", "verification_method", "txt"),
+					resource.TestCheckResourceAttr("auth0_custom_domain.my_custom_domain", "status", "pending_verification"),
 				),
 			},
 		},
