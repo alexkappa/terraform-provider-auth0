@@ -68,13 +68,7 @@ func createCustomDomain(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(c.ID)
-	verification := []map[string]interface{}{
-		{"methods": c.Verification.Methods},
-	}
-	if err := d.Set("verification", verification); err != nil {
-		return err
-	}
-	return nil
+	return readCustomDomain(d, m)
 }
 
 func readCustomDomain(d *schema.ResourceData, m interface{}) error {
@@ -84,6 +78,13 @@ func readCustomDomain(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(c.ID)
+	d.Set("domain", c.Domain)
+	d.Set("type", c.Type)
+	d.Set("primary", c.Primary)
+	d.Set("status", c.Status)
+	d.Set("verification", []map[string]interface{}{
+		{"methods": c.Verification.Methods},
+	})
 	return nil
 }
 
@@ -95,7 +96,7 @@ func updateCustomDomain(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	return nil
+	return readCustomDomain(d, m)
 }
 
 func deleteCustomDomain(d *schema.ResourceData, m interface{}) error {
@@ -104,12 +105,9 @@ func deleteCustomDomain(d *schema.ResourceData, m interface{}) error {
 }
 
 func buildCustomDomain(d *schema.ResourceData) *management.CustomDomain {
-
-	c := &management.CustomDomain{
+	return &management.CustomDomain{
 		Domain:             d.Get("domain").(string),
 		Type:               d.Get("type").(string),
 		VerificationMethod: d.Get("verification_method").(string),
 	}
-
-	return c
 }
