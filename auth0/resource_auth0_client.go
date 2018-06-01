@@ -208,8 +208,7 @@ func createClient(d *schema.ResourceData, m interface{}) error {
 	if err := api.Client.Create(c); err != nil {
 		return err
 	}
-	buildSchema(c, d)
-	return nil
+	return readClient(d, m)
 }
 
 func readClient(d *schema.ResourceData, m interface{}) error {
@@ -218,7 +217,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	buildSchema(c, d)
+	buildClientSchema(c, d)
 	return nil
 }
 
@@ -229,8 +228,7 @@ func updateClient(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	buildSchema(c, d)
-	return nil
+	return readClient(d, m)
 }
 
 func deleteClient(d *schema.ResourceData, m interface{}) error {
@@ -326,7 +324,7 @@ func buildClient(d *schema.ResourceData) *management.Client {
 	return c
 }
 
-func buildSchema(c *management.Client, d *schema.ResourceData) {
+func buildClientSchema(c *management.Client, d *schema.ResourceData) {
 	d.SetId(c.ClientID)
 	d.Set("client_id", c.ClientID)
 	d.Set("client_secret", c.ClientSecret)
@@ -351,7 +349,13 @@ func buildSchema(c *management.Client, d *schema.ResourceData) {
 	d.Set("token_endpoint_auth_method", c.TokenEndpointAuthMethod)
 
 	if c.JWTConfiguration != nil {
-		d.Set("jwt_configuration", c.JWTConfiguration)
+		d.Set("jwt_configuration", []map[string]interface{}{
+			{
+				"alg": c.JWTConfiguration.Algorithm,
+				"lifetime_in_seconds": c.JWTConfiguration.LifetimeInSeconds,
+				"secret_encoded":      c.JWTConfiguration.SecretEncoded,
+				"scopes":              c.JWTConfiguration.Scopes,
+			}})
 	}
 
 	if c.EncryptionKey != nil {
