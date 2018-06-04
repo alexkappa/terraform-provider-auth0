@@ -24,7 +24,7 @@ func newRule() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				ValidateFunc: validation.StringMatch(
-					regexp.MustCompile("^[a-z|A-Z]+[a-z|A-Z\\-\\s]+[a-z|A-Z]+$"),
+					regexp.MustCompile("^[^\\s-][\\w-]+[^\\s-]$"),
 					"Can only contain alphanumeric characters, spaces and '-'. "+
 						"Can neither start nor end with '-' or spaces."),
 			},
