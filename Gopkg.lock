@@ -353,7 +353,13 @@
   branch = "master"
   name = "github.com/yieldr/go-auth0"
   packages = ["management"]
-  revision = "c0651c25dc756addbf61f74c3ff92830baf72a6c"
+  revision = "5182066cebe9637ec210af1e007afca13a497ebb"
+
+[[projects]]
+  name = "github.com/yieldr/terraform-provider-auth0"
+  packages = ["auth0"]
+  revision = "7f79f76587fc7e103c5cd6e3bd38926c04a6f924"
+  version = "v0.0.9"
 
 [[projects]]
   branch = "master"
@@ -494,6 +500,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "b9f95f1aa0d7a35d96fcbf3e086e891f5e5048c5bd854ec7976b225dab5099f7"
+  inputs-digest = "ce2aca1843c9e21f456f1b589b9e15015d2d4237558ed49853d411d0b9314910"
   solver-name = "gps-cdcl"
   solver-version = 1

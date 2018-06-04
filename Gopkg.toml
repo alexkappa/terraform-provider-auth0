@@ -2,6 +2,11 @@
   name = "github.com/hashicorp/terraform"
   version = "0.11.7"
 
+[[constraint]]
+  name = "github.com/yieldr/go-auth0"
+  packages = ["management"]
+  branch = "master"
+
 [prune]
   go-tests = true
   unused-packages = true

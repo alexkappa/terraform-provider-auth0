@@ -42,6 +42,7 @@ type Connection struct {
 	Metadata interface{} `json:"metadata,omitempty"`
 }
 
+// ConnectionOptions general options
 type ConnectionOptions struct {
 
 	// Options for validation.
@@ -71,6 +72,16 @@ type ConnectionOptions struct {
 
 	// Options for adding parameters in the request to the upstream IdP.
 	UpstreamParams interface{} `json:"upstream_params,omitempty"`
+
+	ClientID           string        `json:"client_id,omitempty"`
+	ClientSecret       string        `json:"client_secret,omitempty"`
+	TenantDomain       string        `json:"tenant_domain,omitempty"`
+	DomainAliases      []interface{} `json:"domain_aliases,omitempty"`
+	UseWsfed           bool          `json:"use_wsfed,omitempty"`
+	WaadProtocol       string        `json:"waad_protocol,omitempty"`
+	WaadCommonEndpoint bool          `json:"waad_common_endpoint,omitempty"`
+	AppID              string        `json:"app_id,omitempty"`
+	AppDomain          string        `json:"app_domain,omitempty"`
 }
 
 type ConnectionManager struct {
