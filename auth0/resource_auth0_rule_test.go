@@ -17,7 +17,7 @@ func TestAccRule(t *testing.T) {
 			resource.TestStep{
 				Config: testAccRule,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_rule.my_rule", "name", "Acceptance-Test-Rule"),
+					resource.TestCheckResourceAttr("auth0_rule.my_rule", "name", "auth0-authorization-extension"),
 					resource.TestCheckResourceAttr("auth0_rule.my_rule", "script", "function (user, context, callback) { callback(null, user, context); }"),
 					resource.TestCheckResourceAttr("auth0_rule.my_rule", "enabled", "true"),
 				),
@@ -30,7 +30,7 @@ const testAccRule = `
 provider "auth0" {}
 
 resource "auth0_rule" "my_rule" {
-  name = "Acceptance-Test-Rule"
+  name = "auth0-authorization-extension"
   script = "function (user, context, callback) { callback(null, user, context); }"
   enabled = true
 }
