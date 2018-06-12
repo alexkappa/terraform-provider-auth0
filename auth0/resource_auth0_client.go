@@ -249,12 +249,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if c.EncryptionKey != nil {
-		var enc_key schema.Set
-		err := mapstructure.Decode(c.EncryptionKey, &enc_key)
-		if err != nil {
-			return err
-		}
-		d.Set("encryption_key", enc_key)
+		d.Set("encryption_key", c.EncryptionKey)
 	}
 
 	if c.Addons != nil {
