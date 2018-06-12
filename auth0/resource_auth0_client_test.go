@@ -14,7 +14,7 @@ func TestAccClient(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccClientConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Application - Acceptance Test"),
@@ -31,7 +31,8 @@ resource "auth0_client" "my_client" {
   name = "Application - Acceptance Test"
   description = "Test Applications Long Description"
   app_type = "non_interactive"
-  is_first_party = false
+  custom_login_page_on = true
+  is_first_party = true
   oidc_conformant = false
   callbacks = [ "https://example.com/callback" ]
   allowed_origins = [ "https://example.com" ]
