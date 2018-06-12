@@ -29,22 +29,22 @@ const testAccClientGrantConfig = `
 provider "auth0" {}
 
 resource "auth0_client" "my_client" {
-  	name = "Application - Client Grant - Acceptance Test"
-	custom_login_page_on = true
-	is_first_party = true
+  name = "Application - Client Grant - Acceptance Test"
+  custom_login_page_on = true
+  is_first_party = true
 }
 
 resource "auth0_resource_server" "my_resource_server" {
-  	name = "Resource Server - Client Grant - Acceptance Test"
-  	identifier = "https://api.example.com/client-grant-test"
-  	scopes = {
-  		value = "create:foo"
-  		description = "Create foos"
-  	}
-  	scopes = {
-  		value = "create:bar"
-  		description = "Create bars"
-  	}
+  name = "Resource Server - Client Grant - Acceptance Test"
+  identifier = "https://api.example.com/client-grant-test"
+  scopes = {
+    value = "create:foo"
+    description = "Create foos"
+  }
+  scopes = {
+    value = "create:bar"
+    description = "Create bars"
+  }
 }
 
 resource "auth0_client_grant" "my_client_grant" {
