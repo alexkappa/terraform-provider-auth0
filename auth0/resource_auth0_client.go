@@ -209,6 +209,7 @@ func createClient(d *schema.ResourceData, m interface{}) error {
 	if err := api.Client.Create(c); err != nil {
 		return err
 	}
+	d.SetId(c.ClientID)
 	return readClient(d, m)
 }
 
@@ -350,13 +351,9 @@ func buildClientSchema(c *management.Client, d *schema.ResourceData) error {
 	d.Set("token_endpoint_auth_method", c.TokenEndpointAuthMethod)
 
 	if c.JWTConfiguration != nil {
-		d.Set("jwt_configuration", []map[string]interface{}{
-			{
-				"alg": c.JWTConfiguration.Algorithm,
-				"lifetime_in_seconds": c.JWTConfiguration.LifetimeInSeconds,
-				"secret_encoded":      c.JWTConfiguration.SecretEncoded,
-				"scopes":              c.JWTConfiguration.Scopes,
-			}})
+		var jwt_config = make(map[string]string)
+		mapstructure.Decode(c.JWTConfiguration, &jwt_config)
+		d.Set("jwt_configuration", jwt_config)
 	}
 
 	if c.EncryptionKey != nil {
