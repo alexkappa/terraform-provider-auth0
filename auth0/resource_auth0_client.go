@@ -3,6 +3,7 @@ package auth0
 import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
+	"github.com/mitchellh/mapstructure"
 	"github.com/yieldr/go-auth0/management"
 )
 
@@ -324,7 +325,7 @@ func buildClient(d *schema.ResourceData) *management.Client {
 	return c
 }
 
-func buildClientSchema(c *management.Client, d *schema.ResourceData) {
+func buildClientSchema(c *management.Client, d *schema.ResourceData) error {
 	d.SetId(c.ClientID)
 	d.Set("client_id", c.ClientID)
 	d.Set("client_secret", c.ClientSecret)
@@ -359,7 +360,12 @@ func buildClientSchema(c *management.Client, d *schema.ResourceData) {
 	}
 
 	if c.EncryptionKey != nil {
-		d.Set("encryption_key", c.EncryptionKey)
+		var enc_key schema.Set
+		err := mapstructure.Decode(c.EncryptionKey, &enc_key)
+		if err != nil {
+			return err
+		}
+		d.Set("encryption_key", enc_key)
 	}
 
 	if c.Addons != nil {
@@ -374,5 +380,5 @@ func buildClientSchema(c *management.Client, d *schema.ResourceData) {
 		d.Set("mobile", c.Mobile)
 	}
 
-	return
+	return nil
 }
