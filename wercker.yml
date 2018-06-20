@@ -4,7 +4,8 @@ build:
 
   steps:
 
-    - setup-go-workspace
+    - setup-go-workspace:
+        package-dir: github.com/yieldr/terraform-provider-auth0
 
     - script:
         name: build
@@ -24,9 +25,10 @@ release:
   # current commit.
   steps:
 
-  - setup-go-workspace
+    - setup-go-workspace:
+        package-dir: github.com/yieldr/terraform-provider-auth0
 
-  - script:
-      name: release
-      code: |
-        curl -sL https://git.io/goreleaser | bash -s -- --skip-validate
+    - script:
+        name: release
+        code: |
+          curl -sL https://git.io/goreleaser | bash -s -- --skip-validate

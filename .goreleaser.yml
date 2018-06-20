@@ -1,5 +1,7 @@
 builds:
   - binary: terraform-provider-auth0
+    env:
+      - CGO_ENABLED=0
     goos:
       - darwin
       - linux
