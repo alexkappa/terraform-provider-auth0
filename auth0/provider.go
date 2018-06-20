@@ -32,6 +32,7 @@ func Provider() *schema.Provider {
 			"auth0_resource_server": newResourceServer(),
 			"auth0_rule":            newRule(),
 			"auth0_rule_config":     newRuleConfig(),
+			"auth0_email":           newEmail(),
 		},
 		ConfigureFunc: configure,
 	}

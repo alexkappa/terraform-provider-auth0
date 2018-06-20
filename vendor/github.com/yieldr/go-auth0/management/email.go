@@ -51,7 +51,7 @@ func (em *EmailManager) Create(e *Email) error {
 
 func (em *EmailManager) Read() (*Email, error) {
 	e := new(Email)
-	err := em.m.get(em.m.getURI("emails", "provider"), e)
+	err := em.m.get(em.m.getURI("emails", "provider")+"?fields=name,enabled,default_from_address,credentials", e)
 	return e, err
 }
 

@@ -84,6 +84,7 @@ func createEmail(d *schema.ResourceData, m interface{}) error {
 	if err := api.Email.Create(e); err != nil {
 		return err
 	}
+	d.SetId(e.Name)
 	return nil
 }
 
@@ -93,9 +94,27 @@ func readEmail(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	d.SetId(e.Name)
 	d.Set("name", e.Name)
 	d.Set("enabled", e.Enabled)
 	d.Set("default_from_address", e.DefaultFromAddress)
+
+	if credentials := e.Credentials; credentials != nil {
+		d.Set("credentials", []map[string]interface{}{
+			{
+				"api_user":          e.Credentials.APIUser,
+				"api_key":           e.Credentials.APIKey,
+				"access_key_id":     e.Credentials.AccessKeyID,
+				"secret_access_key": e.Credentials.SecretAccessKey,
+				"region":            e.Credentials.Region,
+				"smtp_host":         e.Credentials.SMTPHost,
+				"smtp_port":         e.Credentials.SMTPPort,
+				"smtp_user":         e.Credentials.SMTPUser,
+				"smtp_pass":         e.Credentials.SMTPPass,
+			},
+		})
+	}
+
 	return nil
 }
 
