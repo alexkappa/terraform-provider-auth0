@@ -41,19 +41,19 @@ func NewCustomDomainManager(m *Management) *CustomDomainManager {
 }
 
 func (cm *CustomDomainManager) Create(c *CustomDomain) (err error) {
-	return cm.m.post(cm.m.getURI("custom-domains"), c)
+	return cm.m.post(cm.m.uri("custom-domains"), c)
 }
 
 func (cm *CustomDomainManager) Read(id string) (*CustomDomain, error) {
 	c := new(CustomDomain)
-	err := cm.m.get(cm.m.getURI("custom-domains", id), c)
+	err := cm.m.get(cm.m.uri("custom-domains", id), c)
 	return c, err
 }
 
 func (cm *CustomDomainManager) Update(id string, c *CustomDomain) (err error) {
-	return cm.m.patch(cm.m.getURI("custom-domains", id), c)
+	return cm.m.patch(cm.m.uri("custom-domains", id), c)
 }
 
 func (cm *CustomDomainManager) Delete(id string) (err error) {
-	return cm.m.delete(cm.m.getURI("custom-domains", id))
+	return cm.m.delete(cm.m.uri("custom-domains", id))
 }

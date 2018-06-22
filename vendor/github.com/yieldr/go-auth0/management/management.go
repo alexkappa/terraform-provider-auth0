@@ -161,7 +161,7 @@ func New(domain, clientID, clientSecret string) (*Management, error) {
 	return m, nil
 }
 
-func (m *Management) getURI(parts ...string) string {
+func (m *Management) uri(parts ...string) string {
 	return fmt.Sprintf("https://%s/%s/%s",
 		m.domain,
 		m.basePath,

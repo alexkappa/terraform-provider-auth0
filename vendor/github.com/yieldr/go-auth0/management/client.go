@@ -100,19 +100,19 @@ func NewClientManager(m *Management) *ClientManager {
 }
 
 func (cm *ClientManager) Create(c *Client) (err error) {
-	return cm.m.post(cm.m.getURI("clients"), c)
+	return cm.m.post(cm.m.uri("clients"), c)
 }
 
 func (cm *ClientManager) Read(id string) (*Client, error) {
 	c := new(Client)
-	err := cm.m.get(cm.m.getURI("clients", id), c)
+	err := cm.m.get(cm.m.uri("clients", id), c)
 	return c, err
 }
 
 func (cm *ClientManager) Update(id string, c *Client) (err error) {
-	return cm.m.patch(cm.m.getURI("clients", id), c)
+	return cm.m.patch(cm.m.uri("clients", id), c)
 }
 
 func (cm *ClientManager) Delete(id string) (err error) {
-	return cm.m.delete(cm.m.getURI("clients", id))
+	return cm.m.delete(cm.m.uri("clients", id))
 }

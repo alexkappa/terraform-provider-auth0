@@ -39,19 +39,19 @@ func NewEmailTemplateManager(m *Management) *EmailTemplateManager {
 }
 
 func (em *EmailTemplateManager) Create(e *EmailTemplate) error {
-	return em.m.post(em.m.getURI("email-templates"), e)
+	return em.m.post(em.m.uri("email-templates"), e)
 }
 
 func (em *EmailTemplateManager) Read(template string) (*EmailTemplate, error) {
 	e := new(EmailTemplate)
-	err := em.m.get(em.m.getURI("email-templates", template), e)
+	err := em.m.get(em.m.uri("email-templates", template), e)
 	return e, err
 }
 
 func (em *EmailTemplateManager) Update(template string, e *EmailTemplate) (err error) {
-	return em.m.put(em.m.getURI("email-templates", template), e)
+	return em.m.patch(em.m.uri("email-templates", template), e)
 }
 
-func (em *EmailTemplateManager) Delete(template string) (err error) {
-	return em.m.delete(em.m.getURI("email-templates", template))
+func (em *EmailTemplateManager) Replace(template string, e *EmailTemplate) (err error) {
+	return em.m.put(em.m.uri("email-templates", template), e)
 }

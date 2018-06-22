@@ -23,12 +23,12 @@ func NewClientGrantManager(m *Management) *ClientGrantManager {
 }
 
 func (r *ClientGrantManager) Create(g *ClientGrant) (err error) {
-	return r.m.post(r.m.getURI("client-grants"), g)
+	return r.m.post(r.m.uri("client-grants"), g)
 }
 
 func (r *ClientGrantManager) Read(id string) (*ClientGrant, error) {
 	var gs []*ClientGrant
-	err := r.m.get(r.m.getURI("client-grants"), &gs)
+	err := r.m.get(r.m.uri("client-grants"), &gs)
 	if err != nil {
 		return nil, err
 	}
@@ -45,9 +45,9 @@ func (r *ClientGrantManager) Read(id string) (*ClientGrant, error) {
 }
 
 func (r *ClientGrantManager) Update(id string, g *ClientGrant) (err error) {
-	return r.m.patch(r.m.getURI("client-grants", id), g)
+	return r.m.patch(r.m.uri("client-grants", id), g)
 }
 
 func (r *ClientGrantManager) Delete(id string) (err error) {
-	return r.m.delete(r.m.getURI("client-grants", id))
+	return r.m.delete(r.m.uri("client-grants", id))
 }
