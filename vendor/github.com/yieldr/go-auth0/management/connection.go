@@ -93,19 +93,19 @@ func NewConnectionManager(m *Management) *ConnectionManager {
 }
 
 func (cm *ConnectionManager) Create(c *Connection) error {
-	return cm.m.post(cm.m.getURI("connections"), c)
+	return cm.m.post(cm.m.uri("connections"), c)
 }
 
 func (cm *ConnectionManager) Read(id string) (*Connection, error) {
 	c := new(Connection)
-	err := cm.m.get(cm.m.getURI("connections", id), c)
+	err := cm.m.get(cm.m.uri("connections", id), c)
 	return c, err
 }
 
 func (cm *ConnectionManager) Update(id string, c *Connection) (err error) {
-	return cm.m.patch(cm.m.getURI("connections", id), c)
+	return cm.m.patch(cm.m.uri("connections", id), c)
 }
 
 func (cm *ConnectionManager) Delete(id string) (err error) {
-	return cm.m.delete(cm.m.getURI("connections", id))
+	return cm.m.delete(cm.m.uri("connections", id))
 }

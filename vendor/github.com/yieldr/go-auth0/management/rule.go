@@ -30,19 +30,19 @@ func NewRuleManager(m *Management) *RuleManager {
 }
 
 func (rm *RuleManager) Create(r *Rule) error {
-	return rm.m.post(rm.m.getURI("rules"), r)
+	return rm.m.post(rm.m.uri("rules"), r)
 }
 
 func (rm *RuleManager) Read(id string) (*Rule, error) {
 	r := new(Rule)
-	err := rm.m.get(rm.m.getURI("rules", id), r)
+	err := rm.m.get(rm.m.uri("rules", id), r)
 	return r, err
 }
 
 func (rm *RuleManager) Update(id string, r *Rule) (err error) {
-	return rm.m.patch(rm.m.getURI("rules", id), r)
+	return rm.m.patch(rm.m.uri("rules", id), r)
 }
 
 func (rm *RuleManager) Delete(id string) (err error) {
-	return rm.m.delete(rm.m.getURI("rules", id))
+	return rm.m.delete(rm.m.uri("rules", id))
 }

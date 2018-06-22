@@ -46,19 +46,19 @@ func NewEmailManager(m *Management) *EmailManager {
 }
 
 func (em *EmailManager) Create(e *Email) error {
-	return em.m.post(em.m.getURI("emails", "provider"), e)
+	return em.m.post(em.m.uri("emails", "provider"), e)
 }
 
 func (em *EmailManager) Read() (*Email, error) {
 	e := new(Email)
-	err := em.m.get(em.m.getURI("emails", "provider")+"?fields=name,enabled,default_from_address,credentials", e)
+	err := em.m.get(em.m.uri("emails", "provider")+"?fields=name,enabled,default_from_address,credentials", e)
 	return e, err
 }
 
 func (em *EmailManager) Update(e *Email) (err error) {
-	return em.m.patch(em.m.getURI("emails", "provider"), e)
+	return em.m.patch(em.m.uri("emails", "provider"), e)
 }
 
 func (em *EmailManager) Delete() (err error) {
-	return em.m.delete(em.m.getURI("emails", "provider"))
+	return em.m.delete(em.m.uri("emails", "provider"))
 }

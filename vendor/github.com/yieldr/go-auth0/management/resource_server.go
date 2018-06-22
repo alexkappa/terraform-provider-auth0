@@ -56,19 +56,19 @@ func NewResourceServerManager(m *Management) *ResourceServerManager {
 }
 
 func (r *ResourceServerManager) Create(rs *ResourceServer) (err error) {
-	return r.m.post(r.m.getURI("resource-servers"), rs)
+	return r.m.post(r.m.uri("resource-servers"), rs)
 }
 
 func (r *ResourceServerManager) Read(id string) (*ResourceServer, error) {
 	rs := new(ResourceServer)
-	err := r.m.get(r.m.getURI("resource-servers", id), rs)
+	err := r.m.get(r.m.uri("resource-servers", id), rs)
 	return rs, err
 }
 
 func (r *ResourceServerManager) Update(id string, rs *ResourceServer) (err error) {
-	return r.m.patch(r.m.getURI("resource-servers", id), rs)
+	return r.m.patch(r.m.uri("resource-servers", id), rs)
 }
 
 func (r *ResourceServerManager) Delete(id string) (err error) {
-	return r.m.delete(r.m.getURI("resource-servers", id))
+	return r.m.delete(r.m.uri("resource-servers", id))
 }

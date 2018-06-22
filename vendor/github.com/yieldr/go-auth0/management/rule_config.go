@@ -18,12 +18,12 @@ func NewRuleConfigManager(m *Management) *RuleConfigManager {
 }
 
 func (rm *RuleConfigManager) Upsert(key string, r *RuleConfig) (err error) {
-	return rm.m.put(rm.m.getURI("rules-configs", key), r)
+	return rm.m.put(rm.m.uri("rules-configs", key), r)
 }
 
 func (rm *RuleConfigManager) Read(key string) (*RuleConfig, error) {
 	var rs []*RuleConfig
-	err := rm.m.get(rm.m.getURI("rules-configs"), &rs)
+	err := rm.m.get(rm.m.uri("rules-configs"), &rs)
 	if err != nil {
 		return nil, err
 	}
@@ -40,5 +40,5 @@ func (rm *RuleConfigManager) Read(key string) (*RuleConfig, error) {
 }
 
 func (rm *RuleConfigManager) Delete(key string) (err error) {
-	return rm.m.delete(rm.m.getURI("rules-configs", key))
+	return rm.m.delete(rm.m.uri("rules-configs", key))
 }
