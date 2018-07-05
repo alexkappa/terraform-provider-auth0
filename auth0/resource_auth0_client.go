@@ -62,6 +62,11 @@ func newClient() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
 			},
+			"grant_types": {
+				Type:     schema.TypeList,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+				Optional: true,
+			},
 			"allowed_origins": {
 				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},
@@ -231,6 +236,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("callbacks", c.Callbacks)
 	d.Set("allowed_logout_urls", c.AllowedLogoutURLs)
 	d.Set("allowed_origins", c.AllowedOrigins)
+	d.Set("grant_types", c.GrantTypes)
 	d.Set("web_origins", c.WebOrigins)
 	d.Set("sso", c.SSO)
 	d.Set("sso_disabled", c.SSODisabled)
@@ -294,6 +300,7 @@ func buildClient(d *schema.ResourceData) *management.Client {
 		Callbacks:               d.Get("callbacks").([]interface{}),
 		AllowedLogoutURLs:       d.Get("allowed_logout_urls").([]interface{}),
 		AllowedOrigins:          d.Get("allowed_origins").([]interface{}),
+		GrantTypes:              d.Get("grant_types").([]interface{}),
 		WebOrigins:              d.Get("web_origins").([]interface{}),
 		SSO:                     d.Get("sso").(bool),
 		SSODisabled:             d.Get("sso_disabled").(bool),
