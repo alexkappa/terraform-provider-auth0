@@ -66,6 +66,7 @@ func newClient() *schema.Resource {
 				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
+				Computed: true,
 			},
 			"allowed_origins": {
 				Type:     schema.TypeList,
