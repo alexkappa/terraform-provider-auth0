@@ -49,9 +49,9 @@ func (em *EmailManager) Create(e *Email) error {
 	return em.m.post(em.m.uri("emails", "provider"), e)
 }
 
-func (em *EmailManager) Read() (*Email, error) {
+func (em *EmailManager) Read(opts ...Option) (*Email, error) {
 	e := new(Email)
-	err := em.m.get(em.m.uri("emails", "provider")+"?fields=name,enabled,default_from_address,credentials", e)
+	err := em.m.get(em.m.uri("emails", "provider")+"?"+em.m.q(opts), e)
 	return e, err
 }
 

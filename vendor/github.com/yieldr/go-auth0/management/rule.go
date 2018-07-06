@@ -33,9 +33,9 @@ func (rm *RuleManager) Create(r *Rule) error {
 	return rm.m.post(rm.m.uri("rules"), r)
 }
 
-func (rm *RuleManager) Read(id string) (*Rule, error) {
+func (rm *RuleManager) Read(id string, opts ...Option) (*Rule, error) {
 	r := new(Rule)
-	err := rm.m.get(rm.m.uri("rules", id), r)
+	err := rm.m.get(rm.m.uri("rules", id)+"?"+rm.m.q(opts), r)
 	return r, err
 }
 

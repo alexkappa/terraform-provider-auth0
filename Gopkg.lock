@@ -352,8 +352,8 @@
 [[projects]]
   name = "github.com/yieldr/go-auth0"
   packages = ["management"]
-  revision = "f4be2a789656a59a9796ebc8f36742b26783458d"
-  version = "v0.0.12"
+  revision = "b4aaab00a952a0bc9f8b0bf69d48d093fab79b7b"
+  version = "v0.1.0"
 
 [[projects]]
   branch = "master"

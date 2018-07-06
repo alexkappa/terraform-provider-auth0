@@ -90,7 +90,7 @@ func createEmail(d *schema.ResourceData, m interface{}) error {
 
 func readEmail(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
-	e, err := api.Email.Read()
+	e, err := api.Email.Read(management.WithFields("name", "enabled", "default_from_address", "credentials"))
 	if err != nil {
 		return err
 	}

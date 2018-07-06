@@ -8,6 +8,8 @@ import (
 	"io"
 	"net/http"
 	"net/http/httputil"
+	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -161,11 +163,20 @@ func New(domain, clientID, clientSecret string) (*Management, error) {
 	return m, nil
 }
 
-func (m *Management) uri(parts ...string) string {
-	return fmt.Sprintf("https://%s/%s/%s",
-		m.domain,
-		m.basePath,
-		strings.Join(parts, "/"))
+func (m *Management) uri(path ...string) string {
+	return (&url.URL{
+		Scheme: "https",
+		Host:   m.domain,
+		Path:   m.basePath + "/" + strings.Join(path, "/"),
+	}).String()
+}
+
+func (m *Management) q(options []Option) string {
+	v := make(url.Values)
+	for _, option := range options {
+		option(v)
+	}
+	return v.Encode()
 }
 
 func (m *Management) get(uri string, v interface{}) error {
@@ -360,4 +371,54 @@ func (m *managementError) Error() string {
 
 func (m *managementError) Status() int {
 	return m.StatusCode
+}
+
+// Option configures a call (typically to retrieve a resource) to Auth0 with
+// query parameters.
+type Option func(v url.Values)
+
+// WithFields configures a call to include the desired fields.
+func WithFields(fields ...string) Option {
+	return func(v url.Values) {
+		v.Set("fields", strings.Join(fields, ","))
+		v.Set("include_fields", "true")
+	}
+}
+
+// WithoutFields configures a call to exclude the desired fields.
+func WithoutFields(fields ...string) Option {
+	return func(v url.Values) {
+		v.Set("fields", strings.Join(fields, ","))
+		v.Set("include_fields", "false")
+	}
+}
+
+// Page configures a call to receive a specific page, if the results where
+// concatenated.
+func Page(page int) Option {
+	return func(v url.Values) {
+		v.Set("page", strconv.FormatInt(int64(page), 10))
+	}
+}
+
+// PerPage configures a call to limit the amount of items in the result.
+func PerPage(items int) Option {
+	return func(v url.Values) {
+		v.Set("per_page", strconv.FormatInt(int64(items), 10))
+	}
+}
+
+// IncludeTotals configures a call to include totals.
+func IncludeTotals(include bool) Option {
+	return func(v url.Values) {
+		v.Set("include_totals", strconv.FormatBool(include))
+	}
+}
+
+// Parameter is a generic configuration to add arbitrary query parameters to
+// calls made to Auth0.
+func Parameter(key, value string) Option {
+	return func(v url.Values) {
+		v.Set(key, value)
+	}
 }
