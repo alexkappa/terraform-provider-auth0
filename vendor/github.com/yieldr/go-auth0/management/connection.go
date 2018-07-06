@@ -96,9 +96,9 @@ func (cm *ConnectionManager) Create(c *Connection) error {
 	return cm.m.post(cm.m.uri("connections"), c)
 }
 
-func (cm *ConnectionManager) Read(id string) (*Connection, error) {
+func (cm *ConnectionManager) Read(id string, opts ...Option) (*Connection, error) {
 	c := new(Connection)
-	err := cm.m.get(cm.m.uri("connections", id), c)
+	err := cm.m.get(cm.m.uri("connections", id)+"?"+cm.m.q(opts), c)
 	return c, err
 }
 

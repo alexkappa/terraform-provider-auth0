@@ -42,9 +42,9 @@ func (em *EmailTemplateManager) Create(e *EmailTemplate) error {
 	return em.m.post(em.m.uri("email-templates"), e)
 }
 
-func (em *EmailTemplateManager) Read(template string) (*EmailTemplate, error) {
+func (em *EmailTemplateManager) Read(template string, opts ...Option) (*EmailTemplate, error) {
 	e := new(EmailTemplate)
-	err := em.m.get(em.m.uri("email-templates", template), e)
+	err := em.m.get(em.m.uri("email-templates", template)+"?"+em.m.q(opts), e)
 	return e, err
 }
 

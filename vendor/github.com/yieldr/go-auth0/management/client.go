@@ -103,9 +103,9 @@ func (cm *ClientManager) Create(c *Client) (err error) {
 	return cm.m.post(cm.m.uri("clients"), c)
 }
 
-func (cm *ClientManager) Read(id string) (*Client, error) {
+func (cm *ClientManager) Read(id string, opts ...Option) (*Client, error) {
 	c := new(Client)
-	err := cm.m.get(cm.m.uri("clients", id), c)
+	err := cm.m.get(cm.m.uri("clients", id)+"?"+cm.m.q(opts), c)
 	return c, err
 }
 
