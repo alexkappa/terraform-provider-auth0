@@ -1,14 +1,15 @@
 provider "auth0" {}
 
 resource "auth0_client" "my_app_client" {
-  name            = "Example Penis Application (Managed by Terraform)"
-  description     = "Example Penis Application Loooooong Description"
+  name            = "Example Application (Managed by Terraform)"
+  description     = "Example Application Loooooong Description"
   app_type        = "non_interactive"
   is_first_party  = true
   oidc_conformant = false
-  callbacks       = ["https://peni.com/callback"]
-  allowed_origins = ["https://peni.com"]
-  web_origins     = ["https://peni.com"]
+  callbacks       = ["https://example.com/callback"]
+  allowed_origins = ["https://example.com"]
+  web_origins     = ["https://example.com"]
+  grant_types =  [ "authorization_code", "http://auth0.com/oauth/grant-type/password-realm", "implicit", "password", "refresh_token" ]  
 
   jwt_configuration = {
     lifetime_in_seconds = 120
