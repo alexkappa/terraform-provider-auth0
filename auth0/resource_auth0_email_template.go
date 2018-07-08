@@ -68,10 +68,28 @@ func newEmailTemplate() *schema.Resource {
 func createEmailTemplate(d *schema.ResourceData, m interface{}) error {
 	e := buildEmailTemplate(d)
 	api := m.(*management.Management)
-	if err := api.EmailTemplate.Update(e.Template, e); err != nil {
+
+	// The email template resource doesn't allow deleting templates, so in order
+	// to avoid conflicts, we first attempt to read the template. If it exists
+	// we'll try to update it, if not we'll try to create it.
+	if _, err := api.EmailTemplate.Read(e.Template); err == nil {
+
+		// We succeeded in reading the template, this means it was created
+		// previously.
+		if err := api.EmailTemplate.Update(e.Template, e); err != nil {
+			return err
+		}
+		d.SetId(e.Template)
+		return nil
+	}
+
+	// If we reached this point the template doesn't exist. Therefore it is safe
+	// to create it.
+	if err := api.EmailTemplate.Create(e); err != nil {
 		return err
 	}
 	d.SetId(e.Template)
+
 	return nil
 }
 
