@@ -20,6 +20,9 @@ func TestAccConnection(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-Connection"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "strategy", "auth0"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.password_policy", "fair"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.enable_database_customization", "false"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.import_mode", "true"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.disable_signup", "true"),
 				),
 			},
 		},
@@ -34,6 +37,9 @@ resource "auth0_connection" "my_connection" {
 	strategy = "auth0"
 	options = {
 		password_policy = "fair"
+		enable_database_customization = false
+		import_mode = true
+		disable_signup = true
 	}
 }
 `
