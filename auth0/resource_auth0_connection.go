@@ -176,7 +176,7 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 			"ext_assigned_plans":            c.Options.ExtAssignedPlans,
 			"ext_profile":                   c.Options.ExtProfile,
 			"enable_database_customization": c.Options.EnableDatabaseCustomization,
-			"brut_force_protection":         c.Options.BrutForceProtection,
+			"brute_force_protection":        c.Options.BruteForceProtection,
 			"import_mode":                   c.Options.ImportMode,
 			"disable_signup":                c.Options.DisableSignup,
 		},
@@ -231,7 +231,7 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 				ExtAssignedPlans:            options["ext_assigned_plans"].(bool),
 				ExtProfile:                  options["ext_profile"].(bool),
 				EnableDatabaseCustomization: options["enable_database_customization"].(bool),
-				BrutForceProtection:         options["brut_force_protection"].(bool),
+				BruteForceProtection:        options["brute_force_protection"].(bool),
 				ImportMode:                  options["import_mode"].(bool),
 				DisableSignup:               options["disable_signup"].(bool),
 			}

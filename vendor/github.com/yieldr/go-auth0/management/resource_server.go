@@ -61,7 +61,7 @@ func (r *ResourceServerManager) Create(rs *ResourceServer) (err error) {
 
 func (r *ResourceServerManager) Read(id string, opts ...Option) (*ResourceServer, error) {
 	rs := new(ResourceServer)
-	err := r.m.get(r.m.uri("resource-servers", id)+"?"+r.m.q(opts), rs)
+	err := r.m.get(r.m.uri("resource-servers", id)+r.m.q(opts), rs)
 	return rs, err
 }
 
