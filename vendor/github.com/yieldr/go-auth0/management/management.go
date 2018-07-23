@@ -88,6 +88,18 @@ type Management struct {
 	// EmailTemplate manages Auth0 Email Templates.
 	EmailTemplate *EmailTemplateManager
 
+	// User manages Auth0 User resources.
+	User *UserManager
+
+	// Tenant manages your Auth0 Tenant.
+	Tenant *TenantManager
+
+	// Ticket creates verify email or change password tickets.
+	Ticket *TicketManager
+
+	// Stat is used to retrieve usage statistics.
+	Stat *StatManager
+
 	domain   string
 	basePath string
 	timeout  time.Duration
@@ -104,7 +116,7 @@ func New(domain, clientID, clientSecret string) (*Management, error) {
 		domain:   domain,
 		basePath: "api/v2",
 		timeout:  1 * time.Minute,
-		// debug:    true,
+		debug:    true,
 	}
 
 	config := Config{
@@ -159,6 +171,10 @@ func New(domain, clientID, clientSecret string) (*Management, error) {
 	m.RuleConfig = NewRuleConfigManager(m)
 	m.EmailTemplate = NewEmailTemplateManager(m)
 	m.Email = NewEmailManager(m)
+	m.User = NewUserManager(m)
+	m.Tenant = NewTenantManager(m)
+	m.Ticket = NewTicketManager(m)
+	m.Stat = NewStatManager(m)
 
 	return m, nil
 }
@@ -172,11 +188,14 @@ func (m *Management) uri(path ...string) string {
 }
 
 func (m *Management) q(options []Option) string {
+	if len(options) == 0 {
+		return ""
+	}
 	v := make(url.Values)
 	for _, option := range options {
 		option(v)
 	}
-	return v.Encode()
+	return "?" + v.Encode()
 }
 
 func (m *Management) get(uri string, v interface{}) error {
