@@ -111,7 +111,7 @@ func newConnection() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},
-						"brut_force_protection": {
+						"brute_force_protection": {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},

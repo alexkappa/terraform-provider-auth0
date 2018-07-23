@@ -352,14 +352,8 @@
 [[projects]]
   name = "github.com/yieldr/go-auth0"
   packages = ["management"]
-  revision = "72d94bbcdb8f91ccd6383fd94bcda5298821bd9a"
+  revision = "1f5e3fca87c52f3d70afa79b2bba728bf95ea416"
   version = "v0.1.1"
-
-[[projects]]
-  name = "github.com/yieldr/terraform-provider-auth0"
-  packages = ["auth0"]
-  revision = "36414e40c983c15019a018e4ad26f014727eeaa4"
-  version = "v0.1.0"
 
 [[projects]]
   branch = "master"
