@@ -44,7 +44,7 @@ func (cm *CustomDomainManager) Create(c *CustomDomain) (err error) {
 	return cm.m.post(cm.m.uri("custom-domains"), c)
 }
 
-func (cm *CustomDomainManager) Read(id string, opts ...Option) (*CustomDomain, error) {
+func (cm *CustomDomainManager) Read(id string, opts ...reqOption) (*CustomDomain, error) {
 	c := new(CustomDomain)
 	err := cm.m.get(cm.m.uri("custom-domains", id)+cm.m.q(opts), c)
 	return c, err
