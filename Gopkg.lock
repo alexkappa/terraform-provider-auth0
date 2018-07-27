@@ -352,7 +352,7 @@
 [[projects]]
   name = "github.com/yieldr/go-auth0"
   packages = ["management"]
-  revision = "1f5e3fca87c52f3d70afa79b2bba728bf95ea416"
+  revision = "0b2b30c6c5c42bbd05a32cc23ce1b78d80b3436c"
   version = "v0.1.1"
 
 [[projects]]

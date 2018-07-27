@@ -59,7 +59,7 @@ func (um *UserManager) Create(u *User) error {
 	return um.m.post(um.m.uri("users"), u)
 }
 
-func (um *UserManager) Read(id string, opts ...Option) (*User, error) {
+func (um *UserManager) Read(id string, opts ...reqOption) (*User, error) {
 	u := new(User)
 	err := um.m.get(um.m.uri("users", id)+um.m.q(opts), u)
 	return u, err
@@ -73,7 +73,7 @@ func (um *UserManager) Delete(id string) (err error) {
 	return um.m.delete(um.m.uri("users", id))
 }
 
-func (um *UserManager) List(opts ...Option) (us []*User, err error) {
+func (um *UserManager) List(opts ...reqOption) (us []*User, err error) {
 	err = um.m.get(um.m.uri("users")+um.m.q(opts), &us)
 	return
 }
