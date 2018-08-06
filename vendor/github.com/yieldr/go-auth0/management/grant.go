@@ -1,0 +1,33 @@
+package management
+
+type Grant struct {
+
+	// The id of the grant.
+	ID string `json:"id,omitempty"`
+
+	// The id of the client.
+	ClientID string `json:"clientID,omitempty"`
+
+	// The id of the user.
+	UserID string `json:"user_id`
+
+	// The grant's audience.
+	Audience string `json:"audience,omitempty"`
+
+	Scope []interface{} `json:"scope,omitempty"`
+}
+
+type GrantManager struct {
+	m *Management
+}
+
+func NewGrantManager(m *Management) *GrantManager {
+	return &GrantManager{m}
+}
+
+func (gm *GrantManager) List() ([]*Grant, error) {
+	var g []*Grant
+	err := gm.m.get(gm.m.uri("grants"), &g)
+	return g, err
+
+}
