@@ -21,6 +21,7 @@ func newConnection() *schema.Resource {
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"strategy": {
 				Type:     schema.TypeString,
@@ -41,6 +42,7 @@ func newConnection() *schema.Resource {
 					"waad", "weibo", "windowslive", "wordpress", "yahoo",
 					"yammer", "yandex",
 				}, true),
+				ForceNew: true,
 			},
 			"options": {
 				Type:     schema.TypeList,
@@ -168,6 +170,8 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 
 func updateConnection(d *schema.ResourceData, m interface{}) error {
 	c := buildConnection(d)
+	c.Strategy = ""
+	c.Name = ""
 	api := m.(*management.Management)
 	err := api.Connection.Update(d.Id(), c)
 	if err != nil {
@@ -194,22 +198,23 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 		vL := v.([]interface{})
 		for _, v := range vL {
 
-			options := v.(map[string]interface{})
+			if options, ok := v.(map[string]interface{}); ok {
 
-			c.Options = &management.ConnectionOptions{
-				Validation:             options["validation"].(map[string]interface{}),
-				PasswordPolicy:         options["password_policy"].(string),
-				PasswordHistory:        options["password_history"].(map[string]interface{}),
-				PasswordNoPersonalInfo: options["password_no_personal_info"].(map[string]interface{}),
-				PasswordDictionary:     options["password_dictionary"].(map[string]interface{}),
-				APIEnableUsers:         options["api_enable_users"].(bool),
-				BasicProfile:           options["basic_profile"].(bool),
-				ExtAdmin:               options["ext_admin"].(bool),
-				ExtIsSuspended:         options["ext_is_suspended"].(bool),
-				ExtAgreedTerms:         options["ext_agreed_terms"].(bool),
-				ExtGroups:              options["ext_groups"].(bool),
-				ExtAssignedPlans:       options["ext_assigned_plans"].(bool),
-				ExtProfile:             options["ext_profile"].(bool),
+				c.Options = &management.ConnectionOptions{
+					Validation:             options["validation"].(map[string]interface{}),
+					PasswordPolicy:         options["password_policy"].(string),
+					PasswordHistory:        options["password_history"].(map[string]interface{}),
+					PasswordNoPersonalInfo: options["password_no_personal_info"].(map[string]interface{}),
+					PasswordDictionary:     options["password_dictionary"].(map[string]interface{}),
+					APIEnableUsers:         options["api_enable_users"].(bool),
+					BasicProfile:           options["basic_profile"].(bool),
+					ExtAdmin:               options["ext_admin"].(bool),
+					ExtIsSuspended:         options["ext_is_suspended"].(bool),
+					ExtAgreedTerms:         options["ext_agreed_terms"].(bool),
+					ExtGroups:              options["ext_groups"].(bool),
+					ExtAssignedPlans:       options["ext_assigned_plans"].(bool),
+					ExtProfile:             options["ext_profile"].(bool),
+				}
 			}
 		}
 	}
