@@ -1,6 +1,8 @@
 package auth0
 
 import (
+	"sort"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 	"github.com/yieldr/go-auth0/management"
@@ -116,6 +118,7 @@ func newConnection() *schema.Resource {
 						"brute_force_protection": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Default:  true,
 						},
 						"import_mode": {
 							Type:     schema.TypeBool,
@@ -183,6 +186,11 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 			"disable_signup":                 c.Options.DisableSignup,
 		},
 	})
+
+	sort.Slice(c.EnabledClients, func(i, j int) bool {
+		return c.EnabledClients[i].(string) > c.EnabledClients[j].(string)
+	})
+
 	d.Set("enabled_clients", c.EnabledClients)
 	d.Set("realms", c.Realms)
 	return nil
@@ -215,11 +223,11 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 	}
 
 	if v, ok := d.GetOk("options"); ok {
+
 		vL := v.([]interface{})
 		for _, v := range vL {
 
 			if options, ok := v.(map[string]interface{}); ok {
-
 				c.Options = &management.ConnectionOptions{
 					Validation:                   options["validation"].(map[string]interface{}),
 					PasswordPolicy:               options["password_policy"].(string),
