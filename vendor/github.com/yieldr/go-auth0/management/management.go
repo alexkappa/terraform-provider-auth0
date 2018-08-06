@@ -16,7 +16,7 @@ import (
 	"golang.org/x/oauth2"
 )
 
-// Config is the payload used to receive an Auth0 management token. This token
+// AuthConfig is the payload used to receive an Auth0 management token. This token
 // is a JWT, it contains specific granted permissions (known as scopes), and it
 // is signed with a application API key and secret for the entire tenant.
 //
@@ -29,7 +29,7 @@ import (
 //
 // See: https://auth0.com/docs/api/management/v2/tokens#1-get-a-token
 //
-type Config struct {
+type AuthConfig struct {
 	Audience     string `json:"audience"`
 	ClientID     string `json:"client_id"`
 	ClientSecret string `json:"client_secret"`
@@ -53,6 +53,13 @@ type Token struct {
 	ExpiresIn   int    `json:"expires_in"`
 	Scope       string `json:"scope"`
 	TokenType   string `json:"token_type"`
+}
+
+// Auth embeds a Config and Token structs so it can be used to authenticate our
+// http client.
+type Auth struct {
+	AuthConfig
+	Token
 }
 
 // Management is an Auth0 management client used to interact with the Auth0
@@ -88,6 +95,18 @@ type Management struct {
 	// EmailTemplate manages Auth0 Email Templates.
 	EmailTemplate *EmailTemplateManager
 
+	// User manages Auth0 User resources.
+	User *UserManager
+
+	// Tenant manages your Auth0 Tenant.
+	Tenant *TenantManager
+
+	// Ticket creates verify email or change password tickets.
+	Ticket *TicketManager
+
+	// Stat is used to retrieve usage statistics.
+	Stat *StatManager
+
 	domain   string
 	basePath string
 	timeout  time.Duration
@@ -98,57 +117,41 @@ type Management struct {
 
 // New creates a new Auth0 Management client by authenticating using the
 // supplied client id and secret.
-func New(domain, clientID, clientSecret string) (*Management, error) {
+func New(domain, clientID, clientSecret string, options ...apiOption) (*Management, error) {
 
 	m := &Management{
 		domain:   domain,
 		basePath: "api/v2",
 		timeout:  1 * time.Minute,
-		// debug:    true,
+		debug:    false,
 	}
 
-	config := Config{
-		Audience:     "https://" + domain + "/api/v2/",
-		ClientID:     clientID,
-		ClientSecret: clientSecret,
-		GrantType:    "client_credentials",
+	for _, option := range options {
+		option(m)
 	}
 
-	var payload bytes.Buffer
-	err := json.NewEncoder(&payload).Encode(config)
+	auth := &Auth{
+		AuthConfig{
+			Audience:     "https://" + domain + "/api/v2/",
+			ClientID:     clientID,
+			ClientSecret: clientSecret,
+			GrantType:    "client_credentials",
+		},
+		Token{},
+	}
+
+	err := m.post("https://"+domain+"/oauth/token", auth)
 	if err != nil {
-		return nil, err
-	}
-
-	req, _ := http.NewRequest("POST", "https://"+domain+"/oauth/token", &payload)
-	req.Header.Add("Content-Type", "application/json")
-
-	res, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-
-	if m.debug {
-		m.dump(req, res)
-	}
-
-	if res.StatusCode != http.StatusOK {
-		return nil, newError(res.Body)
-	}
-
-	var token Token
-	if err = json.NewDecoder(res.Body).Decode(&token); err != nil {
 		return nil, err
 	}
 
 	ts := oauth2.StaticTokenSource(&oauth2.Token{
-		AccessToken: token.AccessToken,
-		TokenType:   token.TokenType,
-		Expiry:      time.Now().Add(time.Duration(token.ExpiresIn) * time.Second),
+		AccessToken: auth.Token.AccessToken,
+		TokenType:   auth.Token.TokenType,
+		Expiry:      time.Now().Add(time.Duration(auth.Token.ExpiresIn) * time.Second),
 	})
 
-	m.http = RetryClient(oauth2.NewClient(context.Background(), ts))
+	m.http = wrapRetry(oauth2.NewClient(context.Background(), ts))
 
 	m.Client = NewClientManager(m)
 	m.ClientGrant = NewClientGrantManager(m)
@@ -159,6 +162,10 @@ func New(domain, clientID, clientSecret string) (*Management, error) {
 	m.RuleConfig = NewRuleConfigManager(m)
 	m.EmailTemplate = NewEmailTemplateManager(m)
 	m.Email = NewEmailManager(m)
+	m.User = NewUserManager(m)
+	m.Tenant = NewTenantManager(m)
+	m.Ticket = NewTicketManager(m)
+	m.Stat = NewStatManager(m)
 
 	return m, nil
 }
@@ -171,57 +178,33 @@ func (m *Management) uri(path ...string) string {
 	}).String()
 }
 
-func (m *Management) q(options []Option) string {
+func (m *Management) q(options []reqOption) string {
+	if len(options) == 0 {
+		return ""
+	}
 	v := make(url.Values)
 	for _, option := range options {
 		option(v)
 	}
-	return v.Encode()
+	return "?" + v.Encode()
 }
 
-func (m *Management) get(uri string, v interface{}) error {
-
-	req, err := http.NewRequest("GET", uri, nil)
-	if err != nil {
-		return err
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), m.timeout)
-	defer cancel()
-
-	res, err := m.http.Do(req.WithContext(ctx))
-	if err != nil {
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		default:
-			return err
-		}
-	}
-	defer res.Body.Close()
-
-	if m.debug {
-		m.dump(req, res)
-	}
-
-	if res.StatusCode != http.StatusOK {
-		return newError(res.Body)
-	}
-
-	return json.NewDecoder(res.Body).Decode(v)
-}
-
-func (m *Management) post(uri string, v interface{}) error {
+func (m *Management) request(method, uri string, v interface{}) error {
 
 	var payload bytes.Buffer
-	json.NewEncoder(&payload).Encode(v)
-
-	req, _ := http.NewRequest("POST", uri, &payload)
+	if v != nil {
+		json.NewEncoder(&payload).Encode(v)
+	}
+	req, _ := http.NewRequest(method, uri, &payload)
 	req.Header.Add("Content-Type", "application/json")
 
 	ctx, cancel := context.WithTimeout(context.Background(), m.timeout)
 	defer cancel()
 
+	if m.http == nil {
+		m.http = http.DefaultClient
+	}
+
 	res, err := m.http.Do(req.WithContext(ctx))
 	if err != nil {
 		select {
@@ -231,7 +214,6 @@ func (m *Management) post(uri string, v interface{}) error {
 			return err
 		}
 	}
-	defer res.Body.Close()
 
 	if m.debug {
 		m.dump(req, res)
@@ -241,108 +223,55 @@ func (m *Management) post(uri string, v interface{}) error {
 		return newError(res.Body)
 	}
 
-	return json.NewDecoder(res.Body).Decode(v)
-}
-
-func (m *Management) put(uri string, v interface{}) error {
-
-	var payload bytes.Buffer
-	json.NewEncoder(&payload).Encode(v)
-
-	req, _ := http.NewRequest("PUT", uri, &payload)
-	req.Header.Add("Content-Type", "application/json")
-
-	ctx, cancel := context.WithTimeout(context.Background(), m.timeout)
-	defer cancel()
-
-	res, err := m.http.Do(req.WithContext(ctx))
-	if err != nil {
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		default:
-			return err
-		}
-	}
-	defer res.Body.Close()
-
-	if m.debug {
-		m.dump(req, res)
-	}
-
-	if res.StatusCode != http.StatusOK {
-		return newError(res.Body)
-	}
-
-	return json.NewDecoder(res.Body).Decode(v)
-}
-
-func (m *Management) patch(uri string, v interface{}) error {
-
-	var payload bytes.Buffer
-	json.NewEncoder(&payload).Encode(v)
-
-	req, _ := http.NewRequest("PATCH", uri, &payload)
-	req.Header.Add("Content-Type", "application/json")
-
-	ctx, cancel := context.WithTimeout(context.Background(), m.timeout)
-	defer cancel()
-
-	res, err := m.http.Do(req.WithContext(ctx))
-	if err != nil {
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		default:
-			return err
-		}
-	}
-	defer res.Body.Close()
-
-	if m.debug {
-		m.dump(req, res)
-	}
-
-	if res.StatusCode != http.StatusOK {
-		return newError(res.Body)
-	}
-
-	return json.NewDecoder(res.Body).Decode(v)
-}
-
-func (m *Management) delete(uri string) error {
-
-	req, _ := http.NewRequest("DELETE", uri, nil)
-
-	ctx, cancel := context.WithTimeout(context.Background(), m.timeout)
-	defer cancel()
-
-	res, err := m.http.Do(req.WithContext(ctx))
-	if err != nil {
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		default:
-			return err
-		}
-	}
-	defer res.Body.Close()
-
-	if m.debug {
-		m.dump(req, res)
-	}
-
 	if res.StatusCode != http.StatusNoContent {
-		return newError(res.Body)
+		defer res.Body.Close()
+		return json.NewDecoder(res.Body).Decode(v)
 	}
 
 	return nil
+}
+
+func (m *Management) get(uri string, v interface{}) error {
+	return m.request("GET", uri, v)
+}
+
+func (m *Management) post(uri string, v interface{}) error {
+	return m.request("POST", uri, v)
+}
+
+func (m *Management) put(uri string, v interface{}) error {
+	return m.request("PUT", uri, v)
+}
+
+func (m *Management) patch(uri string, v interface{}) error {
+	return m.request("PATCH", uri, v)
+}
+
+func (m *Management) delete(uri string) error {
+	return m.request("DELETE", uri, nil)
 }
 
 func (m *Management) dump(req *http.Request, res *http.Response) {
 	b1, _ := httputil.DumpRequest(req, true)
 	b2, _ := httputil.DumpResponse(res, true)
 	fmt.Printf("%s\n%s\b\n", b1, b2)
+}
+
+type apiOption func(*Management)
+
+// WithTimeout configures the management client with a request timeout.
+func WithTimeout(t time.Duration) apiOption {
+	return func(m *Management) {
+		m.timeout = t
+	}
+}
+
+// WithDebug configures the management client to dump http requests and
+// responses to stdout.
+func WithDebug(d bool) apiOption {
+	return func(m *Management) {
+		m.debug = d
+	}
 }
 
 type Error interface {
@@ -373,12 +302,12 @@ func (m *managementError) Status() int {
 	return m.StatusCode
 }
 
-// Option configures a call (typically to retrieve a resource) to Auth0 with
+// reqOption configures a call (typically to retrieve a resource) to Auth0 with
 // query parameters.
-type Option func(v url.Values)
+type reqOption func(url.Values)
 
 // WithFields configures a call to include the desired fields.
-func WithFields(fields ...string) Option {
+func WithFields(fields ...string) reqOption {
 	return func(v url.Values) {
 		v.Set("fields", strings.Join(fields, ","))
 		v.Set("include_fields", "true")
@@ -386,7 +315,7 @@ func WithFields(fields ...string) Option {
 }
 
 // WithoutFields configures a call to exclude the desired fields.
-func WithoutFields(fields ...string) Option {
+func WithoutFields(fields ...string) reqOption {
 	return func(v url.Values) {
 		v.Set("fields", strings.Join(fields, ","))
 		v.Set("include_fields", "false")
@@ -395,21 +324,21 @@ func WithoutFields(fields ...string) Option {
 
 // Page configures a call to receive a specific page, if the results where
 // concatenated.
-func Page(page int) Option {
+func Page(page int) reqOption {
 	return func(v url.Values) {
 		v.Set("page", strconv.FormatInt(int64(page), 10))
 	}
 }
 
 // PerPage configures a call to limit the amount of items in the result.
-func PerPage(items int) Option {
+func PerPage(items int) reqOption {
 	return func(v url.Values) {
 		v.Set("per_page", strconv.FormatInt(int64(items), 10))
 	}
 }
 
 // IncludeTotals configures a call to include totals.
-func IncludeTotals(include bool) Option {
+func IncludeTotals(include bool) reqOption {
 	return func(v url.Values) {
 		v.Set("include_totals", strconv.FormatBool(include))
 	}
@@ -417,7 +346,7 @@ func IncludeTotals(include bool) Option {
 
 // Parameter is a generic configuration to add arbitrary query parameters to
 // calls made to Auth0.
-func Parameter(key, value string) Option {
+func Parameter(key, value string) reqOption {
 	return func(v url.Values) {
 		v.Set(key, value)
 	}

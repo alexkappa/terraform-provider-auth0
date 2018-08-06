@@ -8,7 +8,7 @@ import (
 	"github.com/PuerkitoBio/rehttp"
 )
 
-func RetryClient(c *http.Client) *http.Client {
+func wrapRetry(c *http.Client) *http.Client {
 	if c == nil {
 		c = http.DefaultClient
 	}

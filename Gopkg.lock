@@ -254,7 +254,7 @@
   branch = "master"
   name = "github.com/hashicorp/yamux"
   packages = ["."]
-  revision = "2658be15c5f05e76244154714161f17e3e77de2e"
+  revision = "3520598351bb3500a49ae9563f5539666ae0a27c"
 
 [[projects]]
   name = "github.com/jmespath/go-jmespath"
@@ -352,8 +352,8 @@
 [[projects]]
   name = "github.com/yieldr/go-auth0"
   packages = ["management"]
-  revision = "b4aaab00a952a0bc9f8b0bf69d48d093fab79b7b"
-  version = "v0.1.0"
+  revision = "0b2b30c6c5c42bbd05a32cc23ce1b78d80b3436c"
+  version = "v0.1.1"
 
 [[projects]]
   branch = "master"
@@ -494,6 +494,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "385679b7d821fec121fdfd781f9b4373947c0ee18a48cf1688dbd000ddddc56b"
+  inputs-digest = "769f521a3de17345b4cc013a54b51b7f7a270d0d1f5554aa32469fd7804148bb"
   solver-name = "gps-cdcl"
   solver-version = 1
