@@ -352,8 +352,8 @@
 [[projects]]
   name = "github.com/yieldr/go-auth0"
   packages = ["management"]
-  revision = "0b2b30c6c5c42bbd05a32cc23ce1b78d80b3436c"
-  version = "v0.1.1"
+  revision = "eb3eff6156cf8d7f85f488ce162986524bc00adf"
+  version = "v0.2.1"
 
 [[projects]]
   branch = "master"
@@ -494,6 +494,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "769f521a3de17345b4cc013a54b51b7f7a270d0d1f5554aa32469fd7804148bb"
+  inputs-digest = "aaf6e850012d04e0300322e6d5bff27b4a221c5565ae341d4723f422004b765b"
   solver-name = "gps-cdcl"
   solver-version = 1

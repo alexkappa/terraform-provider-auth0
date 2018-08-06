@@ -77,3 +77,7 @@ func (um *UserManager) List(opts ...reqOption) (us []*User, err error) {
 	err = um.m.get(um.m.uri("users")+um.m.q(opts), &us)
 	return
 }
+
+func (um *UserManager) Search(opts ...reqOption) (us []*User, err error) {
+	return um.List(opts...)
+}

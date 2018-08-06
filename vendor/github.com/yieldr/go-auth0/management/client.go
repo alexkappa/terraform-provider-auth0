@@ -109,8 +109,20 @@ func (cm *ClientManager) Read(id string, opts ...reqOption) (*Client, error) {
 	return c, err
 }
 
+func (cm *ClientManager) List(opts ...reqOption) ([]*Client, error) {
+	var c []*Client
+	err := cm.m.get(cm.m.uri("clients")+cm.m.q(opts), &c)
+	return c, err
+}
+
 func (cm *ClientManager) Update(id string, c *Client) (err error) {
 	return cm.m.patch(cm.m.uri("clients", id), c)
+}
+
+func (cm *ClientManager) RotateSecret(id string) (*Client, error) {
+	c := new(Client)
+	err := cm.m.post(cm.m.uri("clients", id, "rotate-secret"), c)
+	return c, err
 }
 
 func (cm *ClientManager) Delete(id string) (err error) {

@@ -16,6 +16,13 @@ import (
 	"golang.org/x/oauth2"
 )
 
+// Auth embeds a Config and Token structs so it can be used to authenticate our
+// http client.
+type Auth struct {
+	AuthConfig
+	Token
+}
+
 // AuthConfig is the payload used to receive an Auth0 management token. This token
 // is a JWT, it contains specific granted permissions (known as scopes), and it
 // is signed with a application API key and secret for the entire tenant.
@@ -55,13 +62,6 @@ type Token struct {
 	TokenType   string `json:"token_type"`
 }
 
-// Auth embeds a Config and Token structs so it can be used to authenticate our
-// http client.
-type Auth struct {
-	AuthConfig
-	Token
-}
-
 // Management is an Auth0 management client used to interact with the Auth0
 // Management API v2.
 //
@@ -82,6 +82,12 @@ type Management struct {
 
 	// CustomDomain manages Auth0 Custom Domains.
 	CustomDomain *CustomDomainManager
+
+	// Grant manages Auth0 Grants.
+	Grant *GrantManager
+
+	// Log reads Auth0 Logs.
+	Log *LogManager
 
 	// RuleManager manages Auth0 Rules.
 	Rule *RuleManager
@@ -151,12 +157,14 @@ func New(domain, clientID, clientSecret string, options ...apiOption) (*Manageme
 		Expiry:      time.Now().Add(time.Duration(auth.Token.ExpiresIn) * time.Second),
 	})
 
-	m.http = wrapRetry(oauth2.NewClient(context.Background(), ts))
+	m.http = wrapUserAgent(wrapRetry(oauth2.NewClient(context.Background(), ts)))
 
 	m.Client = NewClientManager(m)
 	m.ClientGrant = NewClientGrantManager(m)
 	m.Connection = NewConnectionManager(m)
 	m.CustomDomain = NewCustomDomainManager(m)
+	m.Grant = NewGrantManager(m)
+	m.Log = NewLogManager(m)
 	m.ResourceServer = NewResourceServerManager(m)
 	m.Rule = NewRuleManager(m)
 	m.RuleConfig = NewRuleConfigManager(m)
