@@ -220,24 +220,25 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 
 			if options, ok := v.(map[string]interface{}); ok {
 
-			c.Options = &management.ConnectionOptions{
-        Validation:                   options["validation"].(map[string]interface{}),
-        PasswordPolicy:               options["password_policy"].(string),
-        PasswordHistory:              options["password_history"].(map[string]interface{}),
-        PasswordNoPersonalInfo:       options["password_no_personal_info"].(map[string]interface{}),
-        PasswordDictionary:           options["password_dictionary"].(map[string]interface{}),
-        APIEnableUsers:               options["api_enable_users"].(bool),
-        BasicProfile:                 options["basic_profile"].(bool),
-        ExtAdmin:                     options["ext_admin"].(bool),
-        ExtIsSuspended:               options["ext_is_suspended"].(bool),
-        ExtAgreedTerms:               options["ext_agreed_terms"].(bool),
-        ExtGroups:                    options["ext_groups"].(bool),
-        ExtAssignedPlans:             options["ext_assigned_plans"].(bool),
-        ExtProfile:                   options["ext_profile"].(bool),
-        EnabledDatabaseCustomization: options["enabled_database_customization"].(bool),
-        BruteForceProtection:         options["brute_force_protection"].(bool),
-        ImportMode:                   options["import_mode"].(bool),
-        DisableSignup:                options["disable_signup"].(bool),
+				c.Options = &management.ConnectionOptions{
+					Validation:                   options["validation"].(map[string]interface{}),
+					PasswordPolicy:               options["password_policy"].(string),
+					PasswordHistory:              options["password_history"].(map[string]interface{}),
+					PasswordNoPersonalInfo:       options["password_no_personal_info"].(map[string]interface{}),
+					PasswordDictionary:           options["password_dictionary"].(map[string]interface{}),
+					APIEnableUsers:               options["api_enable_users"].(bool),
+					BasicProfile:                 options["basic_profile"].(bool),
+					ExtAdmin:                     options["ext_admin"].(bool),
+					ExtIsSuspended:               options["ext_is_suspended"].(bool),
+					ExtAgreedTerms:               options["ext_agreed_terms"].(bool),
+					ExtGroups:                    options["ext_groups"].(bool),
+					ExtAssignedPlans:             options["ext_assigned_plans"].(bool),
+					ExtProfile:                   options["ext_profile"].(bool),
+					EnabledDatabaseCustomization: options["enabled_database_customization"].(bool),
+					BruteForceProtection:         options["brute_force_protection"].(bool),
+					ImportMode:                   options["import_mode"].(bool),
+					DisableSignup:                options["disable_signup"].(bool),
+				}
 			}
 		}
 	}
