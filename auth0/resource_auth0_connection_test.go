@@ -45,3 +45,31 @@ resource "auth0_connection" "my_connection" {
 	}
 }
 `
+
+
+func TestAccAdConnection(t *testing.T) {
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccAdConnectionConfig,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.my_ad_connection", "name", "Acceptance-Test-Ad-Connection"),
+					resource.TestCheckResourceAttr("auth0_connection.my_ad_connection", "strategy", "ad"),
+				),
+			},
+		},
+	})
+}
+
+const testAccAdConnectionConfig = `
+provider "auth0" {}
+
+resource "auth0_connection" "my_ad_connection" {
+	name = "Acceptance-Test-Ad-Connection"
+	strategy = "ad"
+}
+`
