@@ -16,4 +16,15 @@ resource "auth0_client" "my_app_client" {
     secret_encoded      = true
     alg                 = "RS256"
   }
+
+  custom_login_page_on = "true"
+
+  addons = {
+    firebase = {
+      client_email = "wer"
+      lifetime_in_seconds = 1
+      private_key = "wer"
+      private_key_id = "qwreerwerwe"
+    }
+  }
 }
