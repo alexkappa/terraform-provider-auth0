@@ -47,6 +47,14 @@ resource "auth0_client" "my_client" {
     	foo = "bar"
     }
   }
+  addons = {
+    firebase = {
+      client_email = "wer"
+      lifetime_in_seconds = 1
+      private_key = "wer"
+      private_key_id = "qwreerwerwe"
+    }
+  }
   mobile = {
     ios = {
       team_id = "9JA89QQLNQ"

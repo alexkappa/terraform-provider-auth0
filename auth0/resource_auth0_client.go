@@ -1,6 +1,8 @@
 package auth0
 
 import (
+	"strconv"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 	auth0 "github.com/yieldr/go-auth0"
@@ -149,7 +151,122 @@ func newClient() *schema.Resource {
 				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 1,
-				Elem:     &schema.Schema{Type: schema.TypeMap},
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"aws": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"azure_blob": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"azure_sb": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"rms": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"mscrm": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"slack": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"sentry": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"box": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"cloudbees": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"concur": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"dropbox": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"echosign": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"egnyte": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"firebase": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"newrelic": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"office365": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"salesforce": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"salesforce_api": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"salesforce_sandbox_api": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"samlp": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"layer": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"sap_api": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"sharepoint": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"springcm": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"wams": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"wsfed": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"zendesk": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"zoom": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+					},
+				},
 			},
 			"token_endpoint_auth_method": {
 				Type:     schema.TypeString,
@@ -335,12 +452,20 @@ func buildClient(d *schema.ResourceData) *management.Client {
 	}
 
 	if v, ok := d.GetOk("addons"); ok {
+		if vL, ok := v.([]interface{}); ok {
 
-		c.Addons = make(map[string]interface{})
+			c.Addons = make(map[string]interface{})
 
-		for _, item := range v.([]interface{}) {
-			for key, val := range item.(map[string]interface{}) {
-				c.Addons[key] = val
+			for _, v := range vL {
+				if addons, ok := v.(map[string]interface{}); ok {
+					for key, val := range addons {
+						if addon, ok := val.(map[string]interface{}); ok {
+							if len(addon) > 0 {
+								c.Addons[key] = buildClientAddon(addon)
+							}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -372,4 +497,22 @@ func buildClient(d *schema.ResourceData) *management.Client {
 	}
 
 	return c
+}
+
+func buildClientAddon(d map[string]interface{}) map[string]interface{} {
+	addon := make(map[string]interface{})
+	for key, value := range d {
+		if s, ok := value.(string); ok {
+			if i, err := strconv.ParseInt(s, 10, 64); err == nil {
+				addon[key] = i
+			} else if f, err := strconv.ParseFloat(s, 64); err == nil {
+				addon[key] = f
+			} else if b, err := strconv.ParseBool(s); err == nil {
+				addon[key] = b
+			} else {
+				addon[key] = s
+			}
+		}
+	}
+	return addon
 }
