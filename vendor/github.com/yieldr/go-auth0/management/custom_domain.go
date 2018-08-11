@@ -1,29 +1,36 @@
 package management
 
+import "encoding/json"
+
 type CustomDomain struct {
 
 	// The id of the custom domain
-	ID string `json:"custom_domain_id,omitempty"`
+	ID *string `json:"custom_domain_id,omitempty"`
 
 	// The custom domain.
-	Domain string `json:"domain,omitempty"`
+	Domain *string `json:"domain,omitempty"`
 
 	// The custom domain provisioning type. Can be either "auth0_managed_certs"
 	// or "self_managed_certs"
-	Type string `json:"type,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	// Primary is true if the domain was marked as "primary", false otherwise.
-	Primary bool `json:"primary,omitempty"`
+	Primary *bool `json:"primary,omitempty"`
 
 	// The custom domain configuration status. Can be any of the following:
 	//
 	// "disabled", "pending", "pending_verification" or "ready"
-	Status string `json:"status,omitempty"`
+	Status *string `json:"status,omitempty"`
 
 	// The custom domain verification method. The only allowed value is "txt".
-	VerificationMethod string `json:"verification_method,omitempty"`
+	VerificationMethod *string `json:"verification_method,omitempty"`
 
 	Verification *CustomDomainVerification `json:"verification,omitempty"`
+}
+
+func (c *CustomDomain) String() string {
+	b, _ := json.MarshalIndent(c, "", "  ")
+	return string(b)
 }
 
 type CustomDomainVerification struct {

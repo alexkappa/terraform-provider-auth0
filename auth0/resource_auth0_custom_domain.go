@@ -3,6 +3,7 @@ package auth0
 import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
+	auth0 "github.com/yieldr/go-auth0"
 	"github.com/yieldr/go-auth0/management"
 )
 
@@ -67,7 +68,7 @@ func createCustomDomain(d *schema.ResourceData, m interface{}) error {
 	if err := api.CustomDomain.Create(c); err != nil {
 		return err
 	}
-	d.SetId(c.ID)
+	d.SetId(auth0.StringValue(c.ID))
 	return readCustomDomain(d, m)
 }
 
@@ -77,7 +78,7 @@ func readCustomDomain(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.SetId(c.ID)
+	d.SetId(auth0.StringValue(c.ID))
 	d.Set("domain", c.Domain)
 	d.Set("type", c.Type)
 	d.Set("primary", c.Primary)
@@ -106,8 +107,8 @@ func deleteCustomDomain(d *schema.ResourceData, m interface{}) error {
 
 func buildCustomDomain(d *schema.ResourceData) *management.CustomDomain {
 	return &management.CustomDomain{
-		Domain:             d.Get("domain").(string),
-		Type:               d.Get("type").(string),
-		VerificationMethod: d.Get("verification_method").(string),
+		Domain:             String(d, "domain"),
+		Type:               String(d, "type"),
+		VerificationMethod: String(d, "verification_method"),
 	}
 }

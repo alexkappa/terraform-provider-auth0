@@ -3,6 +3,7 @@ package auth0
 import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
+	auth0 "github.com/yieldr/go-auth0"
 	"github.com/yieldr/go-auth0/management"
 )
 
@@ -72,14 +73,14 @@ func createEmailTemplate(d *schema.ResourceData, m interface{}) error {
 	// The email template resource doesn't allow deleting templates, so in order
 	// to avoid conflicts, we first attempt to read the template. If it exists
 	// we'll try to update it, if not we'll try to create it.
-	if _, err := api.EmailTemplate.Read(e.Template); err == nil {
+	if _, err := api.EmailTemplate.Read(auth0.StringValue(e.Template)); err == nil {
 
 		// We succeeded in reading the template, this means it was created
 		// previously.
-		if err := api.EmailTemplate.Update(e.Template, e); err != nil {
+		if err := api.EmailTemplate.Update(auth0.StringValue(e.Template), e); err != nil {
 			return err
 		}
-		d.SetId(e.Template)
+		d.SetId(auth0.StringValue(e.Template))
 		return nil
 	}
 
@@ -88,7 +89,7 @@ func createEmailTemplate(d *schema.ResourceData, m interface{}) error {
 	if err := api.EmailTemplate.Create(e); err != nil {
 		return err
 	}
-	d.SetId(e.Template)
+	d.SetId(auth0.StringValue(e.Template))
 
 	return nil
 }
@@ -99,7 +100,7 @@ func readEmailTemplate(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.SetId(e.Template)
+	d.SetId(auth0.StringValue(e.Template))
 	d.Set("template", e.Template)
 	d.Set("body", e.Body)
 	d.Set("from", e.From)
@@ -114,7 +115,7 @@ func readEmailTemplate(d *schema.ResourceData, m interface{}) error {
 func updateEmailTemplate(d *schema.ResourceData, m interface{}) error {
 	e := buildEmailTemplate(d)
 	api := m.(*management.Management)
-	return api.EmailTemplate.Replace(e.Template, e)
+	return api.EmailTemplate.Replace(auth0.StringValue(e.Template), e)
 }
 
 func deleteEmailTemplate(d *schema.ResourceData, m interface{}) error {
@@ -124,13 +125,13 @@ func deleteEmailTemplate(d *schema.ResourceData, m interface{}) error {
 
 func buildEmailTemplate(d *schema.ResourceData) *management.EmailTemplate {
 	return &management.EmailTemplate{
-		Template:              d.Get("template").(string),
-		Body:                  d.Get("body").(string),
-		From:                  d.Get("from").(string),
-		ResultURL:             d.Get("result_url").(string),
-		Subject:               d.Get("subject").(string),
-		Syntax:                d.Get("syntax").(string),
-		URLLifetimeInSecoonds: d.Get("url_lifetime_in_seconds").(int),
-		Enabled:               d.Get("enabled").(bool),
+		Template:              String(d, "template"),
+		Body:                  String(d, "body"),
+		From:                  String(d, "from"),
+		ResultURL:             String(d, "result_url"),
+		Subject:               String(d, "subject"),
+		Syntax:                String(d, "syntax"),
+		URLLifetimeInSecoonds: Int(d, "url_lifetime_in_seconds"),
+		Enabled:               Bool(d, "enabled"),
 	}
 }

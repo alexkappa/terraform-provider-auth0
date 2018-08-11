@@ -2,6 +2,7 @@ package auth0
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
+	auth0 "github.com/yieldr/go-auth0"
 	"github.com/yieldr/go-auth0/management"
 )
 
@@ -32,7 +33,7 @@ func newEmail() *schema.Resource {
 			"credentials": {
 				Type:     schema.TypeList,
 				MaxItems: 1,
-				Optional: true,
+				Required: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"api_user": {
@@ -84,8 +85,8 @@ func createEmail(d *schema.ResourceData, m interface{}) error {
 	if err := api.Email.Create(e); err != nil {
 		return err
 	}
-	d.SetId(e.Name)
-	return nil
+	d.SetId(auth0.StringValue(e.Name))
+	return readEmail(d, m)
 }
 
 func readEmail(d *schema.ResourceData, m interface{}) error {
@@ -94,25 +95,23 @@ func readEmail(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.SetId(e.Name)
+	d.SetId(auth0.StringValue(e.Name))
 	d.Set("name", e.Name)
 	d.Set("enabled", e.Enabled)
 	d.Set("default_from_address", e.DefaultFromAddress)
 
 	if credentials := e.Credentials; credentials != nil {
-		d.Set("credentials", []map[string]interface{}{
-			{
-				"api_user":          e.Credentials.APIUser,
-				"api_key":           e.Credentials.APIKey,
-				"access_key_id":     e.Credentials.AccessKeyID,
-				"secret_access_key": e.Credentials.SecretAccessKey,
-				"region":            e.Credentials.Region,
-				"smtp_host":         e.Credentials.SMTPHost,
-				"smtp_port":         e.Credentials.SMTPPort,
-				"smtp_user":         e.Credentials.SMTPUser,
-				"smtp_pass":         e.Credentials.SMTPPass,
-			},
-		})
+		credentialsMap := make(map[string]interface{})
+		credentialsMap["api_user"] = credentials.APIUser
+		credentialsMap["api_key"] = credentials.APIKey
+		credentialsMap["access_key_id"] = credentials.AccessKeyID
+		credentialsMap["secret_access_key"] = credentials.SecretAccessKey
+		credentialsMap["region"] = credentials.Region
+		credentialsMap["smtp_host"] = credentials.SMTPHost
+		credentialsMap["smtp_port"] = credentials.SMTPPort
+		credentialsMap["smtp_user"] = credentials.SMTPUser
+		credentialsMap["smtp_pass"] = credentials.SMTPPass
+		d.Set("credentials", []map[string]interface{}{credentialsMap})
 	}
 
 	return nil
@@ -121,7 +120,11 @@ func readEmail(d *schema.ResourceData, m interface{}) error {
 func updateEmail(d *schema.ResourceData, m interface{}) error {
 	e := buildEmail(d)
 	api := m.(*management.Management)
-	return api.Email.Update(e)
+	err := api.Email.Update(e)
+	if err != nil {
+		return err
+	}
+	return readEmail(d, m)
 }
 
 func deleteEmail(d *schema.ResourceData, m interface{}) error {
@@ -130,33 +133,24 @@ func deleteEmail(d *schema.ResourceData, m interface{}) error {
 }
 
 func buildEmail(d *schema.ResourceData) *management.Email {
-
-	var credentials *management.EmailCredentials
-
-	if v, ok := d.GetOk("credentials"); ok {
-
-		for _, item := range v.([]interface{}) {
-
-			item := item.(map[string]interface{})
-
-			credentials = &management.EmailCredentials{
-				APIUser:         item["api_user"].(string),
-				APIKey:          item["api_key"].(string),
-				AccessKeyID:     item["access_key_id"].(string),
-				SecretAccessKey: item["secret_access_key"].(string),
-				Region:          item["region"].(string),
-				SMTPHost:        item["smtp_host"].(string),
-				SMTPPort:        item["smtp_port"].(int),
-				SMTPUser:        item["smtp_user"].(string),
-				SMTPPass:        item["smtp_pass"].(string),
-			}
-		}
-	}
-
 	return &management.Email{
-		Name:               d.Get("name").(string),
-		Enabled:            d.Get("enabled").(bool),
-		DefaultFromAddress: d.Get("default_from_address").(string),
-		Credentials:        credentials,
+		Name:               String(d, "name"),
+		Enabled:            Bool(d, "enabled"),
+		DefaultFromAddress: String(d, "default_from_address"),
+		Credentials:        buildEmailCredentials(d.Get("credentials").([]interface{})[0].(map[string]interface{})),
+	}
+}
+
+func buildEmailCredentials(m map[string]interface{}) *management.EmailCredentials {
+	return &management.EmailCredentials{
+		APIUser:         MapString(m, "api_user"),
+		APIKey:          MapString(m, "api_key"),
+		AccessKeyID:     MapString(m, "access_key_id"),
+		SecretAccessKey: MapString(m, "secret_access_key"),
+		Region:          MapString(m, "region"),
+		SMTPHost:        MapString(m, "smtp_host"),
+		SMTPPort:        MapInt(m, "smtp_port"),
+		SMTPUser:        MapString(m, "smtp_user"),
+		SMTPPass:        MapString(m, "smtp_pass"),
 	}
 }

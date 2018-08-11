@@ -2,6 +2,7 @@ package auth0
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
+	auth0 "github.com/yieldr/go-auth0"
 	"github.com/yieldr/go-auth0/management"
 )
 
@@ -40,7 +41,7 @@ func createClientGrant(d *schema.ResourceData, m interface{}) error {
 	if err := api.ClientGrant.Create(g); err != nil {
 		return err
 	}
-	d.SetId(g.ID)
+	d.SetId(auth0.StringValue(g.ID))
 	return readClientGrant(d, m)
 }
 
@@ -50,7 +51,7 @@ func readClientGrant(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.SetId(g.ID)
+	d.SetId(auth0.StringValue(g.ID))
 	d.Set("client_id", g.ClientID)
 	d.Set("audience", g.Audience)
 	d.Set("scope", g.Scope)
@@ -59,8 +60,8 @@ func readClientGrant(d *schema.ResourceData, m interface{}) error {
 
 func updateClientGrant(d *schema.ResourceData, m interface{}) error {
 	g := buildClientGrant(d)
-	g.Audience = ""
-	g.ClientID = ""
+	g.Audience = nil
+	g.ClientID = nil
 	api := m.(*management.Management)
 	err := api.ClientGrant.Update(d.Id(), g)
 	if err != nil {
@@ -76,9 +77,9 @@ func deleteClientGrant(d *schema.ResourceData, m interface{}) error {
 
 func buildClientGrant(d *schema.ResourceData) *management.ClientGrant {
 	g := &management.ClientGrant{
-		ClientID: d.Get("client_id").(string),
-		Audience: d.Get("audience").(string),
-		Scope:    d.Get("scope").([]interface{}),
+		ClientID: String(d, "client_id"),
+		Audience: String(d, "audience"),
+		Scope:    Slice(d, "scope"),
 	}
 
 	return g

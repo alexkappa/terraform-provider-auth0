@@ -2,6 +2,7 @@ package auth0
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
+	auth0 "github.com/yieldr/go-auth0"
 	"github.com/yieldr/go-auth0/management"
 )
 
@@ -83,7 +84,7 @@ func createResourceServer(d *schema.ResourceData, m interface{}) error {
 	if err := api.ResourceServer.Create(s); err != nil {
 		return err
 	}
-	d.SetId(s.ID)
+	d.SetId(auth0.StringValue(s.ID))
 	return readResourceServer(d, m)
 }
 
@@ -93,7 +94,7 @@ func readResourceServer(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.SetId(s.ID)
+	d.SetId(auth0.StringValue(s.ID))
 	d.Set("name", s.Name)
 	d.Set("identifier", s.Identifier)
 	d.Set("scopes", func() (m []map[string]interface{}) {
@@ -117,7 +118,7 @@ func readResourceServer(d *schema.ResourceData, m interface{}) error {
 
 func updateResourceServer(d *schema.ResourceData, m interface{}) error {
 	s := buildResourceServer(d)
-	s.Identifier = ""
+	s.Identifier = nil
 	api := m.(*management.Management)
 	err := api.ResourceServer.Update(d.Id(), s)
 	if err != nil {
@@ -134,15 +135,15 @@ func deleteResourceServer(d *schema.ResourceData, m interface{}) error {
 func buildResourceServer(d *schema.ResourceData) *management.ResourceServer {
 
 	s := &management.ResourceServer{
-		Name:                                      d.Get("name").(string),
-		Identifier:                                d.Get("identifier").(string),
-		SigningAlgorithm:                          d.Get("signing_alg").(string),
-		SigningSecret:                             d.Get("signing_secret").(string),
-		AllowOfflineAccess:                        d.Get("allow_offline_access").(bool),
-		TokenLifetime:                             d.Get("token_lifetime").(int),
-		SkipConsentForVerifiableFirstPartyClients: d.Get("skip_consent_for_verifiable_first_party_clients").(bool),
-		VerificationLocation:                      d.Get("verification_location").(string),
-		Options:                                   d.Get("options").(map[string]interface{}),
+		Name:                                      String(d, "name"),
+		Identifier:                                String(d, "identifier"),
+		SigningAlgorithm:                          String(d, "signing_alg"),
+		SigningSecret:                             String(d, "signing_secret"),
+		AllowOfflineAccess:                        Bool(d, "allow_offline_access"),
+		TokenLifetime:                             Int(d, "token_lifetime"),
+		SkipConsentForVerifiableFirstPartyClients: Bool(d, "skip_consent_for_verifiable_first_party_clients"),
+		VerificationLocation:                      String(d, "verification_location"),
+		Options:                                   Map(d, "options"),
 	}
 
 	if v, ok := d.GetOk("scopes"); ok {
@@ -152,8 +153,8 @@ func buildResourceServer(d *schema.ResourceData) *management.ResourceServer {
 			scopes := vI.(map[string]interface{})
 
 			s.Scopes = append(s.Scopes, &management.ResourceServerScope{
-				Value:       scopes["value"].(string),
-				Description: scopes["description"].(string),
+				Value:       MapString(scopes, "value"),
+				Description: MapString(scopes, "description"),
 			})
 		}
 	}

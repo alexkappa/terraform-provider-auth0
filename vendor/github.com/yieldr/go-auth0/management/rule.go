@@ -1,24 +1,31 @@
 package management
 
+import "encoding/json"
+
 type Rule struct {
 
 	// The rule's identifier.
-	ID string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 
 	// The name of the rule. Can only contain alphanumeric characters, spaces
 	// and '-'. Can neither start nor end with '-' or spaces.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 
 	// A script that contains the rule's code.
-	Script string `json:"script,omitempty"`
+	Script *string `json:"script,omitempty"`
 
 	// The rule's order in relation to other rules. A rule with a lower order
 	// than another rule executes first. If no order is provided it will
 	// automatically be one greater than the current maximum.
-	Order int `json:"order,omitempty"`
+	Order *int `json:"order,omitempty"`
 
 	// Enabled should be set to true if the rule is enabled, false otherwise.
-	Enabled bool `json:"enabled,omitempty"`
+	Enabled *bool `json:"enabled,omitempty"`
+}
+
+func (r *Rule) String() string {
+	b, _ := json.MarshalIndent(r, "", "  ")
+	return string(b)
 }
 
 type RuleManager struct {

@@ -1,13 +1,15 @@
 package management
 
+import "encoding/json"
+
 type Connection struct {
 	// A generated string identifying the connection.
-	ID string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 
 	// The name of the connection. Must start and end with an alphanumeric
 	// character and can only contain alphanumeric characters and '-'. Max
 	// length 128.
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 
 	// The identity provider identifier for the connection. Can be any of the
 	// following:
@@ -23,7 +25,7 @@ type Connection struct {
 	// "thecity-sandbox", "thecity", "thirtysevensignals", "twitter", "untappd",
 	//  "vkontakte", "waad", "weibo", "windowslive", "wordpress", "yahoo",
 	// "yammer" or "yandex".
-	Strategy string `json:"strategy,omitempty"`
+	Strategy *string `json:"strategy,omitempty"`
 
 	// Options for validation.
 	Options *ConnectionOptions `json:"options,omitempty"`
@@ -38,7 +40,12 @@ type Connection struct {
 	// connection name will be added as realm.
 	Realms []interface{} `json:"realms,omitempty"`
 
-	Metadata interface{} `json:"metadata,omitempty"`
+	Metadata *interface{} `json:"metadata,omitempty"`
+}
+
+func (c *Connection) String() string {
+	b, _ := json.MarshalIndent(c, "", "  ")
+	return string(b)
 }
 
 // ConnectionOptions general options
@@ -48,7 +55,7 @@ type ConnectionOptions struct {
 
 	// Password strength level, can be one of:
 	// "none", "low", "fair", "good", "excellent" or null.
-	PasswordPolicy string `json:"passwordPolicy,omitempty"`
+	PasswordPolicy *string `json:"passwordPolicy,omitempty"`
 
 	// Options for password history policy.
 	PasswordHistory map[string]interface{} `json:"password_history,omitempty"`
@@ -59,31 +66,37 @@ type ConnectionOptions struct {
 	// Options for password dictionary policy.
 	PasswordDictionary map[string]interface{} `json:"password_dictionary,omitempty"`
 
-	APIEnableUsers               bool `json:"api_enable_users,omitempty"`
-	BasicProfile                 bool `json:"basic_profile,omitempty"`
-	ExtAdmin                     bool `json:"ext_admin,omitempty"`
-	ExtIsSuspended               bool `json:"ext_is_suspended,omitempty"`
-	ExtAgreedTerms               bool `json:"ext_agreed_terms,omitempty"`
-	ExtGroups                    bool `json:"ext_groups,omitempty"`
-	ExtAssignedPlans             bool `json:"ext_assigned_plans,omitempty"`
-	ExtProfile                   bool `json:"ext_profile,omitempty"`
-	EnabledDatabaseCustomization bool `json:"enabledDatabaseCustomization,omitempty"`
-	BruteForceProtection         bool `json:"brute_force_protection,omitempty"`
-	ImportMode                   bool `json:"import_mode,omitempty"`
-	DisableSignup                bool `json:"disable_signup,omitempty"`
+	APIEnableUsers               *bool `json:"api_enable_users,omitempty"`
+	BasicProfile                 *bool `json:"basic_profile,omitempty"`
+	ExtAdmin                     *bool `json:"ext_admin,omitempty"`
+	ExtIsSuspended               *bool `json:"ext_is_suspended,omitempty"`
+	ExtAgreedTerms               *bool `json:"ext_agreed_terms,omitempty"`
+	ExtGroups                    *bool `json:"ext_groups,omitempty"`
+	ExtAssignedPlans             *bool `json:"ext_assigned_plans,omitempty"`
+	ExtProfile                   *bool `json:"ext_profile,omitempty"`
+	EnabledDatabaseCustomization *bool `json:"enabledDatabaseCustomization,omitempty"`
+	BruteForceProtection         *bool `json:"brute_force_protection,omitempty"`
+	ImportMode                   *bool `json:"import_mode,omitempty"`
+	DisableSignup                *bool `json:"disable_signup,omitempty"`
 
 	// Options for adding parameters in the request to the upstream IdP.
-	UpstreamParams interface{} `json:"upstream_params,omitempty"`
+	UpstreamParams *interface{} `json:"upstream_params,omitempty"`
 
-	ClientID           string        `json:"client_id,omitempty"`
-	ClientSecret       string        `json:"client_secret,omitempty"`
-	TenantDomain       string        `json:"tenant_domain,omitempty"`
+	ClientID           *string       `json:"client_id,omitempty"`
+	ClientSecret       *string       `json:"client_secret,omitempty"`
+	TenantDomain       *string       `json:"tenant_domain,omitempty"`
 	DomainAliases      []interface{} `json:"domain_aliases,omitempty"`
-	UseWsfed           bool          `json:"use_wsfed,omitempty"`
-	WaadProtocol       string        `json:"waad_protocol,omitempty"`
-	WaadCommonEndpoint bool          `json:"waad_common_endpoint,omitempty"`
-	AppID              string        `json:"app_id,omitempty"`
-	AppDomain          string        `json:"app_domain,omitempty"`
+	UseWsfed           *bool         `json:"use_wsfed,omitempty"`
+	WaadProtocol       *string       `json:"waad_protocol,omitempty"`
+	WaadCommonEndpoint *bool         `json:"waad_common_endpoint,omitempty"`
+	AppID              *string       `json:"app_id,omitempty"`
+	AppDomain          *string       `json:"app_domain,omitempty"`
+
+	// Scripts for the connction
+	// Allowed keys are: "get_user", "login", "create", "verify", "change_password" or "delete".
+	CustomScripts map[string]interface{} `json:"custom_scripts,omitempty"`
+	// configuration variables that can be used in custom scripts
+	Configuration map[string]interface{} `json:"configuration,omitempty"`
 }
 
 type ConnectionManager struct {
