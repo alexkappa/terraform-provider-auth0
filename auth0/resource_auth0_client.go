@@ -227,8 +227,134 @@ func newClient() *schema.Resource {
 							Optional: true,
 						},
 						"samlp": {
-							Type:     schema.TypeMap,
+							Type:     schema.TypeList,
+							MaxItems: 1,
 							Optional: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"audience": {
+										Type: schema.TypeString,
+										Optional: true,
+									},
+									"recipient": {
+										Type: schema.TypeString,
+										Optional: true,
+									},
+									"create_upn_claim": {
+										Type: schema.TypeBool,
+										Optional: true,
+									},
+									"passthrough_claims_with_no_mapping": {
+										Type: schema.TypeBool,
+										Optional: true,
+									},
+									"map_unknown_claims_as_is": {
+										Type: schema.TypeBool,
+										Optional: true,
+									},
+									"map_identities": {
+										Type: schema.TypeBool,
+										Optional: true,
+									},
+									"signature_algorithm": {
+										Type: schema.TypeString,
+										Optional: true,
+									},
+									"digest_algorithm": {
+										Type: schema.TypeString,
+										Optional: true,
+									},
+									"destination": {
+										Type: schema.TypeString,
+										Optional: true,
+									},
+									"lifetime_in_seconds": {
+										Type: schema.TypeInt,
+										Optional: true,
+									},
+									"sign_response": {
+										Type: schema.TypeBool,
+										Optional: true,
+									},
+									"typed_attributes": {
+										Type: schema.TypeBool,
+										Optional: true,
+									},
+									"include_attribute_name_format": {
+										Type: schema.TypeBool,
+										Optional: true,
+									},
+									"name_identifier_format": {
+										Type: schema.TypeString,
+										Optional: true,
+									},
+									"authn_context_class_ref": {
+										Type: schema.TypeString,
+										Optional: true,
+									},
+									"binding": {
+										Type: schema.TypeString,
+										Optional: true,
+									},
+									"mappings": {
+										Type: schema.TypeMap,
+										Optional: true,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"user_id": {
+													Type: schema.TypeString,
+													Optional: true,
+												},
+												"email": {
+													Type: schema.TypeString,
+													Optional: true,
+												},
+												"name": {
+													Type: schema.TypeString,
+													Optional: true,
+												},
+												"given_name": {
+													Type: schema.TypeString,
+													Optional: true,
+												},
+												"family_name": {
+													Type: schema.TypeString,
+													Optional: true,
+												},
+												"upn": {
+													Type: schema.TypeString,
+													Optional: true,
+												},
+												"groups": {
+													Type: schema.TypeString,
+													Optional: true,
+												},
+											},
+										},
+									},
+									"logout": {
+										Type: schema.TypeMap,
+										Optional: true,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"callback": {
+													Type: schema.TypeString,
+													Optional: true,
+												},
+												"slo_enabled": {
+													Type: schema.TypeBool,
+													Optional: true,
+												},
+											},
+										},
+									},
+									"name_identifier_probes": {
+										Type:     schema.TypeList,
+										Elem:     &schema.Schema{Type: schema.TypeString},
+										Optional: true,
+									},
+								},
+							},
 						},
 						"layer": {
 							Type:     schema.TypeMap,
@@ -464,7 +590,9 @@ func buildClient(d *schema.ResourceData) *management.Client {
 			for _, v := range vL {
 				if addons, ok := v.(map[string]interface{}); ok {
 					for key, val := range addons {
-						if addon, ok := val.(map[string]interface{}); ok {
+						if key == "samlp" {
+							// need special processing for samlp addon
+						} else if addon, ok := val.(map[string]interface{}); ok {
 							if len(addon) > 0 {
 								c.Addons[key] = buildClientAddon(addon)
 							}
