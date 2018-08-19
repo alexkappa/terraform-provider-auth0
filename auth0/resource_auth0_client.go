@@ -65,7 +65,7 @@ func newClient() *schema.Resource {
 			"grant_types": {
 				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},
-				Computed:  true,
+				Computed: true,
 				Optional: true,
 			},
 			"allowed_origins": {
@@ -233,7 +233,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("app_type", c.AppType)
 	d.Set("logo_uri", c.LogoURI)
 	d.Set("is_first_party", c.IsFirstParty)
-	d.Set("oidc_compliant", c.OIDCConformant)
+	d.Set("oidc_conformant", c.OIDCConformant)
 	d.Set("callbacks", c.Callbacks)
 	d.Set("allowed_logout_urls", c.AllowedLogoutURLs)
 	d.Set("allowed_origins", c.AllowedOrigins)
