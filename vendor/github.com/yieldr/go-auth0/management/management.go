@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -66,7 +67,6 @@ type Token struct {
 // Management API v2.
 //
 type Management struct {
-
 	// Client manages Auth0 Client (also known as Application) resources.
 	Client *ClientManager
 
@@ -262,7 +262,7 @@ func (m *Management) delete(uri string) error {
 func (m *Management) dump(req *http.Request, res *http.Response) {
 	b1, _ := httputil.DumpRequest(req, true)
 	b2, _ := httputil.DumpResponse(res, true)
-	fmt.Printf("%s\n%s\b\n", b1, b2)
+	log.Printf("%s\n%s\b\n", b1, b2)
 }
 
 type apiOption func(*Management)
