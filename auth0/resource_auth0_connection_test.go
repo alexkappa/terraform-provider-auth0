@@ -24,6 +24,7 @@ func TestAccConnection(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.brute_force_protection", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.import_mode", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.disable_signup", "true"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.requires_username", "true"),
 				),
 			},
 		},
@@ -42,6 +43,7 @@ resource "auth0_connection" "my_connection" {
 		brute_force_protection = true
 		import_mode = true
 		disable_signup = true
+		requires_username = true
 	}
 }
 `
