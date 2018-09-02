@@ -6,7 +6,7 @@ import (
 )
 
 func String(d *schema.ResourceData, key string) (s *string) {
-	v, ok := d.GetOk(key)
+	v, ok := d.GetOkExists(key)
 	if ok {
 		s = auth0.String(v.(string))
 	}
@@ -22,7 +22,7 @@ func MapString(m map[string]interface{}, key string) (s *string) {
 }
 
 func Int(d *schema.ResourceData, key string) (i *int) {
-	v, ok := d.GetOk(key)
+	v, ok := d.GetOkExists(key)
 	if ok {
 		i = auth0.Int(v.(int))
 	}
@@ -38,7 +38,7 @@ func MapInt(m map[string]interface{}, key string) (i *int) {
 }
 
 func Bool(d *schema.ResourceData, key string) (b *bool) {
-	v, ok := d.GetOk(key)
+	v, ok := d.GetOkExists(key)
 	if ok {
 		b = auth0.Bool(v.(bool))
 	}
@@ -54,7 +54,7 @@ func MapBool(m map[string]interface{}, key string) (b *bool) {
 }
 
 func Slice(d *schema.ResourceData, key string) (s []interface{}) {
-	v, ok := d.GetOk(key)
+	v, ok := d.GetOkExists(key)
 	if ok {
 		s = v.([]interface{})
 	}
@@ -62,7 +62,7 @@ func Slice(d *schema.ResourceData, key string) (s []interface{}) {
 }
 
 func Map(d *schema.ResourceData, key string) (m map[string]interface{}) {
-	v, ok := d.GetOk(key)
+	v, ok := d.GetOkExists(key)
 	if ok {
 		m = v.(map[string]interface{})
 	}

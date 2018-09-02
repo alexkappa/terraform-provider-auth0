@@ -82,6 +82,7 @@ func newClient() *schema.Resource {
 				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 1,
+				MinItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"lifetime_in_seconds": {
@@ -129,6 +130,7 @@ func newClient() *schema.Resource {
 			"custom_login_page_on": {
 				Type:     schema.TypeBool,
 				Optional: true,
+				Computed: true,
 			},
 			"custom_login_page": {
 				Type:     schema.TypeString,
@@ -143,8 +145,9 @@ func newClient() *schema.Resource {
 				Optional: true,
 			},
 			"addons": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
+				MaxItems: 1,
 				Elem:     &schema.Schema{Type: schema.TypeMap},
 			},
 			"token_endpoint_auth_method": {
@@ -216,7 +219,7 @@ func createClient(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(auth0.StringValue(c.ClientID))
-	return readClient(d, m)
+	return nil
 }
 
 func readClient(d *schema.ResourceData, m interface{}) error {
@@ -258,21 +261,10 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 		})
 	}
 
-	if c.EncryptionKey != nil {
-		d.Set("encryption_key", c.EncryptionKey)
-	}
-
-	if c.Addons != nil {
-		d.Set("addons", c.Addons)
-	}
-
-	if c.ClientMetadata != nil {
-		d.Set("client_metadata", c.ClientMetadata)
-	}
-
-	if c.Mobile != nil {
-		d.Set("mobile", c.Mobile)
-	}
+	d.Set("encryption_key", c.EncryptionKey)
+	d.Set("addons", c.Addons)
+	d.Set("client_metadata", c.ClientMetadata)
+	d.Set("mobile", c.Mobile)
 
 	return nil
 }
@@ -333,7 +325,7 @@ func buildClient(d *schema.ResourceData) *management.Client {
 	if v, ok := d.GetOk("encryption_key"); ok {
 		c.EncryptionKey = make(map[string]string)
 
-		for _, item := range v.([]interface{})[0].(map[string]interface{}) {
+		for _, item := range v.([]interface{}) {
 			for key, val := range item.(map[string]string) {
 				c.EncryptionKey[key] = val
 			}
@@ -344,7 +336,7 @@ func buildClient(d *schema.ResourceData) *management.Client {
 
 		c.Addons = make(map[string]interface{})
 
-		for _, item := range v.(*schema.Set).List() {
+		for _, item := range v.([]interface{}) {
 			for key, val := range item.(map[string]interface{}) {
 				c.Addons[key] = val
 			}
