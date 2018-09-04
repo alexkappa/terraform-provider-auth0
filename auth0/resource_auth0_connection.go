@@ -141,6 +141,12 @@ func newConnection() *schema.Resource {
 							Type:     schema.TypeMap,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 							Optional: true,
+							DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+								if old != "" {
+									return true
+								}
+								return new == old
+							},
 						},
 					},
 				},
