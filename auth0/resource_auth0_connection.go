@@ -132,6 +132,22 @@ func newConnection() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},
+						"custom_scripts": {
+							Type:     schema.TypeMap,
+							Elem:     &schema.Schema{Type: schema.TypeString},
+							Optional: true,
+						},
+						"configuration": {
+							Type:     schema.TypeMap,
+							Elem:     &schema.Schema{Type: schema.TypeString},
+							Optional: true,
+							DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+								if old != "" {
+									return true
+								}
+								return new == old
+							},
+						},
 					},
 				},
 			},
@@ -189,6 +205,8 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 			"import_mode":                    c.Options.ImportMode,
 			"disable_signup":                 c.Options.DisableSignup,
 			"requires_username":              c.Options.RequiresUsername,
+			"custom_scripts":                 c.Options.CustomScripts,
+			"configuration":                  c.Options.Configuration,
 		},
 	})
 
@@ -252,6 +270,8 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 					ImportMode:                   options["import_mode"].(bool),
 					DisableSignup:                options["disable_signup"].(bool),
 					RequiresUsername:             options["requires_username"].(bool),
+					CustomScripts:                options["custom_scripts"].(map[string]interface{}),
+					Configuration:                options["configuration"].(map[string]interface{}),
 				}
 			}
 		}
