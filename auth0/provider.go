@@ -1,6 +1,8 @@
 package auth0
 
 import (
+	"os"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/yieldr/go-auth0/management"
 )
@@ -23,6 +25,18 @@ func Provider() *schema.Provider {
 				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc("AUTH0_CLIENT_SECRET", nil),
 			},
+			"debug": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				DefaultFunc: func() (interface{}, error) {
+					v := os.Getenv("AUTH0_DEBUG")
+					if v == "" {
+						return false, nil
+					}
+
+					return v == "1" || v == "true" || v == "on", nil
+				},
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"auth0_client":          newClient(),
@@ -44,6 +58,7 @@ func configure(data *schema.ResourceData) (interface{}, error) {
 	domain := data.Get("domain").(string)
 	id := data.Get("client_id").(string)
 	secret := data.Get("client_secret").(string)
+	debug := data.Get("debug").(bool)
 
-	return management.New(domain, id, secret)
+	return management.New(domain, id, secret, management.WithDebug(debug))
 }

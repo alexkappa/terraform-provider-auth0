@@ -47,6 +47,7 @@ func newClient() *schema.Resource {
 			"is_first_party": {
 				Type:     schema.TypeBool,
 				Optional: true,
+				Computed: true,
 			},
 			"oidc_conformant": {
 				Type:     schema.TypeBool,
@@ -219,7 +220,7 @@ func createClient(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(auth0.StringValue(c.ClientID))
-	return nil
+	return readClient(d, m)
 }
 
 func readClient(d *schema.ResourceData, m interface{}) error {
