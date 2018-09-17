@@ -128,6 +128,10 @@ func newConnection() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},
+						"requires_username": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
 					},
 				},
 			},
@@ -184,6 +188,7 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 			"brute_force_protection":         c.Options.BruteForceProtection,
 			"import_mode":                    c.Options.ImportMode,
 			"disable_signup":                 c.Options.DisableSignup,
+			"requires_username":              c.Options.RequiresUsername,
 		},
 	})
 
@@ -246,6 +251,7 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 					BruteForceProtection:         auth0.Bool(options["brute_force_protection"].(bool)),
 					ImportMode:                   auth0.Bool(options["import_mode"].(bool)),
 					DisableSignup:                auth0.Bool(options["disable_signup"].(bool)),
+					RequiresUsername:             auth0.Bool(options["requires_username"].(bool)),
 				}
 			}
 		}

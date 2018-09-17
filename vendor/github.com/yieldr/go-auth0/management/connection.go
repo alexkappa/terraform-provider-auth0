@@ -78,6 +78,7 @@ type ConnectionOptions struct {
 	BruteForceProtection         *bool `json:"brute_force_protection,omitempty"`
 	ImportMode                   *bool `json:"import_mode,omitempty"`
 	DisableSignup                *bool `json:"disable_signup,omitempty"`
+	RequiresUsername             *bool `json:"requires_username,omitempty"`
 
 	// Options for adding parameters in the request to the upstream IdP.
 	UpstreamParams *interface{} `json:"upstream_params,omitempty"`
