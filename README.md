@@ -35,7 +35,7 @@ To use the provider define the `auth0` provider in your `*.tf` file.
 
 ```
 provider "auth0" {
-  "domain" = "<doman>"
+  "domain" = "<domain>"
   "client_id" = "<client-id>"
   "client_secret" = "<client-secret>"
 }

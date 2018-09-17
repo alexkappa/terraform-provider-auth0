@@ -9,6 +9,8 @@ import (
 	"github.com/yieldr/go-auth0/management"
 )
 
+var ruleNameRegexp = regexp.MustCompile("^[^\\s-][\\w -]+[^\\s-]$")
+
 func newRule() *schema.Resource {
 	return &schema.Resource{
 
@@ -25,7 +27,7 @@ func newRule() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				ValidateFunc: validation.StringMatch(
-					regexp.MustCompile("^[^\\s-][\\w-]+[^\\s-]$"),
+					ruleNameRegexp,
 					"Can only contain alphanumeric characters, spaces and '-'. "+
 						"Can neither start nor end with '-' or spaces."),
 			},

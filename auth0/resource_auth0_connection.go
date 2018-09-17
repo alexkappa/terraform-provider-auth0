@@ -239,6 +239,7 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 					PasswordHistory:              options["password_history"].(map[string]interface{}),
 					PasswordNoPersonalInfo:       options["password_no_personal_info"].(map[string]interface{}),
 					PasswordDictionary:           options["password_dictionary"].(map[string]interface{}),
+
 					APIEnableUsers:               auth0.Bool(options["api_enable_users"].(bool)),
 					BasicProfile:                 auth0.Bool(options["basic_profile"].(bool)),
 					ExtAdmin:                     auth0.Bool(options["ext_admin"].(bool)),
