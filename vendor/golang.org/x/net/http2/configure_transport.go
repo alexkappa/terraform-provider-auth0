@@ -32,7 +32,7 @@ func configureTransport(t1 *http.Transport) (*Transport, error) {
 		t1.TLSClientConfig.NextProtos = append(t1.TLSClientConfig.NextProtos, "http/1.1")
 	}
 	upgradeFn := func(authority string, c *tls.Conn) http.RoundTripper {
-		addr := authorityAddr("https", authority)
+		addr := authorityAddr(authority)
 		if used, err := connPool.addConnIfNeeded(addr, t2, c); err != nil {
 			go c.Close()
 			return erringRoundTripper{err}
@@ -56,8 +56,8 @@ func configureTransport(t1 *http.Transport) (*Transport, error) {
 }
 
 // registerHTTPSProtocol calls Transport.RegisterProtocol but
-// converting panics into errors.
-func registerHTTPSProtocol(t *http.Transport, rt noDialH2RoundTripper) (err error) {
+// convering panics into errors.
+func registerHTTPSProtocol(t *http.Transport, rt http.RoundTripper) (err error) {
 	defer func() {
 		if e := recover(); e != nil {
 			err = fmt.Errorf("%v", e)
@@ -67,15 +67,22 @@ func registerHTTPSProtocol(t *http.Transport, rt noDialH2RoundTripper) (err erro
 	return nil
 }
 
+// noDialClientConnPool is an implementation of http2.ClientConnPool
+// which never dials.  We let the HTTP/1.1 client dial and use its TLS
+// connection instead.
+type noDialClientConnPool struct{ *clientConnPool }
+
+func (p noDialClientConnPool) GetClientConn(req *http.Request, addr string) (*ClientConn, error) {
+	return p.getClientConn(req, addr, noDialOnMiss)
+}
+
 // noDialH2RoundTripper is a RoundTripper which only tries to complete the request
 // if there's already has a cached connection to the host.
-// (The field is exported so it can be accessed via reflect from net/http; tested
-// by TestNoDialH2RoundTripperType)
-type noDialH2RoundTripper struct{ *Transport }
+type noDialH2RoundTripper struct{ t *Transport }
 
 func (rt noDialH2RoundTripper) RoundTrip(req *http.Request) (*http.Response, error) {
-	res, err := rt.Transport.RoundTrip(req)
-	if isNoCachedConnError(err) {
+	res, err := rt.t.RoundTrip(req)
+	if err == ErrNoCachedConn {
 		return nil, http.ErrSkipAltProtocol
 	}
 	return res, err

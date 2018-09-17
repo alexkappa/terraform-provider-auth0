@@ -393,21 +393,20 @@
   revision = "0e37d006457bf46f9e6692014ba72ef82c33022c"
 
 [[projects]]
-  branch = "master"
+  branch = "release-branch.go1.6"
   name = "golang.org/x/net"
   packages = [
     "context",
     "context/ctxhttp",
     "html",
     "html/atom",
-    "http/httpguts",
     "http2",
     "http2/hpack",
     "idna",
     "internal/timeseries",
     "trace"
   ]
-  revision = "26e67e76b6c3f6ce91f7c52def5af501b4e0f3a2"
+  revision = "62685c2d7ca23c807425dca88b11a3e2323dab41"
 
 [[projects]]
   branch = "master"
@@ -428,20 +427,12 @@
 [[projects]]
   name = "golang.org/x/text"
   packages = [
-    "collate",
-    "collate/build",
-    "internal/colltab",
     "internal/gen",
-    "internal/tag",
     "internal/triegen",
     "internal/ucd",
-    "language",
-    "secure/bidirule",
     "transform",
-    "unicode/bidi",
     "unicode/cldr",
-    "unicode/norm",
-    "unicode/rangetable"
+    "unicode/norm"
   ]
   revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
   version = "v0.3.0"
