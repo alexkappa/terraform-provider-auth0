@@ -154,6 +154,7 @@ func newClient() *schema.Resource {
 			"token_endpoint_auth_method": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 				ValidateFunc: validation.StringInSlice([]string{
 					"none",
 					"client_secret_post",

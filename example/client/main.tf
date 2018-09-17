@@ -5,7 +5,7 @@ resource "auth0_client" "my_app_client" {
   description     = "Example Application Loooooong Description"
   app_type        = "non_interactive"
   is_first_party  = true
-  oidc_conformant = true
+  oidc_conformant = false
   callbacks       = ["https://example.com/callback"]
   allowed_origins = ["https://example.com"]
   web_origins     = ["https://example.com"]
