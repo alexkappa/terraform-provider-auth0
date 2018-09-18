@@ -115,12 +115,20 @@ func readEmailTemplate(d *schema.ResourceData, m interface{}) error {
 func updateEmailTemplate(d *schema.ResourceData, m interface{}) error {
 	e := buildEmailTemplate(d)
 	api := m.(*management.Management)
-	return api.EmailTemplate.Replace(auth0.StringValue(e.Template), e)
+	err := api.EmailTemplate.Replace(auth0.StringValue(e.Template), e)
+	if err != nil {
+		return err
+	}
+	return readEmailTemplate(d, m)
 }
 
 func deleteEmailTemplate(d *schema.ResourceData, m interface{}) error {
-	d.Set("enabled", false)
-	return updateEmailTemplate(d, m)
+	api := m.(*management.Management)
+	t := &management.EmailTemplate{
+		Template: auth0.String(d.Id()),
+		Enabled:  auth0.Bool(false),
+	}
+	return api.EmailTemplate.Update(d.Id(), t)
 }
 
 func buildEmailTemplate(d *schema.ResourceData) *management.EmailTemplate {
