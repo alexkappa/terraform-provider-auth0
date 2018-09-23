@@ -1,17 +1,19 @@
 package management
 
 import (
+	"context"
+	"log"
 	"net/http"
+	"net/http/httputil"
+	"net/url"
 	"strconv"
 	"time"
 
 	"github.com/PuerkitoBio/rehttp"
+	"golang.org/x/oauth2/clientcredentials"
 )
 
-func wrapRetry(c *http.Client) *http.Client {
-	if c == nil {
-		c = http.DefaultClient
-	}
+func wrapRetryClient(c *http.Client) *http.Client {
 	return &http.Client{
 		Transport: rehttp.NewTransport(
 			c.Transport,
@@ -33,20 +35,50 @@ func wrapRetry(c *http.Client) *http.Client {
 	}
 }
 
-func wrapUserAgent(c *http.Client) *http.Client {
-	if c == nil {
-		c = http.DefaultClient
-	}
+func wrapUserAgentClient(c *http.Client) *http.Client {
 	return &http.Client{
-		Transport: roundTripFunc(func(r *http.Request) (*http.Response, error) {
-			r.Header.Set("User-Agent", "Go-Auth0-SDK/v0")
-			return c.Transport.RoundTrip(r)
+		Transport: roundTripFunc(func(req *http.Request) (*http.Response, error) {
+			req.Header.Set("User-Agent", "Go-Auth0-SDK/v0")
+			return c.Transport.RoundTrip(req)
 		}),
 	}
 }
 
 type roundTripFunc func(*http.Request) (*http.Response, error)
 
-func (rf roundTripFunc) RoundTrip(r *http.Request) (*http.Response, error) {
-	return rf(r)
+func (rf roundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
+	return rf(req)
+}
+
+func wrapDebugClient(c *http.Client) *http.Client {
+	return &http.Client{
+		Transport: roundTripFunc(func(req *http.Request) (*http.Response, error) {
+			reqBytes, _ := httputil.DumpRequest(req, true)
+			res, err := c.Transport.RoundTrip(req)
+			if err != nil {
+				return res, err
+			}
+			resBytes, _ := httputil.DumpResponse(res, true)
+			log.Printf("%s\n%s\b\n", reqBytes, resBytes)
+			return res, nil
+		}),
+	}
+}
+
+func newClient(domain, clientID, clientSecret string) *http.Client {
+
+	cc := &clientcredentials.Config{
+		ClientID:     clientID,
+		ClientSecret: clientSecret,
+		TokenURL:     "https://" + domain + "/oauth/token",
+		EndpointParams: url.Values{
+			"audience": {"https://" + domain + "/api/v2/"},
+		},
+	}
+
+	c := cc.Client(context.Background())
+	c = wrapRetryClient(c)
+	c = wrapUserAgentClient(c)
+
+	return c
 }

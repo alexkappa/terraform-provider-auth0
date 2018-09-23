@@ -1,40 +1,47 @@
 package management
 
+import "encoding/json"
+
 type Email struct {
 
 	// The name of the email provider. Can be one of "mandrill", "sendgrid",
 	// "sparkpost", "ses" or "smtp".
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 
 	// True if the email provider is enabled, false otherwise (defaults to true)
-	Enabled bool `json:"enabled,omitempty"`
+	Enabled *bool `json:"enabled,omitempty"`
 
 	// The default FROM address
-	DefaultFromAddress string `json:"default_from_address,omitempty"`
+	DefaultFromAddress *string `json:"default_from_address,omitempty"`
 
 	Credentials *EmailCredentials      `json:"credentials,omitempty"`
 	Settings    map[string]interface{} `json:"settings,omitempty"`
 }
 
+func (e *Email) String() string {
+	b, _ := json.MarshalIndent(e, "", "  ")
+	return string(b)
+}
+
 type EmailCredentials struct {
 	// API User
-	APIUser string `json:"api_user,omitempty"`
+	APIUser *string `json:"api_user,omitempty"`
 	// API Key
-	APIKey string `json:"api_key,omitempty"`
+	APIKey *string `json:"api_key,omitempty"`
 	// AWS Access Key ID
-	AccessKeyID string `json:"accessKeyId,omitempty"`
+	AccessKeyID *string `json:"accessKeyId,omitempty"`
 	// AWS Secret Access Key
-	SecretAccessKey string `json:"secretAccessKey,omitempty"`
+	SecretAccessKey *string `json:"secretAccessKey,omitempty"`
 	// AWS default region
-	Region string `json:"region,omitempty"`
+	Region *string `json:"region,omitempty"`
 	// SMTP host
-	SMTPHost string `json:"smtp_host,omitempty"`
+	SMTPHost *string `json:"smtp_host,omitempty"`
 	// SMTP port
-	SMTPPort int `json:"smtp_port,omitempty"`
+	SMTPPort *int `json:"smtp_port,omitempty"`
 	// SMTP user
-	SMTPUser string `json:"smtp_user,omitempty"`
+	SMTPUser *string `json:"smtp_user,omitempty"`
 	// SMTP password
-	SMTPPass string `json:"smtp_pass,omitempty"`
+	SMTPPass *string `json:"smtp_pass,omitempty"`
 }
 
 type EmailManager struct {

@@ -1,12 +1,23 @@
 package management
 
+import (
+	"encoding/json"
+
+	auth0 "github.com/yieldr/go-auth0"
+)
+
 type RuleConfig struct {
 
 	// The key for a RuleConfigs config
-	Key string `json:"key,omitempty"`
+	Key *string `json:"key,omitempty"`
 
 	// The value for the rules config
-	Value string `json:"value,omitempty"`
+	Value *string `json:"value,omitempty"`
+}
+
+func (r *RuleConfig) String() string {
+	b, _ := json.MarshalIndent(r, "", "  ")
+	return string(b)
 }
 
 type RuleConfigManager struct {
@@ -28,7 +39,8 @@ func (rm *RuleConfigManager) Read(key string) (*RuleConfig, error) {
 		return nil, err
 	}
 	for _, r := range rs {
-		if r.Key == key {
+		rkey := auth0.StringValue(r.Key)
+		if rkey == key {
 			return r, nil
 		}
 	}

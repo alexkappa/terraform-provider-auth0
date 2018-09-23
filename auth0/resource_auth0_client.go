@@ -3,7 +3,7 @@ package auth0
 import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
-	"github.com/mitchellh/mapstructure"
+	auth0 "github.com/yieldr/go-auth0"
 	"github.com/yieldr/go-auth0/management"
 )
 
@@ -47,6 +47,7 @@ func newClient() *schema.Resource {
 			"is_first_party": {
 				Type:     schema.TypeBool,
 				Optional: true,
+				Computed: true,
 			},
 			"oidc_conformant": {
 				Type:     schema.TypeBool,
@@ -82,6 +83,7 @@ func newClient() *schema.Resource {
 				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 1,
+				MinItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"lifetime_in_seconds": {
@@ -106,9 +108,9 @@ func newClient() *schema.Resource {
 				},
 			},
 			"encryption_key": {
-				Type:     schema.TypeSet,
-				Elem:     &schema.Schema{Type: schema.TypeMap},
+				Type:     schema.TypeMap,
 				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
 			"sso": {
 				Type:     schema.TypeBool,
@@ -129,6 +131,7 @@ func newClient() *schema.Resource {
 			"custom_login_page_on": {
 				Type:     schema.TypeBool,
 				Optional: true,
+				Computed: true,
 			},
 			"custom_login_page": {
 				Type:     schema.TypeString,
@@ -143,13 +146,15 @@ func newClient() *schema.Resource {
 				Optional: true,
 			},
 			"addons": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Optional: true,
+				MaxItems: 1,
 				Elem:     &schema.Schema{Type: schema.TypeMap},
 			},
 			"token_endpoint_auth_method": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 				ValidateFunc: validation.StringInSlice([]string{
 					"none",
 					"client_secret_post",
@@ -215,7 +220,7 @@ func createClient(d *schema.ResourceData, m interface{}) error {
 	if err := api.Client.Create(c); err != nil {
 		return err
 	}
-	d.SetId(c.ClientID)
+	d.SetId(auth0.StringValue(c.ClientID))
 	return readClient(d, m)
 }
 
@@ -249,27 +254,19 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("form_template", c.FormTemplate)
 	d.Set("token_endpoint_auth_method", c.TokenEndpointAuthMethod)
 
-	if c.JWTConfiguration != nil {
-		var jwt_config = make(map[string]string)
-		mapstructure.Decode(c.JWTConfiguration, &jwt_config)
-		d.Set("jwt_configuration", jwt_config)
+	if jwtConfiguration := c.JWTConfiguration; jwtConfiguration != nil {
+		d.Set("jwt_configuration", map[string]interface{}{
+			"lifetime_in_seconds": jwtConfiguration.Algorithm,
+			"secret_encoded":      jwtConfiguration.LifetimeInSeconds,
+			"scopes":              jwtConfiguration.Scopes,
+			"alg":                 jwtConfiguration.SecretEncoded,
+		})
 	}
 
-	if c.EncryptionKey != nil {
-		d.Set("encryption_key", c.EncryptionKey)
-	}
-
-	if c.Addons != nil {
-		d.Set("addons", c.Addons)
-	}
-
-	if c.ClientMetadata != nil {
-		d.Set("client_metadata", c.ClientMetadata)
-	}
-
-	if c.Mobile != nil {
-		d.Set("mobile", c.Mobile)
-	}
+	d.Set("encryption_key", c.EncryptionKey)
+	d.Set("addons", c.Addons)
+	d.Set("client_metadata", c.ClientMetadata)
+	d.Set("mobile", c.Mobile)
 
 	return nil
 }
@@ -292,46 +289,45 @@ func deleteClient(d *schema.ResourceData, m interface{}) error {
 func buildClient(d *schema.ResourceData) *management.Client {
 
 	c := &management.Client{
-		Name:                    d.Get("name").(string),
-		Description:             d.Get("description").(string),
-		AppType:                 d.Get("app_type").(string),
-		LogoURI:                 d.Get("logo_uri").(string),
-		IsFirstParty:            d.Get("is_first_party").(bool),
-		OIDCConformant:          d.Get("oidc_conformant").(bool),
-		Callbacks:               d.Get("callbacks").([]interface{}),
-		AllowedLogoutURLs:       d.Get("allowed_logout_urls").([]interface{}),
-		AllowedOrigins:          d.Get("allowed_origins").([]interface{}),
-		GrantTypes:              d.Get("grant_types").([]interface{}),
-		WebOrigins:              d.Get("web_origins").([]interface{}),
-		SSO:                     d.Get("sso").(bool),
-		SSODisabled:             d.Get("sso_disabled").(bool),
-		CrossOriginAuth:         d.Get("cross_origin_auth").(bool),
-		CrossOriginLocation:     d.Get("cross_origin_loc").(string),
-		CustomLoginPageOn:       d.Get("custom_login_page_on").(bool),
-		CustomLoginPage:         d.Get("custom_login_page").(string),
-		CustomLoginPagePreview:  d.Get("custom_login_page_preview").(string),
-		FormTemplate:            d.Get("form_template").(string),
-		TokenEndpointAuthMethod: d.Get("token_endpoint_auth_method").(string),
+		Name:                    String(d, "name"),
+		Description:             String(d, "description"),
+		AppType:                 String(d, "app_type"),
+		LogoURI:                 String(d, "logo_uri"),
+		IsFirstParty:            Bool(d, "is_first_party"),
+		OIDCConformant:          Bool(d, "oidc_conformant"),
+		Callbacks:               Slice(d, "callbacks"),
+		AllowedLogoutURLs:       Slice(d, "allowed_logout_urls"),
+		AllowedOrigins:          Slice(d, "allowed_origins"),
+		GrantTypes:              Slice(d, "grant_types"),
+		WebOrigins:              Slice(d, "web_origins"),
+		SSO:                     Bool(d, "sso"),
+		SSODisabled:             Bool(d, "sso_disabled"),
+		CrossOriginAuth:         Bool(d, "cross_origin_auth"),
+		CrossOriginLocation:     String(d, "cross_origin_loc"),
+		CustomLoginPageOn:       Bool(d, "custom_login_page_on"),
+		CustomLoginPage:         String(d, "custom_login_page"),
+		CustomLoginPagePreview:  String(d, "custom_login_page_preview"),
+		FormTemplate:            String(d, "form_template"),
+		TokenEndpointAuthMethod: String(d, "token_endpoint_auth_method"),
 	}
 
 	if v, ok := d.GetOk("jwt_configuration"); ok {
 		vL := v.([]interface{})
 		for _, v := range vL {
-			jwtC := v.(map[string]interface{})
+			jwtConfiguration := v.(map[string]interface{})
 
 			c.JWTConfiguration = &management.ClientJWTConfiguration{
-				LifetimeInSeconds: jwtC["lifetime_in_seconds"].(int),
-				Scopes:            jwtC["scopes"],
-				Algorithm:         jwtC["alg"].(string),
+				LifetimeInSeconds: auth0.Int(jwtConfiguration["lifetime_in_seconds"].(int)),
+				Scopes:            jwtConfiguration["scopes"],
+				Algorithm:         auth0.String(jwtConfiguration["alg"].(string)),
 			}
 		}
 	}
 
 	if v, ok := d.GetOk("encryption_key"); ok {
-
 		c.EncryptionKey = make(map[string]string)
 
-		for _, item := range v.(*schema.Set).List() {
+		for _, item := range v.([]interface{}) {
 			for key, val := range item.(map[string]string) {
 				c.EncryptionKey[key] = val
 			}
@@ -342,7 +338,7 @@ func buildClient(d *schema.ResourceData) *management.Client {
 
 		c.Addons = make(map[string]interface{})
 
-		for _, item := range v.(*schema.Set).List() {
+		for _, item := range v.([]interface{}) {
 			for key, val := range item.(map[string]interface{}) {
 				c.Addons[key] = val
 			}

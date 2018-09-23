@@ -1,17 +1,28 @@
 package management
 
+import (
+	"encoding/json"
+
+	auth0 "github.com/yieldr/go-auth0"
+)
+
 type ClientGrant struct {
 
 	// A generated string identifying the client grant.
-	ID string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 
 	// The identifier of the client.
-	ClientID string `json:"client_id,omitempty"`
+	ClientID *string `json:"client_id,omitempty"`
 
 	// The audience.
-	Audience string `json:"audience,omitempty"`
+	Audience *string `json:"audience,omitempty"`
 
 	Scope []interface{} `json:"scope,omitempty"`
+}
+
+func (c *ClientGrant) String() string {
+	b, _ := json.MarshalIndent(c, "", "  ")
+	return string(b)
 }
 
 type ClientGrantManager struct {
@@ -33,7 +44,8 @@ func (cg *ClientGrantManager) Read(id string) (*ClientGrant, error) {
 		return nil, err
 	}
 	for _, g := range gs {
-		if g.ID == id {
+		gid := auth0.StringValue(g.ID)
+		if gid == id {
 			return g, nil
 		}
 	}

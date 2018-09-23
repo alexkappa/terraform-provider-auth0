@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
+	auth0 "github.com/yieldr/go-auth0"
 	"github.com/yieldr/go-auth0/management"
 )
 
@@ -53,7 +54,7 @@ func createRule(d *schema.ResourceData, m interface{}) error {
 	if err := api.Rule.Create(c); err != nil {
 		return err
 	}
-	d.SetId(c.ID)
+	d.SetId(auth0.StringValue(c.ID))
 	return readRule(d, m)
 }
 
@@ -87,9 +88,9 @@ func deleteRule(d *schema.ResourceData, m interface{}) error {
 
 func buildRule(d *schema.ResourceData) *management.Rule {
 	return &management.Rule{
-		Name:    d.Get("name").(string),
-		Script:  d.Get("script").(string),
-		Order:   d.Get("order").(int),
-		Enabled: d.Get("enabled").(bool),
+		Name:    String(d, "name"),
+		Script:  String(d, "script"),
+		Order:   Int(d, "order"),
+		Enabled: Bool(d, "enabled"),
 	}
 }

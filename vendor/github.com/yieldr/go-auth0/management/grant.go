@@ -1,20 +1,27 @@
 package management
 
+import "encoding/json"
+
 type Grant struct {
 
 	// The id of the grant.
-	ID string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 
 	// The id of the client.
-	ClientID string `json:"clientID,omitempty"`
+	ClientID *string `json:"clientID,omitempty"`
 
 	// The id of the user.
-	UserID string `json:"user_id`
+	UserID *string `json:"user_id`
 
 	// The grant's audience.
-	Audience string `json:"audience,omitempty"`
+	Audience *string `json:"audience,omitempty"`
 
 	Scope []interface{} `json:"scope,omitempty"`
+}
+
+func (g *Grant) String() string {
+	b, _ := json.MarshalIndent(g, "", "  ")
+	return string(b)
 }
 
 type GrantManager struct {

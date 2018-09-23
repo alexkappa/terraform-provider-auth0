@@ -2,6 +2,7 @@ package auth0
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
+	auth0 "github.com/yieldr/go-auth0"
 	"github.com/yieldr/go-auth0/management"
 )
 
@@ -31,13 +32,13 @@ func newRuleConfig() *schema.Resource {
 
 func createRuleConfig(d *schema.ResourceData, m interface{}) error {
 	r := buildRuleConfig(d)
-	key := r.Key
-	r.Key = ""
+	key := auth0.StringValue(r.Key)
+	r.Key = nil
 	api := m.(*management.Management)
 	if err := api.RuleConfig.Upsert(key, r); err != nil {
 		return err
 	}
-	d.SetId(r.Key)
+	d.SetId(auth0.StringValue(r.Key))
 	return readRuleConfig(d, m)
 }
 
@@ -53,7 +54,7 @@ func readRuleConfig(d *schema.ResourceData, m interface{}) error {
 
 func updateRuleConfig(d *schema.ResourceData, m interface{}) error {
 	r := buildRuleConfig(d)
-	r.Key = ""
+	r.Key = nil
 	api := m.(*management.Management)
 	err := api.RuleConfig.Upsert(d.Id(), r)
 	if err != nil {
@@ -69,7 +70,7 @@ func deleteRuleConfig(d *schema.ResourceData, m interface{}) error {
 
 func buildRuleConfig(d *schema.ResourceData) *management.RuleConfig {
 	return &management.RuleConfig{
-		Key:   d.Get("key").(string),
-		Value: d.Get("value").(string),
+		Key:   String(d, "key"),
+		Value: String(d, "value"),
 	}
 }

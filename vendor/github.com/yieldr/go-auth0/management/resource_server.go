@@ -1,50 +1,57 @@
 package management
 
+import "encoding/json"
+
 type ResourceServer struct {
 
 	// A generated string identifying the resource server.
-	ID string `json:"id,omitempty"`
+	ID *string `json:"id,omitempty"`
 
 	// The name of the resource server. Must contain at least one character.
 	// Does not allow '<' or '>'
-	Name string `json:"name,omitempty"`
+	Name *string `json:"name,omitempty"`
 
 	// The identifier of the resource server.
-	Identifier string `json:"identifier,omitempty"`
+	Identifier *string `json:"identifier,omitempty"`
 
 	// Scopes supported by the resource server.
 	Scopes []*ResourceServerScope `json:"scopes,omitempty"`
 
 	// The algorithm used to sign tokens ["HS256" or "RS256"].
-	SigningAlgorithm string `json:"signing_alg,omitempty"`
+	SigningAlgorithm *string `json:"signing_alg,omitempty"`
 
 	// The secret used to sign tokens when using symmetric algorithms.
-	SigningSecret string `json:"signing_secret,omitempty"`
+	SigningSecret *string `json:"signing_secret,omitempty"`
 
 	// Allows issuance of refresh tokens for this entity.
-	AllowOfflineAccess bool `json:"allow_offline_access,omitempty"`
+	AllowOfflineAccess *bool `json:"allow_offline_access,omitempty"`
 
 	// The amount of time in seconds that the token will be valid after being
 	// issued.
-	TokenLifetime int `json:"token_lifetime,omitempty"`
+	TokenLifetime *int `json:"token_lifetime,omitempty"`
 
 	// Flag this entity as capable of skipping consent
-	SkipConsentForVerifiableFirstPartyClients bool `json:"skip_consent_for_verifiable_first_party_clients,omitempty"`
+	SkipConsentForVerifiableFirstPartyClients *bool `json:"skip_consent_for_verifiable_first_party_clients,omitempty"`
 
 	// A URI from which to retrieve JWKs for this resource server used for
 	// verifying the JWT sent to Auth0 for token introspection.
-	VerificationLocation string `json:"verificationLocation,omitempty"`
+	VerificationLocation *string `json:"verificationLocation,omitempty"`
 
 	Options map[string]interface{} `json:"options,omitempty"`
+}
+
+func (r *ResourceServer) String() string {
+	b, _ := json.MarshalIndent(r, "", "  ")
+	return string(b)
 }
 
 type ResourceServerScope struct {
 	// The scope name. Use the format <action>:<resource> for example
 	// 'delete:client_grants'.
-	Value string `json:"value,omitempty"`
+	Value *string `json:"value,omitempty"`
 
 	// Description of the scope
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 }
 
 type ResourceServerManager struct {
