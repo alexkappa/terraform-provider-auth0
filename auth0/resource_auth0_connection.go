@@ -1,6 +1,8 @@
 package auth0
 
 import (
+	"strings"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 	auth0 "github.com/yieldr/go-auth0"
@@ -130,6 +132,20 @@ func newConnection() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},
+						"custom_scripts": {
+							Type:     schema.TypeMap,
+							Elem:     &schema.Schema{Type: schema.TypeString},
+							Optional: true,
+						},
+						"configuration": {
+							Type:      schema.TypeMap,
+							Elem:      &schema.Schema{Type: schema.TypeString},
+							Sensitive: true,
+							Optional:  true,
+							DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+								return strings.HasPrefix(old, "2.0$") || new == old
+							},
+						},
 					},
 				},
 			},
@@ -170,23 +186,25 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 	d.Set("options", []map[string]interface{}{
 		{
 			"validation":                     c.Options.Validation,
-			"password_policy":                c.Options.PasswordPolicy,
+			"password_policy":                auth0.StringValue(c.Options.PasswordPolicy),
 			"password_history":               c.Options.PasswordHistory,
 			"password_no_personal_info":      c.Options.PasswordNoPersonalInfo,
 			"password_dictionary":            c.Options.PasswordDictionary,
-			"api_enable_users":               c.Options.APIEnableUsers,
-			"basic_profile":                  c.Options.BasicProfile,
-			"ext_admin":                      c.Options.ExtAdmin,
-			"ext_is_suspended":               c.Options.ExtIsSuspended,
-			"ext_agreed_terms":               c.Options.ExtAgreedTerms,
-			"ext_groups":                     c.Options.ExtGroups,
-			"ext_assigned_plans":             c.Options.ExtAssignedPlans,
-			"ext_profile":                    c.Options.ExtProfile,
-			"enabled_database_customization": c.Options.EnabledDatabaseCustomization,
-			"brute_force_protection":         c.Options.BruteForceProtection,
-			"import_mode":                    c.Options.ImportMode,
-			"disable_signup":                 c.Options.DisableSignup,
-			"requires_username":              c.Options.RequiresUsername,
+			"api_enable_users":               auth0.BoolValue(c.Options.APIEnableUsers),
+			"basic_profile":                  auth0.BoolValue(c.Options.BasicProfile),
+			"ext_admin":                      auth0.BoolValue(c.Options.ExtAdmin),
+			"ext_is_suspended":               auth0.BoolValue(c.Options.ExtIsSuspended),
+			"ext_agreed_terms":               auth0.BoolValue(c.Options.ExtAgreedTerms),
+			"ext_groups":                     auth0.BoolValue(c.Options.ExtGroups),
+			"ext_assigned_plans":             auth0.BoolValue(c.Options.ExtAssignedPlans),
+			"ext_profile":                    auth0.BoolValue(c.Options.ExtProfile),
+			"enabled_database_customization": auth0.BoolValue(c.Options.EnabledDatabaseCustomization),
+			"brute_force_protection":         auth0.BoolValue(c.Options.BruteForceProtection),
+			"import_mode":                    auth0.BoolValue(c.Options.ImportMode),
+			"disable_signup":                 auth0.BoolValue(c.Options.DisableSignup),
+			"requires_username":              auth0.BoolValue(c.Options.RequiresUsername),
+			"custom_scripts":                 c.Options.CustomScripts,
+			"configuration":                  c.Options.Configuration,
 		},
 	})
 
@@ -228,12 +246,11 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 
 			if options, ok := v.(map[string]interface{}); ok {
 				c.Options = &management.ConnectionOptions{
-					Validation:             options["validation"].(map[string]interface{}),
-					PasswordPolicy:         auth0.String(options["password_policy"].(string)),
-					PasswordHistory:        options["password_history"].(map[string]interface{}),
-					PasswordNoPersonalInfo: options["password_no_personal_info"].(map[string]interface{}),
-					PasswordDictionary:     options["password_dictionary"].(map[string]interface{}),
-
+					Validation:                   options["validation"].(map[string]interface{}),
+					PasswordPolicy:               auth0.String(options["password_policy"].(string)),
+					PasswordHistory:              options["password_history"].(map[string]interface{}),
+					PasswordNoPersonalInfo:       options["password_no_personal_info"].(map[string]interface{}),
+					PasswordDictionary:           options["password_dictionary"].(map[string]interface{}),
 					APIEnableUsers:               auth0.Bool(options["api_enable_users"].(bool)),
 					BasicProfile:                 auth0.Bool(options["basic_profile"].(bool)),
 					ExtAdmin:                     auth0.Bool(options["ext_admin"].(bool)),
@@ -247,6 +264,8 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 					ImportMode:                   auth0.Bool(options["import_mode"].(bool)),
 					DisableSignup:                auth0.Bool(options["disable_signup"].(bool)),
 					RequiresUsername:             auth0.Bool(options["requires_username"].(bool)),
+					CustomScripts:                options["custom_scripts"].(map[string]interface{}),
+					Configuration:                options["configuration"].(map[string]interface{}),
 				}
 			}
 		}

@@ -95,7 +95,7 @@ type ConnectionOptions struct {
 
 	// Scripts for the connction
 	// Allowed keys are: "get_user", "login", "create", "verify", "change_password" or "delete".
-	CustomScripts map[string]interface{} `json:"custom_scripts,omitempty"`
+	CustomScripts map[string]interface{} `json:"customScripts,omitempty"`
 	// configuration variables that can be used in custom scripts
 	Configuration map[string]interface{} `json:"configuration,omitempty"`
 }
