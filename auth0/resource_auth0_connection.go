@@ -1,8 +1,6 @@
 package auth0
 
 import (
-	"sort"
-
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 	auth0 "github.com/yieldr/go-auth0"
@@ -192,10 +190,6 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 		},
 	})
 
-	sort.Slice(c.EnabledClients, func(i, j int) bool {
-		return c.EnabledClients[i].(string) > c.EnabledClients[j].(string)
-	})
-
 	d.Set("enabled_clients", c.EnabledClients)
 	d.Set("realms", c.Realms)
 	return nil
@@ -234,11 +228,11 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 
 			if options, ok := v.(map[string]interface{}); ok {
 				c.Options = &management.ConnectionOptions{
-					Validation:                   options["validation"].(map[string]interface{}),
-					PasswordPolicy:               auth0.String(options["password_policy"].(string)),
-					PasswordHistory:              options["password_history"].(map[string]interface{}),
-					PasswordNoPersonalInfo:       options["password_no_personal_info"].(map[string]interface{}),
-					PasswordDictionary:           options["password_dictionary"].(map[string]interface{}),
+					Validation:             options["validation"].(map[string]interface{}),
+					PasswordPolicy:         auth0.String(options["password_policy"].(string)),
+					PasswordHistory:        options["password_history"].(map[string]interface{}),
+					PasswordNoPersonalInfo: options["password_no_personal_info"].(map[string]interface{}),
+					PasswordDictionary:     options["password_dictionary"].(map[string]interface{}),
 
 					APIEnableUsers:               auth0.Bool(options["api_enable_users"].(bool)),
 					BasicProfile:                 auth0.Bool(options["basic_profile"].(bool)),
