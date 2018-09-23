@@ -1,10 +1,9 @@
 package auth0
 
 import (
-	"sort"
-
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
+	auth0 "github.com/yieldr/go-auth0"
 	"github.com/yieldr/go-auth0/management"
 )
 
@@ -118,7 +117,6 @@ func newConnection() *schema.Resource {
 						"brute_force_protection": {
 							Type:     schema.TypeBool,
 							Optional: true,
-							Default:  true,
 						},
 						"import_mode": {
 							Type:     schema.TypeBool,
@@ -156,7 +154,7 @@ func createConnection(d *schema.ResourceData, m interface{}) error {
 	if err := api.Connection.Create(c); err != nil {
 		return err
 	}
-	d.SetId(c.ID)
+	d.SetId(auth0.StringValue(c.ID))
 	return readConnection(d, m)
 }
 
@@ -166,7 +164,7 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.SetId(c.ID)
+	d.SetId(auth0.StringValue(c.ID))
 	d.Set("name", c.Name)
 	d.Set("strategy", c.Strategy)
 	d.Set("options", []map[string]interface{}{
@@ -192,10 +190,6 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 		},
 	})
 
-	sort.Slice(c.EnabledClients, func(i, j int) bool {
-		return c.EnabledClients[i].(string) > c.EnabledClients[j].(string)
-	})
-
 	d.Set("enabled_clients", c.EnabledClients)
 	d.Set("realms", c.Realms)
 	return nil
@@ -203,8 +197,8 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 
 func updateConnection(d *schema.ResourceData, m interface{}) error {
 	c := buildConnection(d)
-	c.Strategy = ""
-	c.Name = ""
+	c.Strategy = nil
+	c.Name = nil
 	api := m.(*management.Management)
 	err := api.Connection.Update(d.Id(), c)
 	if err != nil {
@@ -221,10 +215,10 @@ func deleteConnection(d *schema.ResourceData, m interface{}) error {
 func buildConnection(d *schema.ResourceData) *management.Connection {
 
 	c := &management.Connection{
-		Name:           d.Get("name").(string),
-		Strategy:       d.Get("strategy").(string),
-		EnabledClients: d.Get("enabled_clients").([]interface{}),
-		Realms:         d.Get("realms").([]interface{}),
+		Name:           String(d, "name"),
+		Strategy:       String(d, "strategy"),
+		EnabledClients: Slice(d, "enabled_clients"),
+		Realms:         Slice(d, "realms"),
 	}
 
 	if v, ok := d.GetOk("options"); ok {
@@ -234,24 +228,25 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 
 			if options, ok := v.(map[string]interface{}); ok {
 				c.Options = &management.ConnectionOptions{
-					Validation:                   options["validation"].(map[string]interface{}),
-					PasswordPolicy:               options["password_policy"].(string),
-					PasswordHistory:              options["password_history"].(map[string]interface{}),
-					PasswordNoPersonalInfo:       options["password_no_personal_info"].(map[string]interface{}),
-					PasswordDictionary:           options["password_dictionary"].(map[string]interface{}),
-					APIEnableUsers:               options["api_enable_users"].(bool),
-					BasicProfile:                 options["basic_profile"].(bool),
-					ExtAdmin:                     options["ext_admin"].(bool),
-					ExtIsSuspended:               options["ext_is_suspended"].(bool),
-					ExtAgreedTerms:               options["ext_agreed_terms"].(bool),
-					ExtGroups:                    options["ext_groups"].(bool),
-					ExtAssignedPlans:             options["ext_assigned_plans"].(bool),
-					ExtProfile:                   options["ext_profile"].(bool),
-					EnabledDatabaseCustomization: options["enabled_database_customization"].(bool),
-					BruteForceProtection:         options["brute_force_protection"].(bool),
-					ImportMode:                   options["import_mode"].(bool),
-					DisableSignup:                options["disable_signup"].(bool),
-					RequiresUsername:             options["requires_username"].(bool),
+					Validation:             options["validation"].(map[string]interface{}),
+					PasswordPolicy:         auth0.String(options["password_policy"].(string)),
+					PasswordHistory:        options["password_history"].(map[string]interface{}),
+					PasswordNoPersonalInfo: options["password_no_personal_info"].(map[string]interface{}),
+					PasswordDictionary:     options["password_dictionary"].(map[string]interface{}),
+
+					APIEnableUsers:               auth0.Bool(options["api_enable_users"].(bool)),
+					BasicProfile:                 auth0.Bool(options["basic_profile"].(bool)),
+					ExtAdmin:                     auth0.Bool(options["ext_admin"].(bool)),
+					ExtIsSuspended:               auth0.Bool(options["ext_is_suspended"].(bool)),
+					ExtAgreedTerms:               auth0.Bool(options["ext_agreed_terms"].(bool)),
+					ExtGroups:                    auth0.Bool(options["ext_groups"].(bool)),
+					ExtAssignedPlans:             auth0.Bool(options["ext_assigned_plans"].(bool)),
+					ExtProfile:                   auth0.Bool(options["ext_profile"].(bool)),
+					EnabledDatabaseCustomization: auth0.Bool(options["enabled_database_customization"].(bool)),
+					BruteForceProtection:         auth0.Bool(options["brute_force_protection"].(bool)),
+					ImportMode:                   auth0.Bool(options["import_mode"].(bool)),
+					DisableSignup:                auth0.Bool(options["disable_signup"].(bool)),
+					RequiresUsername:             auth0.Bool(options["requires_username"].(bool)),
 				}
 			}
 		}

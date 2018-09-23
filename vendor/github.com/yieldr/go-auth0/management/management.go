@@ -6,62 +6,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
-
-	"golang.org/x/oauth2"
 )
-
-// Auth embeds a Config and Token structs so it can be used to authenticate our
-// http client.
-type Auth struct {
-	AuthConfig
-	Token
-}
-
-// AuthConfig is the payload used to receive an Auth0 management token. This token
-// is a JWT, it contains specific granted permissions (known as scopes), and it
-// is signed with a application API key and secret for the entire tenant.
-//
-// 	{
-// 	  "audience": "https://YOUR_AUTH0_DOMAIN/api/v2/",
-// 	  "client_id": "YOUR_CLIENT_ID",
-// 	  "client_secret": "YOUR_CLIENT_SECRET",
-// 	  "grant_type": "client_credentials"
-// 	}
-//
-// See: https://auth0.com/docs/api/management/v2/tokens#1-get-a-token
-//
-type AuthConfig struct {
-	Audience     string `json:"audience"`
-	ClientID     string `json:"client_id"`
-	ClientSecret string `json:"client_secret"`
-	GrantType    string `json:"grant_type"`
-}
-
-// Token is the response body from the request to receive an Auth0 management
-// token.
-//
-// 	{
-// 	  "access_token": "eyJ...Ggg",
-// 	  "expires_in": 86400,
-// 	  "scope": "read:clients create:clients read:client_keys",
-// 	  "token_type": "Bearer"
-// 	}
-//
-// See: https://auth0.com/docs/api/management/v2/tokens#2-use-the-token
-//
-type Token struct {
-	AccessToken string `json:"access_token"`
-	ExpiresIn   int    `json:"expires_in"`
-	Scope       string `json:"scope"`
-	TokenType   string `json:"token_type"`
-}
 
 // Management is an Auth0 management client used to interact with the Auth0
 // Management API v2.
@@ -136,28 +86,7 @@ func New(domain, clientID, clientSecret string, options ...apiOption) (*Manageme
 		option(m)
 	}
 
-	auth := &Auth{
-		AuthConfig{
-			Audience:     "https://" + domain + "/api/v2/",
-			ClientID:     clientID,
-			ClientSecret: clientSecret,
-			GrantType:    "client_credentials",
-		},
-		Token{},
-	}
-
-	err := m.post("https://"+domain+"/oauth/token", auth)
-	if err != nil {
-		return nil, err
-	}
-
-	ts := oauth2.StaticTokenSource(&oauth2.Token{
-		AccessToken: auth.Token.AccessToken,
-		TokenType:   auth.Token.TokenType,
-		Expiry:      time.Now().Add(time.Duration(auth.Token.ExpiresIn) * time.Second),
-	})
-
-	m.http = wrapUserAgent(wrapRetry(oauth2.NewClient(context.Background(), ts)))
+	m.http = newClient(domain, clientID, clientSecret)
 
 	m.Client = NewClientManager(m)
 	m.ClientGrant = NewClientGrantManager(m)
@@ -223,10 +152,6 @@ func (m *Management) request(method, uri string, v interface{}) error {
 		}
 	}
 
-	if m.debug {
-		m.dump(req, res)
-	}
-
 	if res.StatusCode < http.StatusOK || res.StatusCode >= http.StatusBadRequest {
 		return newError(res.Body)
 	}
@@ -257,12 +182,6 @@ func (m *Management) patch(uri string, v interface{}) error {
 
 func (m *Management) delete(uri string) error {
 	return m.request("DELETE", uri, nil)
-}
-
-func (m *Management) dump(req *http.Request, res *http.Response) {
-	b1, _ := httputil.DumpRequest(req, true)
-	b2, _ := httputil.DumpResponse(res, true)
-	log.Printf("%s\n%s\b\n", b1, b2)
 }
 
 type apiOption func(*Management)

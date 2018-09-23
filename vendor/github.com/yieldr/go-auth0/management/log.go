@@ -1,6 +1,11 @@
 package management
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+
+	auth0 "github.com/yieldr/go-auth0"
+)
 
 var logTypeName = map[string]string{
 	"s":         "Success Login",
@@ -58,33 +63,38 @@ var logTypeName = map[string]string{
 }
 
 type Log struct {
-	ID    string `json:"_id"`
-	LogID string `json:"log_id"`
+	ID    *string `json:"_id"`
+	LogID *string `json:"log_id"`
 
 	// The date when the event was created
-	Date time.Time `json:"date"`
+	Date *time.Time `json:"date"`
 
 	// The log event type
-	Type string `json:"type"`
+	Type *string `json:"type"`
 
 	// The id of the client
-	ClientID string `json:"client_id"`
+	ClientID *string `json:"client_id"`
 
 	// The name of the client
-	ClientName string `json:"client_name"`
+	ClientName *string `json:"client_name"`
 
 	// The IP of the log event source
-	IP string `json:"ip"`
+	IP *string `json:"ip"`
 
 	LocationInfo map[string]interface{} `json:"location_info"`
 	Details      map[string]interface{} `json:"details"`
 
 	// The user's unique identifier
-	UserID string `json:"user_id"`
+	UserID *string `json:"user_id"`
+}
+
+func (l *Log) String() string {
+	b, _ := json.Marshal(l)
+	return string(b)
 }
 
 func (l *Log) TypeName() string {
-	if name, ok := logTypeName[l.Type]; ok {
+	if name, ok := logTypeName[auth0.StringValue(l.Type)]; ok {
 		return name
 	}
 	return ""

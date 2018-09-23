@@ -1,6 +1,9 @@
 package management
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 type StatManager struct {
 	m *Management
@@ -17,16 +20,21 @@ func (sm *StatManager) ActiveUsers() (int, error) {
 }
 
 type DailyStat struct {
-	Date            time.Time `json:"date"`
-	Logins          int       `json:"logins"`
-	Signups         int       `json:"signups"`
-	LeakedPasswords int       `json:"leaked_passwords"`
-	UpdatedAt       time.Time `json:"updated_at"`
-	CreatedAt       time.Time `json:"created_at"`
+	Date            *time.Time `json:"date"`
+	Logins          *int       `json:"logins"`
+	Signups         *int       `json:"signups"`
+	LeakedPasswords *int       `json:"leaked_passwords"`
+	UpdatedAt       *time.Time `json:"updated_at"`
+	CreatedAt       *time.Time `json:"created_at"`
 }
 
-func (sm *StatManager) Daily() ([]*DailyStat, error) {
+func (ds *DailyStat) String() string {
+	b, _ := json.MarshalIndent(ds, "", "  ")
+	return string(b)
+}
+
+func (sm *StatManager) Daily(opts ...reqOption) ([]*DailyStat, error) {
 	var ds []*DailyStat
-	err := sm.m.get(sm.m.uri("stats/daily"), &ds)
+	err := sm.m.get(sm.m.uri("stats/daily")+sm.m.q(opts), &ds)
 	return ds, err
 }
