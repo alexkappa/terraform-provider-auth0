@@ -60,7 +60,7 @@ resource "auth0_connection" "my_connection" {
 }
 `
 
-func TestAccAdConnection(t *testing.T) {
+func TestAccConnectionAd(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
@@ -68,7 +68,7 @@ func TestAccAdConnection(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccAdConnectionConfig,
+				Config: testAccConnectionAdConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_connection.my_ad_connection", "name", "Acceptance-Test-Ad-Connection"),
 					resource.TestCheckResourceAttr("auth0_connection.my_ad_connection", "strategy", "ad"),
@@ -78,7 +78,7 @@ func TestAccAdConnection(t *testing.T) {
 	})
 }
 
-const testAccAdConnectionConfig = `
+const testAccConnectionAdConfig = `
 provider "auth0" {}
 
 resource "auth0_connection" "my_ad_connection" {
