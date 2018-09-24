@@ -50,7 +50,6 @@ func newConnection() *schema.Resource {
 			"options": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Computed: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -67,9 +66,21 @@ func newConnection() *schema.Resource {
 							}, false),
 						},
 						"password_history": {
-							Type:     schema.TypeMap,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Type:     schema.TypeList,
 							Optional: true,
+							Computed: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enable": {
+										Type:     schema.TypeBool,
+										Optional: true,
+									},
+									"size": {
+										Type:     schema.TypeInt,
+										Optional: true,
+									},
+								},
+							},
 						},
 						"password_no_personal_info": {
 							Type:     schema.TypeMap,
@@ -246,10 +257,11 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 		for _, v := range vL {
 
 			if options, ok := v.(map[string]interface{}); ok {
+
 				c.Options = &management.ConnectionOptions{
 					Validation:                   options["validation"].(map[string]interface{}),
 					PasswordPolicy:               auth0.String(options["password_policy"].(string)),
-					PasswordHistory:              options["password_history"].(map[string]interface{}),
+					PasswordHistory:              buildConnectionPasswordHistory(options["password_history"].([]interface{})),
 					PasswordNoPersonalInfo:       options["password_no_personal_info"].(map[string]interface{}),
 					PasswordDictionary:           options["password_dictionary"].(map[string]interface{}),
 					APIEnableUsers:               auth0.Bool(options["api_enable_users"].(bool)),
@@ -273,4 +285,20 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 	}
 
 	return c
+}
+
+func buildConnectionPasswordHistory(v []interface{}) map[string]interface{} {
+	for _, vI := range v {
+		if phc, ok := vI.(map[string]interface{}); ok {
+			passwordHistory := make(map[string]interface{})
+			if enable, ok := phc["enable"]; ok {
+				passwordHistory["enable"] = enable.(bool)
+			}
+			if size, ok := phc["size"]; ok {
+				passwordHistory["size"] = size.(int)
+			}
+			return passwordHistory
+		}
+	}
+	return nil
 }
