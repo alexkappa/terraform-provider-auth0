@@ -56,7 +56,6 @@ resource "auth0_connection" "my_connection" {
 }
 `
 
-
 func TestAccAdConnection(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
@@ -81,5 +80,6 @@ provider "auth0" {}
 resource "auth0_connection" "my_ad_connection" {
 	name = "Acceptance-Test-Ad-Connection"
 	strategy = "ad"
+	options = {}
 }
 `
