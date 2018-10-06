@@ -14,7 +14,7 @@ func TestAccEmail(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccEmailConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_email.my_email_provider", "name", "ses"),
