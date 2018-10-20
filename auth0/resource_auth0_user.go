@@ -2,6 +2,7 @@ package auth0
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
+	auth0 "github.com/yieldr/go-auth0"
 	"github.com/yieldr/go-auth0/management"
 )
 
@@ -111,12 +112,11 @@ func createUser(d *schema.ResourceData, m interface{}) error {
 
 func updateUser(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
-
 	for k, v := range map[string]*management.User{
-		"username":       {Username: String(d, "username"), Connection: String(d, "conn")},
-		"password":       {Password: String(d, "password"), Connection: String(d, "conn")},
-		"email":          {Email: String(d, "email"), Connection: String(d, "conn")},
-		"email_verified": {EmailVerified: Bool(d, "email_verified"), Connection: String(d, "conn")},
+		"username":       {Username: String(d, "username"), Connection: auth0.String(d.Get("conn").(string))},
+		"password":       {Password: String(d, "password"), Connection: auth0.String(d.Get("conn").(string))},
+		"email":          {Email: String(d, "email"), Connection: auth0.String(d.Get("conn").(string))},
+		"email_verified": {EmailVerified: Bool(d, "email_verified"), Connection: auth0.String(d.Get("conn").(string))},
 	} {
 		if d.HasChange(k) {
 			if err := api.User.Update(d.Id(), v); err != nil {
@@ -125,16 +125,25 @@ func updateUser(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 
-	u := &management.User{
-		Connection:    String(d, "conn"),
-		AppMetadata:   Map(d, "app_metadata"),
-		PhoneNumber:   String(d, "phone_number"),
-		PhoneVerified: Bool(d, "phone_verified"),
-		UserMetadata:  Map(d, "user_metadata"),
+	u := &management.User{}
+
+	for k, f := range map[string]func(*management.User){
+		"phone_number":   func(u *management.User) { u.PhoneNumber = String(d, "phone_number") },
+		"phone_verified": func(u *management.User) { u.PhoneVerified = Bool(d, "phone_verified") },
+		"app_metadata":   func(u *management.User) { u.AppMetadata = Map(d, "app_metadata") },
+		"user_metadata":  func(u *management.User) { u.UserMetadata = Map(d, "user_metadata") },
+	} {
+		if d.HasChange(k) {
+			u.Connection = auth0.String(d.Get("conn").(string))
+
+			f(u)
+		}
 	}
 
-	if err := api.User.Update(d.Id(), u); err != nil {
-		return err
+	if (*u != management.User{}) {
+		if err := api.User.Update(d.Id(), u); err != nil {
+			return err
+		}
 	}
 
 	return readUser(d, m)
