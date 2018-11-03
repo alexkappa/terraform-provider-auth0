@@ -1,7 +1,8 @@
-.terraform/
+*.out
 *.tfstate
 *.tfstate.backup
-terraform-provider-auth0
-.wercker/
+.terraform/
 .vscode/
-c.out
+.wercker/
+dist/
+terraform-provider-auth0
