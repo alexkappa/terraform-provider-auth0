@@ -1,5 +1,5 @@
 builds:
-  - binary: terraform-provider-auth0
+  - binary_template: "terraform-provider-auth0_v{{ .Version }}"
     env:
       - CGO_ENABLED=0
     goos:
