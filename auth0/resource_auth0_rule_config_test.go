@@ -14,7 +14,7 @@ func TestAccRuleConfig(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			{
+			resource.TestStep{
 				Config: testAccRuleConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_rule_config.foo", "id", "foo"),
