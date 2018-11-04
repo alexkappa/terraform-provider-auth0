@@ -1,8 +1,6 @@
 package auth0
 
 import (
-	"fmt"
-	"os"
 	"regexp"
 
 	"testing"
@@ -19,7 +17,7 @@ func TestAccUserMissingRequiredParams(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccUserMissingRequiredParam,
-				ExpectError: regexp.MustCompile(`config is invalid: auth0_user.user: "conn": required field is not set`),
+				ExpectError: regexp.MustCompile(`config is invalid: auth0_user.user: "connection_name": required field is not set`),
 			},
 		},
 	})
@@ -38,11 +36,11 @@ func TestAccUserCreateUser(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccUserCreateUser, os.Getenv("AUTH0_CLIENT_ID")),
+				Config: testAccUserCreateUser,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_user.user", "user_id", "auth0|12345"),
+					resource.TestCheckResourceAttr("auth0_user.user", "user_id", "12345"),
 					resource.TestCheckResourceAttr("auth0_user.user", "email", "test@test.com"),
-					resource.TestCheckResourceAttr("auth0_user.user", "conn", "database-acc-user"),
+					resource.TestCheckResourceAttr("auth0_user.user", "connection_name", "Username-Password-Authentication"),
 				),
 			},
 		},
@@ -52,23 +50,10 @@ func TestAccUserCreateUser(t *testing.T) {
 const testAccUserCreateUser = `
 provider "auth0" {}
 
-resource "auth0_connection" "database_acc_user" {
-  name = "database-acc-user"
-  strategy = "auth0"
-  enabled_clients = [
-    "%s"
-  ]
-  options = {
-    password_policy = "low"
-  }
-}
-
 resource "auth0_user" "user" {
-  conn = "database-acc-user"
+  connection_name = "Username-Password-Authentication"
   user_id = "12345"
   email = "test@test.com"
   password = "testtest$12$12"
-
-  depends_on = ["auth0_connection.database_acc_user"]
 }
 		`
