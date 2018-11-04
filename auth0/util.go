@@ -69,12 +69,11 @@ func Slice(d *schema.ResourceData, key string) (s []interface{}) {
 	return
 }
 
-func Map(d *schema.ResourceData, key string) (m *map[string]interface{}) {
+func Map(d *schema.ResourceData, key string) (m map[string]interface{}) {
 	if d.HasChange(key) {
 		v, ok := d.GetOkExists(key)
 		if ok {
-			mr := v.(map[string]interface{})
-			m = &mr
+			m = v.(map[string]interface{})
 		}
 	}
 	return
