@@ -14,7 +14,7 @@ func TestAccCustomDomain(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			{
+			resource.TestStep{
 				Config: testAccCustomDomain,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_custom_domain.my_custom_domain", "domain", "auth.example-app.com"),
