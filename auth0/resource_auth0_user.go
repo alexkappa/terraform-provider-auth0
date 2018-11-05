@@ -99,7 +99,7 @@ func createUser(d *schema.ResourceData, m interface{}) error {
 func updateUser(d *schema.ResourceData, m interface{}) error {
 	u := buildUser(d)
 	api := m.(*management.Management)
-	if err := api.User.Create(u); err != nil {
+	if err := api.User.Update(d.Id(), u); err != nil {
 		return err
 	}
 	return readUser(d, m)
