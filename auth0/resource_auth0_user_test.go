@@ -56,4 +56,4 @@ resource "auth0_user" "user" {
   email = "test@test.com"
   password = "testtest$12$12"
 }
-		`
+`
