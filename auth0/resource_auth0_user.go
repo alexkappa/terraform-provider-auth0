@@ -2,6 +2,7 @@ package auth0
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
+	auth0 "github.com/yieldr/go-auth0"
 	"github.com/yieldr/go-auth0/management"
 )
 
@@ -111,7 +112,7 @@ func deleteUser(d *schema.ResourceData, m interface{}) error {
 }
 
 func buildUser(d *schema.ResourceData) *management.User {
-	return &management.User{
+	u := &management.User{
 		ID:            String(d, "user_id"),
 		Connection:    String(d, "connection_name"),
 		Username:      String(d, "username"),
@@ -124,4 +125,17 @@ func buildUser(d *schema.ResourceData) *management.User {
 		Email:         String(d, "email"),
 		Password:      String(d, "password"),
 	}
+
+	if u.Username != nil || u.Password != nil || u.EmailVerified != nil || u.PhoneVerified != nil {
+		// When updating email_verified, phone_verified, username or password
+		// we need to specify the connection property too.
+		//
+		// https://auth0.com/docs/api/management/v2#!/Users/patch_users_by_id
+		//
+		// As the builtin String function internally checks if the key has been
+		// changed, we retrieve the value of "connection_name" from the state.
+		u.Connection = auth0.String(d.State().Attributes["connection_name"])
+	}
+
+	return u
 }
