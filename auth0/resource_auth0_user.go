@@ -133,8 +133,9 @@ func buildUser(d *schema.ResourceData) *management.User {
 		// https://auth0.com/docs/api/management/v2#!/Users/patch_users_by_id
 		//
 		// As the builtin String function internally checks if the key has been
-		// changed, we retrieve the value of "connection_name" from the state.
-		u.Connection = auth0.String(d.State().Attributes["connection_name"])
+		// changed, we retrieve the value of "connection_name" regardless of
+		// change.
+		u.Connection = auth0.String(d.Get("connection_name").(string))
 	}
 
 	return u
