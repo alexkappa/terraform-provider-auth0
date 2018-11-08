@@ -236,116 +236,95 @@ func newClient() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"audience": {
-										Type: schema.TypeString,
+										Type:     schema.TypeString,
 										Optional: true,
 									},
 									"recipient": {
-										Type: schema.TypeString,
+										Type:     schema.TypeString,
 										Optional: true,
 									},
 									"create_upn_claim": {
-										Type: schema.TypeBool,
+										Type:     schema.TypeBool,
 										Optional: true,
+										Default:  true,
 									},
 									"passthrough_claims_with_no_mapping": {
-										Type: schema.TypeBool,
+										Type:     schema.TypeBool,
 										Optional: true,
+										Default:  true,
 									},
 									"map_unknown_claims_as_is": {
-										Type: schema.TypeBool,
+										Type:     schema.TypeBool,
 										Optional: true,
+										Default:  false,
 									},
 									"map_identities": {
-										Type: schema.TypeBool,
+										Type:     schema.TypeBool,
 										Optional: true,
+										Default:  true,
 									},
 									"signature_algorithm": {
-										Type: schema.TypeString,
+										Type:     schema.TypeString,
 										Optional: true,
+										Default:  "rsa-sha1",
 									},
 									"digest_algorithm": {
-										Type: schema.TypeString,
+										Type:     schema.TypeString,
 										Optional: true,
+										Default:  "sha1",
 									},
 									"destination": {
-										Type: schema.TypeString,
+										Type:     schema.TypeString,
 										Optional: true,
 									},
 									"lifetime_in_seconds": {
-										Type: schema.TypeInt,
+										Type:     schema.TypeInt,
 										Optional: true,
+										Default:  3600,
 									},
 									"sign_response": {
-										Type: schema.TypeBool,
+										Type:     schema.TypeBool,
 										Optional: true,
 									},
 									"typed_attributes": {
-										Type: schema.TypeBool,
+										Type:     schema.TypeBool,
 										Optional: true,
+										Default:  true,
 									},
 									"include_attribute_name_format": {
-										Type: schema.TypeBool,
+										Type:     schema.TypeBool,
 										Optional: true,
+										Default:  true,
 									},
 									"name_identifier_format": {
-										Type: schema.TypeString,
+										Type:     schema.TypeString,
 										Optional: true,
+										Default:  "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
 									},
 									"authn_context_class_ref": {
-										Type: schema.TypeString,
+										Type:     schema.TypeString,
 										Optional: true,
 									},
 									"binding": {
-										Type: schema.TypeString,
+										Type:     schema.TypeString,
 										Optional: true,
 									},
 									"mappings": {
-										Type: schema.TypeMap,
+										Type:     schema.TypeMap,
 										Optional: true,
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"user_id": {
-													Type: schema.TypeString,
-													Optional: true,
-												},
-												"email": {
-													Type: schema.TypeString,
-													Optional: true,
-												},
-												"name": {
-													Type: schema.TypeString,
-													Optional: true,
-												},
-												"given_name": {
-													Type: schema.TypeString,
-													Optional: true,
-												},
-												"family_name": {
-													Type: schema.TypeString,
-													Optional: true,
-												},
-												"upn": {
-													Type: schema.TypeString,
-													Optional: true,
-												},
-												"groups": {
-													Type: schema.TypeString,
-													Optional: true,
-												},
-											},
-										},
+										Elem:     schema.TypeString,
 									},
 									"logout": {
-										Type: schema.TypeMap,
+										Type:     schema.TypeMap,
 										Optional: true,
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"callback": {
-													Type: schema.TypeString,
+													Type:     schema.TypeString,
 													Optional: true,
 												},
 												"slo_enabled": {
-													Type: schema.TypeBool,
+													Type:     schema.TypeBool,
 													Optional: true,
 												},
 											},
@@ -554,92 +533,94 @@ func buildClient(d *schema.ResourceData) *management.Client {
 		TokenEndpointAuthMethod: String(d, "token_endpoint_auth_method"),
 	}
 
-	if v, ok := d.GetOk("jwt_configuration"); ok {
-		vL := v.([]interface{})
-		for _, v := range vL {
-			jwtConfiguration := v.(map[string]interface{})
+	List(d, "jwt_configuration").First(func(v interface{}) {
 
-			c.JWTConfiguration = &management.ClientJWTConfiguration{
-				LifetimeInSeconds: auth0.Int(jwtConfiguration["lifetime_in_seconds"].(int)),
-				Scopes:            jwtConfiguration["scopes"],
-				Algorithm:         auth0.String(jwtConfiguration["alg"].(string)),
-			}
+		m := v.(map[string]interface{})
+
+		c.JWTConfiguration = &management.ClientJWTConfiguration{
+			LifetimeInSeconds: auth0.Int(m["lifetime_in_seconds"].(int)),
+			Algorithm:         auth0.String(m["alg"].(string)),
+			Scopes:            m["scopes"],
 		}
-	}
+	})
 
-	if v, ok := d.GetOk("encryption_key"); ok {
-		c.EncryptionKey = make(map[string]string)
+	List(d, "encryption_key").First(func(v interface{}) {
+		c.EncryptionKey = v.(map[string]string)
+	})
 
-		for _, item := range v.([]interface{}) {
-			for key, val := range item.(map[string]string) {
-				c.EncryptionKey[key] = val
-			}
-		}
-	}
+	List(d, "addons").First(func(v interface{}) {
 
-	if v, ok := d.GetOk("addons"); ok {
-		if vL, ok := v.([]interface{}); ok {
+		c.Addons = make(map[string]interface{})
 
-			c.Addons = make(map[string]interface{})
+		for addonKey, addonValue := range v.(map[string]interface{}) {
 
-			for _, v := range vL {
-				if addons, ok := v.(map[string]interface{}); ok {
-					for key, val := range addons {
-						if key == "samlp" {
-							// need special processing for samlp addon
-						} else if addon, ok := val.(map[string]interface{}); ok {
-							if len(addon) > 0 {
-								c.Addons[key] = buildClientAddon(addon)
-							}
-						}
+			switch addonKey {
+
+			case "samlp":
+				for _, v := range addonValue.([]interface{}) {
+
+					addon := v.(map[string]interface{})
+
+					if len(addon) > 0 {
+						c.Addons[addonKey] = buildClientAddon(addon)
 					}
+				}
+
+			default:
+				addon := addonValue.(map[string]interface{})
+				if len(addon) > 0 {
+					c.Addons[addonKey] = buildClientAddon(addon)
 				}
 			}
 		}
-	}
+	})
 
-	if v, ok := d.GetOk("client_metadata"); ok {
+	List(d, "client_metadata").First(func(v interface{}) {
+		c.ClientMetadata = v.(map[string]string)
+	})
 
-		c.ClientMetadata = make(map[string]string)
-
-		for key, val := range v.(map[string]interface{}) {
-			c.ClientMetadata[key] = val.(string)
-		}
-
-	}
-
-	if v, ok := d.GetOk("mobile"); ok {
+	List(d, "mobile").First(func(v interface{}) {
 
 		c.Mobile = make(map[string]interface{})
 
-		for _, item := range v.([]interface{}) {
+		for mobileKey, mobileValues := range v.(map[string]interface{}) {
 
-			for key, val := range item.(map[string]interface{}) {
-
-				for _, valItem := range val.([]interface{}) {
-					c.Mobile[key] = valItem
-				}
+			for _, mobile := range mobileValues.([]interface{}) {
+				c.Mobile[mobileKey] = mobile
 			}
 		}
-
-	}
+	})
 
 	return c
 }
 
 func buildClientAddon(d map[string]interface{}) map[string]interface{} {
+
 	addon := make(map[string]interface{})
+
 	for key, value := range d {
-		if s, ok := value.(string); ok {
-			if i, err := strconv.ParseInt(s, 10, 64); err == nil {
+
+		switch v := value.(type) {
+
+		case string:
+			if i, err := strconv.ParseInt(v, 10, 64); err == nil {
 				addon[key] = i
-			} else if f, err := strconv.ParseFloat(s, 64); err == nil {
+			} else if f, err := strconv.ParseFloat(v, 64); err == nil {
 				addon[key] = f
-			} else if b, err := strconv.ParseBool(s); err == nil {
+			} else if b, err := strconv.ParseBool(v); err == nil {
 				addon[key] = b
 			} else {
-				addon[key] = s
+				addon[key] = v
 			}
+
+		case map[string]interface{}:
+			addon[key] = buildClientAddon(v)
+
+		case []interface{}:
+			addon[key] = v
+
+		default:
+			addon[key] = v
 		}
 	}
 	return addon

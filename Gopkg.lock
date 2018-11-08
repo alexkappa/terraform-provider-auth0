@@ -359,8 +359,8 @@
     ".",
     "management"
   ]
-  revision = "6443f7f784cfda5477010d9b1c9ce42caf6280b2"
-  version = "v1.0.0-beta.6"
+  revision = "1a19d7bd18347bccc4fdd49baa936b2febbfd312"
+  version = "v1.0.0-beta.8"
 
 [[projects]]
   branch = "master"
@@ -504,6 +504,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "710e99e73075c8a8ea7a15124bcf2d3cc984f882235db6f32791897b93e8b442"
+  inputs-digest = "39a33dbbc7e050861c90b25c2f155e06c70614b420558778292aaff36d9d3ab4"
   solver-name = "gps-cdcl"
   solver-version = 1
