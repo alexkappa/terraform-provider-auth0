@@ -143,14 +143,14 @@ func buildEmail(d *schema.ResourceData) *management.Email {
 
 func buildEmailCredentials(m map[string]interface{}) *management.EmailCredentials {
 	return &management.EmailCredentials{
-		APIUser:         MapString(m, "api_user"),
-		APIKey:          MapString(m, "api_key"),
-		AccessKeyID:     MapString(m, "access_key_id"),
-		SecretAccessKey: MapString(m, "secret_access_key"),
-		Region:          MapString(m, "region"),
-		SMTPHost:        MapString(m, "smtp_host"),
-		SMTPPort:        MapInt(m, "smtp_port"),
-		SMTPUser:        MapString(m, "smtp_user"),
-		SMTPPass:        MapString(m, "smtp_pass"),
+		APIUser:         String(MapData(m), "api_user"),
+		APIKey:          String(MapData(m), "api_key"),
+		AccessKeyID:     String(MapData(m), "access_key_id"),
+		SecretAccessKey: String(MapData(m), "secret_access_key"),
+		Region:          String(MapData(m), "region"),
+		SMTPHost:        String(MapData(m), "smtp_host"),
+		SMTPPort:        Int(MapData(m), "smtp_port"),
+		SMTPUser:        String(MapData(m), "smtp_user"),
+		SMTPPass:        String(MapData(m), "smtp_pass"),
 	}
 }
