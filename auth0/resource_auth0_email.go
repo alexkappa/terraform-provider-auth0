@@ -133,12 +133,17 @@ func deleteEmail(d *schema.ResourceData, m interface{}) error {
 }
 
 func buildEmail(d *schema.ResourceData) *management.Email {
-	return &management.Email{
+	e := &management.Email{
 		Name:               String(d, "name"),
 		Enabled:            Bool(d, "enabled"),
 		DefaultFromAddress: String(d, "default_from_address"),
-		Credentials:        buildEmailCredentials(d.Get("credentials").([]interface{})[0].(map[string]interface{})),
 	}
+
+	List(d, "credentials").First(func(v interface{}) {
+		e.Credentials = buildEmailCredentials(v.(map[string]interface{}))
+	})
+
+	return e
 }
 
 func buildEmailCredentials(m map[string]interface{}) *management.EmailCredentials {

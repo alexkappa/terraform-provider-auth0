@@ -1,6 +1,8 @@
 package auth0
 
 import (
+	"reflect"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	auth0 "github.com/yieldr/go-auth0"
 )
@@ -30,7 +32,11 @@ func (md MapData) HasChange(key string) bool {
 
 func (md MapData) GetOkExists(key string) (interface{}, bool) {
 	v, ok := md[key]
-	return v, ok
+	return v, ok && !isZero(v)
+}
+
+func isZero(v interface{}) bool {
+	return v == reflect.Zero(reflect.TypeOf(v)).Interface()
 }
 
 var _ Data = (*schema.ResourceData)(nil)
