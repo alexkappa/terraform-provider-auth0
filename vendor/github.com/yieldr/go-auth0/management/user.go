@@ -8,7 +8,7 @@ type User struct {
 	ID *string `json:"user_id,omitempty"`
 
 	// The connection the user belongs to.
-	Connection *string `json:"connection"`
+	Connection *string `json:"connection,omitempty"`
 
 	// The user's email
 	Email *string `json:"email,omitempty"`

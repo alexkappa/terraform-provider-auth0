@@ -86,7 +86,7 @@ func New(domain, clientID, clientSecret string, options ...apiOption) (*Manageme
 		option(m)
 	}
 
-	m.http = newClient(domain, clientID, clientSecret)
+	m.http = newClient(domain, clientID, clientSecret, m.debug)
 
 	m.Client = NewClientManager(m)
 	m.ClientGrant = NewClientGrantManager(m)

@@ -65,7 +65,7 @@ func wrapDebugClient(c *http.Client) *http.Client {
 	}
 }
 
-func newClient(domain, clientID, clientSecret string) *http.Client {
+func newClient(domain, clientID, clientSecret string, debug bool) *http.Client {
 
 	cc := &clientcredentials.Config{
 		ClientID:     clientID,
@@ -79,6 +79,10 @@ func newClient(domain, clientID, clientSecret string) *http.Client {
 	c := cc.Client(context.Background())
 	c = wrapRetryClient(c)
 	c = wrapUserAgentClient(c)
+
+	if debug {
+		c = wrapDebugClient(c)
+	}
 
 	return c
 }
