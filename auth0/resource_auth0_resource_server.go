@@ -153,8 +153,8 @@ func buildResourceServer(d *schema.ResourceData) *management.ResourceServer {
 			scopes := vI.(map[string]interface{})
 
 			s.Scopes = append(s.Scopes, &management.ResourceServerScope{
-				Value:       MapString(scopes, "value"),
-				Description: MapString(scopes, "description"),
+				Value:       String(MapData(scopes), "value"),
+				Description: String(MapData(scopes), "description"),
 			})
 		}
 	}

@@ -538,9 +538,9 @@ func buildClient(d *schema.ResourceData) *management.Client {
 		m := v.(map[string]interface{})
 
 		c.JWTConfiguration = &management.ClientJWTConfiguration{
-			LifetimeInSeconds: auth0.Int(m["lifetime_in_seconds"].(int)),
-			Algorithm:         auth0.String(m["alg"].(string)),
-			Scopes:            m["scopes"],
+			LifetimeInSeconds: Int(MapData(m), "lifetime_in_seconds"),
+			Algorithm:         String(MapData(m), "alg"),
+			Scopes:            Map(MapData(m), "scopes"),
 		}
 	})
 

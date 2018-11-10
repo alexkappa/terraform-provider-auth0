@@ -251,38 +251,33 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 		Realms:         Slice(d, "realms"),
 	}
 
-	if v, ok := d.GetOk("options"); ok {
+	List(d, "options").First(func(v interface{}) {
 
-		vL := v.([]interface{})
-		for _, v := range vL {
+		m := v.(map[string]interface{})
 
-			if options, ok := v.(map[string]interface{}); ok {
-
-				c.Options = &management.ConnectionOptions{
-					Validation:                   options["validation"].(map[string]interface{}),
-					PasswordPolicy:               auth0.String(options["password_policy"].(string)),
-					PasswordHistory:              buildConnectionPasswordHistory(options["password_history"].([]interface{})),
-					PasswordNoPersonalInfo:       options["password_no_personal_info"].(map[string]interface{}),
-					PasswordDictionary:           options["password_dictionary"].(map[string]interface{}),
-					APIEnableUsers:               auth0.Bool(options["api_enable_users"].(bool)),
-					BasicProfile:                 auth0.Bool(options["basic_profile"].(bool)),
-					ExtAdmin:                     auth0.Bool(options["ext_admin"].(bool)),
-					ExtIsSuspended:               auth0.Bool(options["ext_is_suspended"].(bool)),
-					ExtAgreedTerms:               auth0.Bool(options["ext_agreed_terms"].(bool)),
-					ExtGroups:                    auth0.Bool(options["ext_groups"].(bool)),
-					ExtAssignedPlans:             auth0.Bool(options["ext_assigned_plans"].(bool)),
-					ExtProfile:                   auth0.Bool(options["ext_profile"].(bool)),
-					EnabledDatabaseCustomization: auth0.Bool(options["enabled_database_customization"].(bool)),
-					BruteForceProtection:         auth0.Bool(options["brute_force_protection"].(bool)),
-					ImportMode:                   auth0.Bool(options["import_mode"].(bool)),
-					DisableSignup:                auth0.Bool(options["disable_signup"].(bool)),
-					RequiresUsername:             auth0.Bool(options["requires_username"].(bool)),
-					CustomScripts:                options["custom_scripts"].(map[string]interface{}),
-					Configuration:                options["configuration"].(map[string]interface{}),
-				}
-			}
+		c.Options = &management.ConnectionOptions{
+			Validation:                   m["validation"].(map[string]interface{}),
+			PasswordPolicy:               auth0.String(m["password_policy"].(string)),
+			PasswordHistory:              buildConnectionPasswordHistory(m["password_history"].([]interface{})),
+			PasswordNoPersonalInfo:       m["password_no_personal_info"].(map[string]interface{}),
+			PasswordDictionary:           m["password_dictionary"].(map[string]interface{}),
+			APIEnableUsers:               auth0.Bool(m["api_enable_users"].(bool)),
+			BasicProfile:                 auth0.Bool(m["basic_profile"].(bool)),
+			ExtAdmin:                     auth0.Bool(m["ext_admin"].(bool)),
+			ExtIsSuspended:               auth0.Bool(m["ext_is_suspended"].(bool)),
+			ExtAgreedTerms:               auth0.Bool(m["ext_agreed_terms"].(bool)),
+			ExtGroups:                    auth0.Bool(m["ext_groups"].(bool)),
+			ExtAssignedPlans:             auth0.Bool(m["ext_assigned_plans"].(bool)),
+			ExtProfile:                   auth0.Bool(m["ext_profile"].(bool)),
+			EnabledDatabaseCustomization: auth0.Bool(m["enabled_database_customization"].(bool)),
+			BruteForceProtection:         auth0.Bool(m["brute_force_protection"].(bool)),
+			ImportMode:                   auth0.Bool(m["import_mode"].(bool)),
+			DisableSignup:                auth0.Bool(m["disable_signup"].(bool)),
+			RequiresUsername:             auth0.Bool(m["requires_username"].(bool)),
+			CustomScripts:                m["custom_scripts"].(map[string]interface{}),
+			Configuration:                m["configuration"].(map[string]interface{}),
 		}
-	}
+	})
 
 	return c
 }
