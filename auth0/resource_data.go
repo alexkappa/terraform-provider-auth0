@@ -36,7 +36,7 @@ func (md MapData) GetOkExists(key string) (interface{}, bool) {
 }
 
 func isZero(v interface{}) bool {
-	return v == reflect.Zero(reflect.TypeOf(v)).Interface()
+	return reflect.DeepEqual(v, reflect.Zero(reflect.TypeOf(v)).Interface())
 }
 
 var _ Data = (*schema.ResourceData)(nil)
