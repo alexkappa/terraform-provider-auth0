@@ -256,44 +256,36 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 		m := v.(map[string]interface{})
 
 		c.Options = &management.ConnectionOptions{
-			Validation:                   m["validation"].(map[string]interface{}),
-			PasswordPolicy:               auth0.String(m["password_policy"].(string)),
-			PasswordHistory:              buildConnectionPasswordHistory(m["password_history"].([]interface{})),
-			PasswordNoPersonalInfo:       m["password_no_personal_info"].(map[string]interface{}),
-			PasswordDictionary:           m["password_dictionary"].(map[string]interface{}),
-			APIEnableUsers:               auth0.Bool(m["api_enable_users"].(bool)),
-			BasicProfile:                 auth0.Bool(m["basic_profile"].(bool)),
-			ExtAdmin:                     auth0.Bool(m["ext_admin"].(bool)),
-			ExtIsSuspended:               auth0.Bool(m["ext_is_suspended"].(bool)),
-			ExtAgreedTerms:               auth0.Bool(m["ext_agreed_terms"].(bool)),
-			ExtGroups:                    auth0.Bool(m["ext_groups"].(bool)),
-			ExtAssignedPlans:             auth0.Bool(m["ext_assigned_plans"].(bool)),
-			ExtProfile:                   auth0.Bool(m["ext_profile"].(bool)),
-			EnabledDatabaseCustomization: auth0.Bool(m["enabled_database_customization"].(bool)),
-			BruteForceProtection:         auth0.Bool(m["brute_force_protection"].(bool)),
-			ImportMode:                   auth0.Bool(m["import_mode"].(bool)),
-			DisableSignup:                auth0.Bool(m["disable_signup"].(bool)),
-			RequiresUsername:             auth0.Bool(m["requires_username"].(bool)),
-			CustomScripts:                m["custom_scripts"].(map[string]interface{}),
-			Configuration:                m["configuration"].(map[string]interface{}),
+			Validation:                   Map(MapData(m), "validation"),
+			PasswordPolicy:               String(MapData(m), "password_policy"),
+			PasswordNoPersonalInfo:       Map(MapData(m), "password_no_personal_info"),
+			PasswordDictionary:           Map(MapData(m), "password_dictionary"),
+			APIEnableUsers:               Bool(MapData(m), "api_enable_users"),
+			BasicProfile:                 Bool(MapData(m), "basic_profile"),
+			ExtAdmin:                     Bool(MapData(m), "ext_admin"),
+			ExtIsSuspended:               Bool(MapData(m), "ext_is_suspended"),
+			ExtAgreedTerms:               Bool(MapData(m), "ext_agreed_terms"),
+			ExtGroups:                    Bool(MapData(m), "ext_groups"),
+			ExtAssignedPlans:             Bool(MapData(m), "ext_assigned_plans"),
+			ExtProfile:                   Bool(MapData(m), "ext_profile"),
+			EnabledDatabaseCustomization: Bool(MapData(m), "enabled_database_customization"),
+			BruteForceProtection:         Bool(MapData(m), "brute_force_protection"),
+			ImportMode:                   Bool(MapData(m), "import_mode"),
+			DisableSignup:                Bool(MapData(m), "disable_signup"),
+			RequiresUsername:             Bool(MapData(m), "requires_username"),
+			CustomScripts:                Map(MapData(m), "custom_scripts"),
+			Configuration:                Map(MapData(m), "configuration"),
 		}
+
+		List(MapData(m), "password_history").First(func(v interface{}) {
+
+			m := v.(map[string]interface{})
+
+			c.Options.PasswordHistory = make(map[string]interface{})
+			c.Options.PasswordHistory["enable"] = Bool(MapData(m), "enable")
+			c.Options.PasswordHistory["size"] = Int(MapData(m), "size")
+		})
 	})
 
 	return c
-}
-
-func buildConnectionPasswordHistory(v []interface{}) map[string]interface{} {
-	for _, vI := range v {
-		if phc, ok := vI.(map[string]interface{}); ok {
-			passwordHistory := make(map[string]interface{})
-			if enable, ok := phc["enable"]; ok {
-				passwordHistory["enable"] = enable.(bool)
-			}
-			if size, ok := phc["size"]; ok {
-				passwordHistory["size"] = size.(int)
-			}
-			return passwordHistory
-		}
-	}
-	return nil
 }

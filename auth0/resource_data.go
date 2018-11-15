@@ -32,7 +32,11 @@ func (md MapData) HasChange(key string) bool {
 
 func (md MapData) GetOkExists(key string) (interface{}, bool) {
 	v, ok := md[key]
-	return v, ok && !isZero(v)
+	return v, ok && !isNil(v) && !isZero(v)
+}
+
+func isNil(v interface{}) bool {
+	return v == nil
 }
 
 func isZero(v interface{}) bool {
