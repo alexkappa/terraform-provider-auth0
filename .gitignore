@@ -1,8 +1,6 @@
 *.out
+*.log
 *.tfstate
 *.tfstate.backup
-.terraform/
-.vscode/
-.wercker/
-dist/
+.*/
 terraform-provider-auth0
