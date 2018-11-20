@@ -116,6 +116,10 @@ func newConnection() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},
+						"ext_nested_groups": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
 						"ext_assigned_plans": {
 							Type:     schema.TypeBool,
 							Optional: true,
@@ -157,6 +161,48 @@ func newConnection() *schema.Resource {
 							DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 								return strings.HasPrefix(old, "2.0$") || new == old
 							},
+						},
+						// waad options
+						"app_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"app_domain": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"client_id": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"client_secret": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"domain_aliases": {
+							Type:     schema.TypeList,
+							Elem:     &schema.Schema{Type: schema.TypeString},
+							Optional: true,
+						},
+						"max_groups_to_retrieve": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"tenant_domain": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"use_wsfed": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
+						"waad_protocol": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"waad_common_endpoint": {
+							Type:     schema.TypeBool,
+							Optional: true,
 						},
 					},
 				},
@@ -208,6 +254,7 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 			"ext_is_suspended":               auth0.BoolValue(c.Options.ExtIsSuspended),
 			"ext_agreed_terms":               auth0.BoolValue(c.Options.ExtAgreedTerms),
 			"ext_groups":                     auth0.BoolValue(c.Options.ExtGroups),
+			"ext_nested_groups":              auth0.BoolValue(c.Options.ExtNestedGroups),
 			"ext_assigned_plans":             auth0.BoolValue(c.Options.ExtAssignedPlans),
 			"ext_profile":                    auth0.BoolValue(c.Options.ExtProfile),
 			"enabled_database_customization": auth0.BoolValue(c.Options.EnabledDatabaseCustomization),
@@ -217,6 +264,18 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 			"requires_username":              auth0.BoolValue(c.Options.RequiresUsername),
 			"custom_scripts":                 c.Options.CustomScripts,
 			"configuration":                  c.Options.Configuration,
+
+			// waad
+			"app_id":                         auth0.StringValue(c.Options.AppID),
+			"app_domain":                     auth0.StringValue(c.Options.AppDomain),
+			"client_id":                      auth0.StringValue(c.Options.ClientID),
+			"client_secret":                  auth0.StringValue(c.Options.ClientSecret),
+			"domain_aliases":                 c.Options.DomainAliases,
+			"max_groups_to_retrieve":         auth0.StringValue(c.Options.MaxGroupsToRetrieve),
+			"tenant_domain":                  auth0.StringValue(c.Options.TenantDomain),
+			"use_wsfed":                      auth0.BoolValue(c.Options.UseWsfed),
+			"waad_protocol":                  auth0.StringValue(c.Options.WaadProtocol),
+			"waad_common_endpoint":           auth0.BoolValue(c.Options.WaadCommonEndpoint),
 		},
 	})
 
@@ -266,6 +325,7 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 			ExtIsSuspended:               Bool(MapData(m), "ext_is_suspended"),
 			ExtAgreedTerms:               Bool(MapData(m), "ext_agreed_terms"),
 			ExtGroups:                    Bool(MapData(m), "ext_groups"),
+			ExtNestedGroups:              Bool(MapData(m), "ext_nested_groups"),
 			ExtAssignedPlans:             Bool(MapData(m), "ext_assigned_plans"),
 			ExtProfile:                   Bool(MapData(m), "ext_profile"),
 			EnabledDatabaseCustomization: Bool(MapData(m), "enabled_database_customization"),
@@ -275,6 +335,18 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 			RequiresUsername:             Bool(MapData(m), "requires_username"),
 			CustomScripts:                Map(MapData(m), "custom_scripts"),
 			Configuration:                Map(MapData(m), "configuration"),
+
+			// Waad
+			AppID:                        String(MapData(m), "app_id"),
+			AppDomain:                    String(MapData(m), "app_domain"),
+			ClientID:                     String(MapData(m), "client_id"),
+			ClientSecret:                 String(MapData(m), "client_secret"),
+			DomainAliases:                Slice(MapData(m), "domain_aliases"),
+			MaxGroupsToRetrieve:          String(MapData(m), "max_groups_to_retrieve"),
+			TenantDomain:                 String(MapData(m), "tenant_domain"),
+			UseWsfed:                     Bool(MapData(m), "use_wsfed"),
+			WaadProtocol:                 String(MapData(m), "waad_protocol"),
+			WaadCommonEndpoint:           Bool(MapData(m), "waad_common_endpoint"),
 		}
 
 		List(MapData(m), "password_history").First(func(v interface{}) {

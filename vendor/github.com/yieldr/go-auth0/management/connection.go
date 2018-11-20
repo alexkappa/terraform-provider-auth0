@@ -73,6 +73,7 @@ type ConnectionOptions struct {
 	ExtIsSuspended               *bool `json:"ext_is_suspended,omitempty"`
 	ExtAgreedTerms               *bool `json:"ext_agreed_terms,omitempty"`
 	ExtGroups                    *bool `json:"ext_groups,omitempty"`
+	ExtNestedGroups              *bool `json:"ext_nested_groups,omitempty"`
 	ExtAssignedPlans             *bool `json:"ext_assigned_plans,omitempty"`
 	ExtProfile                   *bool `json:"ext_profile,omitempty"`
 	EnabledDatabaseCustomization *bool `json:"enabledDatabaseCustomization,omitempty"`
@@ -84,15 +85,16 @@ type ConnectionOptions struct {
 	// Options for adding parameters in the request to the upstream IdP.
 	UpstreamParams *interface{} `json:"upstream_params,omitempty"`
 
-	ClientID           *string       `json:"client_id,omitempty"`
-	ClientSecret       *string       `json:"client_secret,omitempty"`
-	TenantDomain       *string       `json:"tenant_domain,omitempty"`
-	DomainAliases      []interface{} `json:"domain_aliases,omitempty"`
-	UseWsfed           *bool         `json:"use_wsfed,omitempty"`
-	WaadProtocol       *string       `json:"waad_protocol,omitempty"`
-	WaadCommonEndpoint *bool         `json:"waad_common_endpoint,omitempty"`
-	AppID              *string       `json:"app_id,omitempty"`
-	AppDomain          *string       `json:"app_domain,omitempty"`
+	ClientID            *string       `json:"client_id,omitempty"`
+	ClientSecret        *string       `json:"client_secret,omitempty"`
+	TenantDomain        *string       `json:"tenant_domain,omitempty"`
+	DomainAliases       []interface{} `json:"domain_aliases,omitempty"`
+	UseWsfed            *bool         `json:"use_wsfed,omitempty"`
+	WaadProtocol        *string       `json:"waad_protocol,omitempty"`
+	WaadCommonEndpoint  *bool         `json:"waad_common_endpoint,omitempty"`
+	AppID               *string       `json:"app_id,omitempty"`
+	AppDomain           *string       `json:"app_domain,omitempty"`
+	MaxGroupsToRetrieve *string       `json:"max_groups_to_retrieve,omitempty"`
 
 	// Scripts for the connction
 	// Allowed keys are: "get_user", "login", "create", "verify", "change_password" or "delete".
