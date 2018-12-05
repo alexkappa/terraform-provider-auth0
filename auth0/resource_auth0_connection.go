@@ -54,9 +54,34 @@ func newConnection() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"validation": {
-							Type:     schema.TypeMap,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Type:     schema.TypeList,
 							Optional: true,
+							Computed: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"username": {
+										Type:     schema.TypeList,
+										Optional: true,
+										Computed: true,
+										MaxItems: 1,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"min": {
+													Type:     schema.TypeInt,
+													Optional: true,
+													Default:  1,
+												},
+												"max": {
+													Type:     schema.TypeInt,
+													Optional: true,
+													Default:  15,
+												},
+											},
+										},
+									},
+								},
+							},
 						},
 						"password_policy": {
 							Type:     schema.TypeString,
@@ -197,7 +222,7 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 	d.Set("strategy", c.Strategy)
 	d.Set("options", []map[string]interface{}{
 		{
-			"validation":                     c.Options.Validation,
+			"validation":                     readConnectionValidation(c.Options.Validation),
 			"password_policy":                auth0.StringValue(c.Options.PasswordPolicy),
 			"password_history":               c.Options.PasswordHistory,
 			"password_no_personal_info":      c.Options.PasswordNoPersonalInfo,
@@ -256,7 +281,6 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 		m := v.(map[string]interface{})
 
 		c.Options = &management.ConnectionOptions{
-			Validation:                   Map(MapData(m), "validation"),
 			PasswordPolicy:               String(MapData(m), "password_policy"),
 			PasswordNoPersonalInfo:       Map(MapData(m), "password_no_personal_info"),
 			PasswordDictionary:           Map(MapData(m), "password_dictionary"),
@@ -277,6 +301,17 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 			Configuration:                Map(MapData(m), "configuration"),
 		}
 
+		List(MapData(m), "validation").First(func(v interface{}) {
+			vm := v.(map[string]interface{})
+
+			List(MapData(vm), "username").First(func(u interface{}) {
+				um := u.(map[string]interface{})
+
+				c.Options.Validation = make(map[string]interface{})
+				c.Options.Validation["username"] = um
+			})
+		})
+
 		List(MapData(m), "password_history").First(func(v interface{}) {
 
 			m := v.(map[string]interface{})
@@ -288,4 +323,36 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 	})
 
 	return c
+}
+
+// readConnectionValidation decodes validation option from the Auth0 API response.
+func readConnectionValidation(in map[string]interface{}) []map[string]interface{} {
+	// Input data for validation has the following structure:
+	/*
+		map[string]interface{}{
+			"username": map[string]interface{}{
+				"min": 1,
+				"max": 15,
+			}
+		}
+	*/
+	var out []map[string]interface{}
+	username, ok := in["username"]
+	if !ok {
+		return out
+	}
+	outUsernameParams := make(map[string]interface{})
+	inUsernameParams := username.(map[string]interface{})
+	if min, ok := inUsernameParams["min"]; ok {
+		outUsernameParams["min"] = min
+	}
+	if max, ok := inUsernameParams["max"]; ok {
+		outUsernameParams["max"] = max
+	}
+	out = append(out, map[string]interface{}{
+		"username": []map[string]interface{}{
+			outUsernameParams,
+		},
+	})
+	return out
 }

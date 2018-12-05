@@ -60,6 +60,46 @@ resource "auth0_connection" "my_connection" {
 }
 `
 
+func TestAccConnectionValidation(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: testAccConnectionValidationConfig,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.my_connection_with_validation", "name", "Acceptance-Test-Connection-With-Validation"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection_with_validation", "strategy", "auth0"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection_with_validation", "options.0.requires_username", "true"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection_with_validation", "options.0.validation.0.username.0.min", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection_with_validation", "options.0.validation.0.username.0.max", "10"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionValidationConfig = `
+provider "auth0" {}
+
+resource "auth0_connection" "my_connection_with_validation" {
+	name = "Acceptance-Test-Connection-With-Validation"
+	strategy = "auth0"
+
+	options = {
+		requires_username = true
+
+		validation {
+			username {
+				min = 2
+				max = 10
+			}
+		}
+	}
+}
+`
+
 func TestAccConnectionAd(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
