@@ -26,6 +26,11 @@ func newConnection() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
+			"is_domain_connection": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+			},
 			"strategy": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -194,6 +199,7 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 	}
 	d.SetId(auth0.StringValue(c.ID))
 	d.Set("name", c.Name)
+	d.Set("is_domain_connection", c.IsDomainConnection)
 	d.Set("strategy", c.Strategy)
 	d.Set("options", []map[string]interface{}{
 		{
@@ -245,10 +251,11 @@ func deleteConnection(d *schema.ResourceData, m interface{}) error {
 func buildConnection(d *schema.ResourceData) *management.Connection {
 
 	c := &management.Connection{
-		Name:           String(d, "name"),
-		Strategy:       String(d, "strategy"),
-		EnabledClients: Slice(d, "enabled_clients"),
-		Realms:         Slice(d, "realms"),
+		Name:               String(d, "name"),
+		IsDomainConnection: Bool(d, "is_domain_connection"),
+		Strategy:           String(d, "strategy"),
+		EnabledClients:     Slice(d, "enabled_clients"),
+		Realms:             Slice(d, "realms"),
 	}
 
 	List(d, "options").First(func(v interface{}) {
