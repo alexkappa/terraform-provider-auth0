@@ -575,9 +575,12 @@ func buildClient(d *schema.ResourceData) *management.Client {
 		}
 	})
 
-	List(d, "client_metadata").First(func(v interface{}) {
-		c.ClientMetadata = v.(map[string]string)
-	})
+	if v, ok := d.GetOk("client_metadata"); ok {
+		c.ClientMetadata = make(map[string]string)
+		for key, value := range v.(map[string]interface{}) {
+			c.ClientMetadata[key] = (value.(string))
+		}
+	}
 
 	List(d, "mobile").First(func(v interface{}) {
 
