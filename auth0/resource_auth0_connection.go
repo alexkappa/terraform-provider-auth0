@@ -1,8 +1,6 @@
 package auth0
 
 import (
-	"strings"
-
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 	auth0 "github.com/yieldr/go-auth0"
@@ -154,9 +152,6 @@ func newConnection() *schema.Resource {
 							Elem:      &schema.Schema{Type: schema.TypeString},
 							Sensitive: true,
 							Optional:  true,
-							DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-								return strings.HasPrefix(old, "2.0$") || new == old
-							},
 						},
 					},
 				},
