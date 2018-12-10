@@ -26,7 +26,6 @@ func TestAccConnection(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.disable_signup", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.requires_username", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.custom_scripts.get_user", "myFunction"),
-					resource.TestCheckResourceAttrSet("auth0_connection.my_connection", "options.0.configuration.foo"),
 				),
 			},
 		},
@@ -53,6 +52,37 @@ resource "auth0_connection" "my_connection" {
 		custom_scripts = {
 			get_user = "myFunction"
 		}
+	}
+}
+`
+
+func TestAccConnectionWithOptionsConfigurationChildDetectsChange(t *testing.T) {
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccConnectionWithOptionsConfigurationChildConfig,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.my_connection_with_options_configuration", "name", "Acc-Test-Conn-With-Options-Config"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection_with_options_configuration", "strategy", "auth0"),
+					resource.TestCheckResourceAttrSet("auth0_connection.my_connection_with_options_configuration", "options.0.configuration.foo"),
+				),
+				ExpectNonEmptyPlan: true,
+			},
+		},
+	})
+}
+
+const testAccConnectionWithOptionsConfigurationChildConfig = `
+provider "auth0" {}
+
+resource "auth0_connection" "my_connection_with_options_configuration" {
+	name = "Acc-Test-Conn-With-Options-Config"
+	strategy = "auth0"
+	options = {
 		configuration = {
 			foo = "bar"
 		}
