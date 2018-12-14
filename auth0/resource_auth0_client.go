@@ -1,6 +1,8 @@
 package auth0
 
 import (
+	"strconv"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 	auth0 "github.com/yieldr/go-auth0"
@@ -45,6 +47,11 @@ func newClient() *schema.Resource {
 				Optional: true,
 			},
 			"is_first_party": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+			},
+			"is_token_endpoint_ip_header_trusted": {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Computed: true,
@@ -149,7 +156,227 @@ func newClient() *schema.Resource {
 				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 1,
-				Elem:     &schema.Schema{Type: schema.TypeMap},
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"aws": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"azure_blob": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"azure_sb": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"rms": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"mscrm": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"slack": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"sentry": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"box": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"cloudbees": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"concur": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"dropbox": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"echosign": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"egnyte": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"firebase": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"newrelic": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"office365": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"salesforce": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"salesforce_api": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"salesforce_sandbox_api": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"samlp": {
+							Type:     schema.TypeList,
+							MaxItems: 1,
+							Optional: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"audience": {
+										Type:     schema.TypeString,
+										Optional: true,
+									},
+									"recipient": {
+										Type:     schema.TypeString,
+										Optional: true,
+									},
+									"create_upn_claim": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  true,
+									},
+									"passthrough_claims_with_no_mapping": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  true,
+									},
+									"map_unknown_claims_as_is": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  false,
+									},
+									"map_identities": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  true,
+									},
+									"signature_algorithm": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Default:  "rsa-sha1",
+									},
+									"digest_algorithm": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Default:  "sha1",
+									},
+									"destination": {
+										Type:     schema.TypeString,
+										Optional: true,
+									},
+									"lifetime_in_seconds": {
+										Type:     schema.TypeInt,
+										Optional: true,
+										Default:  3600,
+									},
+									"sign_response": {
+										Type:     schema.TypeBool,
+										Optional: true,
+									},
+									"typed_attributes": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  true,
+									},
+									"include_attribute_name_format": {
+										Type:     schema.TypeBool,
+										Optional: true,
+										Default:  true,
+									},
+									"name_identifier_format": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Default:  "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
+									},
+									"authn_context_class_ref": {
+										Type:     schema.TypeString,
+										Optional: true,
+									},
+									"binding": {
+										Type:     schema.TypeString,
+										Optional: true,
+									},
+									"mappings": {
+										Type:     schema.TypeMap,
+										Optional: true,
+										Elem:     schema.TypeString,
+									},
+									"logout": {
+										Type:     schema.TypeMap,
+										Optional: true,
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"callback": {
+													Type:     schema.TypeString,
+													Optional: true,
+												},
+												"slo_enabled": {
+													Type:     schema.TypeBool,
+													Optional: true,
+												},
+											},
+										},
+									},
+									"name_identifier_probes": {
+										Type:     schema.TypeList,
+										Elem:     &schema.Schema{Type: schema.TypeString},
+										Optional: true,
+									},
+								},
+							},
+						},
+						"layer": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"sap_api": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"sharepoint": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"springcm": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"wams": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"wsfed": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"zendesk": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+						"zoom": {
+							Type:     schema.TypeMap,
+							Optional: true,
+						},
+					},
+				},
 			},
 			"token_endpoint_auth_method": {
 				Type:     schema.TypeString,
@@ -238,6 +465,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("app_type", c.AppType)
 	d.Set("logo_uri", c.LogoURI)
 	d.Set("is_first_party", c.IsFirstParty)
+	d.Set("is_token_endpoint_ip_header_trusted", c.IsTokenEndpointIPHeaderTrusted)
 	d.Set("oidc_conformant", c.OIDCConformant)
 	d.Set("callbacks", c.Callbacks)
 	d.Set("allowed_logout_urls", c.AllowedLogoutURLs)
@@ -289,87 +517,121 @@ func deleteClient(d *schema.ResourceData, m interface{}) error {
 func buildClient(d *schema.ResourceData) *management.Client {
 
 	c := &management.Client{
-		Name:                    String(d, "name"),
-		Description:             String(d, "description"),
-		AppType:                 String(d, "app_type"),
-		LogoURI:                 String(d, "logo_uri"),
-		IsFirstParty:            Bool(d, "is_first_party"),
-		OIDCConformant:          Bool(d, "oidc_conformant"),
-		Callbacks:               Slice(d, "callbacks"),
-		AllowedLogoutURLs:       Slice(d, "allowed_logout_urls"),
-		AllowedOrigins:          Slice(d, "allowed_origins"),
-		GrantTypes:              Slice(d, "grant_types"),
-		WebOrigins:              Slice(d, "web_origins"),
-		SSO:                     Bool(d, "sso"),
-		SSODisabled:             Bool(d, "sso_disabled"),
-		CrossOriginAuth:         Bool(d, "cross_origin_auth"),
-		CrossOriginLocation:     String(d, "cross_origin_loc"),
-		CustomLoginPageOn:       Bool(d, "custom_login_page_on"),
-		CustomLoginPage:         String(d, "custom_login_page"),
-		CustomLoginPagePreview:  String(d, "custom_login_page_preview"),
-		FormTemplate:            String(d, "form_template"),
-		TokenEndpointAuthMethod: String(d, "token_endpoint_auth_method"),
+		Name:                           String(d, "name"),
+		Description:                    String(d, "description"),
+		AppType:                        String(d, "app_type"),
+		LogoURI:                        String(d, "logo_uri"),
+		IsFirstParty:                   Bool(d, "is_first_party"),
+		IsTokenEndpointIPHeaderTrusted: Bool(d, "is_token_endpoint_ip_header_trusted"),
+		OIDCConformant:                 Bool(d, "oidc_conformant"),
+		Callbacks:                      Slice(d, "callbacks"),
+		AllowedLogoutURLs:              Slice(d, "allowed_logout_urls"),
+		AllowedOrigins:                 Slice(d, "allowed_origins"),
+		GrantTypes:                     Slice(d, "grant_types"),
+		WebOrigins:                     Slice(d, "web_origins"),
+		SSO:                            Bool(d, "sso"),
+		SSODisabled:                    Bool(d, "sso_disabled"),
+		CrossOriginAuth:                Bool(d, "cross_origin_auth"),
+		CrossOriginLocation:            String(d, "cross_origin_loc"),
+		CustomLoginPageOn:              Bool(d, "custom_login_page_on"),
+		CustomLoginPage:                String(d, "custom_login_page"),
+		CustomLoginPagePreview:         String(d, "custom_login_page_preview"),
+		FormTemplate:                   String(d, "form_template"),
+		TokenEndpointAuthMethod:        String(d, "token_endpoint_auth_method"),
 	}
 
-	if v, ok := d.GetOk("jwt_configuration"); ok {
-		vL := v.([]interface{})
-		for _, v := range vL {
-			jwtConfiguration := v.(map[string]interface{})
+	List(d, "jwt_configuration").First(func(v interface{}) {
 
-			c.JWTConfiguration = &management.ClientJWTConfiguration{
-				LifetimeInSeconds: auth0.Int(jwtConfiguration["lifetime_in_seconds"].(int)),
-				Scopes:            jwtConfiguration["scopes"],
-				Algorithm:         auth0.String(jwtConfiguration["alg"].(string)),
-			}
+		m := v.(map[string]interface{})
+
+		c.JWTConfiguration = &management.ClientJWTConfiguration{
+			LifetimeInSeconds: Int(MapData(m), "lifetime_in_seconds"),
+			Algorithm:         String(MapData(m), "alg"),
+			Scopes:            Map(MapData(m), "scopes"),
 		}
-	}
+	})
 
-	if v, ok := d.GetOk("encryption_key"); ok {
-		c.EncryptionKey = make(map[string]string)
+	List(d, "encryption_key").First(func(v interface{}) {
+		c.EncryptionKey = v.(map[string]string)
+	})
 
-		for _, item := range v.([]interface{}) {
-			for key, val := range item.(map[string]string) {
-				c.EncryptionKey[key] = val
-			}
-		}
-	}
-
-	if v, ok := d.GetOk("addons"); ok {
+	List(d, "addons").First(func(v interface{}) {
 
 		c.Addons = make(map[string]interface{})
 
-		for _, item := range v.([]interface{}) {
-			for key, val := range item.(map[string]interface{}) {
-				c.Addons[key] = val
-			}
-		}
-	}
+		for addonKey, addonValue := range v.(map[string]interface{}) {
 
-	if v, ok := d.GetOk("client_metadata"); ok {
+			switch addonKey {
 
-		c.ClientMetadata = make(map[string]string)
+			case "samlp":
+				for _, v := range addonValue.([]interface{}) {
 
-		for key, val := range v.(map[string]interface{}) {
-			c.ClientMetadata[key] = val.(string)
-		}
+					addon := v.(map[string]interface{})
 
-	}
+					if len(addon) > 0 {
+						c.Addons[addonKey] = buildClientAddon(addon)
+					}
+				}
 
-	if v, ok := d.GetOk("mobile"); ok {
-
-		c.Mobile = make(map[string]interface{})
-
-		for _, item := range v.([]interface{}) {
-
-			for key, val := range item.(map[string]interface{}) {
-
-				for _, valItem := range val.([]interface{}) {
-					c.Mobile[key] = valItem
+			default:
+				addon := addonValue.(map[string]interface{})
+				if len(addon) > 0 {
+					c.Addons[addonKey] = buildClientAddon(addon)
 				}
 			}
 		}
+	})
 
+	if v, ok := d.GetOk("client_metadata"); ok {
+		c.ClientMetadata = make(map[string]string)
+		for key, value := range v.(map[string]interface{}) {
+			c.ClientMetadata[key] = (value.(string))
+		}
 	}
 
+	List(d, "mobile").First(func(v interface{}) {
+
+		c.Mobile = make(map[string]interface{})
+
+		for mobileKey, mobileValues := range v.(map[string]interface{}) {
+
+			for _, mobile := range mobileValues.([]interface{}) {
+				c.Mobile[mobileKey] = mobile
+			}
+		}
+	})
+
 	return c
+}
+
+func buildClientAddon(d map[string]interface{}) map[string]interface{} {
+
+	addon := make(map[string]interface{})
+
+	for key, value := range d {
+
+		switch v := value.(type) {
+
+		case string:
+			if i, err := strconv.ParseInt(v, 10, 64); err == nil {
+				addon[key] = i
+			} else if f, err := strconv.ParseFloat(v, 64); err == nil {
+				addon[key] = f
+			} else if b, err := strconv.ParseBool(v); err == nil {
+				addon[key] = b
+			} else {
+				addon[key] = v
+			}
+
+		case map[string]interface{}:
+			addon[key] = buildClientAddon(v)
+
+		case []interface{}:
+			addon[key] = v
+
+		default:
+			addon[key] = v
+		}
+	}
+	return addon
 }
