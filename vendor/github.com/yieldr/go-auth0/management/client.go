@@ -26,6 +26,10 @@ type Client struct {
 	// Whether this client a first party client or not
 	IsFirstParty *bool `json:"is_first_party,omitempty"`
 
+	// Set header `auth0-forwarded-for` as trusted to be used as source
+	// of end user ip for brute-force-protection on token endpoint.
+	IsTokenEndpointIPHeaderTrusted *bool `json:"is_token_endpoint_ip_header_trusted,omitempty"`
+
 	// Whether this client will conform to strict OIDC specifications
 	OIDCConformant *bool `json:"oidc_conformant,omitempty"`
 
