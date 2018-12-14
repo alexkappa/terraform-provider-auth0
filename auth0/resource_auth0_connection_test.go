@@ -18,6 +18,7 @@ func TestAccConnection(t *testing.T) {
 				Config: testAccConnectionConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-Connection"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "is_domain_connection", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "strategy", "auth0"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.password_policy", "fair"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.enabled_database_customization", "false"),
@@ -38,6 +39,7 @@ provider "auth0" {}
 
 resource "auth0_connection" "my_connection" {
 	name = "Acceptance-Test-Connection"
+	is_domain_connection = true
 	strategy = "auth0"
 	options = {
 		password_policy = "fair"

@@ -51,6 +51,11 @@ func newClient() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"is_token_endpoint_ip_header_trusted": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Computed: true,
+			},
 			"oidc_conformant": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -460,6 +465,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("app_type", c.AppType)
 	d.Set("logo_uri", c.LogoURI)
 	d.Set("is_first_party", c.IsFirstParty)
+	d.Set("is_token_endpoint_ip_header_trusted", c.IsTokenEndpointIPHeaderTrusted)
 	d.Set("oidc_conformant", c.OIDCConformant)
 	d.Set("callbacks", c.Callbacks)
 	d.Set("allowed_logout_urls", c.AllowedLogoutURLs)
@@ -511,26 +517,27 @@ func deleteClient(d *schema.ResourceData, m interface{}) error {
 func buildClient(d *schema.ResourceData) *management.Client {
 
 	c := &management.Client{
-		Name:                    String(d, "name"),
-		Description:             String(d, "description"),
-		AppType:                 String(d, "app_type"),
-		LogoURI:                 String(d, "logo_uri"),
-		IsFirstParty:            Bool(d, "is_first_party"),
-		OIDCConformant:          Bool(d, "oidc_conformant"),
-		Callbacks:               Slice(d, "callbacks"),
-		AllowedLogoutURLs:       Slice(d, "allowed_logout_urls"),
-		AllowedOrigins:          Slice(d, "allowed_origins"),
-		GrantTypes:              Slice(d, "grant_types"),
-		WebOrigins:              Slice(d, "web_origins"),
-		SSO:                     Bool(d, "sso"),
-		SSODisabled:             Bool(d, "sso_disabled"),
-		CrossOriginAuth:         Bool(d, "cross_origin_auth"),
-		CrossOriginLocation:     String(d, "cross_origin_loc"),
-		CustomLoginPageOn:       Bool(d, "custom_login_page_on"),
-		CustomLoginPage:         String(d, "custom_login_page"),
-		CustomLoginPagePreview:  String(d, "custom_login_page_preview"),
-		FormTemplate:            String(d, "form_template"),
-		TokenEndpointAuthMethod: String(d, "token_endpoint_auth_method"),
+		Name:                           String(d, "name"),
+		Description:                    String(d, "description"),
+		AppType:                        String(d, "app_type"),
+		LogoURI:                        String(d, "logo_uri"),
+		IsFirstParty:                   Bool(d, "is_first_party"),
+		IsTokenEndpointIPHeaderTrusted: Bool(d, "is_token_endpoint_ip_header_trusted"),
+		OIDCConformant:                 Bool(d, "oidc_conformant"),
+		Callbacks:                      Slice(d, "callbacks"),
+		AllowedLogoutURLs:              Slice(d, "allowed_logout_urls"),
+		AllowedOrigins:                 Slice(d, "allowed_origins"),
+		GrantTypes:                     Slice(d, "grant_types"),
+		WebOrigins:                     Slice(d, "web_origins"),
+		SSO:                            Bool(d, "sso"),
+		SSODisabled:                    Bool(d, "sso_disabled"),
+		CrossOriginAuth:                Bool(d, "cross_origin_auth"),
+		CrossOriginLocation:            String(d, "cross_origin_loc"),
+		CustomLoginPageOn:              Bool(d, "custom_login_page_on"),
+		CustomLoginPage:                String(d, "custom_login_page"),
+		CustomLoginPagePreview:         String(d, "custom_login_page_preview"),
+		FormTemplate:                   String(d, "form_template"),
+		TokenEndpointAuthMethod:        String(d, "token_endpoint_auth_method"),
 	}
 
 	List(d, "jwt_configuration").First(func(v interface{}) {
@@ -575,9 +582,12 @@ func buildClient(d *schema.ResourceData) *management.Client {
 		}
 	})
 
-	List(d, "client_metadata").First(func(v interface{}) {
-		c.ClientMetadata = v.(map[string]string)
-	})
+	if v, ok := d.GetOk("client_metadata"); ok {
+		c.ClientMetadata = make(map[string]string)
+		for key, value := range v.(map[string]interface{}) {
+			c.ClientMetadata[key] = (value.(string))
+		}
+	}
 
 	List(d, "mobile").First(func(v interface{}) {
 
