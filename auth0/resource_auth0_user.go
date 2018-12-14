@@ -2,6 +2,8 @@ package auth0
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/helper/structure"
+	"github.com/hashicorp/terraform/helper/validation"
 	auth0 "github.com/yieldr/go-auth0"
 	"github.com/yieldr/go-auth0/management"
 )
@@ -46,8 +48,9 @@ func newUser() *schema.Resource {
 				Optional: true,
 			},
 			"user_metadata": {
-				Type:     schema.TypeMap,
-				Optional: true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validation.ValidateJsonString,
 			},
 			"email_verified": {
 				Type:     schema.TypeBool,
@@ -62,8 +65,9 @@ func newUser() *schema.Resource {
 				Optional: true,
 			},
 			"app_metadata": {
-				Type:     schema.TypeMap,
-				Optional: true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validation.ValidateJsonString,
 			},
 		},
 	}
@@ -75,15 +79,23 @@ func readUser(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+
 	d.Set("user_id", u.ID)
 	d.Set("username", u.Username)
 	d.Set("phone_number", u.PhoneNumber)
-	d.Set("user_metadata", u.UserMetadata)
 	d.Set("email_verified", u.EmailVerified)
 	d.Set("phone_verified", u.PhoneVerified)
 	d.Set("verify_email", u.VerifyEmail)
-	d.Set("app_metadata", u.AppMetadata)
 	d.Set("email", u.Email)
+
+	if userMeta, err := structure.FlattenJsonToString(u.UserMetadata); err != nil {
+		d.Set("user_metadata", userMeta)
+	}
+
+	if appMeta, err := structure.FlattenJsonToString(u.AppMetadata); err != nil {
+		d.Set("app_metadata", appMeta)
+	}
+
 	return nil
 }
 
@@ -117,13 +129,25 @@ func buildUser(d *schema.ResourceData) *management.User {
 		Connection:    String(d, "connection_name"),
 		Username:      String(d, "username"),
 		PhoneNumber:   String(d, "phone_number"),
-		UserMetadata:  Map(d, "user_metadata"),
 		EmailVerified: Bool(d, "email_verified"),
 		VerifyEmail:   Bool(d, "verify_email"),
 		PhoneVerified: Bool(d, "phone_verified"),
-		AppMetadata:   Map(d, "app_metadata"),
 		Email:         String(d, "email"),
 		Password:      String(d, "password"),
+	}
+
+	if d.HasChange("user_metadata") {
+		userMeta, err := structure.ExpandJsonFromString(d.Get("user_metadata").(string))
+		if err != nil {
+			u.UserMetadata = userMeta
+		}
+	}
+
+	if d.HasChange("app_metadata") {
+		appMeta, err := structure.ExpandJsonFromString(d.Get("app_metadata").(string))
+		if err != nil {
+			u.AppMetadata = appMeta
+		}
 	}
 
 	if u.Username != nil || u.Password != nil || u.EmailVerified != nil || u.PhoneVerified != nil {

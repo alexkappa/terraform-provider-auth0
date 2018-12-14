@@ -55,5 +55,17 @@ resource "auth0_user" "user" {
   user_id = "12345"
   email = "test@test.com"
   password = "testtest$12$12"
+  user_metadata = <<EOF
+{
+  	"foo": "bar",
+  	"bar": { "baz": "qux" }
+}
+EOF
+  app_metadata = <<EOF
+{
+  	"foo": "bar",
+  	"bar": { "baz": "qux" }
+}
+EOF
 }
 `
