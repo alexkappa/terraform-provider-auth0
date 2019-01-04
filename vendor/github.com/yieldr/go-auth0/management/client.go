@@ -46,7 +46,7 @@ type Client struct {
 	JWTConfiguration  *ClientJWTConfiguration `json:"jwt_configuration,omitempty"`
 
 	// Client signing keys
-	SigningKeys   []map[string]string `json:"-"`
+	SigningKeys   []map[string]string `json:"signing_keys,omitempty"`
 	EncryptionKey map[string]string   `json:"encryption_key,omitempty"`
 	SSO           *bool               `json:"sso,omitempty"`
 

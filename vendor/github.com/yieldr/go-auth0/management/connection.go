@@ -69,7 +69,6 @@ type ConnectionOptions struct {
 	// Options for password dictionary policy.
 	PasswordDictionary map[string]interface{} `json:"password_dictionary,omitempty"`
 
-
 	APIEnableUsers               *bool `json:"api_enable_users,omitempty"`
 	BasicProfile                 *bool `json:"basic_profile,omitempty"`
 	ExtAdmin                     *bool `json:"ext_admin,omitempty"`
@@ -99,7 +98,8 @@ type ConnectionOptions struct {
 	AppDomain           *string       `json:"app_domain,omitempty"`
 	MaxGroupsToRetrieve *string       `json:"max_groups_to_retrieve,omitempty"`
 
-	// Scripts for the connection. Allowed keys are: "get_user", "login", "create", "verify", "change_password", "delete" or "change_email".
+	// Scripts for the connection
+	// Allowed keys are: "get_user", "login", "create", "verify", "change_password", "delete" or "change_email".
 	CustomScripts map[string]interface{} `json:"customScripts,omitempty"`
 	// configuration variables that can be used in custom scripts
 	Configuration map[string]interface{} `json:"configuration,omitempty"`

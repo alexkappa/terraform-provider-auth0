@@ -4,7 +4,8 @@
 
 [[constraint]]
   name = "github.com/yieldr/go-auth0"
-  version = "v1.0.0-beta.9"
+  source = "github.com/harryrose/go-auth0"
+  branch = "master"
 
 [prune]
   go-tests = true
