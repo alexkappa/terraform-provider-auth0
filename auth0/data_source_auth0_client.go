@@ -1,41 +1,33 @@
 package auth0
 
 import (
-	"fmt"
+	"errors"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/yieldr/go-auth0/management"
-)
-
-const (
-	clientDataSchemaName              = "name"
-	clientDataSchemaDescription       = "description"
-	clientDataSchemaClientID          = "client_id"
-	clientDataSchemaClientSecret      = "client_secret"
-	clientDataSchemaSigningKeys       = "signing_keys"
 )
 
 func newClientDataSource() *schema.Resource {
 	return &schema.Resource{
 		Read: readClientDataSource,
 		Schema: map[string]*schema.Schema{
-			clientDataSchemaClientID: {
+			"client_id": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 			},
-			clientDataSchemaName: {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			clientDataSchemaDescription: {
+			"name": {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			clientDataSchemaClientSecret: {
+			"description": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"client_secret": {
 				Type:     schema.TypeString,
 				Computed: true,
 				Sensitive: true,
 			},
-			clientDataSchemaSigningKeys: {
+			"signing_keys": {
 				Type: schema.TypeList,
 				Elem: &schema.Schema{
 					Type: schema.TypeMap,
@@ -49,23 +41,23 @@ func newClientDataSource() *schema.Resource {
 func readClientDataSource(r *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 
-	clientID, ok := r.Get(clientDataSchemaClientID).(string)
+	clientID := String(r, "client_id")
 
-	if !ok {
-		return fmt.Errorf("field '%s' was either not set or not a string", clientDataSchemaClientID)
+	if clientID == nil {
+		return errors.New("client_id was not set")
 	}
 
-	c, err := api.Client.Read(clientID)
+	c, err := api.Client.Read(*clientID)
 
 	if err != nil {
 		return err
 	}
 
-	r.SetId(clientID)
-	r.Set(clientDataSchemaName, c.Name)
-	r.Set(clientDataSchemaDescription, c.Description)
-	r.Set(clientDataSchemaClientSecret, c.ClientSecret)
-	r.Set(clientDataSchemaSigningKeys, c.SigningKeys)
+	r.SetId(*clientID)
+	r.Set("name", c.Name)
+	r.Set("description", c.Description)
+	r.Set("client_secret", c.ClientSecret)
+	r.Set("signing_keys", c.SigningKeys)
 
 	return nil
 }
