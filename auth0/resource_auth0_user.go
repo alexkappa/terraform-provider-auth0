@@ -4,7 +4,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/structure"
 	"github.com/hashicorp/terraform/helper/validation"
-	auth0 "github.com/yieldr/go-auth0"
+	"github.com/yieldr/go-auth0"
 	"github.com/yieldr/go-auth0/management"
 )
 
@@ -138,14 +138,14 @@ func buildUser(d *schema.ResourceData) *management.User {
 
 	if d.HasChange("user_metadata") {
 		userMeta, err := structure.ExpandJsonFromString(d.Get("user_metadata").(string))
-		if err != nil {
+		if err == nil {
 			u.UserMetadata = userMeta
 		}
 	}
 
 	if d.HasChange("app_metadata") {
 		appMeta, err := structure.ExpandJsonFromString(d.Get("app_metadata").(string))
-		if err != nil {
+		if err == nil {
 			u.AppMetadata = appMeta
 		}
 	}
