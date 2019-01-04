@@ -44,3 +44,7 @@ resource "auth0_client" "my_app_client" {
     }
   }
 }
+
+data "auth0_client" "client_lookup" {
+  client_id = "myClientID"
+}
