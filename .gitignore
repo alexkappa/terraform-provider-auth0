@@ -1,6 +1,17 @@
 *.out
 *.log
+*.bak
+*~
+.*.swp
+.idea
+*.test
+*.iml
+*.tfplan
 *.tfstate
 *.tfstate.backup
 .*/
 terraform-provider-auth0
+website/vendor
+website/.bundle
+website/build
+website/node_modules
