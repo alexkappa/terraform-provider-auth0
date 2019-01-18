@@ -272,16 +272,16 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 			"configuration":                  c.Options.Configuration,
 
 			// waad
-			"app_id":                         auth0.StringValue(c.Options.AppID),
-			"app_domain":                     auth0.StringValue(c.Options.AppDomain),
-			"client_id":                      auth0.StringValue(c.Options.ClientID),
-			"client_secret":                  auth0.StringValue(c.Options.ClientSecret),
-			"domain_aliases":                 c.Options.DomainAliases,
-			"max_groups_to_retrieve":         auth0.StringValue(c.Options.MaxGroupsToRetrieve),
-			"tenant_domain":                  auth0.StringValue(c.Options.TenantDomain),
-			"use_wsfed":                      auth0.BoolValue(c.Options.UseWsfed),
-			"waad_protocol":                  auth0.StringValue(c.Options.WaadProtocol),
-			"waad_common_endpoint":           auth0.BoolValue(c.Options.WaadCommonEndpoint),
+			"app_id":                 auth0.StringValue(c.Options.AppID),
+			"app_domain":             auth0.StringValue(c.Options.AppDomain),
+			"client_id":              auth0.StringValue(c.Options.ClientID),
+			"client_secret":          auth0.StringValue(c.Options.ClientSecret),
+			"domain_aliases":         c.Options.DomainAliases,
+			"max_groups_to_retrieve": auth0.StringValue(c.Options.MaxGroupsToRetrieve),
+			"tenant_domain":          auth0.StringValue(c.Options.TenantDomain),
+			"use_wsfed":              auth0.BoolValue(c.Options.UseWsfed),
+			"waad_protocol":          auth0.StringValue(c.Options.WaadProtocol),
+			"waad_common_endpoint":   auth0.BoolValue(c.Options.WaadCommonEndpoint),
 		},
 	})
 
@@ -344,16 +344,16 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 			Configuration:                Map(MapData(m), "configuration"),
 
 			// Waad
-			AppID:                        String(MapData(m), "app_id"),
-			AppDomain:                    String(MapData(m), "app_domain"),
-			ClientID:                     String(MapData(m), "client_id"),
-			ClientSecret:                 String(MapData(m), "client_secret"),
-			DomainAliases:                Slice(MapData(m), "domain_aliases"),
-			MaxGroupsToRetrieve:          String(MapData(m), "max_groups_to_retrieve"),
-			TenantDomain:                 String(MapData(m), "tenant_domain"),
-			UseWsfed:                     Bool(MapData(m), "use_wsfed"),
-			WaadProtocol:                 String(MapData(m), "waad_protocol"),
-			WaadCommonEndpoint:           Bool(MapData(m), "waad_common_endpoint"),
+			AppID:               String(MapData(m), "app_id"),
+			AppDomain:           String(MapData(m), "app_domain"),
+			ClientID:            String(MapData(m), "client_id"),
+			ClientSecret:        String(MapData(m), "client_secret"),
+			DomainAliases:       Slice(MapData(m), "domain_aliases"),
+			MaxGroupsToRetrieve: String(MapData(m), "max_groups_to_retrieve"),
+			TenantDomain:        String(MapData(m), "tenant_domain"),
+			UseWsfed:            Bool(MapData(m), "use_wsfed"),
+			WaadProtocol:        String(MapData(m), "waad_protocol"),
+			WaadCommonEndpoint:  Bool(MapData(m), "waad_common_endpoint"),
 		}
 
 		List(MapData(m), "password_history").First(func(v interface{}) {

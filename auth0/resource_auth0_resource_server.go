@@ -135,12 +135,12 @@ func deleteResourceServer(d *schema.ResourceData, m interface{}) error {
 func buildResourceServer(d *schema.ResourceData) *management.ResourceServer {
 
 	s := &management.ResourceServer{
-		Name:                                      String(d, "name"),
-		Identifier:                                String(d, "identifier"),
-		SigningAlgorithm:                          String(d, "signing_alg"),
-		SigningSecret:                             String(d, "signing_secret"),
-		AllowOfflineAccess:                        Bool(d, "allow_offline_access"),
-		TokenLifetime:                             Int(d, "token_lifetime"),
+		Name:               String(d, "name"),
+		Identifier:         String(d, "identifier"),
+		SigningAlgorithm:   String(d, "signing_alg"),
+		SigningSecret:      String(d, "signing_secret"),
+		AllowOfflineAccess: Bool(d, "allow_offline_access"),
+		TokenLifetime:      Int(d, "token_lifetime"),
 		SkipConsentForVerifiableFirstPartyClients: Bool(d, "skip_consent_for_verifiable_first_party_clients"),
 		VerificationLocation:                      String(d, "verification_location"),
 		Options:                                   Map(d, "options"),
