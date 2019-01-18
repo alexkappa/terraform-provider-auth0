@@ -17,7 +17,7 @@ type ClientGrant struct {
 	// The audience.
 	Audience *string `json:"audience,omitempty"`
 
-	Scope []interface{} `json:"scope,omitempty"`
+	Scope []interface{} `json:"scope"`
 }
 
 func (c *ClientGrant) String() string {
