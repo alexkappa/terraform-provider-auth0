@@ -1,7 +1,8 @@
 PKG_NAME = auth0
 PKGS ?= $$(go list ./...)
-TESTS ?= ".*"
 FILES ?= $$(find . -name '*.go' | grep -v vendor)
+TESTS ?= ".*"
+COVERS ?= "c.out"
 WEBSITE_REPO = github.com/hashicorp/terraform-website
 
 default: build
