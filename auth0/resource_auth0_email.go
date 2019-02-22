@@ -41,16 +41,18 @@ func newEmail() *schema.Resource {
 							Optional: true,
 						},
 						"api_key": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:      schema.TypeString,
+							Optional:  true,
+							Sensitive: true,
 						},
 						"access_key_id": {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
 						"secret_access_key": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:      schema.TypeString,
+							Optional:  true,
+							Sensitive: true,
 						},
 						"region": {
 							Type:     schema.TypeString,
@@ -69,8 +71,9 @@ func newEmail() *schema.Resource {
 							Optional: true,
 						},
 						"smtp_pass": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:      schema.TypeString,
+							Optional:  true,
+							Sensitive: true,
 						},
 					},
 				},
