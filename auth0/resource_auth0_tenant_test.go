@@ -58,7 +58,7 @@ resource "auth0_tenant" "my_tenant" {
 	  show_log_link = false,
 	  url = "https://mycompany.org/error"
 	}
-	friendly_name = "My Test Tenants"
+	friendly_name = "My Test Tenant"
 	picture_url = "https://mycompany.org/logo.png"
 	support_email = "support@mycompany.org"
 	support_url = "https://mycompany.org/support"
