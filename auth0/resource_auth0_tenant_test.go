@@ -15,7 +15,7 @@ func TestAccTenant(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: testAccClientConfig,
+				Config: testAccTenantConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "change_password.0.enabled", "true"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "change_password.0.html", "<html>Change Password</html>"),
