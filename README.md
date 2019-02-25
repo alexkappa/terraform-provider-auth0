@@ -31,7 +31,7 @@ $ make build
 Using the provider
 ------------------
 
-The provider isn't listed in the official Terraform repository, so using `terraform init` to download the provide won't work. To install the auth0 provider, you can [download the binary](https://github.com/yieldr/terraform-provider-auth0/releases) and place in the directory `~/.terraform/plugins` (or `%APPDATA%/terraform.d/plugins/` if you're on Windows).
+The provider isn't listed in the official Terraform repository, so using `terraform init` to download the provide won't work. To install the auth0 provider, you can [download the binary](https://github.com/yieldr/terraform-provider-auth0/releases) and place in the directory `~/.terraform.d/plugins` (or `%APPDATA%/terraform.d/plugins/` if you're on Windows).
 
 To use the provider define the `auth0` provider in your `*.tf` file.
 
