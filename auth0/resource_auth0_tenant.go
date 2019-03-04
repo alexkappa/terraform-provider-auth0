@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/yieldr/go-auth0/management"
 )
@@ -115,9 +116,8 @@ func newTenant() *schema.Resource {
 }
 
 func createTenant(d *schema.ResourceData, m interface{}) error {
-	api := m.(*management.Management)
-	d.SetId(api.Domain)
-	return readTenant(d, m)
+	d.SetId(resource.UniqueId())
+	return updateTenant(d, m)
 }
 
 func readTenant(d *schema.ResourceData, m interface{}) error {
@@ -127,11 +127,37 @@ func readTenant(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	d.Set("change_password", t.ChangePassword)
-	d.Set("guardian_mfa_page", t.GuardianMFAPage)
+	if changePassword := t.ChangePassword; changePassword != nil {
+		d.Set("change_password", []map[string]interface{}{
+			{
+				"enabled": changePassword.Enabled,
+				"html":    changePassword.HTML,
+			},
+		})
+	}
+
+	if guardianMFAPage := t.GuardianMFAPage; guardianMFAPage != nil {
+		d.Set("guardian_mfa_page", []map[string]interface{}{
+			{
+				"enabled": guardianMFAPage.Enabled,
+				"html":    guardianMFAPage.HTML,
+			},
+		})
+	}
+
 	d.Set("default_audience", t.DefaultAudience)
 	d.Set("default_directory", t.DefaultDirectory)
-	d.Set("error_page", t.ErrorPage)
+
+	if errorPage := t.ErrorPage; errorPage != nil {
+		d.Set("error_page", []map[string]interface{}{
+			{
+				"html":          errorPage.HTML,
+				"show_log_link": errorPage.ShowLogLink,
+				"url":           errorPage.URL,
+			},
+		})
+	}
+
 	d.Set("friendly_name", t.FriendlyName)
 	d.Set("picture_url", t.PictureURL)
 	d.Set("support_email", t.SupportEmail)
@@ -154,6 +180,7 @@ func updateTenant(d *schema.ResourceData, m interface{}) error {
 }
 
 func deleteTenant(d *schema.ResourceData, m interface{}) error {
+	d.SetId("")
 	return nil
 }
 

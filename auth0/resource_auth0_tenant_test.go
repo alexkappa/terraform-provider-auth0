@@ -44,28 +44,28 @@ provider "auth0" {}
 
 resource "auth0_tenant" "my_tenant" {
 	change_password {
-	  enabled = true
-	  html = "<html>Change Password</html>"
+		enabled = true
+		html = "<html>Change Password</html>"
 	}
 	guardian_mfa_page {
-	  enabled = true
-	  html = "<html>MFA</html>"
+		enabled = true
+		html = "<html>MFA</html>"
 	}
 	default_audience = ""
 	default_directory = ""
 	error_page {
-	  html = "<html>Error Page</html>",
-	  show_log_link = false,
-	  url = "https://mycompany.org/error"
+		html = "<html>Error Page</html>",
+		show_log_link = false,
+		url = "https://mycompany.org/error"
 	}
 	friendly_name = "My Test Tenant"
 	picture_url = "https://mycompany.org/logo.png"
 	support_email = "support@mycompany.org"
 	support_url = "https://mycompany.org/support"
 	allowed_logout_urls = [
-	  "https://mycompany.org/logoutCallback"
+		"https://mycompany.org/logoutCallback"
 	]
 	session_lifetime = 168,
 	sandbox_version = "8"
-  }
+}
 `
