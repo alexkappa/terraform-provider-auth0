@@ -80,45 +80,6 @@ func newTenant() *schema.Resource {
 					},
 				},
 			},
-			"flags": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"change_pwd_flow_v1": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
-						},
-						"enable_client_connections": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
-						},
-						"enable_apis_section": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
-						},
-						"enable_pipeline2": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
-						},
-						"enable_dynamic_client_registration": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
-						},
-						"enable_custom_domain_in_emails": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
-						},
-					},
-				},
-			},
 			"friendly_name": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -171,7 +132,6 @@ func readTenant(d *schema.ResourceData, m interface{}) error {
 	d.Set("default_audience", t.DefaultAudience)
 	d.Set("default_directory", t.DefaultDirectory)
 	d.Set("error_page", t.ErrorPage)
-	d.Set("flags", t.Flags)
 	d.Set("friendly_name", t.FriendlyName)
 	d.Set("picture_url", t.PictureURL)
 	d.Set("support_email", t.SupportEmail)
@@ -228,15 +188,13 @@ func buildTenant(d *schema.ResourceData) *management.Tenant {
 		}
 	})
 
-	List(d, "flags").First(func(v interface{}) {
+	List(d, "error_page").First(func(v interface{}) {
 		m := v.(map[string]interface{})
-		t.Flags = &management.TenantFlags{
-			ChangePasswordFlowV1:            Bool(MapData(m), "change_pwd_flow_v1"),
-			EnableClientConnections:         Bool(MapData(m), "enable_client_connections"),
-			EnableAPIsSection:               Bool(MapData(m), "enable_apis_section"),
-			EnablePipeline2:                 Bool(MapData(m), "enable_pipeline2"),
-			EnableDynamicClientRegistration: Bool(MapData(m), "enable_dynamic_client_registration"),
-			EnableCustomDomainInEmails:      Bool(MapData(m), "enable_custom_domain_in_emails"),
+
+		t.ErrorPage = &management.TenantErrorPage{
+			HTML:        String(MapData(m), "html"),
+			ShowLogLink: Bool(MapData(m), "show_log_link"),
+			URL:         String(MapData(m), "url"),
 		}
 	})
 
