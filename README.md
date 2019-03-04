@@ -74,10 +74,10 @@ If you wish to work on the provider, you'll first need [Go](http://www.golang.or
 
 On how to develop custom terraform providers, read the [official guide](https://www.terraform.io/docs/extend/writing-custom-providers.html).
 
-To compile the provider, run `make install`. This will build the provider and install the provider binary in the `$GOPATH/bin` directory.
+To compile the provider, run `make build`. This will build the provider and install the provider binary in the `$GOPATH/bin` directory.
 
 ```sh
-$ make install
+$ make build
 ...
 $ $GOPATH/bin/terraform-provider-auth0
 ...
