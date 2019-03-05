@@ -64,7 +64,8 @@ Examples of resources can be found in the [examples directory](example/). The cu
 - [x] [Emails](https://auth0.com/docs/api/management/v2#!/Emails/get_provider)
 - [ ] [Guardian](https://auth0.com/docs/api/management/v2#!/Guardian/get_factors)
 - [ ] [Jobs](https://auth0.com/docs/api/management/v2#!/Jobs/get_jobs_by_id)
-- [ ] [Tenants](https://auth0.com/docs/api/management/v2#!/Tenants/get_settings)
+- [X] [Tenants](https://auth0.com/docs/api/management/v2#!/Tenants/get_settings)
+  - Missing attributes: `flags`, `universal_login`, `idle_session_lifetime`.
 - [ ] [Tickets](https://auth0.com/docs/api/management/v2#!/Tickets/post_email_verification)
 
 Developing the Provider
