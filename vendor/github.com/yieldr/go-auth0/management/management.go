@@ -63,7 +63,7 @@ type Management struct {
 	// Stat is used to retrieve usage statistics.
 	Stat *StatManager
 
-	Domain   string
+	domain   string
 	basePath string
 	timeout  time.Duration
 	debug    bool
@@ -76,7 +76,7 @@ type Management struct {
 func New(domain, clientID, clientSecret string, options ...apiOption) (*Management, error) {
 
 	m := &Management{
-		Domain:   domain,
+		domain:   domain,
 		basePath: "api/v2",
 		timeout:  1 * time.Minute,
 		debug:    false,
@@ -110,7 +110,7 @@ func New(domain, clientID, clientSecret string, options ...apiOption) (*Manageme
 func (m *Management) uri(path ...string) string {
 	return (&url.URL{
 		Scheme: "https",
-		Host:   m.Domain,
+		Host:   m.domain,
 		Path:   m.basePath + "/" + strings.Join(path, "/"),
 	}).String()
 }
