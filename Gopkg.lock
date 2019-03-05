@@ -438,15 +438,15 @@
   version = "v0.5.4"
 
 [[projects]]
-  digest = "1:12fa5858a8359400e6f79a8a114e68328e0968a3fecca4f36dce8f752158076f"
+  digest = "1:8b67492c0c0ae2112754e36a6bc35525361a88014c67762723a614e62f82f5c5"
   name = "github.com/yieldr/go-auth0"
   packages = [
     ".",
     "management",
   ]
   pruneopts = "UT"
-  revision = "58a4d3f2002c48defb5cf0d943551f08b77f1f2d"
-  version = "v1.0.1"
+  revision = "5e90dfea1b93ab8dd9f540da8e577c46911b1707"
+  version = "v1.0.2"
 
 [[projects]]
   branch = "master"

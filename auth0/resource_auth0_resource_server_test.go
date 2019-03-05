@@ -45,7 +45,8 @@ resource "auth0_resource_server" "my_resource_server" {
   	description = "Create bars"
   }
   allow_offline_access = true
-  token_lifetime = 8600
+  token_lifetime = 7200
+  token_lifetime_for_web = 3600
   skip_consent_for_verifiable_first_party_clients = true
 }
 `
