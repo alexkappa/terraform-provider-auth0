@@ -21,7 +21,8 @@ func TestAccResourceServer(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "identifier", "https://api.example.com/v2"),
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "signing_alg", "RS256"),
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "allow_offline_access", "true"),
-					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "token_lifetime", "8600"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "token_lifetime", "7200"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "token_lifetime_for_web", "3600"),
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "skip_consent_for_verifiable_first_party_clients", "true"),
 				),
 			},
@@ -45,7 +46,8 @@ resource "auth0_resource_server" "my_resource_server" {
   	description = "Create bars"
   }
   allow_offline_access = true
-  token_lifetime = 8600
+  token_lifetime = 7200
+  token_lifetime_for_web = 3600
   skip_consent_for_verifiable_first_party_clients = true
 }
 `

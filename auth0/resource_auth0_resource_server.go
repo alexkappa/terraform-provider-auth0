@@ -61,6 +61,11 @@ func newResourceServer() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"token_lifetime_for_web": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				Computed: true,
+			},
 			"skip_consent_for_verifiable_first_party_clients": {
 				Type:     schema.TypeBool,
 				Optional: true,
@@ -110,6 +115,7 @@ func readResourceServer(d *schema.ResourceData, m interface{}) error {
 	d.Set("signing_secret", s.SigningSecret)
 	d.Set("allow_offline_access", s.AllowOfflineAccess)
 	d.Set("token_lifetime", s.TokenLifetime)
+	d.Set("token_lifetime_for_web", s.TokenLifetimeForWeb)
 	d.Set("skip_consent_for_verifiable_first_party_clients", s.SkipConsentForVerifiableFirstPartyClients)
 	d.Set("verification_location", s.VerificationLocation)
 	d.Set("options", s.Options)
@@ -135,12 +141,13 @@ func deleteResourceServer(d *schema.ResourceData, m interface{}) error {
 func buildResourceServer(d *schema.ResourceData) *management.ResourceServer {
 
 	s := &management.ResourceServer{
-		Name:               String(d, "name"),
-		Identifier:         String(d, "identifier"),
-		SigningAlgorithm:   String(d, "signing_alg"),
-		SigningSecret:      String(d, "signing_secret"),
-		AllowOfflineAccess: Bool(d, "allow_offline_access"),
-		TokenLifetime:      Int(d, "token_lifetime"),
+		Name:                String(d, "name"),
+		Identifier:          String(d, "identifier"),
+		SigningAlgorithm:    String(d, "signing_alg"),
+		SigningSecret:       String(d, "signing_secret"),
+		AllowOfflineAccess:  Bool(d, "allow_offline_access"),
+		TokenLifetime:       Int(d, "token_lifetime"),
+		TokenLifetimeForWeb: Int(d, "token_lifetime_for_web"),
 		SkipConsentForVerifiableFirstPartyClients: Bool(d, "skip_consent_for_verifiable_first_party_clients"),
 		VerificationLocation:                      String(d, "verification_location"),
 		Options:                                   Map(d, "options"),

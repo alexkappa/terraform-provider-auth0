@@ -30,6 +30,11 @@ type ResourceServer struct {
 	// issued.
 	TokenLifetime *int `json:"token_lifetime,omitempty"`
 
+	// The amount of time in seconds that the token will be valid after being
+	// issued from browser based flows. Value cannot be larger than
+	// token_lifetime.
+	TokenLifetimeForWeb *int `json:"token_lifetime_for_web,omitempty"`
+
 	// Flag this entity as capable of skipping consent
 	SkipConsentForVerifiableFirstPartyClients *bool `json:"skip_consent_for_verifiable_first_party_clients,omitempty"`
 
