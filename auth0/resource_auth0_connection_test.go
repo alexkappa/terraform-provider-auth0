@@ -44,8 +44,8 @@ resource "auth0_connection" "my_connection" {
 	options = {
 		password_policy = "fair"
 		password_history = {
-			enable = "true"
-			size = "5"
+			enable = true
+			size = 5
 		}
 		enabled_database_customization = false
 		brute_force_protection = true
