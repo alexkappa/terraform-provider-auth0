@@ -62,18 +62,6 @@ The following arguments are supported:
 * `default_audience` - (Optional) Default audience (client ID) for API Authorization.
 * `default_directory` - (Optional) Name of the connection that will be used for password grants at the token endpoint. Only the following connection types are supported: LDAP, AD, Database Connections, Passwordless, Windows Azure Active Directory, ADFS.
 * `error_page` - (Optional) Nested argument of the error page. Defined below.
-* `description` - (Optional) A longer, human-readable description for the AMI.
-* `ena_support` - (Optional) Specifies whether enhanced networking with ENA is enabled. Defaults to `false`.
-* `root_device_name` - (Optional) The name of the root device (for example, `/dev/sda1`, or `/dev/xvda`).
-* `virtualization_type` - (Optional) Keyword to choose what virtualization mode created instances
-  will use. Can be either "paravirtual" (the default) or "hvm". The choice of virtualization type
-  changes the set of further arguments that are required, as described below.
-* `architecture` - (Optional) Machine architecture for created instances. Defaults to "x86_64".
-* `ebs_block_device` - (Optional) Nested block describing an EBS block device that should be
-  attached to created instances. The structure of this block is described below.
-* `ephemeral_block_device` - (Optional) Nested block describing an ephemeral block device that
-  should be attached to created instances. The structure of this block is described below.
-* `tags` - (Optional) A mapping of tags to assign to the resource.
 
 ### change_password
 
