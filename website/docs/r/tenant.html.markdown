@@ -55,25 +55,31 @@ resource "auth0_tenant" "tenant" {
 
 The following arguments are supported:
 
-* `change_password` - (Optional) Nested argument of the change password page.
-  Defined below.
-* `guardian_mfa_page` - (Optional) Nested argument of the guardian MFA page.
+* `change_password` - (Optional) A `change_password` block as defined below.
+* `guardian_mfa_page` - (Optional) A `guardian_mfa_page` block as defined below.
   Defined below.
 * `default_audience` - (Optional) Default audience (client ID) for API Authorization.
 * `default_directory` - (Optional) Name of the connection that will be used for password grants at the token endpoint. Only the following connection types are supported: LDAP, AD, Database Connections, Passwordless, Windows Azure Active Directory, ADFS.
-* `error_page` - (Optional) Nested argument of the error page. Defined below.
+* `error_page` - (Optional) A `error_page` block as defined below.
+* `friendly_name` - (Optional) The friendly name of the tenant.
+* `picture_url` - (Optional) The URL of the tenant logo (recommended size: 150x150).
+* `support_email` - (Optional) User support email.
+* `support_url` - (Optional) User support url.
+* `allowed_logout_urls` - (Optional) A set of URLs that are valid to redirect to after logout from Auth0.
+* `session_lifetime` - (Optional) Force a user to login after they have been inactive for the specified number (unit: hours).
+* `sandbox_version` - (Optional) The selected sandbox version to be used for the extensibility environment.
 
-### change_password
+### `change_password` block
 
 * `enabled` - (Required) Whether to enable the custom page.page.
 * `html` - (Required) HTML content of the custom page.
 
-### guardian_mfa_page
+### `guardian_mfa_page` block
 
 * `enabled` - (Required) Whether to enable the custom page.
 * `html` - (Required) HTML content of the custom page.
 
-### error_page
+### `error_page` block
 
 * `html` - (Required) HTML content of the custom page.
 * `show_log_link` - (Required) Set to `true` to show link to log as part of the default error page,
