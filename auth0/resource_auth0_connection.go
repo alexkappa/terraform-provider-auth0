@@ -181,8 +181,9 @@ func newConnection() *schema.Resource {
 							Optional: true,
 						},
 						"client_secret": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:      schema.TypeString,
+							Optional:  true,
+							Sensitive: true,
 						},
 						"domain_aliases": {
 							Type:     schema.TypeList,
