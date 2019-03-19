@@ -3,18 +3,18 @@ layout: "auth0"
 page_title: "Provider: Auth0"
 sidebar_current: "docs-auth0-index"
 description: |-
-  The Auth0 provider is an unofficial provider that leverages the Auth0
-  Management API to configure your Auth0 tenant.
+  The Auth0 provider is a provider that leverages the Auth0 Management API to
+  configure your Auth0 tenant.
 ---
 
 # Auth0 Provider
 
-The Auth0 provider is an unofficial provider that leverages the Auth0 Management
-API to configure your Auth0 tenant.
+The Auth0 provider is a provider that leverages the Auth0 Management API to 
+configure your Auth0 tenant.
 
 ## Usage
 
-1- Create a `machine-to-macine` application within Auth0.
+1- Create a `machine-to-machine` application within Auth0.
 2- Give it full access to the Auth0 Management API.
 
 See [this guide](https://auth0.com/docs/api/management/v2/create-m2m-app) for 
