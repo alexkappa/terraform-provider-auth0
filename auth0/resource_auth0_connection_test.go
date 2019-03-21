@@ -131,3 +131,62 @@ resource "auth0_connection" "my_connection" {
 	}
 }
 `
+
+func TestAccConnectionWithEnbledClients(t *testing.T) {
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testAccConnectionWithEnabledClientsConfig,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-Connection"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "enabled_clients.#", "4"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionWithEnabledClientsConfig = `
+provider "auth0" {}
+
+resource "auth0_client" "my_client_1" {
+  name = "Application - Acceptance Test 1"
+  description = "Test Applications Long Description"
+  app_type = "non_interactive"
+}
+
+resource "auth0_client" "my_client_2" {
+  name = "Application - Acceptance Test 2"
+  description = "Test Applications Long Description"
+  app_type = "non_interactive"
+}
+
+resource "auth0_client" "my_client_3" {
+  name = "Application - Acceptance Test 3"
+  description = "Test Applications Long Description"
+  app_type = "non_interactive"
+}
+
+resource "auth0_client" "my_client_4" {
+  name = "Application - Acceptance Test 4"
+  description = "Test Applications Long Description"
+  app_type = "non_interactive"
+}
+
+resource "auth0_connection" "my_connection" {
+	name = "Acceptance-Test-Connection"
+	is_domain_connection = true
+	strategy = "auth0"
+	enabled_clients = [
+    "${auth0_client.my_client_1.id}",
+    "${auth0_client.my_client_2.id}",
+    "${auth0_client.my_client_3.id}",
+    "${auth0_client.my_client_4.id}",
+  ]
+
+}
+`
