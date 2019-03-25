@@ -21,7 +21,7 @@ install:
 script:
   - make build
   - make testacc OPTS=-coverprofile=c.out
-  - make website-test
+  # - make website-test
 
 deploy:
   provider: script
