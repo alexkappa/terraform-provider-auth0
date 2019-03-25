@@ -4,7 +4,7 @@ import (
 	"reflect"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	auth0 "github.com/yieldr/go-auth0"
+	"gopkg.in/auth0.v1"
 )
 
 // Data generalises schema.ResourceData so that we can reuse the accessor

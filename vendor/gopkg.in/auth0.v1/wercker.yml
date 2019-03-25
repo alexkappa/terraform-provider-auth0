@@ -5,7 +5,7 @@ build:
   steps:
 
     - wercker/setup-go-workspace:
-        package-dir: github.com/yieldr/go-auth0
+        package-dir: gopkg.in/auth0.v1
 
     - script:
         name: go get

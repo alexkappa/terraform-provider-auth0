@@ -11,6 +11,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"gopkg.in/auth0.v1/internal/client"
 )
 
 // Management is an Auth0 management client used to interact with the Auth0
@@ -54,6 +56,9 @@ type Management struct {
 	// User manages Auth0 User resources.
 	User *UserManager
 
+	// Job manages Auth0 jobs.
+	Job *JobManager
+
 	// Tenant manages your Auth0 Tenant.
 	Tenant *TenantManager
 
@@ -86,7 +91,12 @@ func New(domain, clientID, clientSecret string, options ...apiOption) (*Manageme
 		option(m)
 	}
 
-	m.http = newClient(domain, clientID, clientSecret, m.debug)
+	m.http = client.OAuth2(domain, clientID, clientSecret)
+	m.http = client.WrapUserAgent(m.http)
+	m.http = client.WrapRetry(m.http)
+	if m.debug {
+		m.http = client.WrapDebug(m.http)
+	}
 
 	m.Client = NewClientManager(m)
 	m.ClientGrant = NewClientGrantManager(m)
@@ -100,6 +110,7 @@ func New(domain, clientID, clientSecret string, options ...apiOption) (*Manageme
 	m.EmailTemplate = NewEmailTemplateManager(m)
 	m.Email = NewEmailManager(m)
 	m.User = NewUserManager(m)
+	m.Job = NewJobManager(m)
 	m.Tenant = NewTenantManager(m)
 	m.Ticket = NewTicketManager(m)
 	m.Stat = NewStatManager(m)

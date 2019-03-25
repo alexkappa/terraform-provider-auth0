@@ -1,4 +1,4 @@
-package management
+package client
 
 import (
 	"context"
@@ -13,7 +13,7 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 )
 
-func wrapRetryClient(c *http.Client) *http.Client {
+func WrapRetry(c *http.Client) *http.Client {
 	return &http.Client{
 		Transport: rehttp.NewTransport(
 			c.Transport,
@@ -35,29 +35,29 @@ func wrapRetryClient(c *http.Client) *http.Client {
 	}
 }
 
-func wrapUserAgentClient(c *http.Client) *http.Client {
+func WrapUserAgent(c *http.Client) *http.Client {
 	return &http.Client{
-		Transport: roundTripFunc(func(req *http.Request) (*http.Response, error) {
+		Transport: RoundTripFunc(func(req *http.Request) (*http.Response, error) {
 			req.Header.Set("User-Agent", "Go-Auth0-SDK/v0")
 			return c.Transport.RoundTrip(req)
 		}),
 	}
 }
 
-type roundTripFunc func(*http.Request) (*http.Response, error)
+type RoundTripFunc func(*http.Request) (*http.Response, error)
 
-func (rf roundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
+func (rf RoundTripFunc) RoundTrip(req *http.Request) (*http.Response, error) {
 	return rf(req)
 }
 
-func wrapDebugClient(c *http.Client) *http.Client {
+func WrapDebug(c *http.Client) *http.Client {
 	return &http.Client{
-		Transport: roundTripFunc(func(req *http.Request) (*http.Response, error) {
-			reqBytes, _ := httputil.DumpRequest(req, true)
+		Transport: RoundTripFunc(func(req *http.Request) (*http.Response, error) {
 			res, err := c.Transport.RoundTrip(req)
 			if err != nil {
 				return res, err
 			}
+			reqBytes, _ := httputil.DumpRequest(req, true)
 			resBytes, _ := httputil.DumpResponse(res, true)
 			log.Printf("%s\n%s\b\n", reqBytes, resBytes)
 			return res, nil
@@ -65,24 +65,13 @@ func wrapDebugClient(c *http.Client) *http.Client {
 	}
 }
 
-func newClient(domain, clientID, clientSecret string, debug bool) *http.Client {
-
-	cc := &clientcredentials.Config{
+func OAuth2(domain, clientID, clientSecret string) *http.Client {
+	return (&clientcredentials.Config{
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
 		TokenURL:     "https://" + domain + "/oauth/token",
 		EndpointParams: url.Values{
 			"audience": {"https://" + domain + "/api/v2/"},
 		},
-	}
-
-	c := cc.Client(context.Background())
-	c = wrapRetryClient(c)
-	c = wrapUserAgentClient(c)
-
-	if debug {
-		c = wrapDebugClient(c)
-	}
-
-	return c
+	}).Client(context.Background())
 }

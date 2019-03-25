@@ -3,8 +3,8 @@ package auth0
 import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
-	auth0 "github.com/yieldr/go-auth0"
-	"github.com/yieldr/go-auth0/management"
+	"gopkg.in/auth0.v1"
+	"gopkg.in/auth0.v1/management"
 )
 
 func newCustomDomain() *schema.Resource {
