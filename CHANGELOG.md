@@ -1,4 +1,4 @@
-## v0.1.15 (Unreleased)
+## v0.1.15 (March 25, 2019)
 
 FEATURES:
 
