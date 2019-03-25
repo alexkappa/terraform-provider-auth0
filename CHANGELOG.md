@@ -1,4 +1,4 @@
-## v0.1.16 (Unreleased)
+## v0.1.16 (March 25, 2019)
 
 NOTES:
 

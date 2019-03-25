@@ -19,7 +19,7 @@ Changes proposed in this pull request:
 Output from acceptance testing:
 
 ```
-$ make testacc TESTARGS='-run=TestAccXXX'
+$ make testacc TESTS=TestAccXXX
 
 ...
 ```
