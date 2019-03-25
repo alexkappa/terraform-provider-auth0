@@ -1,7 +1,7 @@
 Auth0 Terraform Provider
 ========================
 
-[![wercker status](https://app.wercker.com/status/a660ce322102e732b9c53a690f6c7078/s/master "wercker status")](https://app.wercker.com/project/byKey/a660ce322102e732b9c53a690f6c7078)
+[![Build Status](https://travis-ci.org/yieldr/terraform-provider-auth0.svg?branch=master)](https://travis-ci.org/yieldr/terraform-provider-auth0)
 [![Maintainability](https://api.codeclimate.com/v1/badges/67528c42e943f9939f54/maintainability)](https://codeclimate.com/github/yieldr/terraform-provider-auth0/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/67528c42e943f9939f54/test_coverage)](https://codeclimate.com/github/yieldr/terraform-provider-auth0/test_coverage)
 
