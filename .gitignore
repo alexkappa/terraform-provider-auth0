@@ -10,6 +10,7 @@
 *.tfstate
 *.tfstate.backup
 .*/
+!.github/
 terraform-provider-auth0
 website/vendor
 website/.bundle
