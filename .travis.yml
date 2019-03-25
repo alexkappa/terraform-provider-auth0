@@ -17,11 +17,21 @@ install:
   # packages that live there.
   # See: https://github.com/golang/go/issues/12933
   - bash scripts/gogetcookie.sh
+  # This script installs Code Climate test coverage reporter.
+  # See: https://docs.codeclimate.com/docs/travis-ci-test-coverage
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+
+before_script:
+  - ./cc-test-reporter before-build
 
 script:
   - make build
   - make testacc OPTS=-coverprofile=c.out
   # - make website-test
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 deploy:
   provider: script
