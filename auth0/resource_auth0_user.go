@@ -4,8 +4,8 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/structure"
 	"github.com/hashicorp/terraform/helper/validation"
-	auth0 "github.com/yieldr/go-auth0"
-	"github.com/yieldr/go-auth0/management"
+	"gopkg.in/auth0.v1"
+	"gopkg.in/auth0.v1/management"
 )
 
 func newUser() *schema.Resource {

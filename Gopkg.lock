@@ -438,17 +438,6 @@
   version = "v0.5.4"
 
 [[projects]]
-  digest = "1:8b67492c0c0ae2112754e36a6bc35525361a88014c67762723a614e62f82f5c5"
-  name = "github.com/yieldr/go-auth0"
-  packages = [
-    ".",
-    "management",
-  ]
-  pruneopts = "UT"
-  revision = "5e90dfea1b93ab8dd9f540da8e577c46911b1707"
-  version = "v1.0.2"
-
-[[projects]]
   branch = "master"
   digest = "1:60c543e7c7783a581e5e77042475dbaa0401e35fef21efca77911ffbb70c4e53"
   name = "github.com/zclconf/go-cty"
@@ -605,6 +594,18 @@
   revision = "8dea3dc473e90c8179e519d91302d0597c0ca1d1"
   version = "v1.15.0"
 
+[[projects]]
+  digest = "1:cb3e2fbdcaf83e2a5783b6e3dc5dabd3d24b25d979ef5b8c2bfef1df64567b0b"
+  name = "gopkg.in/auth0.v1"
+  packages = [
+    ".",
+    "internal/client",
+    "management",
+  ]
+  pruneopts = "UT"
+  revision = "489979a5f92cdd48d8c763318bda5f257a6b4e0d"
+  version = "v1.1.1"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
@@ -615,8 +616,8 @@
     "github.com/hashicorp/terraform/helper/validation",
     "github.com/hashicorp/terraform/plugin",
     "github.com/hashicorp/terraform/terraform",
-    "github.com/yieldr/go-auth0",
-    "github.com/yieldr/go-auth0/management",
+    "gopkg.in/auth0.v1",
+    "gopkg.in/auth0.v1/management",
   ]
   solver-name = "gps-cdcl"
   solver-version = 1

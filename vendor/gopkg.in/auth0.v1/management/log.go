@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
-	auth0 "github.com/yieldr/go-auth0"
+	"gopkg.in/auth0.v1"
 )
 
 var logTypeName = map[string]string{

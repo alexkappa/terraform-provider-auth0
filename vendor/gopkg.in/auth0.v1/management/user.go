@@ -16,6 +16,9 @@ type User struct {
 	// The user's email
 	Email *string `json:"email,omitempty"`
 
+	// The users name
+	Name *string `json:"name,omitempty"`
+
 	// The user's username. Only valid if the connection requires a username
 	Username *string `json:"username,omitempty"`
 

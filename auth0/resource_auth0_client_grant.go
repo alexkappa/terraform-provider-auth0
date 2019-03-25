@@ -2,8 +2,8 @@ package auth0
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
-	auth0 "github.com/yieldr/go-auth0"
-	"github.com/yieldr/go-auth0/management"
+	"gopkg.in/auth0.v1"
+	"gopkg.in/auth0.v1/management"
 )
 
 func newClientGrant() *schema.Resource {
