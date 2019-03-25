@@ -1,3 +1,9 @@
+## v0.1.16 (Unreleased)
+
+NOTES:
+
+* Added contributing, code of conduct, issue templates to the project.
+
 ## v0.1.15 (March 25, 2019)
 
 FEATURES:
