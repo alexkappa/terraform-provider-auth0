@@ -1,4 +1,10 @@
-## v0.1.16 (March 26, 2019)
+## v0.1.18 (March 26, 2019)
+
+NOTES:
+
+* Extract version from changelog for release notes.
+
+## v0.1.17 (March 26, 2019)
 
 NOTES:
 
