@@ -1,3 +1,9 @@
+## v0.1.16 (March 26, 2019)
+
+NOTES:
+
+* Update Travis to build on tag push.
+
 ## v0.1.16 (March 25, 2019)
 
 NOTES:
