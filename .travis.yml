@@ -9,7 +9,7 @@ go:
   - "1.12.x"
 
 env:
-  - GOFLAGS=-mod=vendor
+  - GO111MODULE=on
 
 install:
   # This script is used by the Travis build to install a cookie for
