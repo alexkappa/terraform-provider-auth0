@@ -16,3 +16,4 @@ website/vendor
 website/.bundle
 website/build
 website/node_modules
+scripts/gogetcookie.sh
