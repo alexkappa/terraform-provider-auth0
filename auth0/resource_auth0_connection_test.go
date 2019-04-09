@@ -190,3 +190,26 @@ resource "auth0_connection" "my_connection" {
 
 }
 `
+
+func testTwilioConnection(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testTwilioConnectionConfig,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.sms_connection", "name", "Acceptance-Test-Connection"),
+					resource.TestCheckResourceAttr("auth0_connection.sms_connection", "strategy", "sms"),
+				),
+			},
+		},
+	})
+}
+
+const testTwilioConnectionConfig = `
+resource "auth0_connection" "sms_connection" {
+	
+}
+`
