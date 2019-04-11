@@ -210,6 +210,25 @@ func testTwilioConnection(t *testing.T) {
 
 const testTwilioConnectionConfig = `
 resource "auth0_connection" "sms_connection" {
+	name = "sms-connection"
+	is_domain_connection = false
+	strategy = "sms"
 	
+	options = {
+		disable_signup = false
+		name = "sms-connection"
+		twilio_sid = "ABC123"
+		twilio_token = "DEF456"
+		from = "+12345678"
+		syntax = "md_with_macros"
+		template = "@@password@@"
+		messaging_service_sid = "GHI789"
+		brute_force_protection = true
+		
+		totp = {
+			time_step = 300
+			length = 6
+		}
+	}
 }
 `

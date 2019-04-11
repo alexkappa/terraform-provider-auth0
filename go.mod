@@ -32,6 +32,7 @@ require (
 	github.com/hashicorp/terraform v0.11.8
 	github.com/hashicorp/yamux v0.0.0-20180826203732-cc6d2ea263b2
 	github.com/jmespath/go-jmespath v0.0.0-20160202185014-0b12d6b521d8
+	github.com/mario-areias/auth0 v1.1.1
 	github.com/mattn/go-colorable v0.0.9
 	github.com/mattn/go-isatty v0.0.4
 	github.com/mitchellh/cli v1.0.0

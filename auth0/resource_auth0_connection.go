@@ -210,6 +210,49 @@ func newConnection() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},
+
+						// Twilio/sms options
+						"twilio_sid": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"twilio_token": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"from": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"syntax": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"template": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"totp": {
+							Type:     schema.TypeList,
+							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"time_step": {
+										Type:     schema.TypeInt,
+										Optional: true,
+									},
+									"length": {
+										Type:     schema.TypeInt,
+										Optional: true,
+									},
+								},
+							},
+						},
+						"messaging_service_sid": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
 					},
 				},
 			},
@@ -296,6 +339,15 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 			"use_wsfed":              auth0.BoolValue(c.Options.UseWsfed),
 			"waad_protocol":          auth0.StringValue(c.Options.WaadProtocol),
 			"waad_common_endpoint":   auth0.BoolValue(c.Options.WaadCommonEndpoint),
+
+			// twilio/sms
+			"twilio_sid":            auth0.StringValue(c.Options.TwilioSid),
+			"twilio_token":          auth0.StringValue(c.Options.TwilioToken),
+			"from":                  auth0.StringValue(c.Options.From),
+			"syntax":                auth0.StringValue(c.Options.Syntax),
+			"template":              auth0.StringValue(c.Options.Template),
+			"messaging_service_sid": auth0.StringValue(c.Options.MessagingServiceSid),
+			"totp":                  c.Options.Totp,
 		},
 	})
 
