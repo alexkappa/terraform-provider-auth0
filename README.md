@@ -21,6 +21,12 @@ $ mkdir -p $GOPATH/src/github.com/yieldr; cd $GOPATH/src/github.com/yieldr
 $ git clone git@github.com:yieldr/terraform-provider-auth0
 ```
 
+Enable Go 1.11 modules:
+
+```sh
+$ export GO111MODULE=on
+```
+
 Enter the provider directory and build the provider
 
 ```sh
