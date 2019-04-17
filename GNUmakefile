@@ -4,6 +4,7 @@ FILES ?= $$(find . -name '*.go' | grep -v vendor)
 TESTS ?= ".*"
 COVERS ?= "c.out"
 WEBSITE_REPO = github.com/hashicorp/terraform-website
+export GO111MODULE=on
 
 default: build
 
