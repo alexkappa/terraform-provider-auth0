@@ -47,12 +47,12 @@ require (
 	github.com/ulikunitz/xz v0.5.4
 	github.com/zclconf/go-cty v0.0.0-20180910220602-cc054f996f8b
 	golang.org/x/crypto v0.0.0-20180910181607-0e37d006457b
-	golang.org/x/net v0.0.0-20180911220305-26e67e76b6c3
-	golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be
+	golang.org/x/net v0.0.0-20190108225652-1e06a53dbb7e
+	golang.org/x/oauth2 v0.0.0-20190402181905-9f3314589c9a
 	golang.org/x/sys v0.0.0-20180909124046-d0be0721c37e
 	golang.org/x/text v0.3.0
-	google.golang.org/appengine v1.1.0
+	google.golang.org/appengine v1.4.0
 	google.golang.org/genproto v0.0.0-20180914223249-4b56f30a1fd9
 	google.golang.org/grpc v1.15.0
-	gopkg.in/auth0.v1 v1.1.1
+	gopkg.in/auth0.v1 v1.2.0
 )
