@@ -54,5 +54,5 @@ require (
 	google.golang.org/appengine v1.4.0
 	google.golang.org/genproto v0.0.0-20180914223249-4b56f30a1fd9
 	google.golang.org/grpc v1.15.0
-	gopkg.in/auth0.v1 v1.2.0
+	gopkg.in/auth0.v1 v1.2.1
 )
