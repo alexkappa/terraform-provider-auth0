@@ -212,6 +212,10 @@ func newConnection() *schema.Resource {
 						},
 
 						// Twilio/sms options
+						"name": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
 						"twilio_sid": {
 							Type:     schema.TypeString,
 							Optional: true,
@@ -341,6 +345,7 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 			"waad_common_endpoint":   auth0.BoolValue(c.Options.WaadCommonEndpoint),
 
 			// twilio/sms
+			"name":                  auth0.StringValue(c.Options.Name),
 			"twilio_sid":            auth0.StringValue(c.Options.TwilioSid),
 			"twilio_token":          auth0.StringValue(c.Options.TwilioToken),
 			"from":                  auth0.StringValue(c.Options.From),
