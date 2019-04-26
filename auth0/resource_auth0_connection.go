@@ -221,8 +221,9 @@ func newConnection() *schema.Resource {
 							Optional: true,
 						},
 						"twilio_token": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							DefaultFunc: schema.EnvDefaultFunc("TWILIO_TOKEN", nil),
 						},
 						"from": {
 							Type:     schema.TypeString,
