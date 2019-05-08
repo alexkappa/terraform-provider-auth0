@@ -238,6 +238,23 @@ func newConnection() *schema.Resource {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
+						"totp": {
+							Type:     schema.TypeMap,
+							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"time_step": {
+										Type:     schema.TypeInt,
+										Optional: true,
+									},
+									"length": {
+										Type:     schema.TypeInt,
+										Optional: true,
+									},
+								},
+							},
+						},
 						"messaging_service_sid": {
 							Type:     schema.TypeString,
 							Optional: true,
@@ -337,6 +354,7 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 			"syntax":                auth0.StringValue(c.Options.Syntax),
 			"template":              auth0.StringValue(c.Options.Template),
 			"messaging_service_sid": auth0.StringValue(c.Options.MessagingServiceSid),
+			"totp":                  c.Options.Totp,
 		},
 	})
 
@@ -418,6 +436,10 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 			Syntax:              String(MapData(m), "syntax"),
 			Template:            String(MapData(m), "template"),
 			MessagingServiceSid: String(MapData(m), "messaging_service_sid"),
+			Totp: &management.ConnectionOptionsTotp{
+				TimeStep: Int(MapData(m), "time_step"),
+				Length:   Int(MapData(m), "length"),
+			},
 		}
 
 		List(MapData(m), "password_history").First(func(v interface{}) {
