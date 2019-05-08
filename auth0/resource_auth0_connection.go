@@ -223,6 +223,7 @@ func newConnection() *schema.Resource {
 						"twilio_token": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Sensitive:   true,
 							DefaultFunc: schema.EnvDefaultFunc("TWILIO_TOKEN", nil),
 						},
 						"from": {
@@ -426,6 +427,19 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 			UseWsfed:            Bool(MapData(m), "use_wsfed"),
 			WaadProtocol:        String(MapData(m), "waad_protocol"),
 			WaadCommonEndpoint:  Bool(MapData(m), "waad_common_endpoint"),
+
+			// Twilio
+			Name:                String(MapData(m), "name"),
+			TwilioSid:           String(MapData(m), "twilio_sid"),
+			TwilioToken:         String(MapData(m), "twilio_token"),
+			From:                String(MapData(m), "from"),
+			Syntax:              String(MapData(m), "syntax"),
+			Template:            String(MapData(m), "template"),
+			MessagingServiceSid: String(MapData(m), "messaging_service_sid"),
+			Totp: &management.ConnectionOptionsTotp{
+				TimeStep: Int(MapData(m), "time_step"),
+				Length:   Int(MapData(m), "length"),
+			},
 		}
 
 		List(MapData(m), "password_history").First(func(v interface{}) {
