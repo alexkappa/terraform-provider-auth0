@@ -40,6 +40,6 @@ require (
 	github.com/zclconf/go-cty v0.0.0-20180910220602-cc054f996f8b // indirect
 	google.golang.org/genproto v0.0.0-20180914223249-4b56f30a1fd9 // indirect
 	google.golang.org/grpc v1.15.0 // indirect
-	gopkg.in/auth0.v1 v1.2.1
+	gopkg.in/auth0.v1 v1.2.2
 	gopkg.in/ini.v1 v1.42.0 // indirect
 )
