@@ -210,6 +210,11 @@ func newConnection() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},
+						// adfs options
+						"adfs_server": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
 					},
 				},
 			},
@@ -296,6 +301,9 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 			"use_wsfed":              auth0.BoolValue(c.Options.UseWsfed),
 			"waad_protocol":          auth0.StringValue(c.Options.WaadProtocol),
 			"waad_common_endpoint":   auth0.BoolValue(c.Options.WaadCommonEndpoint),
+
+			// adfs
+			"adfs_server": auth0.StringValue(c.Options.AdfsServer),
 		},
 	})
 
@@ -368,6 +376,9 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 			UseWsfed:            Bool(MapData(m), "use_wsfed"),
 			WaadProtocol:        String(MapData(m), "waad_protocol"),
 			WaadCommonEndpoint:  Bool(MapData(m), "waad_common_endpoint"),
+
+			// adfs
+			AdfsServer: String(MapData(m), "adfs_server"),
 		}
 
 		List(MapData(m), "password_history").First(func(v interface{}) {
