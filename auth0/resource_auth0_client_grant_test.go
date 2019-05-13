@@ -37,11 +37,11 @@ resource "auth0_client" "my_client" {
 resource "auth0_resource_server" "my_resource_server" {
   name = "Resource Server - Client Grant - Acceptance Test"
   identifier = "https://api.example.com/client-grant-test"
-  scopes = {
+  scopes {
        value = "create:foo"
        description = "Create foos"
   }
-  scopes = {
+  scopes {
        value = "create:bar"
        description = "Create bars"
   }

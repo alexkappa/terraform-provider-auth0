@@ -41,9 +41,9 @@ resource "auth0_connection" "my_connection" {
 	name = "Acceptance-Test-Connection"
 	is_domain_connection = true
 	strategy = "auth0"
-	options = {
+	options {
 		password_policy = "fair"
-		password_history = {
+		password_history {
 			enable = true
 			size = 5
 		}
@@ -113,7 +113,7 @@ provider "auth0" {}
 resource "auth0_connection" "my_connection" {
 	name     = "Acceptance-Test-Waad-Connection"
 	strategy = "waad"
-	options = {
+	options {
 		client_id     = "123456"
 		client_secret = "123456"
 		tenant_domain = "example.onmicrosoft.com"
