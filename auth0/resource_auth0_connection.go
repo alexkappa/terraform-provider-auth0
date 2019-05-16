@@ -259,6 +259,12 @@ func newConnection() *schema.Resource {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
+
+						// adfs options
+						"adfs_server": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
 					},
 				},
 			},
@@ -355,6 +361,9 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 			"template":              auth0.StringValue(c.Options.Template),
 			"messaging_service_sid": auth0.StringValue(c.Options.MessagingServiceSid),
 			"totp":                  c.Options.Totp,
+
+			// adfs
+			"adfs_server": auth0.StringValue(c.Options.AdfsServer),
 		},
 	})
 
@@ -440,6 +449,9 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 				TimeStep: Int(MapData(m), "time_step"),
 				Length:   Int(MapData(m), "length"),
 			},
+
+			// adfs
+			AdfsServer: String(MapData(m), "adfs_server"),
 		}
 
 		List(MapData(m), "password_history").First(func(v interface{}) {
