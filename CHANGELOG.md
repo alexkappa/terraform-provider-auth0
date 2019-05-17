@@ -1,3 +1,9 @@
+## v0.1.20 (May 17, 2019)
+
+FEATURES:
+
+* resource/auth0_connection: Add twillio for guardian mfa
+
 ## v0.1.19 (May 14, 2019)
 
 ENHANCEMENTS
