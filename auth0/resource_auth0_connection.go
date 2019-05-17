@@ -241,7 +241,6 @@ func newConnection() *schema.Resource {
 						"totp": {
 							Type:     schema.TypeMap,
 							Optional: true,
-							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"time_step": {
