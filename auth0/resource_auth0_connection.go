@@ -268,22 +268,9 @@ func newConnection() *schema.Resource {
 				},
 			},
 			"enabled_clients": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
-				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					if strings.Contains(k, "#") {
-						return old == new
-					}
-
-					enabledClients := Slice(d, "enabled_clients")
-					result := false
-					for _, v := range enabledClients {
-						result = result || (v == old)
-					}
-
-					return result
-				},
 			},
 			"realms": {
 				Type:     schema.TypeList,
@@ -394,7 +381,7 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 		Name:               String(d, "name"),
 		IsDomainConnection: Bool(d, "is_domain_connection"),
 		Strategy:           String(d, "strategy"),
-		EnabledClients:     Slice(d, "enabled_clients"),
+		EnabledClients:     Set(d, "enabled_clients").List(),
 		Realms:             Slice(d, "realms"),
 	}
 
