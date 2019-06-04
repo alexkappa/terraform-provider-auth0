@@ -88,9 +88,17 @@ func newConnection() *schema.Resource {
 							},
 						},
 						"password_no_personal_info": {
-							Type:     schema.TypeMap,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Type:     schema.TypeList,
 							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enable": {
+										Type:     schema.TypeBool,
+										Optional: true,
+									},
+								},
+							},
 						},
 						"password_dictionary": {
 							Type:     schema.TypeMap,
@@ -405,7 +413,6 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 		c.Options = &management.ConnectionOptions{
 			Validation:                   Map(MapData(m), "validation"),
 			PasswordPolicy:               String(MapData(m), "password_policy"),
-			PasswordNoPersonalInfo:       Map(MapData(m), "password_no_personal_info"),
 			PasswordDictionary:           Map(MapData(m), "password_dictionary"),
 			APIEnableUsers:               Bool(MapData(m), "api_enable_users"),
 			BasicProfile:                 Bool(MapData(m), "basic_profile"),
@@ -460,6 +467,14 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 			c.Options.PasswordHistory = make(map[string]interface{})
 			c.Options.PasswordHistory["enable"] = Bool(MapData(m), "enable")
 			c.Options.PasswordHistory["size"] = Int(MapData(m), "size")
+		})
+
+		List(MapData(m), "password_no_personal_info").First(func(v interface{}) {
+
+			m := v.(map[string]interface{})
+
+			c.Options.PasswordNoPersonalInfo = make(map[string]interface{})
+			c.Options.PasswordNoPersonalInfo["enable"] = Bool(MapData(m), "enable")
 		})
 	})
 
