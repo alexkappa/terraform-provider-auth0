@@ -49,13 +49,15 @@ func TestAccUserCreateUser(t *testing.T) {
 }
 
 const testAccUserCreateUser = `
-provider "auth0" {}
+provider "auth0" {
+}
 
 resource "auth0_user" "user" {
   connection_name = "Username-Password-Authentication"
+  username = "test"
   user_id = "12345"
   email = "test@test.com"
-  password = "testtest$12$12"
+  password = "passpass$12$12"
   nickname = "testnick"
   user_metadata = <<EOF
 {
