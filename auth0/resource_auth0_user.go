@@ -156,7 +156,7 @@ func buildUser(d *schema.ResourceData) *management.User {
 		}
 	}
 
-	if u.Username != nil || u.Password != nil || u.EmailVerified != nil || u.PhoneVerified != nil || u.Nickname != nil {
+	if u.Username != nil || u.Password != nil || u.EmailVerified != nil || u.PhoneVerified != nil {
 		// When updating email_verified, phone_verified, username or password
 		// we need to specify the connection property too.
 		//
