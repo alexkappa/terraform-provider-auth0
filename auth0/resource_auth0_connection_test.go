@@ -48,7 +48,7 @@ resource "auth0_connection" "my_connection" {
 			enable = true
 			size = 5
 		}
-		password_no_personal_info = {
+		password_no_personal_info {
 			enable = true
 		}
 		enabled_database_customization = false
