@@ -18,6 +18,14 @@
   version = "v1.2.1"
 
 [[projects]]
+  digest = "1:fd3d7aa0e36cb66088369d618f0bfd71e38ca727859e4ea7940e81ba584231f4"
+  name = "github.com/alexkappa/terraform-provider-auth0"
+  packages = ["auth0"]
+  pruneopts = "UT"
+  revision = "ed0ac0c088946a765000028eea65ac68f294dc1d"
+  version = "v0.1.18"
+
+[[projects]]
   digest = "1:1929b21a34400d463a99336f8e2908d2a154dc525c52411a8d99bb519942dc4c"
   name = "github.com/apparentlymart/go-cidr"
   packages = ["cidr"]
@@ -595,7 +603,7 @@
   version = "v1.15.0"
 
 [[projects]]
-  digest = "1:cb3e2fbdcaf83e2a5783b6e3dc5dabd3d24b25d979ef5b8c2bfef1df64567b0b"
+  digest = "1:882145370de0aecf60b2593d10530b427af102add58eed382ce7b66ba828a5d4"
   name = "gopkg.in/auth0.v1"
   packages = [
     ".",
@@ -603,13 +611,14 @@
     "management",
   ]
   pruneopts = "UT"
-  revision = "489979a5f92cdd48d8c763318bda5f257a6b4e0d"
-  version = "v1.1.1"
+  revision = "6ead6126232541a07b956238780afdc346293369"
+  version = "v1.2.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/alexkappa/terraform-provider-auth0/auth0",
     "github.com/hashicorp/terraform/helper/resource",
     "github.com/hashicorp/terraform/helper/schema",
     "github.com/hashicorp/terraform/helper/structure",

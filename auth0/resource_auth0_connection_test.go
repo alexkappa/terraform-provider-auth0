@@ -21,6 +21,7 @@ func TestAccConnection(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "is_domain_connection", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "strategy", "auth0"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.password_policy", "fair"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.password_no_personal_info.0.enable", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.enabled_database_customization", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.brute_force_protection", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.import_mode", "true"),
@@ -46,6 +47,9 @@ resource "auth0_connection" "my_connection" {
 		password_history {
 			enable = true
 			size = 5
+		}
+		password_no_personal_info = {
+			enable = true
 		}
 		enabled_database_customization = false
 		brute_force_protection = true
@@ -188,5 +192,47 @@ resource "auth0_connection" "my_connection" {
     "${auth0_client.my_client_4.id}",
   ]
 
+}
+`
+
+func testTwilioConnection(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testTwilioConnectionConfig,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.sms_connection", "name", "Acceptance-Test-Connection"),
+					resource.TestCheckResourceAttr("auth0_connection.sms_connection", "strategy", "sms"),
+				),
+			},
+		},
+	})
+}
+
+const testTwilioConnectionConfig = `
+resource "auth0_connection" "sms_connection" {
+	name = "sms-connection"
+	is_domain_connection = false
+	strategy = "sms"
+	
+	options = {
+		disable_signup = false
+		name = "sms-connection"
+		twilio_sid = "ABC123"
+		twilio_token = "DEF456"
+		from = "+12345678"
+		syntax = "md_with_macros"
+		template = "@@password@@"
+		messaging_service_sid = "GHI789"
+		brute_force_protection = true
+		
+		totp = {
+			time_step = 300
+			length = 6
+		}
+	}
 }
 `
