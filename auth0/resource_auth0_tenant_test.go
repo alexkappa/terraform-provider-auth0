@@ -54,8 +54,8 @@ resource "auth0_tenant" "my_tenant" {
 	default_audience = ""
 	default_directory = ""
 	error_page {
-		html = "<html>Error Page</html>",
-		show_log_link = false,
+		html = "<html>Error Page</html>"
+		show_log_link = false
 		url = "https://mycompany.org/error"
 	}
 	friendly_name = "My Test Tenant"
@@ -65,7 +65,7 @@ resource "auth0_tenant" "my_tenant" {
 	allowed_logout_urls = [
 		"https://mycompany.org/logoutCallback"
 	]
-	session_lifetime = 168,
+	session_lifetime = 168
 	sandbox_version = "8"
 }
 `

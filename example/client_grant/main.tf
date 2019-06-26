@@ -8,12 +8,12 @@ resource "auth0_resource_server" "my_resource_server" {
   name       = "Example Resource Server - Client Grant (Managed by Terraform)"
   identifier = "https://api.example.com/client-grant"
 
-  scopes = {
+  scopes {
     value       = "create:foo"
     description = "Create foos"
   }
 
-  scopes = {
+  scopes {
     value       = "create:bar"
     description = "Create bars"
   }

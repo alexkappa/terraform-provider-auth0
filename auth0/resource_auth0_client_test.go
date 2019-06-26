@@ -49,7 +49,7 @@ resource "auth0_client" "my_client" {
   grant_types = [ "authorization_code", "http://auth0.com/oauth/grant-type/password-realm", "implicit", "password", "refresh_token" ]
   allowed_logout_urls = [ "https://example.com" ]
   web_origins = [ "https://example.com" ]
-  jwt_configuration = {
+  jwt_configuration {
     lifetime_in_seconds = 300
     secret_encoded = true
     alg = "RS256"
@@ -60,31 +60,31 @@ resource "auth0_client" "my_client" {
   client_metadata = {
     foo = "zoo"
   }
-  addons = {
+  addons {
     firebase = {
       client_email = "john.doe@example.com"
       lifetime_in_seconds = 1
       private_key = "wer"
       private_key_id = "qwreerwerwe"
-    },
-    samlp = {
-      audience = "https://example.com/saml",
+    }
+    samlp {
+      audience = "https://example.com/saml"
       mappings = {
-        email = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
+        email = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
         name = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
-      },
-      create_upn_claim = false,
-      passthrough_claims_with_no_mapping = false,
-      map_unknown_claims_as_is = false,
-      map_identities = false,
-      name_identifier_format = "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent",
+      }
+      create_upn_claim = false
+      passthrough_claims_with_no_mapping = false
+      map_unknown_claims_as_is = false
+      map_identities = false
+      name_identifier_format = "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"
       name_identifier_probes = [
         "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
       ]
     }
   }
-  mobile = {
-    ios = {
+  mobile {
+    ios {
       team_id = "9JA89QQLNQ"
       app_bundle_identifier = "com.my.bundle.id"
     }
