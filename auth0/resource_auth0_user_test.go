@@ -49,8 +49,7 @@ func TestAccUserCreateUser(t *testing.T) {
 }
 
 const testAccUserCreateUser = `
-provider "auth0" {
-}
+provider "auth0" {}
 
 resource "auth0_user" "user" {
   connection_name = "Username-Password-Authentication"
