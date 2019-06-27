@@ -1,3 +1,17 @@
+## v0.2.0 (June 27, 2019)
+
+ENHANCEMENTS:
+
+* resource/auth0_user: Add support for user attribute `nickname`
+
+BUG FIXES:
+
+* resource/auth0_connection: Fix icorrect schema of `password_no_personal_info`
+
+NOTES:
+
+* Provider is compatible with Terraform v0.12.3
+
 ## v0.1.20 (May 17, 2019)
 
 FEATURES:
