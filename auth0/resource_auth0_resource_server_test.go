@@ -37,11 +37,11 @@ resource "auth0_resource_server" "my_resource_server" {
   name = "Resource Server - Acceptance Test"
   identifier = "https://api.example.com/v2"
   signing_alg = "RS256"
-  scopes = {
+  scopes {
   	value = "create:foo"
   	description = "Create foos"
   }
-  scopes = {
+  scopes {
   	value = "create:bar"
   	description = "Create bars"
   }

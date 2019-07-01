@@ -17,7 +17,7 @@ func TestAccUserMissingRequiredParams(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config:      testAccUserMissingRequiredParam,
-				ExpectError: regexp.MustCompile(`config is invalid: auth0_user.user: "connection_name": required field is not set`),
+				ExpectError: regexp.MustCompile(`The argument "connection_name" is required`),
 			},
 		},
 	})

@@ -14,13 +14,14 @@ func TestAccConnection(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccConnectionConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-Connection"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "is_domain_connection", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "strategy", "auth0"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.password_policy", "fair"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.password_no_personal_info.0.enable", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.enabled_database_customization", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.brute_force_protection", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.import_mode", "true"),
@@ -28,6 +29,12 @@ func TestAccConnection(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.requires_username", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.custom_scripts.get_user", "myFunction"),
 					resource.TestCheckResourceAttrSet("auth0_connection.my_connection", "options.0.configuration.foo"),
+				),
+			},
+			{
+				Config: testAccConnectionConfigUpdateBruteForceProtection,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.brute_force_protection", "false"),
 				),
 			},
 		},
@@ -41,14 +48,48 @@ resource "auth0_connection" "my_connection" {
 	name = "Acceptance-Test-Connection"
 	is_domain_connection = true
 	strategy = "auth0"
-	options = {
+	options {
 		password_policy = "fair"
-		password_history = {
+		password_history {
 			enable = true
 			size = 5
 		}
+		password_no_personal_info {
+			enable = true
+		}
 		enabled_database_customization = false
 		brute_force_protection = true
+		import_mode = true
+		disable_signup = false
+		requires_username = true
+		custom_scripts = {
+			get_user = "myFunction"
+		}
+		configuration = {
+			foo = "bar"
+		}
+	}
+}
+`
+
+const testAccConnectionConfigUpdateBruteForceProtection = `
+provider "auth0" {}
+
+resource "auth0_connection" "my_connection" {
+	name = "Acceptance-Test-Connection"
+	is_domain_connection = true
+	strategy = "auth0"
+	options {
+		password_policy = "fair"
+		password_history {
+			enable = true
+			size = 5
+		}
+		password_no_personal_info {
+			enable = true
+		}
+		enabled_database_customization = false
+		brute_force_protection = false
 		import_mode = true
 		disable_signup = false
 		requires_username = true
@@ -113,7 +154,7 @@ provider "auth0" {}
 resource "auth0_connection" "my_connection" {
 	name     = "Acceptance-Test-Waad-Connection"
 	strategy = "waad"
-	options = {
+	options {
 		client_id     = "123456"
 		client_secret = "123456"
 		tenant_domain = "example.onmicrosoft.com"
