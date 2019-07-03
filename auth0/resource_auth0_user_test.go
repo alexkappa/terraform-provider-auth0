@@ -49,8 +49,7 @@ func TestAccUserCreateUser(t *testing.T) {
 }
 
 const testAccUserCreateUser = `
-provider "auth0" {
-}
+provider "auth0" {}
 
 resource "auth0_user" "user" {
   connection_name = "Username-Password-Authentication"
@@ -59,17 +58,7 @@ resource "auth0_user" "user" {
   email = "test@test.com"
   password = "passpass$12$12"
   nickname = "testnick"
-  user_metadata = <<EOF
-{
-  	"foo": "bar",
-  	"bar": { "baz": "qux" }
-}
-EOF
-  app_metadata = <<EOF
-{
-  	"foo": "bar",
-  	"bar": { "baz": "qux" }
-}
-EOF
+  user_metadata = "{\"bar\":{\"baz\":\"qux\"},\"foo\":\"bar\"}"
+  app_metadata  = "{\"bar\":{\"baz\":\"qux\"},\"foo\":\"bar\"}"
 }
 `
