@@ -92,12 +92,15 @@ func Slice(d Data, key string) (s []interface{}) {
 	return
 }
 
-// Set accesses the value held by key and type asserts it to a set.
-func Set(d Data, key string) (s *schema.Set) {
+// Set accesses the value held by key, type asserts it to a set and returns a
+// slice containing its values.
+func Set(d Data, key string) (s []interface{}) {
 	if d.HasChange(key) {
 		v, ok := d.GetOkExists(key)
 		if ok {
-			s = v.(*schema.Set)
+			if set, ok := v.(*schema.Set); ok {
+				s = set.List()
+			}
 		}
 	}
 	return
