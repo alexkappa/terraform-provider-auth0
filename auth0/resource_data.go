@@ -92,18 +92,18 @@ func Slice(d Data, key string) (s []interface{}) {
 	return
 }
 
-// Set accesses the value held by key, type asserts it to a set and returns a
-// slice containing its values.
-func Set(d Data, key string) (s []interface{}) {
+// Set accesses the value held by key, type asserts it to a set and returns an
+// iterator able to go over the items of the list.
+func Set(d Data, key string) *iterator {
 	if d.HasChange(key) {
 		v, ok := d.GetOkExists(key)
 		if ok {
-			if set, ok := v.(*schema.Set); ok {
-				s = set.List()
+			if s, ok := v.(*schema.Set); ok {
+				return &iterator{s.List()}
 			}
 		}
 	}
-	return
+	return &iterator{}
 }
 
 // Map accesses the value held by key and type asserts it to a map.
@@ -152,4 +152,9 @@ func (i *iterator) First(f func(value interface{})) {
 		f(value)
 		return
 	}
+}
+
+// Slice returns the underlying list as a raw slice.
+func (i *iterator) Slice() []interface{} {
+	return i.i
 }

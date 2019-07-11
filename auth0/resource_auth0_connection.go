@@ -381,7 +381,7 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 		Name:               String(d, "name"),
 		IsDomainConnection: Bool(d, "is_domain_connection"),
 		Strategy:           String(d, "strategy"),
-		EnabledClients:     Set(d, "enabled_clients"),
+		EnabledClients:     Set(d, "enabled_clients").Slice(),
 		Realms:             Slice(d, "realms"),
 	}
 
