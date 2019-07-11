@@ -92,20 +92,6 @@ func Slice(d Data, key string) (s []interface{}) {
 	return
 }
 
-// Set accesses the value held by key, type asserts it to a set and returns an
-// iterator able to go over the items of the list.
-func Set(d Data, key string) *iterator {
-	if d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			if s, ok := v.(*schema.Set); ok {
-				return &iterator{s.List()}
-			}
-		}
-	}
-	return &iterator{}
-}
-
 // Map accesses the value held by key and type asserts it to a map.
 func Map(d Data, key string) (m map[string]interface{}) {
 	if d.HasChange(key) {
@@ -127,6 +113,20 @@ func List(d Data, key string) *iterator {
 		v, ok := d.GetOkExists(key)
 		if ok {
 			return &iterator{v.([]interface{})}
+		}
+	}
+	return &iterator{}
+}
+
+// Set accesses the value held by key, type asserts it to a set and returns an
+// iterator able to go over the items of the list.
+func Set(d Data, key string) *iterator {
+	if d.HasChange(key) {
+		v, ok := d.GetOkExists(key)
+		if ok {
+			if s, ok := v.(*schema.Set); ok {
+				return &iterator{s.List()}
+			}
 		}
 	}
 	return &iterator{}
