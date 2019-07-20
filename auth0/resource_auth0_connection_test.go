@@ -24,7 +24,7 @@ func TestAccConnection(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.password_no_personal_info.0.enable", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.enabled_database_customization", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.brute_force_protection", "true"),
-					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.import_mode", "true"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.import_mode", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.disable_signup", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.requires_username", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.custom_scripts.get_user", "myFunction"),
@@ -59,7 +59,7 @@ resource "auth0_connection" "my_connection" {
 		}
 		enabled_database_customization = false
 		brute_force_protection = true
-		import_mode = true
+		import_mode = false
 		disable_signup = false
 		requires_username = true
 		custom_scripts = {
@@ -90,7 +90,7 @@ resource "auth0_connection" "my_connection" {
 		}
 		enabled_database_customization = false
 		brute_force_protection = false
-		import_mode = true
+		import_mode = false
 		disable_signup = false
 		requires_username = true
 		custom_scripts = {

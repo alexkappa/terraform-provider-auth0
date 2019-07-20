@@ -41,6 +41,12 @@ func newClient() *schema.Resource {
 			"app_type": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"native", "spa", "regular_web", "non_interactive", "rms",
+					"box", "cloudbees", "concur", "dropbox", "mscrm", "echosign",
+					"egnyte", "newrelic", "office365", "salesforce", "sentry",
+					"sharepoint", "slack", "springcm", "zendesk", "zoom",
+				}, false),
 			},
 			"logo_uri": {
 				Type:     schema.TypeString,
