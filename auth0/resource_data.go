@@ -118,6 +118,20 @@ func List(d Data, key string) *iterator {
 	return &iterator{}
 }
 
+// Set accesses the value held by key, type asserts it to a set and returns an
+// iterator able to go over the items of the list.
+func Set(d Data, key string) *iterator {
+	if d.HasChange(key) {
+		v, ok := d.GetOkExists(key)
+		if ok {
+			if s, ok := v.(*schema.Set); ok {
+				return &iterator{s.List()}
+			}
+		}
+	}
+	return &iterator{}
+}
+
 type iterator struct {
 	i []interface{}
 }
@@ -138,4 +152,9 @@ func (i *iterator) First(f func(value interface{})) {
 		f(value)
 		return
 	}
+}
+
+// Slice returns the underlying list as a raw slice.
+func (i *iterator) Slice() []interface{} {
+	return i.i
 }
