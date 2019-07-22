@@ -57,7 +57,7 @@ Examples of resources can be found in the [examples directory](example/). The cu
 - [x] [Rules](https://auth0.com/docs/api/management/v2#!/Rules/get_rules)
 - [x] [Rules Configs](https://auth0.com/docs/api/management/v2#!/Rules_Configs/get_rules_configs)
 - [ ] [User Blocks](https://auth0.com/docs/api/management/v2#!/User_Blocks/get_user_blocks)
-- [ ] [Users](https://auth0.com/docs/api/management/v2#!/Users/get_users)
+- [x] [Users](https://auth0.com/docs/api/management/v2#!/Users/get_users)
 - [ ] [Users By Email](https://auth0.com/docs/api/management/v2#!/Users_By_Email/get_users_by_email)
 - [ ] [Blacklists](https://auth0.com/docs/api/management/v2#!/Blacklists/get_tokens)
 - [x] [Email Templates](https://auth0.com/docs/api/management/v2#!/Email_Templates/get_email_templates_by_templateName)
