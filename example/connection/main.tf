@@ -3,9 +3,9 @@ provider "auth0" {}
 resource "auth0_connection" "my_connection" {
   name = "Example-Connection"
   strategy = "auth0"
-  options = {
+  options {
     password_policy = "excellent"
-    password_history = {
+    password_history {
       enable = true
       size = 3
     }
@@ -30,7 +30,7 @@ resource "auth0_connection" "my_waad_connection" {
    name     = "my-waad-connection"
    strategy = "waad"
 
-   options = {
+   options {
      client_id     = "1234"
      client_secret = "1234"
      tenant_domain = "exmaple.onmicrosoft.com"
