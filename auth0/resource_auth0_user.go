@@ -46,6 +46,7 @@ func newUser() *schema.Resource {
 			"password": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Sensitive:   true,
 			},
 			"phone_number": {
 				Type:     schema.TypeString,
