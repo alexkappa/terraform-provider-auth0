@@ -50,6 +50,7 @@ func Provider() *schema.Provider {
 			"auth0_email_template":  newEmailTemplate(),
 			"auth0_user":            newUser(),
 			"auth0_tenant":          newTenant(),
+			"auth0_role":            newRole(),
 		},
 		ConfigureFunc: configure,
 	}
