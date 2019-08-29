@@ -48,11 +48,9 @@ var _ Data = (*schema.ResourceData)(nil)
 // String accesses the value held by key and type asserts it to a pointer to a
 // string.
 func String(d Data, key string) (s *string) {
-	if d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			s = auth0.String(v.(string))
-		}
+	v, ok := d.GetOkExists(key)
+	if ok {
+		s = auth0.String(v.(string))
 	}
 	return
 }
@@ -60,11 +58,9 @@ func String(d Data, key string) (s *string) {
 // Int accesses the value held by key and type asserts it to a pointer to a
 // int.
 func Int(d Data, key string) (i *int) {
-	if d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			i = auth0.Int(v.(int))
-		}
+	v, ok := d.GetOkExists(key)
+	if ok {
+		i = auth0.Int(v.(int))
 	}
 	return
 }
@@ -72,33 +68,27 @@ func Int(d Data, key string) (i *int) {
 // Bool accesses the value held by key and type asserts it to a pointer to a
 // bool.
 func Bool(d Data, key string) (b *bool) {
-	if d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			b = auth0.Bool(v.(bool))
-		}
+	v, ok := d.GetOkExists(key)
+	if ok {
+		b = auth0.Bool(v.(bool))
 	}
 	return
 }
 
 // Slice accesses the value held by key and type asserts it to a slice.
 func Slice(d Data, key string) (s []interface{}) {
-	if d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			s = v.([]interface{})
-		}
+	v, ok := d.GetOkExists(key)
+	if ok {
+		s = v.([]interface{})
 	}
 	return
 }
 
 // Map accesses the value held by key and type asserts it to a map.
 func Map(d Data, key string) (m map[string]interface{}) {
-	if d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			m = v.(map[string]interface{})
-		}
+	v, ok := d.GetOkExists(key)
+	if ok {
+		m = v.(map[string]interface{})
 	}
 	return
 }
@@ -109,11 +99,9 @@ func Map(d Data, key string) (m map[string]interface{}) {
 // The iterator can go over all the items in the list or just the first one,
 // which is a common use case for defining nested schemas in Terraform.
 func List(d Data, key string) *iterator {
-	if d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			return &iterator{v.([]interface{})}
-		}
+	v, ok := d.GetOkExists(key)
+	if ok {
+		return &iterator{v.([]interface{})}
 	}
 	return &iterator{}
 }
@@ -121,12 +109,10 @@ func List(d Data, key string) *iterator {
 // Set accesses the value held by key, type asserts it to a set and returns an
 // iterator able to go over the items of the list.
 func Set(d Data, key string) *iterator {
-	if d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			if s, ok := v.(*schema.Set); ok {
-				return &iterator{s.List()}
-			}
+	v, ok := d.GetOkExists(key)
+	if ok {
+		if s, ok := v.(*schema.Set); ok {
+			return &iterator{s.List()}
 		}
 	}
 	return &iterator{}
