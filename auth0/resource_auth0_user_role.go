@@ -33,10 +33,14 @@ func newUserRole() *schema.Resource {
 // Associate an array of roles with a user.
 // A list of roles ids to associated with the user.
 func assignRoles(d *schema.ResourceData, m interface{}) error {
+
+	u := &management.User{
+		ID: String(d, "user_id"),
+	}
+
 	roles := buildRoles(d)
-	userID := String(d, "user_id")
 	api := m.(*management.Management)
-	if err := api.User.AssignRoles(*userID, roles...); err != nil {
+	if err := api.User.AssignRoles(*u.ID, roles...); err != nil {
 		return err
 	}
 	return getRoles(d, m)
@@ -44,9 +48,13 @@ func assignRoles(d *schema.ResourceData, m interface{}) error {
 
 // List the the roles associated with a user.
 func getRoles(d *schema.ResourceData, m interface{}) error {
-	userID := String(d, "user_id")
+
+	u := &management.User{
+		ID: String(d, "user_id"),
+	}
+
 	api := m.(*management.Management)
-	roles, err := api.User.GetRoles(*userID)
+	roles, err := api.User.GetRoles(*u.ID)
 	if err != nil {
 		return err
 	}
@@ -59,8 +67,12 @@ func getRoles(d *schema.ResourceData, m interface{}) error {
 func unassignRoles(d *schema.ResourceData, m interface{}) error {
 	roles := buildRoles(d)
 	api := m.(*management.Management)
-	userID := String(d, "user_id")
-	return api.User.UnassignRoles(*userID, roles...)
+
+	u := &management.User{
+		ID: String(d, "user_id"),
+	}
+
+	return api.User.UnassignRoles(*u.ID, roles...)
 }
 
 func buildRoles(d *schema.ResourceData) []*management.Role {
