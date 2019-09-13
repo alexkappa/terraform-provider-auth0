@@ -2,6 +2,7 @@ package auth0
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/helper/validation"
 	"gopkg.in/auth0.v1"
 	"gopkg.in/auth0.v1/management"
 )
@@ -79,6 +80,14 @@ func newResourceServer() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
 			},
+			"token_dialect": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"access_token",
+					"access_token_authz",
+				}, true),
+			},
 		},
 	}
 }
@@ -119,6 +128,7 @@ func readResourceServer(d *schema.ResourceData, m interface{}) error {
 	d.Set("skip_consent_for_verifiable_first_party_clients", s.SkipConsentForVerifiableFirstPartyClients)
 	d.Set("verification_location", s.VerificationLocation)
 	d.Set("options", s.Options)
+	d.Set("token_dialect", s.TokenDialect)
 	return nil
 }
 
@@ -151,6 +161,7 @@ func buildResourceServer(d *schema.ResourceData) *management.ResourceServer {
 		SkipConsentForVerifiableFirstPartyClients: Bool(d, "skip_consent_for_verifiable_first_party_clients"),
 		VerificationLocation:                      String(d, "verification_location"),
 		Options:                                   Map(d, "options"),
+		TokenDialect:                              String(d, "token_dialect"),
 	}
 
 	if v, ok := d.GetOk("scopes"); ok {
