@@ -422,9 +422,6 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 		c.Options = &management.ConnectionOptions{
 			Validation:                   Map(MapData(m), "validation"),
 			PasswordPolicy:               String(MapData(m), "password_policy"),
-			PasswordHistory:              Map(MapData(m), "password_history"),
-			PasswordNoPersonalInfo:       Map(MapData(m), "password_no_personal_info"),
-			PasswordDictionary:           Map(MapData(m), "password_dictionary"),
 			APIEnableUsers:               Bool(MapData(m), "api_enable_users"),
 			BasicProfile:                 Bool(MapData(m), "basic_profile"),
 			ExtAdmin:                     Bool(MapData(m), "ext_admin"),
@@ -489,6 +486,15 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 
 			c.Options.PasswordNoPersonalInfo = make(map[string]interface{})
 			c.Options.PasswordNoPersonalInfo["enable"] = Bool(MapData(m), "enable")
+		})
+
+		List(MapData(m), "password_dictionary").First(func(v interface{}) {
+
+			m := v.(map[string]interface{})
+
+			c.Options.PasswordDictionary = make(map[string]interface{})
+			c.Options.PasswordDictionary["enable"] = Bool(MapData(m), "enable")
+			c.Options.PasswordDictionary["dictionary"] = Slice(MapData(m), "dictionary")
 		})
 	})
 
