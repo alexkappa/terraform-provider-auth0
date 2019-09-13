@@ -101,9 +101,22 @@ func newConnection() *schema.Resource {
 							},
 						},
 						"password_dictionary": {
-							Type:     schema.TypeMap,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Type:     schema.TypeList,
 							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enable": {
+										Type:     schema.TypeBool,
+										Optional: true,
+									},
+									"dictionary": {
+										Type:     schema.TypeSet,
+										Elem:     &schema.Schema{Type: schema.TypeString},
+										Optional: true,
+									},
+								},
+							},
 						},
 						"api_enable_users": {
 							Type:     schema.TypeBool,
@@ -409,6 +422,8 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 		c.Options = &management.ConnectionOptions{
 			Validation:                   Map(MapData(m), "validation"),
 			PasswordPolicy:               String(MapData(m), "password_policy"),
+			PasswordHistory:              Map(MapData(m), "password_history"),
+			PasswordNoPersonalInfo:       Map(MapData(m), "password_no_personal_info"),
 			PasswordDictionary:           Map(MapData(m), "password_dictionary"),
 			APIEnableUsers:               Bool(MapData(m), "api_enable_users"),
 			BasicProfile:                 Bool(MapData(m), "basic_profile"),
