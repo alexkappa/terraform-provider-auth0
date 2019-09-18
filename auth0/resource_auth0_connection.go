@@ -272,6 +272,12 @@ func newConnection() *schema.Resource {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
+
+						// salesforce options
+						"community_base_url": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
 					},
 				},
 			},
@@ -358,6 +364,9 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 
 			// adfs
 			"adfs_server": auth0.StringValue(c.Options.AdfsServer),
+
+			// salesforce
+			"community_base_url": auth0.StringValue(c.Options.CommunityBaseURL),
 		},
 	})
 
