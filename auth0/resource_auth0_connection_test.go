@@ -232,7 +232,7 @@ resource "auth0_connection" "my_connection" {
 }
 `
 
-func testTwilioConnection(t *testing.T) {
+func TestTwilioConnection(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
@@ -241,8 +241,9 @@ func testTwilioConnection(t *testing.T) {
 			resource.TestStep{
 				Config: testTwilioConnectionConfig,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_connection.sms_connection", "name", "Acceptance-Test-Connection"),
+					resource.TestCheckResourceAttr("auth0_connection.sms_connection", "name", "sms-connection"),
 					resource.TestCheckResourceAttr("auth0_connection.sms_connection", "strategy", "sms"),
+					resource.TestCheckResourceAttr("auth0_connection.sms_connection", "options.0.twilio_token", "DEF456"),
 				),
 			},
 		},
@@ -255,7 +256,7 @@ resource "auth0_connection" "sms_connection" {
 	is_domain_connection = false
 	strategy = "sms"
 	
-	options = {
+	options {
 		disable_signup = false
 		name = "sms-connection"
 		twilio_sid = "ABC123"
@@ -270,6 +271,38 @@ resource "auth0_connection" "sms_connection" {
 			time_step = 300
 			length = 6
 		}
+	}
+}
+`
+
+func TestSalesforceCommunityConnection(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: testSalesforceConnectionConfig,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.salesforce_community", "name", "salesforce-community"),
+					resource.TestCheckResourceAttr("auth0_connection.salesforce_community", "strategy", "salesforce-community"),
+					resource.TestCheckResourceAttr("auth0_connection.salesforce_community", "options.0.community_base_url", "https://salesforce-community.example"),
+				),
+			},
+		},
+	})
+}
+
+const testSalesforceConnectionConfig = `
+resource "auth0_connection" "salesforce_community" {
+	name = "salesforce-community"
+	is_domain_connection = false
+	strategy = "salesforce-community"
+	
+	options {
+		client_id = false
+		client_secret = "sms-connection"
+		community_base_url = "https://salesforce-community.example"
 	}
 }
 `
