@@ -4,5 +4,5 @@ go 1.12
 
 require (
 	github.com/hashicorp/terraform v0.12.7
-	gopkg.in/auth0.v1 v1.2.5
+	gopkg.in/auth0.v1 v1.2.6
 )
