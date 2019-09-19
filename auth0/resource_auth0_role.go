@@ -37,6 +37,24 @@ func newRole() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 			},
+			"permissions": {
+				Type: schema.TypeList,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+						},
+						"resource_server_identifier": {
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+						},
+					},
+				},
+				Optional: true,
+			},
 		},
 	}
 }
@@ -53,6 +71,11 @@ func createRole(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
+	permissions := buildPermissions(d)
+	if err := api.Role.AssignPermissions(*c.ID, permissions...); err != nil {
+		return err
+	}
+
 	d.SetId(auth0.StringValue(c.ID))
 	return readRole(d, m)
 }
@@ -64,20 +87,36 @@ func readRole(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
+	d.SetId(auth0.StringValue(c.ID))
+	d.Set("role_id", c.ID)
+	d.Set("name", c.Name)
+	d.Set("description", c.Description)
+
 	users, err := api.Role.Users(d.Id())
 	if err != nil {
 		return err
 	}
 
-	d.Set("role_id", c.ID)
-	d.Set("name", c.Name)
-	d.Set("description", c.Description)
-
-	user_ids := []string{}
+	userIDs := []string{}
 	for _, user := range users {
-		user_ids = append(user_ids, *user.ID)
+		userIDs = append(userIDs, *user.ID)
 	}
-	d.Set("user_ids", user_ids)
+	d.Set("user_ids", userIDs)
+
+	permissions, err := api.Role.Permissions(d.Id())
+	if err != nil {
+		return err
+	}
+
+	d.Set("permissions", func() (m []map[string]interface{}) {
+		for _, permission := range permissions {
+			m = append(m, map[string]interface{}{
+				"name":                       permission.Name,
+				"resource_server_identifier": permission.ResourceServerIdentifier,
+			})
+		}
+		return m
+	}())
 	return nil
 }
 
@@ -113,6 +152,23 @@ func buildUsers(d *schema.ResourceData) []*management.User {
 		userID, _ := val.(string)
 		result = append(result, &management.User{
 			ID: &userID,
+		})
+	}
+
+	return result
+}
+
+func buildPermissions(d *schema.ResourceData) []*management.Permission {
+
+	var result []*management.Permission
+
+	for _, val := range Slice(d, "permissions") {
+
+		permission := val.(map[string]interface{})
+
+		result = append(result, &management.Permission{
+			Name:                     String(MapData(permission), "name"),
+			ResourceServerIdentifier: String(MapData(permission), "resource_server_identifier"),
 		})
 	}
 
