@@ -18,6 +18,11 @@ func newRole() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
+			"role_id": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -46,6 +51,7 @@ func readRole(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	d.Set("role_id", c.ID)
 	d.Set("name", c.Name)
 	d.Set("description", c.Description)
 	return nil
@@ -68,6 +74,7 @@ func deleteRole(d *schema.ResourceData, m interface{}) error {
 
 func buildRole(d *schema.ResourceData) *management.Role {
 	return &management.Role{
+		ID:          String(d, "role_id"),
 		Name:        String(d, "name"),
 		Description: String(d, "description"),
 	}
