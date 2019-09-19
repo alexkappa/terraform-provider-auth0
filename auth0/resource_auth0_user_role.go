@@ -2,6 +2,7 @@ package auth0
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
+	"gopkg.in/auth0.v1"
 	"gopkg.in/auth0.v1/management"
 )
 
@@ -33,7 +34,6 @@ func newUserRole() *schema.Resource {
 // Associate an array of roles with a user.
 // A list of roles ids to associated with the user.
 func assignRoles(d *schema.ResourceData, m interface{}) error {
-
 	u := &management.User{
 		ID: String(d, "user_id"),
 	}
@@ -43,6 +43,7 @@ func assignRoles(d *schema.ResourceData, m interface{}) error {
 	if err := api.User.AssignRoles(*u.ID, roles...); err != nil {
 		return err
 	}
+	d.SetId(auth0.StringValue(u.ID))
 	return getRoles(d, m)
 }
 
