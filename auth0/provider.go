@@ -51,7 +51,6 @@ func Provider() *schema.Provider {
 			"auth0_user":            newUser(),
 			"auth0_tenant":          newTenant(),
 			"auth0_role":            newRole(),
-			"auth0_user_role":       newUserRole(),
 		},
 		ConfigureFunc: configure,
 	}

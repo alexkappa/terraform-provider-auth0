@@ -11,11 +11,5 @@ resource "auth0_user" "user" {
 resource "auth0_role" "my_role" {
   name        = "My Role - (Managed by Terraform)"
   description = "Role Description..."
-}
-
-resource "auth0_user_role" "my_user_role" {
-  user_id = "${auth0_user.user.id}"
-  roles   = ["${auth0_role.my_role.id}"]
-
-  depends_on = ["auth0_user.user"]
+  user_ids    = ["${auth0_user.user.id}"]
 }
