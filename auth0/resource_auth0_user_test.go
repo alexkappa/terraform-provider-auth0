@@ -53,6 +53,7 @@ provider "auth0" {}
 
 resource "auth0_user" "user" {
   connection_name = "Username-Password-Authentication"
+  username = "test"
   user_id = "12345"
   email = "test@test.com"
   password = "passpass$12$12"
