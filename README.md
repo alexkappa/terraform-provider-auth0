@@ -31,7 +31,7 @@ $ make build
 Using the provider
 ------------------
 
-The provider isn't listed in the official Terraform repository, so using `terraform init` to download the provide won't work. To install the auth0 provider, you can [download the binary](https://github.com/yieldr/terraform-provider-auth0/releases) and place in the directory `~/.terraform.d/plugins` (or `%APPDATA%/terraform.d/plugins/` if you're on Windows).
+The provider isn't listed in the official Terraform repository, so using `terraform init` to download the provider won't work. To install the auth0 provider, you can [download the binary](https://github.com/yieldr/terraform-provider-auth0/releases) and place in the directory `~/.terraform.d/plugins` (or `%APPDATA%/terraform.d/plugins/` if you're on Windows).
 
 To use the provider define the `auth0` provider in your `*.tf` file.
 
@@ -57,7 +57,7 @@ Examples of resources can be found in the [examples directory](example/). The cu
 - [x] [Rules](https://auth0.com/docs/api/management/v2#!/Rules/get_rules)
 - [x] [Rules Configs](https://auth0.com/docs/api/management/v2#!/Rules_Configs/get_rules_configs)
 - [ ] [User Blocks](https://auth0.com/docs/api/management/v2#!/User_Blocks/get_user_blocks)
-- [ ] [Users](https://auth0.com/docs/api/management/v2#!/Users/get_users)
+- [x] [Users](https://auth0.com/docs/api/management/v2#!/Users/get_users)
 - [ ] [Users By Email](https://auth0.com/docs/api/management/v2#!/Users_By_Email/get_users_by_email)
 - [ ] [Blacklists](https://auth0.com/docs/api/management/v2#!/Blacklists/get_tokens)
 - [x] [Email Templates](https://auth0.com/docs/api/management/v2#!/Email_Templates/get_email_templates_by_templateName)
