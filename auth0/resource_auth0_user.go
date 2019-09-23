@@ -53,9 +53,10 @@ func newUser() *schema.Resource {
 				Optional: true,
 			},
 			"user_metadata": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validation.ValidateJsonString,
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateFunc:     validation.ValidateJsonString,
+				DiffSuppressFunc: structure.SuppressJsonDiff,
 			},
 			"email_verified": {
 				Type:     schema.TypeBool,
@@ -70,9 +71,10 @@ func newUser() *schema.Resource {
 				Optional: true,
 			},
 			"app_metadata": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ValidateFunc: validation.ValidateJsonString,
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateFunc:     validation.ValidateJsonString,
+				DiffSuppressFunc: structure.SuppressJsonDiff,
 			},
 		},
 	}
