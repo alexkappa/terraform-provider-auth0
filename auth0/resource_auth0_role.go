@@ -127,7 +127,6 @@ func updateRole(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-
 	return readRole(d, m)
 }
 
@@ -145,32 +144,24 @@ func buildRole(d *schema.ResourceData) *management.Role {
 }
 
 func buildUsers(d *schema.ResourceData) []*management.User {
-
-	var result []*management.User
-
+	var users []*management.User
 	for _, val := range Slice(d, "user_ids") {
 		userID, _ := val.(string)
-		result = append(result, &management.User{
+		users = append(users, &management.User{
 			ID: &userID,
 		})
 	}
-
-	return result
+	return users
 }
 
 func buildPermissions(d *schema.ResourceData) []*management.Permission {
-
-	var result []*management.Permission
-
+	var permissions []*management.Permission
 	for _, val := range Slice(d, "permissions") {
-
 		permission := val.(map[string]interface{})
-
-		result = append(result, &management.Permission{
+		permissions = append(permissions, &management.Permission{
 			Name:                     String(MapData(permission), "name"),
 			ResourceServerIdentifier: String(MapData(permission), "resource_server_identifier"),
 		})
 	}
-
-	return result
+	return permissions
 }
