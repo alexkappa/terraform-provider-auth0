@@ -44,8 +44,9 @@ func newUser() *schema.Resource {
 				Optional: true,
 			},
 			"password": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:      schema.TypeString,
+				Optional:  true,
+				Sensitive: true,
 			},
 			"phone_number": {
 				Type:     schema.TypeString,
@@ -93,11 +94,11 @@ func readUser(d *schema.ResourceData, m interface{}) error {
 	d.Set("verify_email", u.VerifyEmail)
 	d.Set("email", u.Email)
 
-	if userMeta, err := structure.FlattenJsonToString(u.UserMetadata); err != nil {
+	if userMeta, err := structure.FlattenJsonToString(u.UserMetadata); err == nil {
 		d.Set("user_metadata", userMeta)
 	}
 
-	if appMeta, err := structure.FlattenJsonToString(u.AppMetadata); err != nil {
+	if appMeta, err := structure.FlattenJsonToString(u.AppMetadata); err == nil {
 		d.Set("app_metadata", appMeta)
 	}
 
@@ -144,14 +145,14 @@ func buildUser(d *schema.ResourceData) *management.User {
 
 	if d.HasChange("user_metadata") {
 		userMeta, err := structure.ExpandJsonFromString(d.Get("user_metadata").(string))
-		if err != nil {
+		if err == nil {
 			u.UserMetadata = userMeta
 		}
 	}
 
 	if d.HasChange("app_metadata") {
 		appMeta, err := structure.ExpandJsonFromString(d.Get("app_metadata").(string))
-		if err != nil {
+		if err == nil {
 			u.AppMetadata = appMeta
 		}
 	}
