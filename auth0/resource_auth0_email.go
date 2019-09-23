@@ -44,15 +44,19 @@ func newEmail() *schema.Resource {
 							Type:      schema.TypeString,
 							Optional:  true,
 							Sensitive: true,
+							ForceNew:  true,
 						},
 						"access_key_id": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:      schema.TypeString,
+							Optional:  true,
+							Sensitive: true,
+							ForceNew:  true,
 						},
 						"secret_access_key": {
 							Type:      schema.TypeString,
 							Optional:  true,
 							Sensitive: true,
+							ForceNew:  true,
 						},
 						"region": {
 							Type:     schema.TypeString,
@@ -107,8 +111,8 @@ func readEmail(d *schema.ResourceData, m interface{}) error {
 		credentialsMap := make(map[string]interface{})
 		credentialsMap["api_user"] = credentials.APIUser
 		credentialsMap["api_key"] = credentials.APIKey
-		credentialsMap["access_key_id"] = credentials.AccessKeyID
-		credentialsMap["secret_access_key"] = credentials.SecretAccessKey
+		credentialsMap["access_key_id"] = d.Get("credentials.0.access_key_id")
+		credentialsMap["secret_access_key"] = d.Get("credentials.0.secret_access_key")
 		credentialsMap["region"] = credentials.Region
 		credentialsMap["smtp_host"] = credentials.SMTPHost
 		credentialsMap["smtp_port"] = credentials.SMTPPort
