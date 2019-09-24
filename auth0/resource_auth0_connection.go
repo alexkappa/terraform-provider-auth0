@@ -494,7 +494,7 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 
 			c.Options.PasswordDictionary = make(map[string]interface{})
 			c.Options.PasswordDictionary["enable"] = Bool(MapData(m), "enable")
-			c.Options.PasswordDictionary["dictionary"] = Slice(MapData(m), "dictionary")
+			c.Options.PasswordDictionary["dictionary"] = Set(MapData(m), "dictionary").Slice()
 		})
 	})
 
