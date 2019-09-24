@@ -3,6 +3,7 @@ package auth0
 import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
+	"gopkg.in/auth0.v1"
 	"gopkg.in/auth0.v1/management"
 )
 
@@ -253,17 +254,17 @@ func readTenant(d *schema.ResourceData, m interface{}) error {
 	if flags := t.Flags; flags != nil {
 		d.Set("flags", []map[string]interface{}{
 			{
-				"change_pwd_flow_v1":                     flags.ChangePasswordFlowV1,
-				"enable_client_connections":              flags.EnableClientConnections,
-				"enable_apis_section":                    flags.EnableAPIsSection,
-				"enable_pipeline2":                       flags.EnablePipeline2,
-				"enable_dynamic_client_registration":     flags.EnableDynamicClientRegistration,
-				"enable_custom_domain_in_emails":         flags.EnableCustomDomainInEmails,
-				"allow_changing_enable_sso":              flags.AllowChangingEnableSso,
-				"universal_login":                        flags.UniversalLogin,
-				"enable_legacy_logs_search_v2":           flags.EnableLegacyLogsSearchV2,
-				"disable_clickjack_protection_headers":   flags.DisableClickjackProtectionHeaders,
-				"enable_public_signup_user_exists_error": flags.EnablePublicSignupUserExistsError,
+				"change_pwd_flow_v1":                     auth0.BoolValue(flags.ChangePasswordFlowV1),
+				"enable_client_connections":              auth0.BoolValue(flags.EnableClientConnections),
+				"enable_apis_section":                    auth0.BoolValue(flags.EnableAPIsSection),
+				"enable_pipeline2":                       auth0.BoolValue(flags.EnablePipeline2),
+				"enable_dynamic_client_registration":     auth0.BoolValue(flags.EnableDynamicClientRegistration),
+				"enable_custom_domain_in_emails":         auth0.BoolValue(flags.EnableCustomDomainInEmails),
+				"allow_changing_enable_sso":              auth0.BoolValue(flags.AllowChangingEnableSso),
+				"universal_login":                        auth0.BoolValue(flags.UniversalLogin),
+				"enable_legacy_logs_search_v2":           auth0.BoolValue(flags.EnableLegacyLogsSearchV2),
+				"disable_clickjack_protection_headers":   auth0.BoolValue(flags.DisableClickjackProtectionHeaders),
+				"enable_public_signup_user_exists_error": auth0.BoolValue(flags.EnablePublicSignupUserExistsError),
 			},
 		})
 	}
