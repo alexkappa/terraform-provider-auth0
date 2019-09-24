@@ -133,11 +133,6 @@ func newTenant() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},
-						"disable_impersonation": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Computed: true,
-						},
 						"enable_pipeline2": {
 							Type:     schema.TypeBool,
 							Optional: true,
@@ -149,11 +144,6 @@ func newTenant() *schema.Resource {
 						"enable_custom_domain_in_emails": {
 							Type:     schema.TypeBool,
 							Optional: true,
-						},
-						"enable_sso": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Computed: true,
 						},
 						"allow_changing_enable_sso": {
 							Type:     schema.TypeBool,
@@ -266,11 +256,9 @@ func readTenant(d *schema.ResourceData, m interface{}) error {
 				"change_pwd_flow_v1":                     flags.ChangePasswordFlowV1,
 				"enable_client_connections":              flags.EnableClientConnections,
 				"enable_apis_section":                    flags.EnableAPIsSection,
-				"disable_impersonation":                  flags.DisableImpersonation,
 				"enable_pipeline2":                       flags.EnablePipeline2,
 				"enable_dynamic_client_registration":     flags.EnableDynamicClientRegistration,
 				"enable_custom_domain_in_emails":         flags.EnableCustomDomainInEmails,
-				"enable_sso":                             flags.EnableSSO,
 				"allow_changing_enable_sso":              flags.AllowChangingEnableSso,
 				"universal_login":                        flags.UniversalLogin,
 				"enable_legacy_logs_search_v2":           flags.EnableLegacyLogsSearchV2,
@@ -360,11 +348,9 @@ func buildTenant(d *schema.ResourceData) *management.Tenant {
 			ChangePasswordFlowV1:              Bool(MapData(m), "change_pwd_flow_v1"),
 			EnableClientConnections:           Bool(MapData(m), "enable_client_connections"),
 			EnableAPIsSection:                 Bool(MapData(m), "enable_apis_section"),
-			DisableImpersonation:              Bool(MapData(m), "disable_impersonation"),
 			EnablePipeline2:                   Bool(MapData(m), "enable_pipeline2"),
 			EnableDynamicClientRegistration:   Bool(MapData(m), "enable_dynamic_client_registration"),
 			EnableCustomDomainInEmails:        Bool(MapData(m), "enable_custom_domain_in_emails"),
-			EnableSSO:                         Bool(MapData(m), "enable_sso"),
 			AllowChangingEnableSso:            Bool(MapData(m), "allow_changing_enable_sso"),
 			UniversalLogin:                    Bool(MapData(m), "universal_login"),
 			EnableLegacyLogsSearchV2:          Bool(MapData(m), "enable_legacy_logs_search_v2"),
