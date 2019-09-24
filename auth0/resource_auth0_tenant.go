@@ -136,6 +136,7 @@ func newTenant() *schema.Resource {
 						"disable_impersonation": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Computed: true,
 						},
 						"enable_pipeline2": {
 							Type:     schema.TypeBool,
@@ -152,6 +153,7 @@ func newTenant() *schema.Resource {
 						"enable_sso": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Computed: true,
 						},
 						"allow_changing_enable_sso": {
 							Type:     schema.TypeBool,
