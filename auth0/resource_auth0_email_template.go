@@ -36,7 +36,7 @@ func newEmailTemplate() *schema.Resource {
 			},
 			"body": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 			},
 			"from": {
 				Type:     schema.TypeString,
@@ -44,7 +44,7 @@ func newEmailTemplate() *schema.Resource {
 			},
 			"result_url": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"subject": {
 				Type:     schema.TypeString,
@@ -56,7 +56,7 @@ func newEmailTemplate() *schema.Resource {
 			},
 			"url_lifetime_in_seconds": {
 				Type:     schema.TypeInt,
-				Required: true,
+				Optional: true,
 			},
 			"enabled": {
 				Type:     schema.TypeBool,
