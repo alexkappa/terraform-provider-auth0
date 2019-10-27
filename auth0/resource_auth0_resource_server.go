@@ -79,6 +79,10 @@ func newResourceServer() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
 			},
+			"enforce_policies": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -119,6 +123,7 @@ func readResourceServer(d *schema.ResourceData, m interface{}) error {
 	d.Set("skip_consent_for_verifiable_first_party_clients", s.SkipConsentForVerifiableFirstPartyClients)
 	d.Set("verification_location", s.VerificationLocation)
 	d.Set("options", s.Options)
+	d.Set("enforce_policies", s.EnforcePolicies)
 	return nil
 }
 
@@ -151,6 +156,7 @@ func buildResourceServer(d *schema.ResourceData) *management.ResourceServer {
 		SkipConsentForVerifiableFirstPartyClients: Bool(d, "skip_consent_for_verifiable_first_party_clients"),
 		VerificationLocation:                      String(d, "verification_location"),
 		Options:                                   Map(d, "options"),
+		EnforcePolicies:                           Bool(d, "enforce_policies"),
 	}
 
 	if v, ok := d.GetOk("scopes"); ok {
