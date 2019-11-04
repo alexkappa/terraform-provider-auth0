@@ -24,6 +24,7 @@ func TestAccResourceServer(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "token_lifetime", "7200"),
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "token_lifetime_for_web", "3600"),
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "skip_consent_for_verifiable_first_party_clients", "true"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "enforce_policies", "true"),
 				),
 			},
 		},
@@ -49,5 +50,6 @@ resource "auth0_resource_server" "my_resource_server" {
   token_lifetime = 7200
   token_lifetime_for_web = 3600
   skip_consent_for_verifiable_first_party_clients = true
+  enforce_policies = true
 }
 `
