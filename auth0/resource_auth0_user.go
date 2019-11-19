@@ -1,6 +1,8 @@
 package auth0
 
 import (
+	"strings"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/structure"
 	"github.com/hashicorp/terraform/helper/validation"
@@ -25,6 +27,9 @@ func newUser() *schema.Resource {
 				Computed: true,
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 					return old == "auth0|"+new
+				},
+				StateFunc: func(s interface{}) string {
+					return strings.ToLower(s.(string))
 				},
 			},
 			"connection_name": {
