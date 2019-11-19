@@ -60,23 +60,47 @@ func newRole() *schema.Resource {
 }
 
 func createRole(d *schema.ResourceData, m interface{}) error {
+
 	c := buildRole(d)
 	api := m.(*management.Management)
 	if err := api.Role.Create(c); err != nil {
 		return err
 	}
 
-	users := buildUsers(d)
-	if err := api.Role.AssignUsers(*c.ID, users...); err != nil {
-		return err
+	// Enable partial state mode. Sub-resources can potentially cause partial
+	// state. Therefore we must explicitly tell Terraform what is safe to
+	// persist and what is not.
+	//
+	// See: https://www.terraform.io/docs/extend/writing-custom-providers.html
+	d.Partial(true)
+
+	if d.HasChange("user_ids") {
+		users := buildUsers(d)
+		if len(users) > 0 {
+			err := api.Role.AssignUsers(*c.ID, users...)
+			if err != nil {
+				return err
+			}
+		}
+		d.SetPartial("user_ids")
 	}
 
-	permissions := buildPermissions(d)
-	if err := api.Role.AssignPermissions(*c.ID, permissions...); err != nil {
-		return err
+	if d.HasChange("permissions") {
+		permissions := buildPermissions(d)
+		if len(permissions) > 0 {
+			err := api.Role.AssignPermissions(*c.ID, permissions...)
+			if err != nil {
+				return err
+			}
+		}
+		d.SetPartial("permissions")
 	}
 
+	// We succeeded, disable partial mode. This causes Terraform to save
+	// all fields again.
+	d.Partial(false)
 	d.SetId(auth0.StringValue(c.ID))
+
 	return readRole(d, m)
 }
 
