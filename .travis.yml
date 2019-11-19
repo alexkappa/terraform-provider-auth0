@@ -15,12 +15,6 @@ cache:
 env:
   - GO111MODULE=on
 
-before_install:
-  # Decrypt the script that authenticates on go.googlesource.com. Sensitive
-  # information is store in this file therefore encryption is recommended.
-  # See: https://docs.travis-ci.com/user/encrypting-files/
-  - openssl aes-256-cbc -K $encrypted_f1cd2d86aa15_key -iv $encrypted_f1cd2d86aa15_iv -in scripts/gogetcookie.sh.enc -out scripts/gogetcookie.sh -d
-
 install:
   # This script is used by the Travis build to install a cookie for
   # go.googlesource.com so rate limits are higher when using `go get` to fetch

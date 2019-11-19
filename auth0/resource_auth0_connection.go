@@ -88,9 +88,17 @@ func newConnection() *schema.Resource {
 							},
 						},
 						"password_no_personal_info": {
-							Type:     schema.TypeMap,
-							Elem:     &schema.Schema{Type: schema.TypeString},
+							Type:     schema.TypeList,
 							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enable": {
+										Type:     schema.TypeBool,
+										Optional: true,
+									},
+								},
+							},
 						},
 						"password_dictionary": {
 							Type:     schema.TypeMap,
@@ -210,26 +218,73 @@ func newConnection() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},
+
+						// Twilio/sms options
+						"name": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"twilio_sid": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"twilio_token": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Sensitive:   true,
+							DefaultFunc: schema.EnvDefaultFunc("TWILIO_TOKEN", nil),
+						},
+						"from": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"syntax": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"template": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+						"totp": {
+							Type:     schema.TypeMap,
+							Optional: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"time_step": {
+										Type:     schema.TypeInt,
+										Optional: true,
+									},
+									"length": {
+										Type:     schema.TypeInt,
+										Optional: true,
+									},
+								},
+							},
+						},
+						"messaging_service_sid": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+
+						// adfs options
+						"adfs_server": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+
+						// salesforce options
+						"community_base_url": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
 					},
 				},
 			},
 			"enabled_clients": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
-				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					if strings.Contains(k, "#") {
-						return old == new
-					}
-
-					enabledClients := Slice(d, "enabled_clients")
-					result := false
-					for _, v := range enabledClients {
-						result = result || (v == old)
-					}
-
-					return result
-				},
 			},
 			"realms": {
 				Type:     schema.TypeList,
@@ -296,6 +351,22 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 			"use_wsfed":              auth0.BoolValue(c.Options.UseWsfed),
 			"waad_protocol":          auth0.StringValue(c.Options.WaadProtocol),
 			"waad_common_endpoint":   auth0.BoolValue(c.Options.WaadCommonEndpoint),
+
+			// twilio/sms
+			"name":                  auth0.StringValue(c.Options.Name),
+			"twilio_sid":            auth0.StringValue(c.Options.TwilioSid),
+			"twilio_token":          auth0.StringValue(c.Options.TwilioToken),
+			"from":                  auth0.StringValue(c.Options.From),
+			"syntax":                auth0.StringValue(c.Options.Syntax),
+			"template":              auth0.StringValue(c.Options.Template),
+			"messaging_service_sid": auth0.StringValue(c.Options.MessagingServiceSid),
+			"totp":                  c.Options.Totp,
+
+			// adfs
+			"adfs_server": auth0.StringValue(c.Options.AdfsServer),
+
+			// salesforce
+			"community_base_url": auth0.StringValue(c.Options.CommunityBaseURL),
 		},
 	})
 
@@ -327,7 +398,7 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 		Name:               String(d, "name"),
 		IsDomainConnection: Bool(d, "is_domain_connection"),
 		Strategy:           String(d, "strategy"),
-		EnabledClients:     Slice(d, "enabled_clients"),
+		EnabledClients:     Set(d, "enabled_clients").Slice(),
 		Realms:             Slice(d, "realms"),
 	}
 
@@ -338,7 +409,6 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 		c.Options = &management.ConnectionOptions{
 			Validation:                   Map(MapData(m), "validation"),
 			PasswordPolicy:               String(MapData(m), "password_policy"),
-			PasswordNoPersonalInfo:       Map(MapData(m), "password_no_personal_info"),
 			PasswordDictionary:           Map(MapData(m), "password_dictionary"),
 			APIEnableUsers:               Bool(MapData(m), "api_enable_users"),
 			BasicProfile:                 Bool(MapData(m), "basic_profile"),
@@ -368,6 +438,25 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 			UseWsfed:            Bool(MapData(m), "use_wsfed"),
 			WaadProtocol:        String(MapData(m), "waad_protocol"),
 			WaadCommonEndpoint:  Bool(MapData(m), "waad_common_endpoint"),
+
+			// Twilio
+			Name:                String(MapData(m), "name"),
+			TwilioSid:           String(MapData(m), "twilio_sid"),
+			TwilioToken:         String(MapData(m), "twilio_token"),
+			From:                String(MapData(m), "from"),
+			Syntax:              String(MapData(m), "syntax"),
+			Template:            String(MapData(m), "template"),
+			MessagingServiceSid: String(MapData(m), "messaging_service_sid"),
+			Totp: &management.ConnectionOptionsTotp{
+				TimeStep: Int(MapData(m), "time_step"),
+				Length:   Int(MapData(m), "length"),
+			},
+
+			// adfs
+			AdfsServer: String(MapData(m), "adfs_server"),
+
+			// salesforce
+			CommunityBaseURL: String(MapData(m), "community_base_url"),
 		}
 
 		List(MapData(m), "password_history").First(func(v interface{}) {
@@ -377,6 +466,14 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 			c.Options.PasswordHistory = make(map[string]interface{})
 			c.Options.PasswordHistory["enable"] = Bool(MapData(m), "enable")
 			c.Options.PasswordHistory["size"] = Int(MapData(m), "size")
+		})
+
+		List(MapData(m), "password_no_personal_info").First(func(v interface{}) {
+
+			m := v.(map[string]interface{})
+
+			c.Options.PasswordNoPersonalInfo = make(map[string]interface{})
+			c.Options.PasswordNoPersonalInfo["enable"] = Bool(MapData(m), "enable")
 		})
 	})
 

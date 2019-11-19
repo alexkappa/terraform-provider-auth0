@@ -9,6 +9,8 @@ import (
 
 func TestAccCustomDomain(t *testing.T) {
 
+	t.Skip()
+
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
