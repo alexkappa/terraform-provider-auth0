@@ -41,6 +41,12 @@ func newClient() *schema.Resource {
 			"app_type": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"native", "spa", "regular_web", "non_interactive", "rms",
+					"box", "cloudbees", "concur", "dropbox", "mscrm", "echosign",
+					"egnyte", "newrelic", "office365", "salesforce", "sentry",
+					"sharepoint", "slack", "springcm", "zendesk", "zoom",
+				}, false),
 			},
 			"logo_uri": {
 				Type:     schema.TypeString,
@@ -484,10 +490,10 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 
 	if jwtConfiguration := c.JWTConfiguration; jwtConfiguration != nil {
 		d.Set("jwt_configuration", map[string]interface{}{
-			"lifetime_in_seconds": jwtConfiguration.Algorithm,
-			"secret_encoded":      jwtConfiguration.LifetimeInSeconds,
+			"lifetime_in_seconds": jwtConfiguration.LifetimeInSeconds,
+			"secret_encoded":      jwtConfiguration.SecretEncoded,
 			"scopes":              jwtConfiguration.Scopes,
-			"alg":                 jwtConfiguration.SecretEncoded,
+			"alg":                 jwtConfiguration.Algorithm,
 		})
 	}
 

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This script maintains the text of a specific release from the CHANGELOG to be
 # used as release notes.

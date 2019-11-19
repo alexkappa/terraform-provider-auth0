@@ -24,6 +24,7 @@ func TestAccResourceServer(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "token_lifetime", "7200"),
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "token_lifetime_for_web", "3600"),
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "skip_consent_for_verifiable_first_party_clients", "true"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "enforce_policies", "true"),
 				),
 			},
 		},
@@ -37,11 +38,11 @@ resource "auth0_resource_server" "my_resource_server" {
   name = "Resource Server - Acceptance Test"
   identifier = "https://api.example.com/v2"
   signing_alg = "RS256"
-  scopes = {
+  scopes {
   	value = "create:foo"
   	description = "Create foos"
   }
-  scopes = {
+  scopes {
   	value = "create:bar"
   	description = "Create bars"
   }
@@ -49,5 +50,6 @@ resource "auth0_resource_server" "my_resource_server" {
   token_lifetime = 7200
   token_lifetime_for_web = 3600
   skip_consent_for_verifiable_first_party_clients = true
+  enforce_policies = true
 }
 `

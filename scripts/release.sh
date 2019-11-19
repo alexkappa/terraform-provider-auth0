@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 set -e
 
 TAR_FILE="/tmp/goreleaser.tar.gz"
@@ -33,8 +33,11 @@ release_notes() {
   bash scripts/release-notes.sh "$TAG" > "$TMPDIR/release-notes.md"
 }
 
+release() {
+  "${TMPDIR}/goreleaser" --skip-validate --release-notes="${TMPDIR}/release-notes.md"
+}
+
 download
 extract
 release_notes
-
-"${TMPDIR}/goreleaser" --skip-validate --release-notes="${TMPDIR}/release-notes.md"
+release
