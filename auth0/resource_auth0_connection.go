@@ -454,6 +454,9 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 
 			// adfs
 			AdfsServer: String(MapData(m), "adfs_server"),
+
+			// salesforce
+			CommunityBaseURL: String(MapData(m), "community_base_url"),
 		}
 
 		List(MapData(m), "password_history").First(func(v interface{}) {
