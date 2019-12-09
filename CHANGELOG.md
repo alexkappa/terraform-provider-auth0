@@ -1,4 +1,8 @@
-<!-- ## v0.2.2 (Unreleased) -->
+## v0.2.2 (December 10, 2019)
+
+ENHANCEMENTS:
+
+* Switch to using Github Actions in favour of Wercker.
 
 ## v0.2.1 (October 21, 2019)
 
