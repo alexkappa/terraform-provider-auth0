@@ -1,0 +1,16 @@
+name: CI
+on: 
+  push:
+    tags: *
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get version from ref
+      run: echo ::set-output name=TAG::$(echo $GITHUB_REF | cut -d / -f 3)
+      id: get_version
+      
+    - name: Go release
+      run: bash scripts/release.sh ${{ steps.get_version.outputs.VERSION }}
