@@ -1,0 +1,24 @@
+name: Stale
+on:
+  schedule:
+  - cron: "0 0 * * *"
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/stale@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        stale-issue-label: stale
+        stale-issue-message: |
+          This issue is stale because it has been open 30 days with no activity.
+          Stale issues will be closed after 5 days if no action is taken. If you
+          think this issue should not be closed, remove the `stale` label.
+        exempt-issue-label: triage
+        stale-pr-label: stale
+        stale-pr-message: |
+          This PR has become stale as it has been open 30 days with no activity.
+          Stale PRs will be closed after 5 days if no action is taken. If you
+          think this PR should not be closed, remove the `stale` label.
+        exempt-pr-label: triage
