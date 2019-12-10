@@ -13,4 +13,12 @@ jobs:
       id: get_version
       
     - name: Go release
-      run: bash scripts/release.sh ${{ steps.get_version.outputs.VERSION }}
+      run: ./scripts/release.sh ${{ steps.get_version.outputs.VERSION }}
+
+    # - name: Go release
+    #   uses: goreleaser/goreleaser-action@v1
+    #   with:
+    #     version: ${{ steps.get_version.outputs.VERSION }}
+    #     args: --skip-validate --release-notes="${TMPDIR}/release-notes.md"
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
