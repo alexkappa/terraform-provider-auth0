@@ -1,7 +1,7 @@
 Auth0 Terraform Provider
 ========================
 
-[![Build Status](https://travis-ci.org/alexkappa/terraform-provider-auth0.svg?branch=master)](https://travis-ci.org/alexkappa/terraform-provider-auth0)
+[![Build Status](https://github.com/alexkappa/terraform-provider-auth0/workflows/Build/badge.svg)](https://github.com/alexkappa/terraform-provider-auth0/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/9c49c10286123b716c79/maintainability)](https://codeclimate.com/github/alexkappa/terraform-provider-auth0/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/9c49c10286123b716c79/test_coverage)](https://codeclimate.com/github/alexkappa/terraform-provider-auth0/test_coverage)
 
