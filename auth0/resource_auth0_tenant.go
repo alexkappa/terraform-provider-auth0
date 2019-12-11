@@ -264,16 +264,18 @@ func readTenant(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if universalLogin := t.UniversalLogin; universalLogin != nil {
-		d.Set("universal_login", []map[string]interface{}{
-			{
-				"colors": []map[string]interface{}{
-					{
-						"primary":         universalLogin.Colors.Primary,
-						"page_background": universalLogin.Colors.PageBackground,
+		if colors := universalLogin.Colors; colors != nil {
+			d.Set("universal_login", []map[string]interface{}{
+				{
+					"colors": []map[string]interface{}{
+						{
+							"primary":         universalLogin.Colors.Primary,
+							"page_background": universalLogin.Colors.PageBackground,
+						},
 					},
 				},
-			},
-		})
+			})
+		}
 	}
 
 	return nil
