@@ -38,7 +38,7 @@ func TestAccUserCreateUser(t *testing.T) {
 			{
 				Config: testAccUserCreateUser,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_user.user", "user_id", "12345"),
+					resource.TestCheckResourceAttr("auth0_user.user", "user_id", "auth0|12345"),
 					resource.TestCheckResourceAttr("auth0_user.user", "email", "test@test.com"),
 					resource.TestCheckResourceAttr("auth0_user.user", "nickname", "testnick"),
 					resource.TestCheckResourceAttr("auth0_user.user", "connection_name", "Username-Password-Authentication"),
