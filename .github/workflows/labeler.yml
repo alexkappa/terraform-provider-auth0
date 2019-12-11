@@ -1,7 +1,8 @@
 name: Label
 on: [pull_request]
 jobs:
-  triage:
+  label:
+    name: Label
     runs-on: ubuntu-latest
     steps:
     - uses: actions/labeler@v2
