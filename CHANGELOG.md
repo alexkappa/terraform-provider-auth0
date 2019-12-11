@@ -1,4 +1,10 @@
-<!-- ## v0.3.1 (Unreleased) -->
+<!-- ## v0.x.x (Unreleased) -->
+
+## v0.3.1 (December 10, 2019)
+
+ENHANCEMENTS:
+
+* resource/auth0_tenant: Support `flags` and `universal_login` settings [#133](https://github.com/terraform-providers/terraform-provider-auth0/pull/133)
 
 ## v0.3.0 (December 10, 2019)
 
