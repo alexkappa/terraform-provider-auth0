@@ -1,4 +1,12 @@
-<!-- ## v0.2.3 (Unreleased) -->
+## v0.2.3 (December 10, 2019)
+
+BUG FIXES:
+
+* resource/auth0_email_template: Fix 404 issue when modifying templates ([#144](https://github.com/terraform-providers/terraform-provider-auth0/pull/144)).
+
+NOTES:
+
+* Upgrade to `gopkg.in/auth0.v2`
 
 ## v0.2.2 (December 10, 2019)
 
