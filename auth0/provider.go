@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"gopkg.in/auth0.v1/management"
+	"gopkg.in/auth0.v2/management"
 )
 
 func Provider() *schema.Provider {

@@ -5,8 +5,8 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
-	"gopkg.in/auth0.v1"
-	"gopkg.in/auth0.v1/management"
+	"gopkg.in/auth0.v2"
+	"gopkg.in/auth0.v2/management"
 )
 
 func newClient() *schema.Resource {

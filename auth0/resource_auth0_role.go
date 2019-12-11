@@ -2,8 +2,8 @@ package auth0
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
-	"gopkg.in/auth0.v1"
-	"gopkg.in/auth0.v1/management"
+	"gopkg.in/auth0.v2"
+	"gopkg.in/auth0.v2/management"
 )
 
 func newRole() *schema.Resource {
@@ -88,7 +88,7 @@ func createRole(d *schema.ResourceData, m interface{}) error {
 	if d.HasChange("permissions") {
 		permissions := buildPermissions(d)
 		if len(permissions) > 0 {
-			err := api.Role.AssignPermissions(*c.ID, permissions...)
+			err := api.Role.AssociatePermissions(*c.ID, permissions...)
 			if err != nil {
 				return err
 			}

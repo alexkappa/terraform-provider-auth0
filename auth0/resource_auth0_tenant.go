@@ -3,7 +3,7 @@ package auth0
 import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
-	"gopkg.in/auth0.v1/management"
+	"gopkg.in/auth0.v2/management"
 )
 
 func newTenant() *schema.Resource {

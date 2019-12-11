@@ -3,8 +3,8 @@ package auth0
 import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
-	"gopkg.in/auth0.v1"
-	"gopkg.in/auth0.v1/management"
+	"gopkg.in/auth0.v2"
+	"gopkg.in/auth0.v2/management"
 )
 
 func newCustomDomain() *schema.Resource {
@@ -12,7 +12,6 @@ func newCustomDomain() *schema.Resource {
 
 		Create: createCustomDomain,
 		Read:   readCustomDomain,
-		Update: updateCustomDomain,
 		Delete: deleteCustomDomain,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -22,10 +21,12 @@ func newCustomDomain() *schema.Resource {
 			"domain": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"type": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 				ValidateFunc: validation.StringInSlice([]string{
 					"auth0_managed_certs",
 					"self_managed_certs",
@@ -42,6 +43,7 @@ func newCustomDomain() *schema.Resource {
 			"verification_method": {
 				Type:         schema.TypeString,
 				Required:     true,
+				ForceNew:     true,
 				ValidateFunc: validation.StringInSlice([]string{"txt"}, true),
 			},
 			"verification": {
@@ -91,17 +93,6 @@ func readCustomDomain(d *schema.ResourceData, m interface{}) error {
 	}
 
 	return nil
-}
-
-func updateCustomDomain(d *schema.ResourceData, m interface{}) error {
-	c := buildCustomDomain(d)
-	c.Verification = nil
-	api := m.(*management.Management)
-	err := api.CustomDomain.Update(d.Id(), c)
-	if err != nil {
-		return err
-	}
-	return readCustomDomain(d, m)
 }
 
 func deleteCustomDomain(d *schema.ResourceData, m interface{}) error {
