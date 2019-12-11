@@ -118,6 +118,20 @@ func newConnection() *schema.Resource {
 								},
 							},
 						},
+						"password_complexity_options": {
+							Type:     schema.TypeList,
+							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"min_length": {
+										Type:         schema.TypeInt,
+										Optional:     true,
+										ValidateFunc: validation.IntAtLeast(1),
+									},
+								},
+							},
+						},
 						"api_enable_users": {
 							Type:     schema.TypeBool,
 							Optional: true,
@@ -336,6 +350,7 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 			"password_history":               c.Options.PasswordHistory,
 			"password_no_personal_info":      c.Options.PasswordNoPersonalInfo,
 			"password_dictionary":            c.Options.PasswordDictionary,
+			"password_complexity_options":    c.Options.PasswordComplexityOptions,
 			"api_enable_users":               auth0.BoolValue(c.Options.APIEnableUsers),
 			"basic_profile":                  auth0.BoolValue(c.Options.BasicProfile),
 			"ext_admin":                      auth0.BoolValue(c.Options.ExtAdmin),
@@ -495,6 +510,14 @@ func buildConnection(d *schema.ResourceData) *management.Connection {
 			c.Options.PasswordDictionary = make(map[string]interface{})
 			c.Options.PasswordDictionary["enable"] = Bool(MapData(m), "enable")
 			c.Options.PasswordDictionary["dictionary"] = Set(MapData(m), "dictionary").Slice()
+		})
+
+		List(MapData(m), "password_complexity_options").First(func(v interface{}) {
+
+			m := v.(map[string]interface{})
+
+			c.Options.PasswordComplexityOptions = make(map[string]interface{})
+			c.Options.PasswordComplexityOptions["min_length"] = Int(MapData(m), "min_length")
 		})
 	})
 
