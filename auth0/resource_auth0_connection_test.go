@@ -22,6 +22,7 @@ func TestAccConnection(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "strategy", "auth0"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.password_policy", "fair"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.password_no_personal_info.0.enable", "true"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.password_dictionary.0.enable", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.enabled_database_customization", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.brute_force_protection", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.import_mode", "false"),
@@ -56,6 +57,10 @@ resource "auth0_connection" "my_connection" {
 		}
 		password_no_personal_info {
 			enable = true
+		}
+		password_dictionary {
+			enable = true
+			dictionary = [ "password", "admin", "1234" ]
 		}
 		enabled_database_customization = false
 		brute_force_protection = true
