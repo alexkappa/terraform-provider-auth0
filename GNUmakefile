@@ -19,7 +19,7 @@ test: fmtcheck
 		xargs -t -n4 go test $(TESTARGS) -timeout=30s -parallel=4 -run ^$(TESTS)$
 
 testacc: fmtcheck
-	TF_ACC=1 go test $(PKGS) -v $(TESTARGS) -timeout 120m -coverprofile=$(COVERS) -run ^$(TESTS)$
+	@TF_ACC=1 go test $(PKGS) -v $(TESTARGS) -timeout 120m -coverprofile=$(COVERS) -run ^$(TESTS)$
 
 vet:
 	@echo "go vet ."
