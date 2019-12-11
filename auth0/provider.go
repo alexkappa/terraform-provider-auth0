@@ -33,7 +33,6 @@ func Provider() *schema.Provider {
 					if v == "" {
 						return false, nil
 					}
-
 					return v == "1" || v == "true" || v == "on", nil
 				},
 			},
