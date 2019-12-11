@@ -1,4 +1,6 @@
-## v0.2.3 (December 10, 2019)
+<!-- ## v0.3.1 (Unreleased) -->
+
+## v0.3.0 (December 10, 2019)
 
 BUG FIXES:
 
