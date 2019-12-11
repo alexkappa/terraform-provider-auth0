@@ -3,8 +3,9 @@ package auth0
 import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
-	"gopkg.in/auth0.v1"
-	"gopkg.in/auth0.v1/management"
+	"gopkg.in/auth0.v2"
+	"gopkg.in/auth0.v2/management"
+	"log"
 )
 
 func newEmailTemplate() *schema.Resource {
@@ -115,7 +116,7 @@ func readEmailTemplate(d *schema.ResourceData, m interface{}) error {
 func updateEmailTemplate(d *schema.ResourceData, m interface{}) error {
 	e := buildEmailTemplate(d)
 	api := m.(*management.Management)
-	err := api.EmailTemplate.Replace(auth0.StringValue(e.Template), e)
+	err := api.EmailTemplate.Update(d.Id(), e)
 	if err != nil {
 		return err
 	}
@@ -132,7 +133,7 @@ func deleteEmailTemplate(d *schema.ResourceData, m interface{}) error {
 }
 
 func buildEmailTemplate(d *schema.ResourceData) *management.EmailTemplate {
-	return &management.EmailTemplate{
+	t := &management.EmailTemplate{
 		Template:              String(d, "template"),
 		Body:                  String(d, "body"),
 		From:                  String(d, "from"),
@@ -142,4 +143,6 @@ func buildEmailTemplate(d *schema.ResourceData) *management.EmailTemplate {
 		URLLifetimeInSecoonds: Int(d, "url_lifetime_in_seconds"),
 		Enabled:               Bool(d, "enabled"),
 	}
+	log.Printf("[DEBUG] Template: %s", t)
+	return t
 }
