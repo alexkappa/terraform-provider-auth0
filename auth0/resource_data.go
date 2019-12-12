@@ -11,6 +11,10 @@ import (
 // methods defined below.
 type Data interface {
 
+	// IsNewResource reports whether or not the resource is seen for the first
+	// time. If so, checks for change won't be carried out.
+	IsNewResource() bool
+
 	// HasChange reports whether or not the given key has been changed.
 	HasChange(key string) bool
 
@@ -24,6 +28,10 @@ type Data interface {
 // MapData wraps a map satisfying the Data interface, so it can be used in the
 // accessor methods defined below.
 type MapData map[string]interface{}
+
+func (md MapData) IsNewResource() bool {
+	return false
+}
 
 func (md MapData) HasChange(key string) bool {
 	_, ok := md[key]
@@ -48,7 +56,7 @@ var _ Data = (*schema.ResourceData)(nil)
 // String accesses the value held by key and type asserts it to a pointer to a
 // string.
 func String(d Data, key string) (s *string) {
-	if d.HasChange(key) {
+	if d.IsNewResource() || d.HasChange(key) {
 		v, ok := d.GetOkExists(key)
 		if ok {
 			s = auth0.String(v.(string))
@@ -60,7 +68,7 @@ func String(d Data, key string) (s *string) {
 // Int accesses the value held by key and type asserts it to a pointer to a
 // int.
 func Int(d Data, key string) (i *int) {
-	if d.HasChange(key) {
+	if d.IsNewResource() || d.HasChange(key) {
 		v, ok := d.GetOkExists(key)
 		if ok {
 			i = auth0.Int(v.(int))
@@ -72,7 +80,7 @@ func Int(d Data, key string) (i *int) {
 // Bool accesses the value held by key and type asserts it to a pointer to a
 // bool.
 func Bool(d Data, key string) (b *bool) {
-	if d.HasChange(key) {
+	if d.IsNewResource() || d.HasChange(key) {
 		v, ok := d.GetOkExists(key)
 		if ok {
 			b = auth0.Bool(v.(bool))
@@ -83,7 +91,7 @@ func Bool(d Data, key string) (b *bool) {
 
 // Slice accesses the value held by key and type asserts it to a slice.
 func Slice(d Data, key string) (s []interface{}) {
-	if d.HasChange(key) {
+	if d.IsNewResource() || d.HasChange(key) {
 		v, ok := d.GetOkExists(key)
 		if ok {
 			s = v.([]interface{})
@@ -94,7 +102,7 @@ func Slice(d Data, key string) (s []interface{}) {
 
 // Map accesses the value held by key and type asserts it to a map.
 func Map(d Data, key string) (m map[string]interface{}) {
-	if d.HasChange(key) {
+	if d.IsNewResource() || d.HasChange(key) {
 		v, ok := d.GetOkExists(key)
 		if ok {
 			m = v.(map[string]interface{})
@@ -109,7 +117,7 @@ func Map(d Data, key string) (m map[string]interface{}) {
 // The iterator can go over all the items in the list or just the first one,
 // which is a common use case for defining nested schemas in Terraform.
 func List(d Data, key string) *iterator {
-	if d.HasChange(key) {
+	if d.IsNewResource() || d.HasChange(key) {
 		v, ok := d.GetOkExists(key)
 		if ok {
 			return &iterator{v.([]interface{})}
@@ -121,7 +129,7 @@ func List(d Data, key string) *iterator {
 // Set accesses the value held by key, type asserts it to a set and returns an
 // iterator able to go over the items of the list.
 func Set(d Data, key string) *iterator {
-	if d.HasChange(key) {
+	if d.IsNewResource() || d.HasChange(key) {
 		v, ok := d.GetOkExists(key)
 		if ok {
 			if s, ok := v.(*schema.Set); ok {
