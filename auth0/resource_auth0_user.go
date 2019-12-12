@@ -119,7 +119,7 @@ func createUser(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(*u.ID)
-	return nil
+	return readUser(d, m)
 }
 
 func updateUser(d *schema.ResourceData, m interface{}) error {
