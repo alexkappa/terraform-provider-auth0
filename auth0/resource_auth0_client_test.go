@@ -92,7 +92,7 @@ resource "auth0_client" "my_client" {
 }
 `
 
-func TestAccClientBugfix(t *testing.T) {
+func TestAccClientZeroValueCheck(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
@@ -102,20 +102,20 @@ func TestAccClientBugfix(t *testing.T) {
 			{
 				Config: testAccClientConfig_create,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_client.mds_provider", "name", "Application - Acceptance Test - Zero Value Check"),
-					resource.TestCheckResourceAttr("auth0_client.mds_provider", "is_first_party", "false"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Application - Acceptance Test - Zero Value Check"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "is_first_party", "false"),
 				),
 			},
 			{
 				Config: testAccClientConfig_update,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_client.mds_provider", "is_first_party", "true"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "is_first_party", "true"),
 				),
 			},
 			{
 				Config: testAccClientConfig_update_again,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_client.mds_provider", "is_first_party", "false"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "is_first_party", "false"),
 				),
 			},
 		},
