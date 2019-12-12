@@ -28,6 +28,7 @@ func newResourceServer() *schema.Resource {
 			"identifier": {
 				Type:     schema.TypeString,
 				Optional: true,
+				ForceNew: true,
 			},
 			"scopes": {
 				Type:     schema.TypeList,
