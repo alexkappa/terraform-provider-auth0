@@ -65,6 +65,7 @@ func newClient() *schema.Resource {
 			"oidc_conformant": {
 				Type:     schema.TypeBool,
 				Optional: true,
+				Computed: true,
 			},
 			"callbacks": {
 				Type:     schema.TypeList,

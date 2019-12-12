@@ -91,3 +91,54 @@ resource "auth0_client" "my_client" {
   }
 }
 `
+
+func TestAccClientZeroValueCheck(t *testing.T) {
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClientConfig_create,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Application - Acceptance Test - Zero Value Check"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "is_first_party", "false"),
+				),
+			},
+			{
+				Config: testAccClientConfig_update,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_client.my_client", "is_first_party", "true"),
+				),
+			},
+			{
+				Config: testAccClientConfig_update_again,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_client.my_client", "is_first_party", "false"),
+				),
+			},
+		},
+	})
+}
+
+const testAccClientConfig_create = `
+resource "auth0_client" "my_client" {
+  name = "Application - Acceptance Test - Zero Value Check"
+  is_first_party = false
+}
+`
+
+const testAccClientConfig_update = `
+resource "auth0_client" "my_client" {
+  name = "Application - Acceptance Test - Zero Value Check"
+  is_first_party = true
+}
+`
+
+const testAccClientConfig_update_again = `
+resource "auth0_client" "my_client" {
+  name = "Application - Acceptance Test - Zero Value Check"
+  is_first_party = false
+}
+`
