@@ -1,6 +1,8 @@
 package auth0
 
 import (
+	"fmt"
+
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
 
@@ -30,7 +32,7 @@ func newResourceServer() *schema.Resource {
 				Optional: true,
 			},
 			"scopes": {
-				Type:     schema.TypeList,
+				Type:     schema.TypeSet,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -53,6 +55,19 @@ func newResourceServer() *schema.Resource {
 			"signing_secret": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
+				ValidateFunc: func(i interface{}, k string) (s []string, es []error) {
+					v, ok := i.(string)
+					if !ok {
+						es = append(es, fmt.Errorf("expected type of %s to be string", k))
+						return
+					}
+					min := 16
+					if len(v) < min {
+						es = append(es, fmt.Errorf("expected length of %s to be at least %d, %q is %d", k, min, v, len(v)))
+					}
+					return
+				},
 			},
 			"allow_offline_access": {
 				Type:     schema.TypeBool,
@@ -171,18 +186,15 @@ func buildResourceServer(d *schema.ResourceData) *management.ResourceServer {
 		TokenDialect:                              String(d, "token_dialect"),
 	}
 
-	if v, ok := d.GetOk("scopes"); ok {
+	Set(d, "scopes").All(func(key int, value interface{}) {
 
-		for _, vI := range v.([]interface{}) {
+		scopes := value.(map[string]interface{})
 
-			scopes := vI.(map[string]interface{})
-
-			s.Scopes = append(s.Scopes, &management.ResourceServerScope{
-				Value:       String(MapData(scopes), "value"),
-				Description: String(MapData(scopes), "description"),
-			})
-		}
-	}
+		s.Scopes = append(s.Scopes, &management.ResourceServerScope{
+			Value:       String(MapData(scopes), "value"),
+			Description: String(MapData(scopes), "description"),
+		})
+	})
 
 	return s
 }
