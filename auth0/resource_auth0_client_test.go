@@ -102,7 +102,7 @@ func TestAccClientBugfix(t *testing.T) {
 			{
 				Config: testAccClientConfig_create,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_client.mds_provider", "name", "foobar"),
+					resource.TestCheckResourceAttr("auth0_client.mds_provider", "name", "Application - Acceptance Test - Zero Value Check"),
 					resource.TestCheckResourceAttr("auth0_client.mds_provider", "is_first_party", "false"),
 				),
 			},
@@ -123,22 +123,22 @@ func TestAccClientBugfix(t *testing.T) {
 }
 
 const testAccClientConfig_create = `
-resource "auth0_client" "mds_provider" {
-  name = "foobar"
+resource "auth0_client" "my_client" {
+  name = "Application - Acceptance Test - Zero Value Check"
   is_first_party = false
 }
 `
 
 const testAccClientConfig_update = `
-resource "auth0_client" "mds_provider" {
-  name = "foobar"
+resource "auth0_client" "my_client" {
+  name = "Application - Acceptance Test - Zero Value Check"
   is_first_party = true
 }
 `
 
 const testAccClientConfig_update_again = `
-resource "auth0_client" "mds_provider" {
-  name = "foobar"
+resource "auth0_client" "my_client" {
+  name = "Application - Acceptance Test - Zero Value Check"
   is_first_party = false
 }
 `
