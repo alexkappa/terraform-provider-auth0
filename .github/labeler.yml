@@ -42,6 +42,6 @@ resource/auth0_tenant:
   - '**/*tenant.go'
   - '**/*tenant_test.go'
 
-resource/auth0_user:
-  - '**/*user.go'
-  - '**/*user_test.go'
+resource_data:
+  - '**/resource_data.go'
+  - '**/resource_data_test.go'
