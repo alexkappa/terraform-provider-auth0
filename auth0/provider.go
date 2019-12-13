@@ -2,9 +2,7 @@ package auth0
 
 import (
 	"os"
-	"testing"
 
-	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"gopkg.in/auth0.v2/management"
 )
@@ -55,10 +53,6 @@ func Provider() *schema.Provider {
 		},
 		ConfigureFunc: configure,
 	}
-}
-
-func TestMain(m *testing.M) {
-	resource.TestMain(m)
 }
 
 func configure(data *schema.ResourceData) (interface{}, error) {
