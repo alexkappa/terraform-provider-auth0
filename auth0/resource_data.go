@@ -4,6 +4,7 @@ import (
 	"reflect"
 
 	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/helper/structure"
 	"gopkg.in/auth0.v2"
 )
 
@@ -165,4 +166,33 @@ func (i *iterator) First(f func(value interface{})) {
 // Slice returns the underlying list as a raw slice.
 func (i *iterator) Slice() []interface{} {
 	return i.i
+}
+
+// Set accesses the value held by key, type asserts it to a set. It then
+// compares it's changes if any and returns what needs to be added (created) and
+// what needs to be removed (delete).
+func Diff(d *schema.ResourceData, key string) (add []interface{}, rm []interface{}) {
+	if d.IsNewResource() {
+		add = Set(d, key).Slice()
+	}
+	if d.HasChange(key) {
+		o, n := d.GetChange(key)
+		add = n.(*schema.Set).Difference(o.(*schema.Set)).List()
+		rm = o.(*schema.Set).Difference(n.(*schema.Set)).List()
+	}
+	return
+}
+
+// JSON accesses the value held by key and unmarshals it into a map.
+func JSON(d Data, key string) (m map[string]interface{}, err error) {
+	if d.IsNewResource() || d.HasChange(key) {
+		v, ok := d.GetOkExists(key)
+		if ok {
+			m, err = structure.ExpandJsonFromString(v.(string))
+			if err != nil {
+				return
+			}
+		}
+	}
+	return
 }
