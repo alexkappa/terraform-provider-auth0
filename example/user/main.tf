@@ -8,4 +8,10 @@ resource "auth0_user" "user" {
   email = "test@test.com"
   email_verified = true
   password = "passpass$12$12"
+  roles = [ "${auth0_role.admin.id}" ]
+}
+
+resource auth0_role admin {
+	name = "admin"
+	description = "Administrator"
 }
