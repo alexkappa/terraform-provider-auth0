@@ -15,60 +15,76 @@ func TestAccRole(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRoleCreate,
+				Config: testAccRole_create,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_role.my_role", "name", "Application - Role Acceptance Test"),
-					resource.TestCheckResourceAttr("auth0_role.my_role", "description", "Test Applications Role Long Description"),
+					resource.TestCheckResourceAttr("auth0_role.the_one", "name", "The One - Role - Acceptance Test"),
+					resource.TestCheckResourceAttr("auth0_role.the_one", "description", "The One - Role - Acceptance Test"),
+					resource.TestCheckResourceAttr("auth0_role.the_one", "permissions.#", "1"),
 				),
 			},
 			{
-				Config: testAccRoleUpdate,
+				Config: testAccRole_update,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_role.my_role", "description", "Test Applications Role Long Description And Then Some"),
-					resource.TestCheckResourceAttr("auth0_role.my_role", "user_ids.0", "auth0|neo"),
-					resource.TestCheckResourceAttr("auth0_role.my_role", "user_ids.1", "auth0|trinity"),
+					resource.TestCheckResourceAttr("auth0_role.the_one", "description", "The One who will bring peace - Role - Acceptance Test"),
+					resource.TestCheckResourceAttr("auth0_role.the_one", "permissions.#", "2"),
 				),
 			},
 		},
 	})
 }
 
-const testAccRoleCreate = `
-provider "auth0" {}
+const testAccRole_create = `
+provider auth0 {}
 
-resource "auth0_role" "my_role" {
-	name = "Application - Role Acceptance Test"
-	description = "Test Applications Role Long Description"
+resource auth0_resource_server matrix {
+	name = "The One - Resource Server - Acceptance Test"
+	identifier = "https://matrix.com/"
+	scopes {
+		value = "stop:bullets"
+		description = "Stop bullets"
+	}
+	scopes {
+		value = "bring:peace"
+		description = "Bring peace"
+	}
+  }
+
+resource auth0_role the_one {
+  name = "The One - Role - Acceptance Test"
+  description = "The One - Role - Acceptance Test"
+  permissions {
+	name = "stop:bullets"
+	resource_server_identifier = auth0_resource_server.matrix.identifier
+  }
 }
 `
 
-const testAccRoleUpdate = `
-provider "auth0" {}
+const testAccRole_update = `
+provider auth0 {}
 
-resource "auth0_user" "neo" {
-  connection_name = "Username-Password-Authentication"
-  email = "neo@matrix.com"
-  username = "neo"
-  nickname = "neo"
-  password = "IAmThe#1"
-  user_id = "neo"
-}
+resource auth0_resource_server matrix {
+	name = "The One - Resource Server - Acceptance Test"
+	identifier = "https://matrix.com/"
+	scopes {
+		value = "stop:bullets"
+		description = "Create bars"
+	}
+	scopes {
+		value = "bring:peace"
+		description = "Bring peace"
+	}
+  }
 
-resource "auth0_user" "trinity" {
-  connection_name = "Username-Password-Authentication"
-  email = "trinity@matrix.com"
-  username = "trinity"
-  nickname = "trinity"
-  password = "TheM4trixH4$Y0u"
-  user_id = "trinity"
-}
-
-resource "auth0_role" "my_role" {
-  name = "Application Role Acceptance Test"
-  description = "Test Applications Role Long Description And Then Some"
-  user_ids = [ 
-    auth0_user.neo.id, 
-    auth0_user.trinity.id
-  ]
+resource auth0_role the_one {
+  name = "The One - Role - Acceptance Test"
+  description = "The One who will bring peace - Role - Acceptance Test"
+  permissions {
+	name = "stop:bullets"
+	resource_server_identifier = auth0_resource_server.matrix.identifier
+  }
+  permissions {
+	name = "bring:peace"
+	resource_server_identifier = auth0_resource_server.matrix.identifier
+  }
 }
 `
