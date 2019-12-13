@@ -36,24 +36,23 @@ func newRole() *schema.Resource {
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
 				ForceNew: true,
+				Removed:  `This field has been removed. Use "auth0_user.roles" instead`,
 			},
 			"permissions": {
-				Type: schema.TypeList,
+				Type:     schema.TypeSet,
+				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
 							Type:     schema.TypeString,
-							Optional: true,
-							ForceNew: true,
+							Required: true,
 						},
 						"resource_server_identifier": {
 							Type:     schema.TypeString,
-							Optional: true,
-							ForceNew: true,
+							Required: true,
 						},
 					},
 				},
-				Optional: true,
 			},
 		},
 	}
@@ -66,6 +65,7 @@ func createRole(d *schema.ResourceData, m interface{}) error {
 	if err := api.Role.Create(c); err != nil {
 		return err
 	}
+	d.SetId(auth0.StringValue(c.ID))
 
 	// Enable partial state mode. Sub-resources can potentially cause partial
 	// state. Therefore we must explicitly tell Terraform what is safe to
@@ -73,33 +73,12 @@ func createRole(d *schema.ResourceData, m interface{}) error {
 	//
 	// See: https://www.terraform.io/docs/extend/writing-custom-providers.html
 	d.Partial(true)
-
-	if d.HasChange("user_ids") {
-		users := buildUsers(d)
-		if len(users) > 0 {
-			err := api.Role.AssignUsers(*c.ID, users...)
-			if err != nil {
-				return err
-			}
-		}
-		d.SetPartial("user_ids")
+	if err := assignRolePermissions(d, m); err != nil {
+		return err
 	}
-
-	if d.HasChange("permissions") {
-		permissions := buildPermissions(d)
-		if len(permissions) > 0 {
-			err := api.Role.AssociatePermissions(*c.ID, permissions...)
-			if err != nil {
-				return err
-			}
-		}
-		d.SetPartial("permissions")
-	}
-
 	// We succeeded, disable partial mode. This causes Terraform to save
 	// all fields again.
 	d.Partial(false)
-	d.SetId(auth0.StringValue(c.ID))
 
 	return readRole(d, m)
 }
@@ -116,22 +95,10 @@ func readRole(d *schema.ResourceData, m interface{}) error {
 	d.Set("name", c.Name)
 	d.Set("description", c.Description)
 
-	users, err := api.Role.Users(d.Id())
-	if err != nil {
-		return err
-	}
-
-	userIDs := []string{}
-	for _, user := range users {
-		userIDs = append(userIDs, *user.ID)
-	}
-	d.Set("user_ids", userIDs)
-
 	permissions, err := api.Role.Permissions(d.Id())
 	if err != nil {
 		return err
 	}
-
 	d.Set("permissions", func() (m []map[string]interface{}) {
 		for _, permission := range permissions {
 			m = append(m, map[string]interface{}{
@@ -141,6 +108,7 @@ func readRole(d *schema.ResourceData, m interface{}) error {
 		}
 		return m
 	}())
+
 	return nil
 }
 
@@ -151,6 +119,11 @@ func updateRole(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	d.Partial(true)
+	if err := assignRolePermissions(d, m); err != nil {
+		return err
+	}
+	d.Partial(false)
 	return readRole(d, m)
 }
 
@@ -167,25 +140,44 @@ func buildRole(d *schema.ResourceData) *management.Role {
 	}
 }
 
-func buildUsers(d *schema.ResourceData) []*management.User {
-	var users []*management.User
-	for _, val := range Slice(d, "user_ids") {
-		userID, _ := val.(string)
-		users = append(users, &management.User{
-			ID: &userID,
-		})
-	}
-	return users
-}
+func assignRolePermissions(d *schema.ResourceData, m interface{}) error {
 
-func buildPermissions(d *schema.ResourceData) []*management.Permission {
-	var permissions []*management.Permission
-	for _, val := range Slice(d, "permissions") {
-		permission := val.(map[string]interface{})
-		permissions = append(permissions, &management.Permission{
-			Name:                     String(MapData(permission), "name"),
-			ResourceServerIdentifier: String(MapData(permission), "resource_server_identifier"),
+	add, rm := Diff(d, "permissions")
+
+	var addPermissions []*management.Permission
+	for _, addPermission := range add {
+		permission := addPermission.(map[string]interface{})
+		addPermissions = append(addPermissions, &management.Permission{
+			Name:                     auth0.String(permission["name"].(string)),
+			ResourceServerIdentifier: auth0.String(permission["resource_server_identifier"].(string)),
 		})
 	}
-	return permissions
+
+	var rmPermissions []*management.Permission
+	for _, rmPermission := range rm {
+		permission := rmPermission.(map[string]interface{})
+		rmPermissions = append(rmPermissions, &management.Permission{
+			Name:                     auth0.String(permission["name"].(string)),
+			ResourceServerIdentifier: auth0.String(permission["resource_server_identifier"].(string)),
+		})
+	}
+
+	api := m.(*management.Management)
+
+	if len(rmPermissions) > 0 {
+		err := api.Role.RemovePermissions(d.Id(), rmPermissions...)
+		if err != nil {
+			return err
+		}
+	}
+
+	if len(addPermissions) > 0 {
+		err := api.Role.AssociatePermissions(d.Id(), addPermissions...)
+		if err != nil {
+			return err
+		}
+	}
+
+	d.SetPartial("permissions")
+	return nil
 }

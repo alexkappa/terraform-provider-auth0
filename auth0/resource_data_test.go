@@ -18,3 +18,15 @@ func TestMapData(t *testing.T) {
 		t.Error("unexpected value should return false")
 	}
 }
+
+func TestJSON(t *testing.T) {
+	d := MapData{"json": `{"foo": 123}`}
+	v, err := JSON(d, "json")
+	if err != nil {
+		t.Error(err)
+	}
+	j, ok := v["foo"]
+	if !ok {
+		t.Errorf("Expected result to be a int, instead it was %T\n", j)
+	}
+}
