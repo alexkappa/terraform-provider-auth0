@@ -1,5 +1,20 @@
 <!-- ## v0.x.x (Unreleased) -->
 
+## v0.4.0 (December 13, 2019)
+
+ENHANCEMENTS:
+
+* resource/auth0_connection: Introduce `password_complexity_options` ([#132](https://github.com/terraform-providers/terraform-provider-auth0/pull/132)).
+* resource/auth0_resource_server: `signing_secret` is now also a computed field. If set it's validated to be at least 16 characters ([#146](https://github.com/terraform-providers/terraform-provider-auth0/pull/146)).
+* resource/auth0_resource_server: `identifier` update forces new resource ([#147](https://github.com/terraform-providers/terraform-provider-auth0/pull/147)).
+* resource/auth0_role (**breaking change**): `user_ids` is removed. In its place the following is introduced ([#149](https://github.com/terraform-providers/terraform-provider-auth0/pull/149)).
+* resource/auth0_user: `roles` is added ([#149](https://github.com/terraform-providers/terraform-provider-auth0/pull/149)).
+
+BUG FIXES:
+
+* resource/auth0_connection: Fix `password_dictionary` [#128](https://github.com/terraform-providers/terraform-provider-auth0/pull/128)
+* resource/auth0_client: Fix `is_first_party` setting if set to zero value ([#148](https://github.com/terraform-providers/terraform-provider-auth0/pull/148)). 
+
 ## v0.3.1 (December 10, 2019)
 
 ENHANCEMENTS:
