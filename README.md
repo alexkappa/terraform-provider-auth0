@@ -67,6 +67,36 @@ Examples of resources can be found in the [examples directory](example/). The cu
 - [X] [Tenants](https://auth0.com/docs/api/management/v2#!/Tenants/get_settings)
 - [ ] [Tickets](https://auth0.com/docs/api/management/v2#!/Tickets/post_email_verification)
 
+Importing your current configuration
+-------------------------------------
+
+If you already have an Auth0 tenant with a client (application) configured, you can import it using the [Terraform import](https://www.terraform.io/docs/import/index.html) command.
+You will need to have a client configured and set up for management, so that you can have a target for your import
+
+Client
+```
+# this is a placeholder which serves as a target for your import. When you run the import it will generate
+# state for your existing client under this state key.
+resource auth0_client.my_client {
+  name = "My Client"
+  app_type = "spa"
+  description = "This is the target for my import. Do not run terraform apply before importing."
+}
+```
+
+Import your existing configuration, assigning it to the placeholder you created above. Run this in the same directory.
+*note* your existing_auth0_client_id is the client id of the application you want to manage. It can be found in the Auth0 UI/Console.
+`terraform import auth0_client.my_client <existing_auth0_client_id>`
+
+Output
+```
+bash-4.4# terraform import auth0_client.my_client izK6G97YvmbHw8ZmSyEYEJeiH3MnIF6B
+auth0_client.my_client: Importing from ID "izK6G97YvmbHw8ZmSyEYEJeiH3MnIF6B"...
+auth0_client.my_client: Import complete!
+  Imported auth0_client (ID: izK6G97YvmbHw8ZmSyEYEJeiH3MnIF6B)
+  auth0_client.my_client: Refreshing state... (ID: izK6G97YvmbHw8ZmSyEYEJeiH3MnIF6B)
+```
+
 Developing the Provider
 ---------------------------
 
