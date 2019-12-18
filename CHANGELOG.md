@@ -1,5 +1,11 @@
 <!-- ## v0.x.x (Unreleased) -->
 
+## v0.4.1 (December 18, 2019)
+
+ENHANCEMENTS:
+
+* resource/auth0_client: support rotating `client_secret` by changing the value of `client_secret_rotation_trigger` ([#153](https://github.com/terraform-providers/terraform-provider-auth0/pull/153)).
+
 ## v0.4.0 (December 13, 2019)
 
 ENHANCEMENTS:
