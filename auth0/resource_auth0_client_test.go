@@ -100,20 +100,20 @@ func TestAccClientZeroValueCheck(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: testAccClientConfig_create,
+				Config: testAccClientConfigCreate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Application - Acceptance Test - Zero Value Check"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "is_first_party", "false"),
 				),
 			},
 			{
-				Config: testAccClientConfig_update,
+				Config: testAccClientConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_client.my_client", "is_first_party", "true"),
 				),
 			},
 			{
-				Config: testAccClientConfig_update_again,
+				Config: testAccClientConfigUpdateAgain,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_client.my_client", "is_first_party", "false"),
 				),
@@ -122,23 +122,63 @@ func TestAccClientZeroValueCheck(t *testing.T) {
 	})
 }
 
-const testAccClientConfig_create = `
+const testAccClientConfigCreate = `
 resource "auth0_client" "my_client" {
   name = "Application - Acceptance Test - Zero Value Check"
   is_first_party = false
 }
 `
 
-const testAccClientConfig_update = `
+const testAccClientConfigUpdate = `
 resource "auth0_client" "my_client" {
   name = "Application - Acceptance Test - Zero Value Check"
   is_first_party = true
 }
 `
 
-const testAccClientConfig_update_again = `
+const testAccClientConfigUpdateAgain = `
 resource "auth0_client" "my_client" {
   name = "Application - Acceptance Test - Zero Value Check"
   is_first_party = false
+}
+`
+
+func TestAccClientRotateSecret(t *testing.T) {
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClientConfigRotateSecret,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Application - Acceptance Test - Rotate Secret"),
+				),
+			},
+			{
+				Config: testAccClientConfigRotateSecretUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_client.my_client", "client_secret_rotation_trigger.triggered_at", "2018-01-02T23:12:01Z"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "client_secret_rotation_trigger.triggered_by", "alex"),
+				),
+			},
+		},
+	})
+}
+
+const testAccClientConfigRotateSecret = `
+resource "auth0_client" "my_client" {
+  name = "Application - Acceptance Test - Rotate Secret"
+}
+`
+
+const testAccClientConfigRotateSecretUpdate = `
+resource "auth0_client" "my_client" {
+  name = "Application - Acceptance Test - Rotate Secret"
+  client_secret_rotation_trigger = {
+    triggered_at = "2018-01-02T23:12:01Z"
+    triggered_by = "alex"
+  }
 }
 `
