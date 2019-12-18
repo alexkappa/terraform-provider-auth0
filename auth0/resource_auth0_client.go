@@ -38,6 +38,10 @@ func newClient() *schema.Resource {
 				Computed:  true,
 				Sensitive: true,
 			},
+			"client_secret_rotation_trigger": {
+				Type:     schema.TypeMap,
+				Optional: true,
+			},
 			"app_type": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -509,10 +513,18 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 func updateClient(d *schema.ResourceData, m interface{}) error {
 	c := buildClient(d)
 	api := m.(*management.Management)
-	err := api.Client.Update(d.Id(), c)
+	if clientHasChange(c) {
+		err := api.Client.Update(d.Id(), c)
+		if err != nil {
+			return err
+		}
+	}
+	d.Partial(true)
+	err := rotateClientSecret(d, m)
 	if err != nil {
 		return err
 	}
+	d.Partial(false)
 	return readClient(d, m)
 }
 
@@ -641,4 +653,21 @@ func buildClientAddon(d map[string]interface{}) map[string]interface{} {
 		}
 	}
 	return addon
+}
+
+func rotateClientSecret(d *schema.ResourceData, m interface{}) error {
+	if d.HasChange("client_secret_rotation_trigger") {
+		api := m.(*management.Management)
+		c, err := api.Client.RotateSecret(d.Id())
+		if err != nil {
+			return err
+		}
+		d.Set("client_secret", c.ClientSecret)
+	}
+	d.SetPartial("client_secret_rotation_trigger")
+	return nil
+}
+
+func clientHasChange(c *management.Client) bool {
+	return c.String() != "{}"
 }
