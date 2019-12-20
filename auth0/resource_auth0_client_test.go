@@ -3,9 +3,22 @@ package auth0
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
+
+func init() {
+	resource.AddTestSweepers("auth0_client", &resource.Sweeper{
+		Name: "auth0_client",
+		F: func (_ string) error {
+			api, err := Auth0()
+			if err != nil {
+				return err
+			}
+			api.Clients.
+		}
+	})
+}
 
 func TestAccClient(t *testing.T) {
 
