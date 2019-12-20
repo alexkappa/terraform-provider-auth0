@@ -3,8 +3,8 @@ package auth0
 import (
 	"reflect"
 
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/helper/structure"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/structure"
 	"gopkg.in/auth0.v2"
 )
 

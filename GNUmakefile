@@ -3,7 +3,7 @@ PKGS ?= $$(go list ./...)
 FILES ?= $$(find . -name '*.go' | grep -v vendor)
 TESTS ?= ".*"
 COVERS ?= "c.out"
-WEBSITE_REPO = github.com/hashicorp/terraform-website
+WEBSITE_REPO = github.com/hashicorp/terraform-plugin-sdk-website
 
 default: build
 

@@ -3,7 +3,8 @@ package auth0
 import (
 	"os"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	
 	"gopkg.in/auth0.v2/management"
 )
 
