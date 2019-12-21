@@ -2,10 +2,10 @@ package auth0
 
 import (
 	"log"
-	
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
-	
+
 	"gopkg.in/auth0.v2"
 	"gopkg.in/auth0.v2/management"
 )
