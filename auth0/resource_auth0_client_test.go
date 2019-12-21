@@ -1,8 +1,10 @@
 package auth0
 
 import (
+	"strings"
 	"testing"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
@@ -10,13 +12,24 @@ import (
 func init() {
 	resource.AddTestSweepers("auth0_client", &resource.Sweeper{
 		Name: "auth0_client",
-		F: func (_ string) error {
+		F: func(_ string) (err error) {
 			api, err := Auth0()
 			if err != nil {
-				return err
+				return
 			}
-			api.Clients.
-		}
+			clients, err := api.Client.List()
+			if err != nil {
+				return
+			}
+			for _, client := range clients {
+				if strings.Contains(*client.Name, "Acceptance Test") {
+					if e := api.Client.Delete(*client.ClientID); e != nil {
+						multierror.Append(err, e)
+					}
+				}
+			}
+			return
+		},
 	})
 }
 
@@ -30,7 +43,7 @@ func TestAccClient(t *testing.T) {
 			{
 				Config: testAccClientConfig,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Application - Acceptance Test"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Acceptance Test"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "is_token_endpoint_ip_header_trusted", "true"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "token_endpoint_auth_method", "client_secret_post"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.firebase.client_email", "john.doe@example.com"),
@@ -46,10 +59,8 @@ func TestAccClient(t *testing.T) {
 }
 
 const testAccClientConfig = `
-provider "auth0" {}
-
 resource "auth0_client" "my_client" {
-  name = "Application - Acceptance Test"
+  name = "Acceptance Test"
   description = "Test Applications Long Description"
   app_type = "non_interactive"
   custom_login_page_on = true
@@ -115,7 +126,7 @@ func TestAccClientZeroValueCheck(t *testing.T) {
 			{
 				Config: testAccClientConfigCreate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Application - Acceptance Test - Zero Value Check"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Acceptance Test - Zero Value Check"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "is_first_party", "false"),
 				),
 			},
@@ -137,21 +148,21 @@ func TestAccClientZeroValueCheck(t *testing.T) {
 
 const testAccClientConfigCreate = `
 resource "auth0_client" "my_client" {
-  name = "Application - Acceptance Test - Zero Value Check"
+  name = "Acceptance Test - Zero Value Check"
   is_first_party = false
 }
 `
 
 const testAccClientConfigUpdate = `
 resource "auth0_client" "my_client" {
-  name = "Application - Acceptance Test - Zero Value Check"
+  name = "Acceptance Test - Zero Value Check"
   is_first_party = true
 }
 `
 
 const testAccClientConfigUpdateAgain = `
 resource "auth0_client" "my_client" {
-  name = "Application - Acceptance Test - Zero Value Check"
+  name = "Acceptance Test - Zero Value Check"
   is_first_party = false
 }
 `
@@ -166,7 +177,7 @@ func TestAccClientRotateSecret(t *testing.T) {
 			{
 				Config: testAccClientConfigRotateSecret,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Application - Acceptance Test - Rotate Secret"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Acceptance Test - Rotate Secret"),
 				),
 			},
 			{
@@ -182,13 +193,13 @@ func TestAccClientRotateSecret(t *testing.T) {
 
 const testAccClientConfigRotateSecret = `
 resource "auth0_client" "my_client" {
-  name = "Application - Acceptance Test - Rotate Secret"
+  name = "Acceptance Test - Rotate Secret"
 }
 `
 
 const testAccClientConfigRotateSecretUpdate = `
 resource "auth0_client" "my_client" {
-  name = "Application - Acceptance Test - Rotate Secret"
+  name = "Acceptance Test - Rotate Secret"
   client_secret_rotation_trigger = {
     triggered_at = "2018-01-02T23:12:01Z"
     triggered_by = "alex"

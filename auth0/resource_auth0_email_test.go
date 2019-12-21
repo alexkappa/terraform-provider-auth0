@@ -3,8 +3,8 @@ package auth0
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdkk/terraform/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdkk/terraform/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
 func TestAccEmail(t *testing.T) {

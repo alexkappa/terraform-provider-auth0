@@ -32,8 +32,6 @@ func TestAccEmailTemplate(t *testing.T) {
 }
 
 const testAccEmailTemplateConfig = `
-provider "auth0" {}
-
 resource "auth0_email" "my_email_provider" {
 	name = "ses"
 	enabled = true
