@@ -93,6 +93,10 @@ func newUser() *schema.Resource {
 func readUser(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	u, err := api.User.Read(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}
@@ -175,7 +179,12 @@ func updateUser(d *schema.ResourceData, m interface{}) error {
 
 func deleteUser(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
-	return api.User.Delete(d.Id())
+	err := api.User.Delete(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
+	return err
 }
 
 func buildUser(d *schema.ResourceData) (u *management.User, err error) {

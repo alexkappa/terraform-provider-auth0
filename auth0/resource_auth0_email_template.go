@@ -6,6 +6,7 @@ import (
 	"gopkg.in/auth0.v2"
 	"gopkg.in/auth0.v2/management"
 	"log"
+	"strings"
 )
 
 func newEmailTemplate() *schema.Resource {
@@ -98,6 +99,10 @@ func createEmailTemplate(d *schema.ResourceData, m interface{}) error {
 func readEmailTemplate(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	e, err := api.EmailTemplate.Read(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}
@@ -129,7 +134,12 @@ func deleteEmailTemplate(d *schema.ResourceData, m interface{}) error {
 		Template: auth0.String(d.Id()),
 		Enabled:  auth0.Bool(false),
 	}
-	return api.EmailTemplate.Update(d.Id(), t)
+	err := api.EmailTemplate.Update(d.Id(), t)
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
+	return err
 }
 
 func buildEmailTemplate(d *schema.ResourceData) *management.EmailTemplate {

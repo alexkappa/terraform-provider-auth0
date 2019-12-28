@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/helper/schema"
 	"gopkg.in/auth0.v2/management"
+	"strings"
 )
 
 func newTenant() *schema.Resource {
@@ -202,6 +203,10 @@ func createTenant(d *schema.ResourceData, m interface{}) error {
 func readTenant(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	t, err := api.Tenant.Read()
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}

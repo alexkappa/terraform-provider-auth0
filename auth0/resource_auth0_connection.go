@@ -336,6 +336,10 @@ func createConnection(d *schema.ResourceData, m interface{}) error {
 func readConnection(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	c, err := api.Connection.Read(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}
@@ -417,7 +421,12 @@ func updateConnection(d *schema.ResourceData, m interface{}) error {
 
 func deleteConnection(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
-	return api.Connection.Delete(d.Id())
+	err := api.Connection.Delete(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
+	return err
 }
 
 func buildConnection(d *schema.ResourceData) *management.Connection {

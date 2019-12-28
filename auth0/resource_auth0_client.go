@@ -2,6 +2,7 @@ package auth0
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
@@ -465,6 +466,12 @@ func createClient(d *schema.ResourceData, m interface{}) error {
 func readClient(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	c, err := api.Client.Read(d.Id())
+
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
+
 	if err != nil {
 		return err
 	}
@@ -530,7 +537,12 @@ func updateClient(d *schema.ResourceData, m interface{}) error {
 
 func deleteClient(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
-	return api.Client.Delete(d.Id())
+	err := api.Client.Delete(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
+	return err
 }
 
 func buildClient(d *schema.ResourceData) *management.Client {

@@ -2,6 +2,7 @@ package auth0
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
@@ -126,6 +127,10 @@ func createResourceServer(d *schema.ResourceData, m interface{}) error {
 func readResourceServer(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	s, err := api.ResourceServer.Read(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}
@@ -167,7 +172,12 @@ func updateResourceServer(d *schema.ResourceData, m interface{}) error {
 
 func deleteResourceServer(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
-	return api.ResourceServer.Delete(d.Id())
+	err := api.ResourceServer.Delete(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
+	return err
 }
 
 func buildResourceServer(d *schema.ResourceData) *management.ResourceServer {
