@@ -5,6 +5,7 @@ import (
 	"github.com/hashicorp/terraform/helper/validation"
 	"gopkg.in/auth0.v2"
 	"gopkg.in/auth0.v2/management"
+	"strings"
 )
 
 func newCustomDomain() *schema.Resource {
@@ -77,6 +78,10 @@ func createCustomDomain(d *schema.ResourceData, m interface{}) error {
 func readCustomDomain(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	c, err := api.CustomDomain.Read(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}
@@ -97,7 +102,12 @@ func readCustomDomain(d *schema.ResourceData, m interface{}) error {
 
 func deleteCustomDomain(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
-	return api.CustomDomain.Delete(d.Id())
+	err := api.CustomDomain.Delete(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
+	return err
 }
 
 func buildCustomDomain(d *schema.ResourceData) *management.CustomDomain {

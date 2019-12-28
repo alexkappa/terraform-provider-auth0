@@ -2,6 +2,7 @@ package auth0
 
 import (
 	"regexp"
+	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
@@ -61,6 +62,10 @@ func createRule(d *schema.ResourceData, m interface{}) error {
 func readRule(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	c, err := api.Rule.Read(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}
@@ -83,7 +88,12 @@ func updateRule(d *schema.ResourceData, m interface{}) error {
 
 func deleteRule(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
-	return api.Rule.Delete(d.Id())
+	err := api.Rule.Delete(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
+	return err
 }
 
 func buildRule(d *schema.ResourceData) *management.Rule {

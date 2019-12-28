@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"gopkg.in/auth0.v2"
 	"gopkg.in/auth0.v2/management"
+	"strings"
 )
 
 func newRuleConfig() *schema.Resource {
@@ -46,6 +47,10 @@ func createRuleConfig(d *schema.ResourceData, m interface{}) error {
 func readRuleConfig(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	r, err := api.RuleConfig.Read(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}
@@ -66,7 +71,12 @@ func updateRuleConfig(d *schema.ResourceData, m interface{}) error {
 
 func deleteRuleConfig(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
-	return api.RuleConfig.Delete(d.Id())
+	err := api.RuleConfig.Delete(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
+	return err
 }
 
 func buildRuleConfig(d *schema.ResourceData) *management.RuleConfig {

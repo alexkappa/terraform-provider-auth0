@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"gopkg.in/auth0.v2"
 	"gopkg.in/auth0.v2/management"
+	"strings"
 )
 
 func newClientGrant() *schema.Resource {
@@ -48,6 +49,10 @@ func createClientGrant(d *schema.ResourceData, m interface{}) error {
 func readClientGrant(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	g, err := api.ClientGrant.Read(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
 	if err != nil {
 		return err
 	}
@@ -72,7 +77,12 @@ func updateClientGrant(d *schema.ResourceData, m interface{}) error {
 
 func deleteClientGrant(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
-	return api.ClientGrant.Delete(d.Id())
+	err := api.ClientGrant.Delete(d.Id())
+	if err != nil && strings.HasPrefix(err.Error(), "404") {
+		d.SetId("")
+		return nil
+	}
+	return err
 }
 
 func buildClientGrant(d *schema.ResourceData) *management.ClientGrant {
