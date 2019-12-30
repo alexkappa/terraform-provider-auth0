@@ -3,7 +3,7 @@ PKGS ?= $$(go list ./...)
 FILES ?= $$(find . -name '*.go' | grep -v vendor)
 TESTS ?= ".*"
 COVERS ?= "c.out"
-WEBSITE_REPO = github.com/hashicorp/terraform-website
+WEBSITE_REPO = github.com/hashicorp/terraform-plugin-sdk-website
 
 default: build
 
@@ -12,6 +12,10 @@ build: fmtcheck
 
 install: build
 	@cp $(GOPATH)/bin/terraform-provider-auth0 ~/.terraform.d/plugins
+
+sweep:
+	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
+	@go test $(PKGS) -v -sweep="phony" $(SWEEPARGS)
 
 test: fmtcheck
 	@go test -i $(PKGS) || exit 1
@@ -31,7 +35,7 @@ vet:
 	fi
 
 fmt:
-	gofmt -w $(FILES)
+	@gofmt -w $(FILES)
 
 fmtcheck:
 	@sh -c "'$(CURDIR)/scripts/gofmtcheck.sh'"
