@@ -2,7 +2,7 @@ package auth0
 
 import (
 	"log"
-	"strings"
+	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -101,11 +101,13 @@ func createEmailTemplate(d *schema.ResourceData, m interface{}) error {
 func readEmailTemplate(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	e, err := api.EmailTemplate.Read(d.Id())
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
-	}
 	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 		return err
 	}
 	d.SetId(auth0.StringValue(e.Template))
@@ -137,9 +139,13 @@ func deleteEmailTemplate(d *schema.ResourceData, m interface{}) error {
 		Enabled:  auth0.Bool(false),
 	}
 	err := api.EmailTemplate.Update(d.Id(), t)
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
+	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 	}
 	return err
 }

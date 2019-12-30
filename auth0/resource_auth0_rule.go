@@ -1,8 +1,8 @@
 package auth0
 
 import (
+	"net/http"
 	"regexp"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -63,13 +63,16 @@ func createRule(d *schema.ResourceData, m interface{}) error {
 func readRule(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	c, err := api.Rule.Read(d.Id())
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
-	}
 	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 		return err
 	}
+
 	d.Set("name", c.Name)
 	d.Set("script", c.Script)
 	d.Set("order", c.Order)
@@ -90,9 +93,14 @@ func updateRule(d *schema.ResourceData, m interface{}) error {
 func deleteRule(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	err := api.Rule.Delete(d.Id())
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
+	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
+		return err
 	}
 	return err
 }

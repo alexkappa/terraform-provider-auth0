@@ -5,7 +5,7 @@ import (
 
 	"gopkg.in/auth0.v2"
 	"gopkg.in/auth0.v2/management"
-	"strings"
+	"net/http"
 )
 
 func newRuleConfig() *schema.Resource {
@@ -48,11 +48,13 @@ func createRuleConfig(d *schema.ResourceData, m interface{}) error {
 func readRuleConfig(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	r, err := api.RuleConfig.Read(d.Id())
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
-	}
 	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 		return err
 	}
 	d.Set("key", r.Key)
@@ -73,9 +75,13 @@ func updateRuleConfig(d *schema.ResourceData, m interface{}) error {
 func deleteRuleConfig(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	err := api.RuleConfig.Delete(d.Id())
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
+	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 	}
 	return err
 }

@@ -2,7 +2,7 @@ package auth0
 
 import (
 	"fmt"
-	"strings"
+	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -127,13 +127,16 @@ func createResourceServer(d *schema.ResourceData, m interface{}) error {
 func readResourceServer(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	s, err := api.ResourceServer.Read(d.Id())
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
-	}
 	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 		return err
 	}
+
 	d.SetId(auth0.StringValue(s.ID))
 	d.Set("name", s.Name)
 	d.Set("identifier", s.Identifier)
@@ -173,9 +176,13 @@ func updateResourceServer(d *schema.ResourceData, m interface{}) error {
 func deleteResourceServer(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	err := api.ResourceServer.Delete(d.Id())
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
+	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 	}
 	return err
 }

@@ -5,7 +5,7 @@ import (
 
 	"gopkg.in/auth0.v2"
 	"gopkg.in/auth0.v2/management"
-	"strings"
+	"net/http"
 )
 
 func newEmail() *schema.Resource {
@@ -101,13 +101,16 @@ func createEmail(d *schema.ResourceData, m interface{}) error {
 func readEmail(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	e, err := api.Email.Read(management.WithFields("name", "enabled", "default_from_address", "credentials"))
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
-	}
 	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 		return err
 	}
+
 	d.SetId(auth0.StringValue(e.Name))
 	d.Set("name", e.Name)
 	d.Set("enabled", e.Enabled)
@@ -143,9 +146,13 @@ func updateEmail(d *schema.ResourceData, m interface{}) error {
 func deleteEmail(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	err := api.Email.Delete()
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
+	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 	}
 	return err
 }
