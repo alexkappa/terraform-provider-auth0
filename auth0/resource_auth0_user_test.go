@@ -2,7 +2,6 @@ package auth0
 
 import (
 	"regexp"
-
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
