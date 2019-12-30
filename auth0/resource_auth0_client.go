@@ -4,8 +4,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/helper/validation"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+
 	"gopkg.in/auth0.v2"
 	"gopkg.in/auth0.v2/management"
 )

@@ -3,8 +3,8 @@ package auth0
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform/helper/resource"
-	"github.com/hashicorp/terraform/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
 func TestAccEmailTemplate(t *testing.T) {
@@ -32,8 +32,6 @@ func TestAccEmailTemplate(t *testing.T) {
 }
 
 const testAccEmailTemplateConfig = `
-provider "auth0" {}
-
 resource "auth0_email" "my_email_provider" {
 	name = "ses"
 	enabled = true
