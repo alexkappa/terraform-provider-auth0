@@ -1,10 +1,10 @@
 package auth0
 
 import (
+	"net/http"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
-
-	"net/http"
 
 	"gopkg.in/auth0.v2"
 	"gopkg.in/auth0.v2/management"
