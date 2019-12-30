@@ -3,7 +3,8 @@ package auth0
 import (
 	"os"
 
-	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+
 	"gopkg.in/auth0.v2/management"
 )
 
@@ -51,11 +52,11 @@ func Provider() *schema.Provider {
 			"auth0_tenant":          newTenant(),
 			"auth0_role":            newRole(),
 		},
-		ConfigureFunc: configure,
+		ConfigureFunc: Configure,
 	}
 }
 
-func configure(data *schema.ResourceData) (interface{}, error) {
+func Configure(data *schema.ResourceData) (interface{}, error) {
 
 	domain := data.Get("domain").(string)
 	id := data.Get("client_id").(string)

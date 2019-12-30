@@ -3,7 +3,22 @@ package auth0
 import (
 	"os"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+
+	"gopkg.in/auth0.v2/management"
 )
+
+func Auth0() (*management.Management, error) {
+	return management.New(
+		os.Getenv("AUTH0_DOMAIN"),
+		os.Getenv("AUTH0_CLIENT_ID"),
+		os.Getenv("AUTH0_CLIENT_SECRET"))
+}
+
+func TestMain(m *testing.M) {
+	resource.TestMain(m)
+}
 
 func TestProvider(t *testing.T) {
 	if err := Provider().InternalValidate(); err != nil {

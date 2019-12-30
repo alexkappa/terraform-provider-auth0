@@ -292,6 +292,6 @@ to a single resource. Most tests follow a similar structure.
 
 For more details on acceptance tests and how to write them, the [documentation](https://www.terraform.io/docs/extend/testing/acceptance-tests/index.html) can be a valuable resource. The acceptance tests in this provider should also be able to offer reasonable guidance.
 
-[website]: https://github.com/hashicorp/terraform/tree/master/website
-[acctests]: https://github.com/hashicorp/terraform#acceptance-tests
+[website]: https://github.com/hashicorp/terraform-plugin-sdk/tree/master/website
+[acctests]: https://github.com/hashicorp/terraform-plugin-sdk#acceptance-tests
 [ml]: https://groups.google.com/group/terraform-tool
