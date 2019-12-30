@@ -6,7 +6,7 @@ import (
 
 	"gopkg.in/auth0.v2"
 	"gopkg.in/auth0.v2/management"
-	"strings"
+	"net/http"
 )
 
 func newCustomDomain() *schema.Resource {
@@ -79,13 +79,16 @@ func createCustomDomain(d *schema.ResourceData, m interface{}) error {
 func readCustomDomain(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	c, err := api.CustomDomain.Read(d.Id())
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
-	}
 	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 		return err
 	}
+
 	d.SetId(auth0.StringValue(c.ID))
 	d.Set("domain", c.Domain)
 	d.Set("type", c.Type)
@@ -104,9 +107,13 @@ func readCustomDomain(d *schema.ResourceData, m interface{}) error {
 func deleteCustomDomain(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	err := api.CustomDomain.Delete(d.Id())
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
+	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 	}
 	return err
 }

@@ -5,7 +5,7 @@ import (
 
 	"gopkg.in/auth0.v2"
 	"gopkg.in/auth0.v2/management"
-	"strings"
+	"net/http"
 )
 
 func newClientGrant() *schema.Resource {
@@ -50,11 +50,13 @@ func createClientGrant(d *schema.ResourceData, m interface{}) error {
 func readClientGrant(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	g, err := api.ClientGrant.Read(d.Id())
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
-	}
 	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 		return err
 	}
 	d.SetId(auth0.StringValue(g.ID))
@@ -79,9 +81,14 @@ func updateClientGrant(d *schema.ResourceData, m interface{}) error {
 func deleteClientGrant(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	err := api.ClientGrant.Delete(d.Id())
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
+	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
+		return err
 	}
 	return err
 }

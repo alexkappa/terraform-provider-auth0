@@ -1,8 +1,8 @@
 package auth0
 
 import (
+	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -467,13 +467,13 @@ func createClient(d *schema.ResourceData, m interface{}) error {
 func readClient(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	c, err := api.Client.Read(d.Id())
-
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
-	}
-
 	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 		return err
 	}
 
@@ -539,9 +539,13 @@ func updateClient(d *schema.ResourceData, m interface{}) error {
 func deleteClient(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	err := api.Client.Delete(d.Id())
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
+	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 	}
 	return err
 }

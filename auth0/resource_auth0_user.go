@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -94,11 +95,13 @@ func newUser() *schema.Resource {
 func readUser(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	u, err := api.User.Read(d.Id())
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
-	}
 	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 		return err
 	}
 
@@ -181,9 +184,13 @@ func updateUser(d *schema.ResourceData, m interface{}) error {
 func deleteUser(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	err := api.User.Delete(d.Id())
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
+	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 	}
 	return err
 }

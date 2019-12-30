@@ -5,7 +5,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
 	"gopkg.in/auth0.v2/management"
-	"strings"
+	"net/http"
 )
 
 func newTenant() *schema.Resource {
@@ -204,11 +204,13 @@ func createTenant(d *schema.ResourceData, m interface{}) error {
 func readTenant(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	t, err := api.Tenant.Read()
-	if err != nil && strings.HasPrefix(err.Error(), "404") {
-		d.SetId("")
-		return nil
-	}
 	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
 		return err
 	}
 
