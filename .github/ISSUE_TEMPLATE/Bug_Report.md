@@ -13,7 +13,7 @@ Please note the following potential times when an issue might be in Terraform co
 * [Registry](https://registry.terraform.io/) issues
 * Spans resources across multiple providers
 
-If you are running into one of these scenarios, we recommend opening an issue in the [Terraform core repository](https://github.com/hashicorp/terraform/) instead.
+If you are running into one of these scenarios, we recommend opening an issue in the [Terraform core repository](https://github.com/hashicorp/terraform-plugin-sdk/) instead.
 --->
 
 <!--- Please keep this note for the community --->

@@ -1,12 +1,14 @@
 package auth0
 
 import (
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/helper/validation"
-	"gopkg.in/auth0.v2"
-	"gopkg.in/auth0.v2/management"
 	"log"
 	"strings"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
+
+	"gopkg.in/auth0.v2"
+	"gopkg.in/auth0.v2/management"
 )
 
 func newEmailTemplate() *schema.Resource {
