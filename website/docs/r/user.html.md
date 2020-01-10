@@ -1,3 +1,10 @@
+---
+layout: "auth0"
+page_title: "Auth0: auth0_user"
+description: |-
+  With this resource, you can manage user identities, including resetting passwords, and creating, provisioning, blocking, and deleting users.
+---
+
 # auth0_user
 
 With this resource, you can manage user identities, including resetting passwords, and creating, provisioning, blocking, and deleting users.

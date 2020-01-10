@@ -1,3 +1,10 @@
+---
+layout: "auth0"
+page_title: "Auth0: auth0_role"
+description: |-
+  With this resource, you can created and manage collections of permissions that can be assigned to users, which are otherwise known as roles.
+---
+
 # auth0_role
 
 With this resource, you can created and manage collections of permissions that can be assigned to users, which are otherwise known as roles. Permissions (scopes) are created on auth0_resource_server, then associated with roles and optionally, users using this resource.

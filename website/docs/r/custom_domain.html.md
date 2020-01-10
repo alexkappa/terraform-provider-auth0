@@ -1,3 +1,10 @@
+---
+layout: "auth0"
+page_title: "Auth0: auth0_custom_domain"
+description: |-
+  With this resource, you can create and manage a custom domain within your Auth0 tenant in order to maintain a consistent user experience.
+---
+
 # auth0_custom_domain
 
 With Auth0, you can use a custom domain to maintain a consistent user experience. This resource allows you to create and manage a custom domain within your Auth0 tenant.

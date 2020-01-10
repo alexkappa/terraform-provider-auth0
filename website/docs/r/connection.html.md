@@ -1,3 +1,10 @@
+---
+layout: "auth0"
+page_title: "Auth0: auth0_connection"
+description: |-
+  With this resource, you can configure and manage sources of users, which may include identity providers, databases, or passwordless authentication methods.
+---
+
 # auth0_connection
 
 With Auth0, you can define sources of users, otherwise known as connections, which may include identity providers (such as Google or LinkedIn), databases, or passwordless authentication methods. This resource allows you to configure and manage connections to be used with your clients and users.

@@ -1,3 +1,10 @@
+---
+layout: "auth0"
+page_title: "Provider: Auth0"
+description: |-
+  The Auth0 provider is used to interact with Auth0 applications and APIs.
+---
+
 # Auth0 Provider
 
 The Auth0 provider is used to interact with Auth0 applications and APIs. It provides resources that allow you to create and manage clients, resource servers, client grants, connections, email providers and templates, rules and rule variables, users, roles, tenants, and custom domains as part of a Terraform deployment.

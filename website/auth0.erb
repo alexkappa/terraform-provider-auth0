@@ -1,0 +1,59 @@
+<% wrap_layout :inner do %>
+  <% content_for :sidebar do %>
+    <div class="docs-sidebar hidden-print affix-top" role="complementary">
+      <ul class="nav docs-sidenav">
+        <li>
+        <a href="/docs/providers/index.html">All Providers</a>
+        </li>
+
+        <li>
+        <a href="/docs/providers/auth0/index.html">Auth0 Provider</a>
+        </li>
+
+        <li>
+        <a href="#">Resources</a>
+        <ul class="nav nav-visible">
+          <li>
+            <a href="/docs/providers/auth0/r/client_grant.html">auth0_client_grant</a>
+          </li>
+          <li>
+            <a href="/docs/providers/auth0/r/client.html">auth0_client</a>
+          </li>
+          <li>
+          <a href="/docs/providers/auth0/r/connection.html">auth0_connection</a>
+          </li>
+          <li>
+            <a href="/docs/providers/auth0/r/custom_domain.html">auth0_custom_domain/a>
+          </li>
+          <li>
+            <a href="/docs/providers/auth0/r/email_template.html">auth0_email_template</a>
+          </li>
+          <li>
+            <a href="/docs/providers/auth0/r/email.html">auth0_email</a>
+          </li>
+          <li>
+              <a href="/docs/providers/auth0/r/resource_server.html">auth0_resource_server</a>
+          </li>
+          <li>
+            <a href="/docs/providers/auth0/r/role.html">auth0_role</a>
+          </li>
+          <li>
+            <a href="/docs/providers/auth0/r/rule_config.html">auth0_rule_config</a>
+          </li>
+          <li>
+            <a href="/docs/providers/auth0/r/rule.html">auth0_rule</a>
+          </li>
+          <li>
+            <a href="/docs/providers/auth0/r/tenant.html">auth0_tenant</a>
+          </li>
+          <li>
+            <a href="/docs/providers/auth0/r/user.html">auth0_user</a>
+          </li>
+        </ul>
+        </li>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= yield %>
+  <% end %>

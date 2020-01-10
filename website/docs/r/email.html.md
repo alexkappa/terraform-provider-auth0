@@ -1,3 +1,10 @@
+---
+layout: "auth0"
+page_title: "Auth0: auth0_email"
+description: |-
+  With this resource, you can configure email providers so you can route all emails that are part of Auth0's authentication workflows through the supported high-volume email service of your choice.
+---
+
 # auth0_email
 
 With Auth0, you can have standard welcome, password reset, and account verification email-based workflows built right into Auth0. This resource allows you to configure email providers so you can route all emails that are part of Auth0's authentication workflows through the supported high-volume email service of your choice.
