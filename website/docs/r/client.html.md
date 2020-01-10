@@ -1,3 +1,10 @@
+---
+layout: "auth0"
+page_title: "Auth0: auth0_client"
+description: |-
+  With this resource, you can create and configure applications that use Auth0 for authentication.
+---
+
 # auth0_client
 
 With this resource, you can set up applications that use Auth0 for authentication and configure allowed callback URLs and secrets for these applications. Depending on your plan, you may also configure add-ons to allow your application to call another application's API (such as Firebase and AWS) on behalf of an authenticated user.

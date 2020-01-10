@@ -1,3 +1,10 @@
+---
+layout: "auth0"
+page_title: "Auth0: auth0_email_template"
+description: |-
+  With this resource, you can configure email templates to customize the look, feel, and sender identities of emails sent by Auth0 using configured email providers.
+---
+
 # auth0_email_template
 
 With Auth0, you can have standard welcome, password reset, and account verification email-based workflows built right into Auth0. This resource allows you to configure email templates to customize the look, feel, and sender identities of emails sent by Auth0. Used in conjunction with configured email providers.

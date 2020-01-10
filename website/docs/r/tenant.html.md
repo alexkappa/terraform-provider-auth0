@@ -1,3 +1,10 @@
+---
+layout: "auth0"
+page_title: "Auth0: auth0_tenant"
+description: |-
+  With this resource, you can manage Auth0 tenants, including setting logos and support contact information, setting error pages, and configuring default tenant behaviors.
+---
+
 # auth0_tenant
 
 With this resource, you can manage Auth0 tenants, including setting logos and support contact information, setting error pages, and configuring default tenant behaviors.

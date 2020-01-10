@@ -1,6 +1,11 @@
-# auth0_resource_server
+---
+layout: "auth0"
+page_title: "Auth0: auth0_resource_server"
+description: |-
+  With this resource, you can set up APIs that can be consumed from your authorized applications.
+---
 
-Allows you to create, read, update, and delete Auth0 resource servers.
+# auth0_resource_server
 
 With this resource, you can set up APIs that can be consumed from your authorized applications.
 
