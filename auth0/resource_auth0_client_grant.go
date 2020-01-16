@@ -98,8 +98,11 @@ func buildClientGrant(d *schema.ResourceData) *management.ClientGrant {
 	g := &management.ClientGrant{
 		ClientID: String(d, "client_id"),
 		Audience: String(d, "audience"),
-		Scope:    Slice(d, "scope"),
 	}
-
+	if scope, ok := d.GetOk("scope"); ok {
+		g.Scope = scope.([]interface{})
+	} else {
+		g.Scope = []interface{}{}
+	}
 	return g
 }
