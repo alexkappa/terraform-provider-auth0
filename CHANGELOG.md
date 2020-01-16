@@ -1,5 +1,11 @@
 <!-- ## v0.x.x (Unreleased) -->
 
+## v0.4.3 (January 16, 2020)
+
+BUG FIXES:
+
+* resource/auth0_client_grant: fix empty scope issue ([#162](https://github.com/alexkappa/terraform-provider-auth0/pull/162))
+
 ## v0.4.2 (December 30, 2019)
 
 ENHANCEMENTS:
