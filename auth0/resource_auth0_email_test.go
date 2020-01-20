@@ -7,6 +7,19 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
+func init() {
+	resource.AddTestSweepers("auth0_email", &resource.Sweeper{
+		Name: "auth0_email",
+		F: func(_ string) error {
+			api, err := Auth0()
+			if err != nil {
+				return err
+			}
+			return api.Email.Delete()
+		},
+	})
+}
+
 func TestAccEmail(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{

@@ -124,7 +124,7 @@ func readEmail(d *schema.ResourceData, m interface{}) error {
 	if credentials := e.Credentials; credentials != nil {
 		credentialsMap := make(map[string]interface{})
 		credentialsMap["api_user"] = credentials.APIUser
-		credentialsMap["api_key"] = credentials.APIKey
+		credentialsMap["api_key"] = d.Get("credentials.0.api_key")
 		credentialsMap["access_key_id"] = d.Get("credentials.0.access_key_id")
 		credentialsMap["secret_access_key"] = d.Get("credentials.0.secret_access_key")
 		credentialsMap["region"] = credentials.Region
@@ -132,7 +132,7 @@ func readEmail(d *schema.ResourceData, m interface{}) error {
 		credentialsMap["smtp_host"] = credentials.SMTPHost
 		credentialsMap["smtp_port"] = credentials.SMTPPort
 		credentialsMap["smtp_user"] = credentials.SMTPUser
-		credentialsMap["smtp_pass"] = credentials.SMTPPass
+		credentialsMap["smtp_pass"] = d.Get("credentials.0.smtp_pass")
 		d.Set("credentials", []map[string]interface{}{credentialsMap})
 	}
 
