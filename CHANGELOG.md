@@ -1,5 +1,16 @@
 <!-- ## v0.x.x (Unreleased) -->
 
+## v0.5.0 (Unreleased)
+
+ENHANCEMENTS:
+
+* resource/auth0_email: add `domain` field to allow configuring of mailgun provider ([#164](https://github.com/alexkappa/terraform-provider-auth0/pull/164))
+
+NOTES:
+
+* Upgrade to `gopkg.in/auth0.v3` (`v3.0.3`)
+
+
 ## v0.4.3 (January 16, 2020)
 
 BUG FIXES:
