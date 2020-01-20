@@ -5,8 +5,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
-	"gopkg.in/auth0.v2"
-	"gopkg.in/auth0.v2/management"
+	"gopkg.in/auth0.v3"
+	"gopkg.in/auth0.v3/management"
 )
 
 func newRuleConfig() *schema.Resource {

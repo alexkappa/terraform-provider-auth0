@@ -7,28 +7,40 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+
+	"gopkg.in/auth0.v3/management"
 )
 
 func init() {
 	resource.AddTestSweepers("auth0_client", &resource.Sweeper{
 		Name: "auth0_client",
-		F: func(_ string) (err error) {
+		F: func(_ string) error {
 			api, err := Auth0()
 			if err != nil {
-				return
+				return err
 			}
-			clients, err := api.Client.List()
-			if err != nil {
-				return
-			}
-			for _, client := range clients {
-				if strings.Contains(*client.Name, "Acceptance Test") {
-					if e := api.Client.Delete(*client.ClientID); e != nil {
-						multierror.Append(err, e)
+			var page int
+			for {
+				l, err := api.Client.List(management.Page(page))
+				if err != nil {
+					return err
+				}
+				for _, client := range l.Clients {
+					if strings.Contains(*client.Name, "Acceptance Test") {
+						if e := api.Client.Delete(*client.ClientID); e != nil {
+							multierror.Append(err, e)
+						}
 					}
 				}
+				if err != nil {
+					return err
+				}
+				if !l.HasNext() {
+					break
+				}
+				page++
 			}
-			return
+			return nil
 		},
 	})
 }
