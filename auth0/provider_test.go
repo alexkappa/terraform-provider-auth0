@@ -6,7 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 
-	"gopkg.in/auth0.v2/management"
+	"gopkg.in/auth0.v3/management"
 )
 
 func Auth0() (*management.Management, error) {
