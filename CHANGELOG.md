@@ -1,6 +1,6 @@
 <!-- ## v0.x.x (Unreleased) -->
 
-## v0.5.0 (Unreleased)
+## v0.5.0 (January 20, 2020)
 
 ENHANCEMENTS:
 
