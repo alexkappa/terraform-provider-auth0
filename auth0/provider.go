@@ -1,11 +1,13 @@
 package auth0
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/meta"
 
-	"gopkg.in/auth0.v2/management"
+	"gopkg.in/auth0.v3/management"
 )
 
 func Provider() *schema.Provider {
@@ -63,5 +65,10 @@ func Configure(data *schema.ResourceData) (interface{}, error) {
 	secret := data.Get("client_secret").(string)
 	debug := data.Get("debug").(bool)
 
-	return management.New(domain, id, secret, management.WithDebug(debug))
+	userAgent := fmt.Sprintf("Go-Auth0-SDK/v3; Terraform/%s",
+		meta.SDKVersionString())
+
+	return management.New(domain, id, secret,
+		management.WithDebug(debug),
+		management.WithUserAgent(userAgent))
 }
