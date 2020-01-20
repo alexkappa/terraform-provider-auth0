@@ -5,8 +5,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
-	"gopkg.in/auth0.v2"
-	"gopkg.in/auth0.v2/management"
+	"gopkg.in/auth0.v3"
+	"gopkg.in/auth0.v3/management"
 )
 
 func newEmail() *schema.Resource {
@@ -65,6 +65,10 @@ func newEmail() *schema.Resource {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
+						"domain": {
+							Type:     schema.TypeString,
+							Optional: true,
+						},
 						"smtp_host": {
 							Type:     schema.TypeString,
 							Optional: true,
@@ -101,7 +105,7 @@ func createEmail(d *schema.ResourceData, m interface{}) error {
 
 func readEmail(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
-	e, err := api.Email.Read(management.WithFields("name", "enabled", "default_from_address", "credentials"))
+	e, err := api.Email.Read()
 	if err != nil {
 		if mErr, ok := err.(management.Error); ok {
 			if mErr.Status() == http.StatusNotFound {
@@ -120,14 +124,15 @@ func readEmail(d *schema.ResourceData, m interface{}) error {
 	if credentials := e.Credentials; credentials != nil {
 		credentialsMap := make(map[string]interface{})
 		credentialsMap["api_user"] = credentials.APIUser
-		credentialsMap["api_key"] = credentials.APIKey
+		credentialsMap["api_key"] = d.Get("credentials.0.api_key")
 		credentialsMap["access_key_id"] = d.Get("credentials.0.access_key_id")
 		credentialsMap["secret_access_key"] = d.Get("credentials.0.secret_access_key")
 		credentialsMap["region"] = credentials.Region
+		credentialsMap["domain"] = credentials.Domain
 		credentialsMap["smtp_host"] = credentials.SMTPHost
 		credentialsMap["smtp_port"] = credentials.SMTPPort
 		credentialsMap["smtp_user"] = credentials.SMTPUser
-		credentialsMap["smtp_pass"] = credentials.SMTPPass
+		credentialsMap["smtp_pass"] = d.Get("credentials.0.smtp_pass")
 		d.Set("credentials", []map[string]interface{}{credentialsMap})
 	}
 
@@ -179,6 +184,7 @@ func buildEmailCredentials(m map[string]interface{}) *management.EmailCredential
 		AccessKeyID:     String(MapData(m), "access_key_id"),
 		SecretAccessKey: String(MapData(m), "secret_access_key"),
 		Region:          String(MapData(m), "region"),
+		Domain:          String(MapData(m), "domain"),
 		SMTPHost:        String(MapData(m), "smtp_host"),
 		SMTPPort:        Int(MapData(m), "smtp_port"),
 		SMTPUser:        String(MapData(m), "smtp_user"),
