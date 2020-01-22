@@ -1,5 +1,11 @@
 <!-- ## v0.x.x (Unreleased) -->
 
+## v0.5.1 (January 22, 2020)
+
+BUG FIXES:
+
+* resource/auth0_email: fix `api_key` issue when reading back the resource from Auth0 ([#161](https://github.com/alexkappa/terraform-provider-auth0/issues/161))
+
 ## v0.5.0 (January 20, 2020)
 
 ENHANCEMENTS:
