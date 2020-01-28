@@ -14,24 +14,24 @@ Requirements
 Building The Provider
 ---------------------
 
-Clone repository to: `$GOPATH/src/github.com/yieldr/terraform-provider-auth0`
+Clone repository to: `$GOPATH/src/github.com/alexkappa/terraform-provider-auth0`
 
 ```sh
-$ mkdir -p $GOPATH/src/github.com/yieldr; cd $GOPATH/src/github.com/yieldr
-$ git clone git@github.com:yieldr/terraform-provider-auth0
+$ mkdir -p $GOPATH/src/github.com/alexkappa; cd $GOPATH/src/github.com/alexkappa
+$ git clone git@github.com:alexkappa/terraform-provider-auth0
 ```
 
 Enter the provider directory and build the provider
 
 ```sh
-$ cd $GOPATH/src/github.com/yieldr/terraform-provider-auth0
+$ cd $GOPATH/src/github.com/alexkappa/terraform-provider-auth0
 $ make build
 ```
 
 Using the provider
 ------------------
 
-The provider isn't listed in the official Terraform repository, so using `terraform init` to download the provider won't work. To install the auth0 provider, you can [download the binary](https://github.com/yieldr/terraform-provider-auth0/releases) and place in the directory `~/.terraform.d/plugins` (or `%APPDATA%/terraform.d/plugins/` if you're on Windows).
+The provider isn't listed in the official Terraform repository, so using `terraform init` to download the provider won't work. To install the auth0 provider, you can [download the binary](https://github.com/alexkappa/terraform-provider-auth0/releases) and place in the directory `~/.terraform.d/plugins` (or `%APPDATA%/terraform.d/plugins/` if you're on Windows).
 
 To use the provider define the `auth0` provider in your `*.tf` file.
 
