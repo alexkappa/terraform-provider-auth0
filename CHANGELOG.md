@@ -145,13 +145,13 @@ NOTES:
 
 FEATURES:
 
-* **New Resource:** auth0_tenant ([#79](https://github.com/yieldr/terraform-provider-auth0/pull/79))
+* **New Resource:** auth0_tenant ([#79](https://github.com/alexkappa/terraform-provider-auth0/pull/79))
 
 ENHANCEMENTS:
 
 * resource/auth0_connection: `enabled_clients` will suppress diff if the list order is different.
-* resource/auth0_connection: set `client_secret` to sensitive ([#91](https://github.com/yieldr/terraform-provider-auth0/pull/91)).
-* resource/auth0_resource_server: introduce `token_lifetime_for_web` ([#84](https://github.com/yieldr/terraform-provider-auth0/pull/84)).
+* resource/auth0_connection: set `client_secret` to sensitive ([#91](https://github.com/alexkappa/terraform-provider-auth0/pull/91)).
+* resource/auth0_resource_server: introduce `token_lifetime_for_web` ([#84](https://github.com/alexkappa/terraform-provider-auth0/pull/84)).
 
 NOTES:
 
