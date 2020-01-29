@@ -1,6 +1,6 @@
-<!-- ## v0.x.x (Unreleased) -->
+## 0.5.1 (Unreleased)
 
-## v0.5.1 (January 22, 2020)
+Initial release under releases.hashicorp.com
 
 BUG FIXES:
 
