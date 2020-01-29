@@ -1,4 +1,4 @@
-## 0.5.1 (Unreleased)
+## 0.5.1 (January 29, 2020)
 
 Initial release under releases.hashicorp.com
 
