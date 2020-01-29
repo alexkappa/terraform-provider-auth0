@@ -4,8 +4,9 @@ ENHANCEMENTS:
 
 * resource/auth0_user: `name`, `family_name`, `given_name`, `blocked` and `picture` are added ([#166](https://github.com/alexkappa/terraform-provider-auth0/pull/166))
 
+## 0.5.1 (January 29, 2020)
 
-## v0.5.1 (January 22, 2020)
+Initial release under releases.hashicorp.com
 
 BUG FIXES:
 
