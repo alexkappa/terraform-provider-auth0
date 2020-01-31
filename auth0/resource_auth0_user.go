@@ -42,6 +42,18 @@ func newUser() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
+			"name": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"family_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"given_name": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"nickname": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -83,6 +95,14 @@ func newUser() *schema.Resource {
 				ValidateFunc:     validation.ValidateJsonString,
 				DiffSuppressFunc: structure.SuppressJsonDiff,
 			},
+			"blocked": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
+			"picture": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"roles": {
 				Type:     schema.TypeSet,
 				Optional: true,
@@ -107,12 +127,17 @@ func readUser(d *schema.ResourceData, m interface{}) error {
 
 	d.Set("user_id", u.ID)
 	d.Set("username", u.Username)
+	d.Set("name", u.Name)
+	d.Set("family_name", u.FamilyName)
+	d.Set("given_name", u.GivenName)
 	d.Set("nickname", u.Nickname)
 	d.Set("email", u.Email)
 	d.Set("email_verified", u.EmailVerified)
 	d.Set("verify_email", u.VerifyEmail)
 	d.Set("phone_number", u.PhoneNumber)
 	d.Set("phone_verified", u.PhoneVerified)
+	d.Set("blocked", u.Blocked)
+	d.Set("picture", u.Picture)
 
 	userMeta, err := structure.FlattenJsonToString(u.UserMetadata)
 	if err != nil {
@@ -201,6 +226,9 @@ func buildUser(d *schema.ResourceData) (u *management.User, err error) {
 	u.ID = String(d, "user_id")
 	u.Connection = String(d, "connection_name")
 	u.Username = String(d, "username")
+	u.Name = String(d, "name")
+	u.FamilyName = String(d, "family_name")
+	u.GivenName = String(d, "given_name")
 	u.Nickname = String(d, "nickname")
 	u.PhoneNumber = String(d, "phone_number")
 	u.EmailVerified = Bool(d, "email_verified")
@@ -208,6 +236,8 @@ func buildUser(d *schema.ResourceData) (u *management.User, err error) {
 	u.PhoneVerified = Bool(d, "phone_verified")
 	u.Email = String(d, "email")
 	u.Password = String(d, "password")
+	u.Blocked = Bool(d, "blocked")
+	u.Picture = String(d, "picture")
 
 	u.UserMetadata, err = JSON(d, "user_metadata")
 	if err != nil {
