@@ -89,10 +89,23 @@ In order to test the provider, you can simply run `make test`.
 $ make test
 ```
 
-In order to run the full suite of Acceptance tests, run `make testacc`.
-
-*Note:* Acceptance tests create real resources, and often cost money to run.
+In order to run the full suite of Acceptance tests, the following environment variables must be set:
 
 ```sh
-$ make testacc
+AUTH0_DOMAIN=your-tenant.auth0.com
+AUTH0_CLIENT_ID=xyz
+AUTH0_CLIENT_SECRET=xyz
 ```
+
+Then, run `make testacc`. 
+
+*Note:* The acceptance tests make calls to a real Auth0 tenant, and create real resources. Certain tests, for example
+for custom domains (`TestAccCustomDomain`), also require a paid Auth0 subscription to be able to run successfully. 
+
+At the time of writing, the following configuration steps are also required for the test tenant:
+
+* The `Username-Password-Authentication` connection must have _Requires Username_ option enabled for the user tests to 
+succesfully run.
+
+
+

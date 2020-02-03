@@ -39,9 +39,13 @@ func TestAccUser(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_user.user", "user_id", "auth0|12345"),
 					resource.TestCheckResourceAttr("auth0_user.user", "email", "test@test.com"),
-					resource.TestCheckResourceAttr("auth0_user.user", "nickname", "testnick"),
+					resource.TestCheckResourceAttr("auth0_user.user", "name", "Firstname Lastname"),
+					resource.TestCheckResourceAttr("auth0_user.user", "family_name", "Lastname"),
+					resource.TestCheckResourceAttr("auth0_user.user", "given_name", "Firstname"),
+					resource.TestCheckResourceAttr("auth0_user.user", "nickname", "some.nickname"),
 					resource.TestCheckResourceAttr("auth0_user.user", "connection_name", "Username-Password-Authentication"),
 					resource.TestCheckResourceAttr("auth0_user.user", "roles.#", "0"),
+					resource.TestCheckResourceAttr("auth0_user.user", "picture", "https://www.example.com/a-valid-picture-url.jpg"),
 				),
 			},
 			{
@@ -67,11 +71,15 @@ provider auth0 {}
 
 resource auth0_user user {
   connection_name = "Username-Password-Authentication"
-  username = "test"
+  username = "unique_username"
   user_id = "12345"
   email = "test@test.com"
   password = "passpass$12$12"
-  nickname = "testnick"
+  name = "Firstname Lastname"
+  given_name = "Firstname"
+  family_name = "Lastname"
+  nickname = "some.nickname"
+  picture = "https://www.example.com/a-valid-picture-url.jpg"
   user_metadata = <<EOF
 {
   	"foo": "bar",
@@ -92,11 +100,15 @@ provider auth0 {}
 
 resource auth0_user user {
   connection_name = "Username-Password-Authentication"
-  username = "test"
+  username = "unique_username"
   user_id = "12345"
   email = "test@test.com"
   password = "passpass$12$12"
-  nickname = "testnick"
+  name = "Firstname Lastname"
+  given_name = "Firstname"
+  family_name = "Lastname"
+  nickname = "some.nickname"
+  picture = "https://www.example.com/a-valid-picture-url.jpg"
   roles = [ auth0_role.owner.id, auth0_role.admin.id ]
   user_metadata = <<EOF
 {
@@ -128,11 +140,15 @@ provider auth0 {}
 
 resource auth0_user user {
   connection_name = "Username-Password-Authentication"
-  username = "test"
+  username = "unique_username"
   user_id = "12345"
   email = "test@test.com"
   password = "passpass$12$12"
-  nickname = "testnick"
+  name = "Firstname Lastname"
+  given_name = "Firstname"
+  family_name = "Lastname"
+  nickname = "some.nickname"
+  picture = "https://www.example.com/a-valid-picture-url.jpg"
   roles = [ auth0_role.admin.id ]
   user_metadata = <<EOF
 {
