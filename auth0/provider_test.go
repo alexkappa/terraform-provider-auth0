@@ -5,15 +5,18 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
 	"gopkg.in/auth0.v3/management"
 )
 
 func Auth0() (*management.Management, error) {
-	return management.New(
-		os.Getenv("AUTH0_DOMAIN"),
-		os.Getenv("AUTH0_CLIENT_ID"),
-		os.Getenv("AUTH0_CLIENT_SECRET"))
+	c := terraform.NewResourceConfigRaw(nil)
+	p := Provider()
+	if err := p.Configure(c); err != nil {
+		return nil, err
+	}
+	return p.Meta().(*management.Management), nil
 }
 
 func TestMain(m *testing.M) {
@@ -22,7 +25,14 @@ func TestMain(m *testing.M) {
 
 func TestProvider(t *testing.T) {
 	if err := Provider().InternalValidate(); err != nil {
-		t.Fatalf("err: %s", err)
+		t.Fatal(err)
+	}
+}
+
+func TestProviderConfigure(t *testing.T) {
+	c := terraform.NewResourceConfigRaw(nil)
+	if err := Provider().Configure(c); err != nil {
+		t.Fatal(err)
 	}
 }
 
