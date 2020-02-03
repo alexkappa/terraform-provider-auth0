@@ -15,8 +15,11 @@ With this resource, you can manage user identities, including resetting password
 resource "auth0_user" "user" {
   connection_name = "Username-Password-Authentication"
   user_id = "12345"
-  username = "test"
-  nickname = "testnick"
+  username = "unique_username"
+  name = "Firstname Lastname"
+  given_name = "Firstname"
+  family_name = "Lastname"
+  nickname = "some.nickname"
   email = "test@test.com"
   email_verified = true
   password = "passpass$12$12"
