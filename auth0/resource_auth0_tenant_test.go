@@ -34,6 +34,9 @@ func TestAccTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "session_lifetime", "1080"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "sandbox_version", "8"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "idle_session_lifetime", "720"),
+					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "enabled_locales.0", "en"),
+					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "enabled_locales.1", "de"),
+					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "enabled_locales.2", "fr"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.universal_login", "true"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.disable_clickjack_protection_headers", "true"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.enable_public_signup_user_exists_error", "true"),
@@ -74,6 +77,7 @@ resource "auth0_tenant" "my_tenant" {
 	session_lifetime = 1080
 	sandbox_version = "8"
 	idle_session_lifetime = 720
+	enabled_locales = ["en", "de", "fr"]
 	flags {
 		universal_login = true
 		disable_clickjack_protection_headers = true
