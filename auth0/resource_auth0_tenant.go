@@ -118,6 +118,11 @@ func newTenant() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
+			"enabled_locales": {
+				Type:     schema.TypeList,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+				Optional: true,
+			},
 			"flags": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -254,6 +259,7 @@ func readTenant(d *schema.ResourceData, m interface{}) error {
 	d.Set("session_lifetime", t.SessionLifetime)
 	d.Set("sandbox_version", t.SandboxVersion)
 	d.Set("idle_session_lifetime", t.IdleSessionLifetime)
+	d.Set("enabled_locales", t.EnabledLocales)
 
 	if flags := t.Flags; flags != nil {
 		d.Set("flags", []map[string]interface{}{
@@ -317,6 +323,7 @@ func buildTenant(d *schema.ResourceData) *management.Tenant {
 		SessionLifetime:     Int(d, "session_lifetime"),
 		SandboxVersion:      String(d, "sandbox_version"),
 		IdleSessionLifetime: Int(d, "idle_session_lifetime"),
+		EnabledLocales:      Slice(d, "enabled_locales"),
 	}
 
 	List(d, "change_password").First(func(v interface{}) {
