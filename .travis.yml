@@ -32,7 +32,7 @@ before_script:
 script:
   - make build
   - make testacc OPTS=-coverprofile=c.out
-  # - make website-test
+  - make website-test
 
 after_script:
   - cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
@@ -45,8 +45,7 @@ deploy:
 
 branches:
   only:
-    - nobuild
-    # - master
+    - master
     # - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
 matrix:
