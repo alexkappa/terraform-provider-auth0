@@ -1,7 +1,7 @@
 Auth0 Terraform Provider
 ========================
 
-[![Build Status](https://github.com/terraform-providers/terraform-provider-auth0/workflows/Build/badge.svg)](https://github.com/alexkappa/terraform-provider-auth0/actions)
+[![Build Status](https://travis-ci.org/terraform-providers/terraform-provider-auth0.svg?branch=master)](https://travis-ci.org/terraform-providers/terraform-provider-auth0)
 [![Maintainability](https://api.codeclimate.com/v1/badges/9c49c10286123b716c79/maintainability)](https://codeclimate.com/github/alexkappa/terraform-provider-auth0/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/9c49c10286123b716c79/test_coverage)](https://codeclimate.com/github/alexkappa/terraform-provider-auth0/test_coverage)
 
@@ -45,27 +45,7 @@ provider "auth0" {
 
 These variables can also be accessed via the `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID` and `AUTH0_CLIENT_SECRET` environment variables respectively.
 
-Examples of resources can be found in the [examples directory](example/). The currently supported Auth0 resources are described below.
-
-- [x] [Clients (Applications)](https://auth0.com/docs/api/management/v2#!/Clients/get_clients)
-- [x] [Client Grants](https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants)
-- [x] [Connections](https://auth0.com/docs/api/management/v2#!/Connections/get_connections)
-- [x] [Custom Domains](https://auth0.com/docs/api/management/v2#!/Custom_Domains/get_custom_domains)
-- [ ] [Device Credentials](https://auth0.com/docs/api/management/v2#!/Device_Credentials/get_device_credentials)
-- [ ] [Grants](https://auth0.com/docs/api/management/v2#!/Grants/get_grants)
-- [x] [Resource Servers (APIs)](https://auth0.com/docs/api/management/v2#!/Resource_Servers/get_resource_servers)
-- [x] [Rules](https://auth0.com/docs/api/management/v2#!/Rules/get_rules)
-- [x] [Rules Configs](https://auth0.com/docs/api/management/v2#!/Rules_Configs/get_rules_configs)
-- [ ] [User Blocks](https://auth0.com/docs/api/management/v2#!/User_Blocks/get_user_blocks)
-- [x] [Users](https://auth0.com/docs/api/management/v2#!/Users/get_users)
-- [ ] [Users By Email](https://auth0.com/docs/api/management/v2#!/Users_By_Email/get_users_by_email)
-- [ ] [Blacklists](https://auth0.com/docs/api/management/v2#!/Blacklists/get_tokens)
-- [x] [Email Templates](https://auth0.com/docs/api/management/v2#!/Email_Templates/get_email_templates_by_templateName)
-- [x] [Emails](https://auth0.com/docs/api/management/v2#!/Emails/get_provider)
-- [ ] [Guardian](https://auth0.com/docs/api/management/v2#!/Guardian/get_factors)
-- [ ] [Jobs](https://auth0.com/docs/api/management/v2#!/Jobs/get_jobs_by_id)
-- [X] [Tenants](https://auth0.com/docs/api/management/v2#!/Tenants/get_settings)
-- [ ] [Tickets](https://auth0.com/docs/api/management/v2#!/Tickets/post_email_verification)
+Examples of resources can be found in the [examples directory](example/).
 
 Developing the Provider
 ---------------------------
