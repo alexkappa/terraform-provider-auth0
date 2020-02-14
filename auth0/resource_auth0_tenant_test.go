@@ -15,7 +15,7 @@ func TestAccTenant(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTenantConfig,
+				Config: testAccTenantConfigCreate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "change_password.0.enabled", "true"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "change_password.0.html", "<html>Change Password</html>"),
@@ -41,13 +41,24 @@ func TestAccTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "universal_login.0.colors.0.page_background", "#000000"),
 				),
 			},
+			// This test case confirms issue #160 where boolean values from a
+			// Bool(Map()) don't get picked up as their value is considered zero
+			// (e.g. false, "").
+			//
+			// See: https://github.com/alexkappa/terraform-provider-auth0/issues/160
+			//
+			// {
+			// 	Config: testAccTenantConfigUpdate,
+			// 	Check: resource.ComposeTestCheckFunc(
+			// 		resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.disable_clickjack_protection_headers", "false"),
+			// 		resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.enable_public_signup_user_exists_error", "true"),
+			// 	),
+			// },
 		},
 	})
 }
 
-const testAccTenantConfig = `
-provider "auth0" {}
-
+const testAccTenantConfigCreate = `
 resource "auth0_tenant" "my_tenant" {
 	change_password {
 		enabled = true
@@ -77,6 +88,47 @@ resource "auth0_tenant" "my_tenant" {
 	flags {
 		universal_login = true
 		disable_clickjack_protection_headers = true
+		enable_public_signup_user_exists_error = true
+	}
+	universal_login {
+		colors {
+			primary = "#0059d6"
+			page_background = "#000000"
+		}
+	}
+}
+`
+
+const testAccTenantConfigUpdate = `
+resource "auth0_tenant" "my_tenant" {
+	change_password {
+		enabled = true
+		html = "<html>Change Password</html>"
+	}
+	guardian_mfa_page {
+		enabled = true
+		html = "<html>MFA</html>"
+	}
+	default_audience = ""
+	default_directory = ""
+	error_page {
+		html = "<html>Error Page</html>"
+		show_log_link = false
+		url = "https://mycompany.org/error"
+	}
+	friendly_name = "My Test Tenant"
+	picture_url = "https://mycompany.org/logo.png"
+	support_email = "support@mycompany.org"
+	support_url = "https://mycompany.org/support"
+	allowed_logout_urls = [
+		"https://mycompany.org/logoutCallback"
+	]
+	session_lifetime = 1080
+	sandbox_version = "8"
+	idle_session_lifetime = 720
+	flags {
+		universal_login = true
+		disable_clickjack_protection_headers = false # <---- disable and test
 		enable_public_signup_user_exists_error = true
 	}
 	universal_login {

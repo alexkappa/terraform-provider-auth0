@@ -172,7 +172,19 @@ func buildEmail(d *schema.ResourceData) *management.Email {
 	}
 
 	List(d, "credentials").First(func(v interface{}) {
-		e.Credentials = buildEmailCredentials(v.(map[string]interface{}))
+		// e.Credentials = buildEmailCredentials(v.(map[string]interface{}))
+		e.Credentials = &management.EmailCredentials{
+			APIUser:         String(d, "credentials.0.api_user"),
+			APIKey:          String(d, "credentials.0.api_key"),
+			AccessKeyID:     String(d, "credentials.0.access_key_id"),
+			SecretAccessKey: String(d, "credentials.0.secret_access_key"),
+			Region:          String(d, "credentials.0.region"),
+			Domain:          String(d, "credentials.0.domain"),
+			SMTPHost:        String(d, "credentials.0.smtp_host"),
+			SMTPPort:        Int(d, "credentials.0.smtp_port"),
+			SMTPUser:        String(d, "credentials.0.smtp_user"),
+			SMTPPass:        String(d, "credentials.0.smtp_pass"),
+		}
 	})
 
 	return e

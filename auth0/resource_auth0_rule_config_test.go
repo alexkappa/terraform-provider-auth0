@@ -1,13 +1,42 @@
 package auth0
 
 import (
+	"strings"
 	"testing"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/terraform-providers/terraform-provider-auth0/auth0/internal/random"
 )
 
+func init() {
+	resource.AddTestSweepers("auth0_rule_config", &resource.Sweeper{
+		Name: "auth0_rule_config",
+		F: func(_ string) error {
+			api, err := Auth0()
+			if err != nil {
+				return err
+			}
+			configurations, err := api.RuleConfig.List()
+			if err != nil {
+				return err
+			}
+			for _, c := range configurations {
+				if strings.Contains(c.GetKey(), "acc_test") {
+					if e := api.RuleConfig.Delete(c.GetKey()); e != nil {
+						multierror.Append(err, e)
+					}
+				}
+			}
+			return err
+		},
+	})
+}
+
 func TestAccRuleConfig(t *testing.T) {
+
+	rand := random.String(4)
 
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
@@ -15,10 +44,10 @@ func TestAccRuleConfig(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccRuleConfig,
+				Config: random.Template(testAccRuleConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_rule_config.foo", "id", "foo"),
-					resource.TestCheckResourceAttr("auth0_rule_config.foo", "key", "foo"),
+					random.TestCheckResourceAttr("auth0_rule_config.foo", "id", "acc_test_{{.random}}", rand),
+					random.TestCheckResourceAttr("auth0_rule_config.foo", "key", "acc_test_{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_rule_config.foo", "value", "bar"),
 				),
 			},
@@ -27,10 +56,9 @@ func TestAccRuleConfig(t *testing.T) {
 }
 
 const testAccRuleConfig = `
-provider "auth0" {}
 
 resource "auth0_rule_config" "foo" {
-  key = "foo"
+  key = "acc_test_{{.random}}"
   value = "bar"
 }
 `

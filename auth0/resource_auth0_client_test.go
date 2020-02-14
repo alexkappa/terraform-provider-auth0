@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/terraform-providers/terraform-provider-auth0/auth0/internal/random"
 
 	"gopkg.in/auth0.v3/management"
 )
@@ -26,8 +27,9 @@ func init() {
 					return err
 				}
 				for _, client := range l.Clients {
-					if strings.Contains(*client.Name, "Acceptance Test") {
-						if e := api.Client.Delete(*client.ClientID); e != nil {
+					if strings.Contains(client.GetName(), "Acceptance Test") ||
+						strings.Contains(client.GetName(), "Test Client") {
+						if e := api.Client.Delete(client.GetClientID()); e != nil {
 							multierror.Append(err, e)
 						}
 					}
@@ -47,19 +49,23 @@ func init() {
 
 func TestAccClient(t *testing.T) {
 
+	rand := random.String(6)
+
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: testAccClientConfig,
+				Config: random.Template(testAccClientConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Acceptance Test"),
+					random.TestCheckResourceAttr("auth0_client.my_client", "name", "Acceptance Test - {{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "is_token_endpoint_ip_header_trusted", "true"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "token_endpoint_auth_method", "client_secret_post"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.#", "1"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.firebase.client_email", "john.doe@example.com"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.firebase.lifetime_in_seconds", "1"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.samlp.#", "1"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.samlp.0.audience", "https://example.com/saml"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.samlp.0.map_identities", "false"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.samlp.0.name_identifier_format", "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"),
@@ -71,9 +77,10 @@ func TestAccClient(t *testing.T) {
 }
 
 const testAccClientConfig = `
+
 resource "auth0_client" "my_client" {
-  name = "Acceptance Test"
-  description = "Test Applications Long Description"
+  name = "Acceptance Test - {{.random}}"
+  description = "Test Application Long Description"
   app_type = "non_interactive"
   custom_login_page_on = true
   is_first_party = true
@@ -130,26 +137,28 @@ resource "auth0_client" "my_client" {
 
 func TestAccClientZeroValueCheck(t *testing.T) {
 
+	rand := random.String(6)
+
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: testAccClientConfigCreate,
+				Config: random.Template(testAccClientConfigCreate, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Acceptance Test - Zero Value Check"),
+					random.TestCheckResourceAttr("auth0_client.my_client", "name", "Acceptance Test - Zero Value Check - {{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "is_first_party", "false"),
 				),
 			},
 			{
-				Config: testAccClientConfigUpdate,
+				Config: random.Template(testAccClientConfigUpdate, rand),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_client.my_client", "is_first_party", "true"),
 				),
 			},
 			{
-				Config: testAccClientConfigUpdateAgain,
+				Config: random.Template(testAccClientConfigUpdateAgain, rand),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_client.my_client", "is_first_party", "false"),
 				),
@@ -159,27 +168,32 @@ func TestAccClientZeroValueCheck(t *testing.T) {
 }
 
 const testAccClientConfigCreate = `
+
 resource "auth0_client" "my_client" {
-  name = "Acceptance Test - Zero Value Check"
+  name = "Acceptance Test - Zero Value Check - {{.random}}"
   is_first_party = false
 }
 `
 
 const testAccClientConfigUpdate = `
+
 resource "auth0_client" "my_client" {
-  name = "Acceptance Test - Zero Value Check"
+  name = "Acceptance Test - Zero Value Check - {{.random}}"
   is_first_party = true
 }
 `
 
 const testAccClientConfigUpdateAgain = `
+
 resource "auth0_client" "my_client" {
-  name = "Acceptance Test - Zero Value Check"
+  name = "Acceptance Test - Zero Value Check - {{.random}}"
   is_first_party = false
 }
 `
 
 func TestAccClientRotateSecret(t *testing.T) {
+
+	rand := random.String(6)
 
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
@@ -187,13 +201,13 @@ func TestAccClientRotateSecret(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: testAccClientConfigRotateSecret,
+				Config: random.Template(testAccClientConfigRotateSecret, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_client.my_client", "name", "Acceptance Test - Rotate Secret"),
+					random.TestCheckResourceAttr("auth0_client.my_client", "name", "Acceptance Test - Rotate Secret - {{.random}}", rand),
 				),
 			},
 			{
-				Config: testAccClientConfigRotateSecretUpdate,
+				Config: random.Template(testAccClientConfigRotateSecretUpdate, rand),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_client.my_client", "client_secret_rotation_trigger.triggered_at", "2018-01-02T23:12:01Z"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "client_secret_rotation_trigger.triggered_by", "alex"),
@@ -204,14 +218,16 @@ func TestAccClientRotateSecret(t *testing.T) {
 }
 
 const testAccClientConfigRotateSecret = `
+
 resource "auth0_client" "my_client" {
-  name = "Acceptance Test - Rotate Secret"
+  name = "Acceptance Test - Rotate Secret - {{.random}}"
 }
 `
 
 const testAccClientConfigRotateSecretUpdate = `
+
 resource "auth0_client" "my_client" {
-  name = "Acceptance Test - Rotate Secret"
+  name = "Acceptance Test - Rotate Secret - {{.random}}"
   client_secret_rotation_trigger = {
     triggered_at = "2018-01-02T23:12:01Z"
     triggered_by = "alex"

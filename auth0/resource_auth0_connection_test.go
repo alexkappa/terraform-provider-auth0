@@ -1,13 +1,53 @@
 package auth0
 
 import (
+	"strings"
 	"testing"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/terraform-providers/terraform-provider-auth0/auth0/internal/random"
+	"gopkg.in/auth0.v3/management"
 )
 
+func init() {
+	resource.AddTestSweepers("auth0_connection", &resource.Sweeper{
+		Name: "auth0_connection",
+		F: func(_ string) error {
+			api, err := Auth0()
+			if err != nil {
+				return err
+			}
+			var page int
+			for {
+				l, err := api.Connection.List(management.Page(page))
+				if err != nil {
+					return err
+				}
+				for _, connection := range l.Connections {
+					if strings.Contains(connection.GetName(), "Acceptance-Test") {
+						if e := api.Client.Delete(connection.GetID()); e != nil {
+							multierror.Append(err, e)
+						}
+					}
+				}
+				if err != nil {
+					return err
+				}
+				if !l.HasNext() {
+					break
+				}
+				page++
+			}
+			return nil
+		},
+	})
+}
+
 func TestAccConnection(t *testing.T) {
+
+	rand := random.String(6)
 
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
@@ -15,9 +55,9 @@ func TestAccConnection(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: testAccConnectionConfig,
+				Config: random.Template(testAccConnectionConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-Connection"),
+					random.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-Connection-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "is_domain_connection", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "strategy", "auth0"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.password_policy", "fair"),
@@ -34,7 +74,7 @@ func TestAccConnection(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccConnectionConfigUpdateBruteForceProtection,
+				Config: random.Template(testAccConnectionConfigUpdate, rand),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.brute_force_protection", "false"),
 				),
@@ -44,10 +84,9 @@ func TestAccConnection(t *testing.T) {
 }
 
 const testAccConnectionConfig = `
-provider "auth0" {}
 
 resource "auth0_connection" "my_connection" {
-	name = "Acceptance-Test-Connection"
+	name = "Acceptance-Test-Connection-{{.random}}"
 	is_domain_connection = true
 	strategy = "auth0"
 	options {
@@ -81,11 +120,10 @@ resource "auth0_connection" "my_connection" {
 }
 `
 
-const testAccConnectionConfigUpdateBruteForceProtection = `
-provider "auth0" {}
+const testAccConnectionConfigUpdate = `
 
 resource "auth0_connection" "my_connection" {
-	name = "Acceptance-Test-Connection"
+	name = "Acceptance-Test-Connection-{{.random}}"
 	is_domain_connection = true
 	strategy = "auth0"
 	options {
@@ -112,7 +150,9 @@ resource "auth0_connection" "my_connection" {
 }
 `
 
-func TestAccConnectionAd(t *testing.T) {
+func TestAccConnectionAD(t *testing.T) {
+
+	rand := random.String(6)
 
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
@@ -120,9 +160,9 @@ func TestAccConnectionAd(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccConnectionAdConfig,
+				Config: random.Template(testAccConnectionADConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_connection.my_ad_connection", "name", "Acceptance-Test-Ad-Connection"),
+					random.TestCheckResourceAttr("auth0_connection.my_ad_connection", "name", "Acceptance-Test-AD-Connection-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.my_ad_connection", "strategy", "ad"),
 				),
 			},
@@ -130,16 +170,17 @@ func TestAccConnectionAd(t *testing.T) {
 	})
 }
 
-const testAccConnectionAdConfig = `
-provider "auth0" {}
+const testAccConnectionADConfig = `
 
 resource "auth0_connection" "my_ad_connection" {
-	name = "Acceptance-Test-Ad-Connection"
+	name = "Acceptance-Test-AD-Connection-{{.random}}"
 	strategy = "ad"
 }
 `
 
-func TestAccConnectionWaad(t *testing.T) {
+func TestAccConnectionWAAD(t *testing.T) {
+
+	rand := random.String(6)
 
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
@@ -147,9 +188,9 @@ func TestAccConnectionWaad(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccConnectionWaadConfig,
+				Config: random.Template(testAccConnectionWAADConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-Waad-Connection"),
+					random.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-WAAD-Connection-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "strategy", "waad"),
 				),
 			},
@@ -157,11 +198,10 @@ func TestAccConnectionWaad(t *testing.T) {
 	})
 }
 
-const testAccConnectionWaadConfig = `
-provider "auth0" {}
+const testAccConnectionWAADConfig = `
 
 resource "auth0_connection" "my_connection" {
-	name     = "Acceptance-Test-Waad-Connection"
+	name     = "Acceptance-Test-WAAD-Connection-{{.random}}"
 	strategy = "waad"
 	options {
 		client_id     = "123456"
@@ -184,15 +224,17 @@ resource "auth0_connection" "my_connection" {
 
 func TestAccConnectionWithEnbledClients(t *testing.T) {
 
+	rand := random.String(6)
+
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testAccConnectionWithEnabledClientsConfig,
+				Config: random.Template(testAccConnectionWithEnabledClientsConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-Connection"),
+					random.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-Connection-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "enabled_clients.#", "4"),
 				),
 			},
@@ -201,56 +243,57 @@ func TestAccConnectionWithEnbledClients(t *testing.T) {
 }
 
 const testAccConnectionWithEnabledClientsConfig = `
-provider "auth0" {}
 
 resource "auth0_client" "my_client_1" {
-  name = "Application - Acceptance Test 1"
-  description = "Test Applications Long Description"
-  app_type = "non_interactive"
+	name = "Application - Acceptance Test - 1 - {{.random}}"
+	description = "Test Applications Long Description"
+	app_type = "non_interactive"
 }
 
 resource "auth0_client" "my_client_2" {
-  name = "Application - Acceptance Test 2"
-  description = "Test Applications Long Description"
-  app_type = "non_interactive"
+	name = "Application - Acceptance Test - 2 - {{.random}}"
+	description = "Test Applications Long Description"
+	app_type = "non_interactive"
 }
 
 resource "auth0_client" "my_client_3" {
-  name = "Application - Acceptance Test 3"
-  description = "Test Applications Long Description"
-  app_type = "non_interactive"
+	name = "Application - Acceptance Test - 3 - {{.random}}"
+	description = "Test Applications Long Description"
+	app_type = "non_interactive"
 }
 
 resource "auth0_client" "my_client_4" {
-  name = "Application - Acceptance Test 4"
-  description = "Test Applications Long Description"
-  app_type = "non_interactive"
+	name = "Application - Acceptance Test - 4 - {{.random}}"
+	description = "Test Applications Long Description"
+	app_type = "non_interactive"
 }
 
 resource "auth0_connection" "my_connection" {
-	name = "Acceptance-Test-Connection"
+	name = "Acceptance-Test-Connection-{{.random}}"
 	is_domain_connection = true
 	strategy = "auth0"
 	enabled_clients = [
-    "${auth0_client.my_client_1.id}",
-    "${auth0_client.my_client_2.id}",
-    "${auth0_client.my_client_3.id}",
-    "${auth0_client.my_client_4.id}",
-  ]
-
+		"${auth0_client.my_client_1.id}",
+		"${auth0_client.my_client_2.id}",
+		"${auth0_client.my_client_3.id}",
+		"${auth0_client.my_client_4.id}",
+	]
 }
 `
 
-func TestTwilioConnection(t *testing.T) {
+func TestAccTwilioConnection(t *testing.T) {
+
+	rand := random.String(6)
+
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testTwilioConnectionConfig,
+				Config: random.Template(testAccTwilioConnectionConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_connection.sms_connection", "name", "sms-connection"),
+					random.TestCheckResourceAttr("auth0_connection.sms_connection", "name", "Acceptance-Test-SMS-Connection-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.sms_connection", "strategy", "sms"),
 					resource.TestCheckResourceAttr("auth0_connection.sms_connection", "options.0.twilio_token", "DEF456"),
 				),
@@ -259,9 +302,10 @@ func TestTwilioConnection(t *testing.T) {
 	})
 }
 
-const testTwilioConnectionConfig = `
+const testAccTwilioConnectionConfig = `
+
 resource "auth0_connection" "sms_connection" {
-	name = "sms-connection"
+	name = "Acceptance-Test-SMS-Connection-{{.random}}"
 	is_domain_connection = false
 	strategy = "sms"
 	
@@ -284,16 +328,19 @@ resource "auth0_connection" "sms_connection" {
 }
 `
 
-func TestSalesforceCommunityConnection(t *testing.T) {
+func TestAccSalesforceCommunityConnection(t *testing.T) {
+
+	rand := random.String(6)
+
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: testSalesforceConnectionConfig,
+				Config: random.Template(testAccSalesforceConnectionConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_connection.salesforce_community", "name", "salesforce-community"),
+					random.TestCheckResourceAttr("auth0_connection.salesforce_community", "name", "Acceptance-Test-Salesforce-Connection-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.salesforce_community", "strategy", "salesforce-community"),
 					resource.TestCheckResourceAttr("auth0_connection.salesforce_community", "options.0.community_base_url", "https://salesforce-community.example"),
 				),
@@ -302,9 +349,10 @@ func TestSalesforceCommunityConnection(t *testing.T) {
 	})
 }
 
-const testSalesforceConnectionConfig = `
+const testAccSalesforceConnectionConfig = `
+
 resource "auth0_connection" "salesforce_community" {
-	name = "salesforce-community"
+	name = "Acceptance-Test-Salesforce-Connection-{{.random}}"
 	is_domain_connection = false
 	strategy = "salesforce-community"
 	
