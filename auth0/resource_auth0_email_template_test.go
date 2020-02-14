@@ -5,7 +5,25 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"gopkg.in/auth0.v3"
+	"gopkg.in/auth0.v3/management"
 )
+
+func init() {
+	resource.AddTestSweepers("auth0_email_template", &resource.Sweeper{
+		Name: "auth0_email_template",
+		F: func(_ string) (err error) {
+			api, err := Auth0()
+			if err != nil {
+				return
+			}
+			err = api.EmailTemplate.Update("welcome_email", &management.EmailTemplate{
+				Enabled: auth0.Bool(false),
+			})
+			return
+		},
+	})
+}
 
 func TestAccEmailTemplate(t *testing.T) {
 
@@ -32,6 +50,7 @@ func TestAccEmailTemplate(t *testing.T) {
 }
 
 const testAccEmailTemplateConfig = `
+
 resource "auth0_email" "my_email_provider" {
 	name = "ses"
 	enabled = true

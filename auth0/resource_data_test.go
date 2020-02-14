@@ -10,12 +10,13 @@ func TestMapData(t *testing.T) {
 		"zero": 0,
 	}
 
-	if _, okExists := d.GetOkExists("one"); okExists != true {
-		t.Error("unexpected value should return true")
-	}
-
-	if _, okExists := d.GetOkExists("zero"); okExists != false {
-		t.Error("unexpected value should return false")
+	for key, shouldBeOk := range map[string]bool{
+		"one":  true,
+		"zero": false,
+	} {
+		if _, ok := d.GetOkExists(key); ok != shouldBeOk {
+			t.Errorf("d.GetOkExists(%s) should retport ok == %t", key, shouldBeOk)
+		}
 	}
 }
 

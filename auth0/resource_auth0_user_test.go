@@ -4,9 +4,47 @@ import (
 	"regexp"
 	"testing"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"gopkg.in/auth0.v3/management"
+
+	"github.com/terraform-providers/terraform-provider-auth0/auth0/internal/random"
 )
+
+func init() {
+	resource.AddTestSweepers("auth0_user", &resource.Sweeper{
+		Name: "auth0_user",
+		F: func(_ string) error {
+			api, err := Auth0()
+			if err != nil {
+				return err
+			}
+			var page int
+			for {
+				l, err := api.User.Search(
+					management.Page(page),
+					management.Query(`email.domain:"acceptance.test.com"`))
+				if err != nil {
+					return err
+				}
+				for _, user := range l.Users {
+					if e := api.User.Delete(user.GetID()); e != nil {
+						multierror.Append(err, e)
+					}
+				}
+				if err != nil {
+					return err
+				}
+				if !l.HasNext() {
+					break
+				}
+				page++
+			}
+			return nil
+		},
+	})
+}
 
 func TestAccUserMissingRequiredParams(t *testing.T) {
 	resource.Test(t, resource.TestCase{
@@ -15,41 +53,38 @@ func TestAccUserMissingRequiredParams(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config:      testAccUserMissingRequiredParam,
+				Config:      "resource auth0_user user {}",
 				ExpectError: regexp.MustCompile(`The argument "connection_name" is required`),
 			},
 		},
 	})
 }
 
-const testAccUserMissingRequiredParam = `
-provider "auth0" {}
-
-resource "auth0_user" "user" {}
-`
-
 func TestAccUser(t *testing.T) {
+
+	rand := random.String(6)
+
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: testAccUser_create,
+				Config: random.Template(testAccUserCreate, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_user.user", "user_id", "auth0|12345"),
-					resource.TestCheckResourceAttr("auth0_user.user", "email", "test@test.com"),
+					random.TestCheckResourceAttr("auth0_user.user", "user_id", "auth0|{{.random}}", rand),
+					random.TestCheckResourceAttr("auth0_user.user", "email", "{{.random}}@acceptance.test.com", rand),
 					resource.TestCheckResourceAttr("auth0_user.user", "name", "Firstname Lastname"),
 					resource.TestCheckResourceAttr("auth0_user.user", "family_name", "Lastname"),
 					resource.TestCheckResourceAttr("auth0_user.user", "given_name", "Firstname"),
-					resource.TestCheckResourceAttr("auth0_user.user", "nickname", "some.nickname"),
+					resource.TestCheckResourceAttr("auth0_user.user", "nickname", rand),
 					resource.TestCheckResourceAttr("auth0_user.user", "connection_name", "Username-Password-Authentication"),
 					resource.TestCheckResourceAttr("auth0_user.user", "roles.#", "0"),
-					resource.TestCheckResourceAttr("auth0_user.user", "picture", "https://www.example.com/a-valid-picture-url.jpg"),
+					resource.TestCheckResourceAttr("auth0_user.user", "picture", "https://www.example.com/picture.jpg"),
 				),
 			},
 			{
-				Config: testAccUser_update,
+				Config: random.Template(testAccUserAddRole, rand),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_user.user", "roles.#", "2"),
 					resource.TestCheckResourceAttr("auth0_role.owner", "name", "owner"),
@@ -57,7 +92,7 @@ func TestAccUser(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccUser_update_again,
+				Config: random.Template(testAccUserRemoveRole, rand),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_user.user", "roles.#", "1"),
 				),
@@ -66,21 +101,20 @@ func TestAccUser(t *testing.T) {
 	})
 }
 
-const testAccUser_create = `
-provider auth0 {}
+const testAccUserCreate = `
 
 resource auth0_user user {
-  connection_name = "Username-Password-Authentication"
-  username = "unique_username"
-  user_id = "12345"
-  email = "test@test.com"
-  password = "passpass$12$12"
-  name = "Firstname Lastname"
-  given_name = "Firstname"
-  family_name = "Lastname"
-  nickname = "some.nickname"
-  picture = "https://www.example.com/a-valid-picture-url.jpg"
-  user_metadata = <<EOF
+	connection_name = "Username-Password-Authentication"
+	username = "{{.random}}"
+	user_id = "{{.random}}"
+	email = "{{.random}}@acceptance.test.com"
+	password = "passpass$12$12"
+	name = "Firstname Lastname"
+	given_name = "Firstname"
+	family_name = "Lastname"
+	nickname = "{{.random}}"
+	picture = "https://www.example.com/picture.jpg"
+	user_metadata = <<EOF
 {
   	"foo": "bar",
   	"bar": { "baz": "qux" }
@@ -95,22 +129,21 @@ EOF
 }
 `
 
-const testAccUser_update = `
-provider auth0 {}
+const testAccUserAddRole = `
 
 resource auth0_user user {
-  connection_name = "Username-Password-Authentication"
-  username = "unique_username"
-  user_id = "12345"
-  email = "test@test.com"
-  password = "passpass$12$12"
-  name = "Firstname Lastname"
-  given_name = "Firstname"
-  family_name = "Lastname"
-  nickname = "some.nickname"
-  picture = "https://www.example.com/a-valid-picture-url.jpg"
-  roles = [ auth0_role.owner.id, auth0_role.admin.id ]
-  user_metadata = <<EOF
+	connection_name = "Username-Password-Authentication"
+	username = "{{.random}}"
+	user_id = "{{.random}}"
+	email = "{{.random}}@acceptance.test.com"
+	password = "passpass$12$12"
+	name = "Firstname Lastname"
+	given_name = "Firstname"
+	family_name = "Lastname"
+	nickname = "{{.random}}"
+	picture = "https://www.example.com/picture.jpg"
+	roles = [ auth0_role.owner.id, auth0_role.admin.id ]
+	user_metadata = <<EOF
 {
   	"foo": "bar",
   	"bar": { "baz": "qux" }
@@ -135,22 +168,21 @@ resource auth0_role admin {
 }
 `
 
-const testAccUser_update_again = `
-provider auth0 {}
+const testAccUserRemoveRole = `
 
 resource auth0_user user {
-  connection_name = "Username-Password-Authentication"
-  username = "unique_username"
-  user_id = "12345"
-  email = "test@test.com"
-  password = "passpass$12$12"
-  name = "Firstname Lastname"
-  given_name = "Firstname"
-  family_name = "Lastname"
-  nickname = "some.nickname"
-  picture = "https://www.example.com/a-valid-picture-url.jpg"
-  roles = [ auth0_role.admin.id ]
-  user_metadata = <<EOF
+	connection_name = "Username-Password-Authentication"
+	username = "{{.random}}"
+	user_id = "{{.random}}"
+	email = "{{.random}}@acceptance.test.com"
+	password = "passpass$12$12"
+	name = "Firstname Lastname"
+	given_name = "Firstname"
+	family_name = "Lastname"
+	nickname = "{{.random}}"
+	picture = "https://www.example.com/picture.jpg"
+	roles = [ auth0_role.admin.id ]
+	user_metadata = <<EOF
 {
   	"foo": "bar",
   	"bar": { "baz": "qux" }
