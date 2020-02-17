@@ -5,8 +5,11 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
 	"gopkg.in/auth0.v3/management"
+
+	v "github.com/terraform-providers/terraform-provider-auth0/auth0/internal/validation"
 )
 
 func newTenant() *schema.Resource {
@@ -192,6 +195,14 @@ func newTenant() *schema.Resource {
 						},
 					},
 				},
+			},
+			"default_redirection_uri": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ValidateFunc: validation.All(
+					v.IsURLWithNoFragment,
+					validation.IsURLWithScheme([]string{"https"}),
+				),
 			},
 		},
 	}
