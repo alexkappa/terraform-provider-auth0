@@ -54,6 +54,9 @@ test-compile:
 	fi
 	go test -c $(TEST) $(TESTARGS)
 
+doc:
+	go run scripts/gendocs.go -resource auth0_<resource>
+
 website:
 ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
 	echo "$(WEBSITE_REPO) not found in your GOPATH (necessary for layouts and assets), get-ting..."
