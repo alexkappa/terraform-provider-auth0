@@ -52,6 +52,7 @@ Arguments accepted by this resource include:
 * `guardian_mfa_page` - (Optional) List(Resource). Configuration settings for the Guardian MFA page. For details, see [Guardian MFA Page](#guardian-mfa-page).
 * `default_audience` - (Optional) String. API Audience to use by default for API Authorization flows. This setting is equivalent to appending the audience to every authorization request made to the tenant for every application.
 * `default_directory` - (Optional) String. Name of the connection to be used for Password Grant exchanges. Options include `auth0-adldap`, `ad`, `auth0`, `email`, `sms`, `waad`, and `adfs`.
+* `default_redirection_uri` - (Optional) String. The default absolute redirection uri, must be https and cannot contain a fragment.
 * `error_page` - (Optional) List(Resource). Configuration settings for error pages. For details, see [Error Page](#error-page).
 * `friendly_name` - (Optional) String. Friendly name for the tenant.
 * `picture_url` - (Optional). String URL of logo to be shown for the tenant. Recommended size is 150px x 150px. If no URL is provided, the Auth0 logo will be used. 

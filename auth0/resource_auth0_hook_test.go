@@ -29,7 +29,6 @@ func TestAccHook(t *testing.T) {
 }
 
 const testAccHook = `
-provider "auth0" {}
 
 resource "auth0_hook" "my_hook" {
   name = "pre-user-reg-hook"

@@ -32,10 +32,12 @@ func newHook() *schema.Resource {
 					hookNameRegexp,
 					"Can only contain alphanumeric characters, spaces and '-'. "+
 						"Can neither start nor end with '-' or spaces."),
+				Description: "Name of this hook",
 			},
 			"script": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Code to be executed when this hook runs",
 			},
 			"trigger_id": {
 				Type:     schema.TypeString,
@@ -47,10 +49,15 @@ func newHook() *schema.Resource {
 					"post-user-registration",
 					"post-change-password",
 				}, false),
+				Description: "Execution stage of this rule. Can be " +
+					"credentials-exchange, pre-user-registration, " +
+					"post-user-registration, post-change-password" +
+					", or send-phone-message",
 			},
 			"enabled": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether the hook is enabled, or disabled",
 			},
 		},
 	}
