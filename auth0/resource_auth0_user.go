@@ -151,7 +151,7 @@ func readUser(d *schema.ResourceData, m interface{}) error {
 	}
 	d.Set("app_metadata", appMeta)
 
-	roles, err := api.User.GetRoles(d.Id())
+	roles, err := api.User.Roles(d.Id())
 	if err != nil {
 		return err
 	}

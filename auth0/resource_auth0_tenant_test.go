@@ -39,6 +39,7 @@ func TestAccTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.enable_public_signup_user_exists_error", "true"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "universal_login.0.colors.0.primary", "#0059d6"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "universal_login.0.colors.0.page_background", "#000000"),
+					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "default_redirection_uri", "https://example.com/login"),
 				),
 			},
 			// This test case confirms issue #160 where boolean values from a
@@ -96,6 +97,7 @@ resource "auth0_tenant" "my_tenant" {
 			page_background = "#000000"
 		}
 	}
+	default_redirection_uri = "https://example.com/login"
 }
 `
 
@@ -137,5 +139,6 @@ resource "auth0_tenant" "my_tenant" {
 			page_background = "#000000"
 		}
 	}
+	default_redirection_uri = "https://example.com/login"
 }
 `
