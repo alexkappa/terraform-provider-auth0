@@ -1,5 +1,9 @@
 ## v0.5.2 (Unreleased)
 
+FEATURES:
+
+* **New Resource:** auth0_hook ([#171](https://github.com/alexkappa/terraform-provider-auth0/pull/171))
+
 ENHANCEMENTS:
 
 * resource/auth0_user: `name`, `family_name`, `given_name`, `blocked` and `picture` are added ([#166](https://github.com/alexkappa/terraform-provider-auth0/pull/166))

@@ -38,13 +38,15 @@ func newHook() *schema.Resource {
 				Required: true,
 			},
 			"trigger_id": {
-				Type: schema.TypeString,
-				ValidateFunc: validation.StringInSlice([]string{
-					"credentials-exchange", "pre-user-registration",
-					"post-user-registration", "post-change-password",
-				}, false),
+				Type:     schema.TypeString,
+				Required: true,
 				ForceNew: true,
-				Optional: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"credentials-exchange",
+					"pre-user-registration",
+					"post-user-registration",
+					"post-change-password",
+				}, false),
 			},
 			"enabled": {
 				Type:     schema.TypeBool,
