@@ -18,7 +18,7 @@ func TestAccHook(t *testing.T) {
 			resource.TestStep{
 				Config: testAccHook,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_hook.my_hook", "name", "auth0-authorization-extension"),
+					resource.TestCheckResourceAttr("auth0_hook.my_hook", "name", "pre-user-reg-hook"),
 					resource.TestCheckResourceAttr("auth0_hook.my_hook", "script", "function (user, context, callback) { callback(null, { user }); }"),
 					resource.TestCheckResourceAttr("auth0_hook.my_hook", "trigger_id", "pre-user-registration"),
 					resource.TestCheckResourceAttr("auth0_hook.my_hook", "enabled", "true"),
@@ -32,7 +32,7 @@ const testAccHook = `
 provider "auth0" {}
 
 resource "auth0_hook" "my_hook" {
-  name = "auth0-pre-user-reg-hook"
+  name = "pre-user-reg-hook"
   script = "function (user, context, callback) { callback(null, { user }); }"
   trigger_id = "pre-user-registration"
   enabled = true

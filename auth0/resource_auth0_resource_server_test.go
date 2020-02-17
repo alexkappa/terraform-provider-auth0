@@ -81,7 +81,7 @@ func TestAccResourceServer(t *testing.T) {
 const testAccResourceServerConfigCreate = `
 
 resource "auth0_resource_server" "my_resource_server" {
-	name = "Acceptance Test - {{.random}}" 
+	name = "Acceptance Test - {{.random}}"
 	identifier = "https://uat.api.alexkappa.com/{{.random}}"
 	signing_alg = "RS256"
 	scopes {
@@ -103,7 +103,7 @@ resource "auth0_resource_server" "my_resource_server" {
 const testAccResourceServerConfigUpdate = `
 
 resource "auth0_resource_server" "my_resource_server" {
-	name = "Acceptance Test - {{.random}}" 
+	name = "Acceptance Test - {{.random}}"
 	identifier = "https://uat.api.alexkappa.com/{{.random}}"
 	signing_alg = "RS256"
 	scopes {
