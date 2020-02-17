@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"regexp"
 	"strings"
 	"testing"
 
@@ -70,6 +71,7 @@ func TestAccClient(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.samlp.0.map_identities", "false"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.samlp.0.name_identifier_format", "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "client_metadata.foo", "zoo"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "initiate_login_uri", "https://example.com/login"),
 				),
 			},
 		},
@@ -132,6 +134,7 @@ resource "auth0_client" "my_client" {
       app_bundle_identifier = "com.my.bundle.id"
     }
   }
+  initiate_login_uri = "https://example.com/login"
 }
 `
 
@@ -232,5 +235,42 @@ resource "auth0_client" "my_client" {
     triggered_at = "2018-01-02T23:12:01Z"
     triggered_by = "alex"
   }
+}
+`
+
+func TestAccClientInitiateLoginUri(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config:      random.Template(testAccClientConfigInitiateLoginUriHttp, rand),
+				ExpectError: regexp.MustCompile("to have a url with schema"),
+			},
+			{
+				Config:      random.Template(testAccClientConfigInitiateLoginUriFragment, rand),
+				ExpectError: regexp.MustCompile("to have a url with an emtpy fragment"),
+			},
+		},
+	})
+}
+
+const testAccClientConfigInitiateLoginUriHttp = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - Initiate Login URI - {{.random}}"
+  initiate_login_uri = "http://example.com/login"
+}
+`
+
+const testAccClientConfigInitiateLoginUriFragment = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - Initiate Login URI - {{.random}}"
+  initiate_login_uri = "https://example.com/login#fragment"
 }
 `
