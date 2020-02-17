@@ -9,6 +9,8 @@ import (
 
 	"gopkg.in/auth0.v3"
 	"gopkg.in/auth0.v3/management"
+
+	v "github.com/terraform-providers/terraform-provider-auth0/auth0/internal/validation"
 )
 
 func newClient() *schema.Resource {
@@ -450,6 +452,14 @@ func newClient() *schema.Resource {
 					},
 				},
 			},
+			"initiate_login_uri": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ValidateFunc: validation.All(
+					validation.IsURLWithScheme([]string{"https"}),
+					v.IsURLWithNoFragment,
+				),
+			},
 		},
 	}
 }
@@ -514,6 +524,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("addons", c.Addons)
 	d.Set("client_metadata", c.ClientMetadata)
 	d.Set("mobile", c.Mobile)
+	d.Set("initiate_login_uri", c.InitiateLoginURI)
 
 	return nil
 }
@@ -574,6 +585,7 @@ func buildClient(d *schema.ResourceData) *management.Client {
 		CustomLoginPagePreview:         String(d, "custom_login_page_preview"),
 		FormTemplate:                   String(d, "form_template"),
 		TokenEndpointAuthMethod:        String(d, "token_endpoint_auth_method"),
+		InitiateLoginURI:               String(d, "initiate_login_uri"),
 	}
 
 	List(d, "jwt_configuration").First(func(v interface{}) {

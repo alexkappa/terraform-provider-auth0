@@ -25,7 +25,7 @@ func init() {
 				if err != nil {
 					return err
 				}
-				for _, rs := range l.ResourceServer {
+				for _, rs := range l.ResourceServers {
 					if strings.Contains(rs.GetName(), "Acceptance Test") {
 						if e := api.ResourceServer.Delete(rs.GetID()); e != nil {
 							multierror.Append(err, e)
