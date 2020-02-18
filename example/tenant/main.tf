@@ -29,4 +29,5 @@ resource "auth0_tenant" "tenant" {
   ]
   session_lifetime = 46000
   sandbox_version  = "8"
+  enabled_locales = ["en"]
 }
