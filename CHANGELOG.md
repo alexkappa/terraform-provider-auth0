@@ -10,6 +10,10 @@ ENHANCEMENTS:
 * `resource/auth0_client`: add `initiate_login_uri` ([#2](https://github.com/terraform-providers/terraform-provider-auth0/pull/2))
 * `resource/auth0_tenant`: add `default_redirection_uri` ([#2](https://github.com/terraform-providers/terraform-provider-auth0/pull/2))
 
+BUG FIXES:
+
+* resource/auth0_user: unassiging a role won't fail if the role has already been deleted.
+
 ## 0.5.1 (January 29, 2020)
 
 Initial release under releases.hashicorp.com

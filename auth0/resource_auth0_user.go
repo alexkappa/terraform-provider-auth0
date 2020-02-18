@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -200,7 +201,7 @@ func updateUser(d *schema.ResourceData, m interface{}) error {
 	d.Partial(true)
 	err = assignUserRoles(d, m)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed assigning user roles. %s", err)
 	}
 	d.Partial(false)
 	return readUser(d, m)
@@ -287,7 +288,15 @@ func assignUserRoles(d *schema.ResourceData, m interface{}) error {
 	if len(rmRoles) > 0 {
 		err := api.User.RemoveRoles(d.Id(), rmRoles...)
 		if err != nil {
-			return err
+			// Ignore 404 errors as the role may have been deleted prior to
+			// unassigning them from the user.
+			if mErr, ok := err.(management.Error); ok {
+				if mErr.Status() != http.StatusNotFound {
+					return err
+				}
+			} else {
+				return err
+			}
 		}
 	}
 
