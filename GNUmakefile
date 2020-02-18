@@ -15,7 +15,7 @@ install: build
 
 sweep:
 	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
-	@go test $(PKGS) -v -sweep="phony" $(SWEEPARGS)
+	@go test ./auth0 -v -sweep="phony" $(SWEEPARGS)
 
 test: fmtcheck
 	@go test -i $(PKGS) || exit 1

@@ -1,9 +1,9 @@
 // +build ignore
+
 package main
 
 import (
 	"bytes"
-	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -14,27 +14,27 @@ import (
 	"github.com/terraform-providers/terraform-provider-auth0/auth0"
 )
 
-var args = struct {
-	provider,
-	name,
-	resource string
-}{}
+// var args = struct {
+// 	provider,
+// 	name,
+// 	resource string
+// }{}
 
-func init() {
-	flag.StringVar(&args.provider, "provider", "auth0", "provider key")
-	flag.StringVar(&args.name, "provider-name", "Auth0", "provider friendly name")
-	flag.StringVar(&args.resource, "resource", "", "Resource key")
-	flag.Parse()
-}
+// func init() {
+// 	flag.StringVar(&args.provider, "provider", "auth0", "provider key")
+// 	flag.StringVar(&args.name, "provider-name", "Auth0", "provider friendly name")
+// 	flag.StringVar(&args.resource, "resource", "", "Resource key")
+// 	flag.Parse()
+// }
 
 func main() {
 	buf := bytes.NewBuffer([]byte{})
 	p := auth0.Provider()
 	r := &Resource{
-		ProviderKey:    args.provider,
-		ProviderName:   args.name,
-		ResourceKey:    args.resource,
-		ResourceSchema: p.ResourcesMap[args.resource],
+		ProviderKey:    "auth0",
+		ProviderName:   Auth0,
+		ResourceKey:    "auth0_hook",
+		ResourceSchema: p.ResourcesMap["auth0_hook"],
 	}
 	r.GenerateResourceMarkdown(buf)
 	fmt.Print(buf.String())
