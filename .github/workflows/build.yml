@@ -27,6 +27,8 @@ jobs:
 
     - name: Build
       run: make build
+      env:
+        CGO_ENABLED: 0
 
     - name: Test
       run: make testacc OPTS=-coverprofile=c.out

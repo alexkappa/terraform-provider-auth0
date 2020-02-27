@@ -31,3 +31,4 @@ jobs:
         args: --skip-validate --release-notes release-notes.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CGO_ENABLED: 0
