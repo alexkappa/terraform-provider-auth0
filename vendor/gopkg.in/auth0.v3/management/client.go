@@ -1,7 +1,6 @@
 package management
 
 type Client struct {
-
 	// The name of the client
 	Name *string `json:"name,omitempty"`
 
@@ -79,6 +78,12 @@ type Client struct {
 	TokenEndpointAuthMethod *string                `json:"token_endpoint_auth_method,omitempty"`
 	ClientMetadata          map[string]string      `json:"client_metadata,omitempty"`
 	Mobile                  map[string]interface{} `json:"mobile,omitempty"`
+
+	// Initiate login uri, must be https and cannot contain a fragment
+	InitiateLoginURI *string `json:"initiate_login_uri,omitempty"`
+
+	NativeSocialLogin *ClientNativeSocialLogin `json:"native_social_login,omitempty"`
+	RefreshToken      *ClientRefreshToken      `json:"refresh_token,omitempty"`
 }
 
 type ClientJWTConfiguration struct {
@@ -93,6 +98,23 @@ type ClientJWTConfiguration struct {
 
 	// Algorithm used to sign JWTs. Can be "HS256" or "RS256"
 	Algorithm *string `json:"alg,omitempty"`
+}
+
+type ClientNativeSocialLogin struct {
+	// Native Social Login support for the Apple connection
+	Apple map[string]interface{} `json:"apple,omitempty"`
+
+	// Native Social Login support for the Facebook connection
+	Facebook map[string]interface{} `json:"facebook,omitempty"`
+}
+
+type ClientRefreshToken struct {
+	// Refresh token types, one of: reusable, rotating
+	Type *string `json:"type,omitempty"`
+
+	// Period in seconds where the previous refresh token can be exchanged
+	// without triggering breach detection
+	Leeway *int `json:"leeway,omitempty"`
 }
 
 type ClientList struct {

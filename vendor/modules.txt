@@ -126,7 +126,11 @@ github.com/hashicorp/hcl/v2/json
 github.com/hashicorp/logutils
 # github.com/hashicorp/terraform-config-inspect v0.0.0-20191115094559-17f92b0546e8
 github.com/hashicorp/terraform-config-inspect/tfconfig
-# github.com/hashicorp/terraform-plugin-sdk v1.4.1
+# github.com/hashicorp/terraform-json v0.4.0
+github.com/hashicorp/terraform-json
+# github.com/hashicorp/terraform-plugin-sdk v1.7.0
+github.com/hashicorp/terraform-plugin-sdk/acctest
+github.com/hashicorp/terraform-plugin-sdk/helper/acctest
 github.com/hashicorp/terraform-plugin-sdk/helper/hashcode
 github.com/hashicorp/terraform-plugin-sdk/helper/logging
 github.com/hashicorp/terraform-plugin-sdk/helper/resource
@@ -170,6 +174,8 @@ github.com/hashicorp/terraform-plugin-sdk/internal/version
 github.com/hashicorp/terraform-plugin-sdk/meta
 github.com/hashicorp/terraform-plugin-sdk/plugin
 github.com/hashicorp/terraform-plugin-sdk/terraform
+# github.com/hashicorp/terraform-plugin-test v1.2.0
+github.com/hashicorp/terraform-plugin-test
 # github.com/hashicorp/terraform-svchost v0.0.0-20191011084731-65d371908596
 github.com/hashicorp/terraform-svchost
 github.com/hashicorp/terraform-svchost/auth
@@ -216,7 +222,7 @@ github.com/ulikunitz/xz/lzma
 # github.com/vmihailenco/msgpack v4.0.1+incompatible
 github.com/vmihailenco/msgpack
 github.com/vmihailenco/msgpack/codes
-# github.com/zclconf/go-cty v1.1.0
+# github.com/zclconf/go-cty v1.2.1
 github.com/zclconf/go-cty/cty
 github.com/zclconf/go-cty/cty/convert
 github.com/zclconf/go-cty/cty/function
@@ -248,12 +254,19 @@ go.opencensus.io/trace/tracestate
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/cast5
+golang.org/x/crypto/curve25519
+golang.org/x/crypto/ed25519
+golang.org/x/crypto/ed25519/internal/edwards25519
+golang.org/x/crypto/internal/chacha20
+golang.org/x/crypto/internal/subtle
 golang.org/x/crypto/openpgp
 golang.org/x/crypto/openpgp/armor
 golang.org/x/crypto/openpgp/elgamal
 golang.org/x/crypto/openpgp/errors
 golang.org/x/crypto/openpgp/packet
 golang.org/x/crypto/openpgp/s2k
+golang.org/x/crypto/poly1305
+golang.org/x/crypto/ssh
 # golang.org/x/net v0.0.0-20191009170851-d66e71096ffb
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
@@ -271,6 +284,7 @@ golang.org/x/oauth2/internal
 golang.org/x/oauth2/jws
 golang.org/x/oauth2/jwt
 # golang.org/x/sys v0.0.0-20190804053845-51ab0e2deafa
+golang.org/x/sys/cpu
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
 golang.org/x/text/secure/bidirule
@@ -345,7 +359,7 @@ google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
 google.golang.org/grpc/test/bufconn
-# gopkg.in/auth0.v3 v3.0.3
+# gopkg.in/auth0.v3 v3.3.0
 gopkg.in/auth0.v3
 gopkg.in/auth0.v3/internal/client
 gopkg.in/auth0.v3/management

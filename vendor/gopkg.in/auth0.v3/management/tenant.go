@@ -17,6 +17,8 @@ type Tenant struct {
 
 	ErrorPage *TenantErrorPage `json:"error_page,omitempty"`
 
+	DeviceFlow *TenantDeviceFlow `json:"device_flow,omitempty"`
+
 	Flags *TenantFlags `json:"flags,omitempty"`
 
 	// The friendly name of the tenant
@@ -31,6 +33,9 @@ type Tenant struct {
 	// User support URL
 	SupportURL *string `json:"support_url,omitempty"`
 
+	// Used to store additional metadata
+	UniversalLogin *TenantUniversalLogin `json:"universal_login,omitempty"`
+
 	// A set of URLs that are valid to redirect to after logout from Auth0.
 	AllowedLogoutURLs []interface{} `json:"allowed_logout_urls,omitempty"`
 
@@ -38,22 +43,21 @@ type Tenant struct {
 	// hours).
 	SessionLifetime *int `json:"session_lifetime,omitempty"`
 
+	// Force a user to login after they have been inactive for the specified number (unit: hours)
+	IdleSessionLifetime *int `json:"idle_session_lifetime,omitempty"`
+
 	// The selected sandbox version to be used for the extensibility environment
 	SandboxVersion *string `json:"sandbox_version,omitempty"`
 
 	// A set of available sandbox versions for the extensibility environment
 	SandboxVersionAvailable []interface{} `json:"sandbox_versions_available,omitempty"`
 
-	// Force a user to login after they have been inactive for the specified number (unit: hours)
-	IdleSessionLifetime *int `json:"idle_session_lifetime,omitempty"`
-
-	// Used to store additional metadata
-	UniversalLogin *TenantUniversalLogin `json:"universal_login,omitempty"`
+	// The default absolute redirection uri, must be https and cannot contain a
+	// fragment.
+	DefaultRedirectionURI *string `json:"default_redirection_uri,omitempty"`
 
 	// Supported locales for the UI
 	EnabledLocales []interface{} `json:"enabled_locales,omitempty"`
-
-	DeviceFlow *TenantDeviceFlow `json:"device_flow,omitempty"`
 }
 
 type TenantChangePassword struct {
@@ -110,24 +114,30 @@ type TenantFlags struct {
 	// domain. If no custom domain is found the email operation will fail.
 	EnableCustomDomainInEmails *bool `json:"enable_custom_domain_in_emails,omitempty"`
 
-	// If enabled, users will not be prompted to confirm log in before SSO redirection.
+	// If enabled, users will not be prompted to confirm log in before SSO
+	// redirection.
 	EnableSSO *bool `json:"enable_sso,omitempty"`
 
-	AllowChangingEnableSso *bool `json:"allow_changing_enable_sso,omitempty"`
+	// Whether the `EnableSSO` setting can be changed.
+	AllowChangingEnableSSO *bool `json:"allow_changing_enable_sso,omitempty"`
 
 	// If enabled, activate the new look and feel for Universal Login
 	UniversalLogin *bool `json:"universal_login,omitempty"`
 
-	// If enabled, the legacy Logs Search Engine V2 will be enabled for your account.
+	// If enabled, the legacy Logs Search Engine V2 will be enabled for your
+	// account.
+	//
 	// Turn it off to opt-in for the latest Logs Search Engine V3.
 	EnableLegacyLogsSearchV2 *bool `json:"enable_legacy_logs_search_v2,omitempty"`
 
-	// If enabled, additional HTTP security headers will not be included in the response
-	// to prevent embedding of the Universal Login prompts in an IFRAME.
+	// If enabled, additional HTTP security headers will not be included in the
+	// response to prevent embedding of the Universal Login prompts in an
+	// IFRAME.
 	DisableClickjackProtectionHeaders *bool `json:"disable_clickjack_protection_headers,omitempty"`
 
 	// If enabled, this will use a generic response in the public signup API
-	// which will prevent users from being able to find out if an e-mail address or username has previously registered
+	// which will prevent users from being able to find out if an e-mail address
+	// or username has previously registered.
 	EnablePublicSignupUserExistsError *bool `json:"enable_public_signup_user_exists_error,omitempty"`
 }
 
@@ -147,7 +157,8 @@ type TenantDeviceFlow struct {
 	// The character set for generating a User Code ['base20' or 'digits']
 	Charset *string `json:"charset,omitempty"`
 
-	// The mask used to format the generated User Code to a friendly, readable format with possible spaces or hyphens
+	// The mask used to format the generated User Code to a friendly, readable
+	// format with possible spaces or hyphens
 	Mask *string `json:"mask,omitempty"`
 }
 
