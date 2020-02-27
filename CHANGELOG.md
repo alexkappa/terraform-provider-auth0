@@ -3,13 +3,14 @@
 FEATURES:
 
 * **New Resource:** auth0_hook ([#171](https://github.com/alexkappa/terraform-provider-auth0/pull/171))
+* **New Resource:** auth0_global_client ([#172](https://github.com/alexkappa/terraform-provider-auth0/pull/172))
 
 ENHANCEMENTS:
 
 * resource/auth0_user: `name`, `family_name`, `given_name`, `blocked` and `picture` are added ([#166](https://github.com/alexkappa/terraform-provider-auth0/pull/166))
-* `resource/auth0_client`: add `initiate_login_uri` ([#2](https://github.com/terraform-providers/terraform-provider-auth0/pull/2))
-* `resource/auth0_tenant`: add `default_redirection_uri` ([#2](https://github.com/terraform-providers/terraform-provider-auth0/pull/2))
-* `resource/auth0_connection`: `strategy` is now required and the `apple`, `oidc` and `line` strategies are added ([#6](https://github.com/terraform-providers/terraform-provider-auth0/pull/6))
+* resource/auth0_client: add `initiate_login_uri` ([#2](https://github.com/terraform-providers/terraform-provider-auth0/pull/2))
+* resource/auth0_tenant: add `default_redirection_uri` ([#2](https://github.com/terraform-providers/terraform-provider-auth0/pull/2))
+* resource/auth0_connection: `strategy` is now required and the `apple`, `oidc` and `line` strategies are added ([#6](https://github.com/terraform-providers/terraform-provider-auth0/pull/6))
 
 BUG FIXES:
 

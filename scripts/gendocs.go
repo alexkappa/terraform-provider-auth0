@@ -14,11 +14,11 @@ import (
 	"github.com/terraform-providers/terraform-provider-auth0/auth0"
 )
 
-// var args = struct {
-// 	provider,
-// 	name,
-// 	resource string
-// }{}
+var args = struct {
+	provider,
+	name,
+	resource string
+}{}
 
 // func init() {
 // 	flag.StringVar(&args.provider, "provider", "auth0", "provider key")
@@ -32,9 +32,9 @@ func main() {
 	p := auth0.Provider()
 	r := &Resource{
 		ProviderKey:    "auth0",
-		ProviderName:   Auth0,
-		ResourceKey:    "auth0_hook",
-		ResourceSchema: p.ResourcesMap["auth0_hook"],
+		ProviderName:   "Auth0",
+		ResourceKey:    "auth0_global_client",
+		ResourceSchema: p.ResourcesMap["auth0_global_client"],
 	}
 	r.GenerateResourceMarkdown(buf)
 	fmt.Print(buf.String())

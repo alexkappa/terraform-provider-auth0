@@ -89,6 +89,15 @@ type UserIdentity struct {
 	IsSocial   *bool   `json:"isSocial,omitempty"`
 }
 
+type userBlock struct {
+	BlockedFor []*UserBlock `json:"blocked_for,omitempty"`
+}
+
+type UserBlock struct {
+	Identifier *string `json:"identifier,omitempty"`
+	IP         *string `json:"ip,omitempty"`
+}
+
 // UserList is an envelope struct which is used when calling List() or Search()
 // methods.
 //
@@ -195,10 +204,10 @@ func (m *UserManager) ListByEmail(email string, opts ...ListOption) (us []*User,
 	return
 }
 
-// GetRoles lists all roles associated with a user.
+// Roles lists all roles associated with a user.
 //
 // See: https://auth0.com/docs/api/management/v2#!/Users/get_user_roles
-func (m *UserManager) GetRoles(id string, opts ...ListOption) (roles []*Role, err error) {
+func (m *UserManager) Roles(id string, opts ...ListOption) (roles []*Role, err error) {
 	err = m.get(m.uri("users", id, "roles")+m.q(opts), &roles)
 	return roles, err
 }
@@ -251,4 +260,23 @@ func (m *UserManager) RemovePermissions(id string, permissions ...*Permission) e
 	p := make(map[string][]*Permission)
 	p["permissions"] = permissions
 	return m.request("DELETE", m.uri("users", id, "permissions"), &p)
+}
+
+// Blocks retrieves a list of blocked IP addresses of a particular user.
+//
+// See: https://auth0.com/docs/api/management/v2#!/User_Blocks/get_user_blocks_by_id
+func (m *UserManager) Blocks(id string) ([]*UserBlock, error) {
+	b := new(userBlock)
+	err := m.get(m.uri("user-blocks", id), &b)
+	return b.BlockedFor, err
+}
+
+// Unblock a user that was blocked due to an excessive amount of incorrectly
+// provided credentials.
+//
+// Note: This endpoint does not unblock users that were blocked by admins.
+//
+// See: https://auth0.com/docs/api/management/v2#!/User_Blocks/delete_user_blocks_by_id
+func (m *UserManager) Unblock(id string) error {
+	return m.delete(m.uri("user-blocks", id))
 }

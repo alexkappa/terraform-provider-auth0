@@ -60,7 +60,7 @@ type ResourceServerScope struct {
 
 type ResourceServerList struct {
 	List
-	ResourceServer []*ResourceServer `json:"resource_servers"`
+	ResourceServers []*ResourceServer `json:"resource_servers"`
 }
 
 type ResourceServerManager struct {
@@ -107,4 +107,23 @@ func (m *ResourceServerManager) List(opts ...ListOption) (rl *ResourceServerList
 	opts = m.defaults(opts)
 	err = m.get(m.uri("users")+m.q(opts), &rl)
 	return
+}
+
+// Stream is a helper method which handles pagination
+func (m *ResourceServerManager) Stream(fn func(s *ResourceServer)) error {
+	var page int
+	for {
+		l, err := m.List(Page(page))
+		if err != nil {
+			return err
+		}
+		for _, s := range l.ResourceServers {
+			fn(s)
+		}
+		if !l.HasNext() {
+			break
+		}
+		page++
+	}
+	return nil
 }

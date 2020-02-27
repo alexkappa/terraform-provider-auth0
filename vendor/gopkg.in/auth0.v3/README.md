@@ -1,9 +1,9 @@
 # Auth0 Go SDK
 
 [![GoDoc](https://godoc.org/gopkg.in/auth0.v3?status.svg)](https://godoc.org/gopkg.in/auth0.v3)
-[![build status](https://github.com/go-auth0/auth0/workflows/Build/badge.svg)](https://github.com/go-auth0/auth0/actions?query=workflow%3ABuild+branch%3Amaster)
-[![Maintainability](https://api.codeclimate.com/v1/badges/bf038abb77ffb7c94cde/maintainability)](https://codeclimate.com/github/go-auth0/auth0/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/bf038abb77ffb7c94cde/test_coverage)](https://codeclimate.com/github/go-auth0/auth0/test_coverage)
+[![build status](https://img.shields.io/github/workflow/status/go-auth0/auth0/Go)](https://github.com/go-auth0/auth0/actions?query=workflow%3ABuild+branch%3Amaster)
+[![Maintainability](https://img.shields.io/codeclimate/maintainability/go-auth0/auth0)](https://codeclimate.com/github/go-auth0/auth0/maintainability)
+[![Test Coverage](https://img.shields.io/codeclimate/coverage/go-auth0/auth0)](https://codeclimate.com/github/go-auth0/auth0/test_coverage)
 
 ## Documentation
 
@@ -49,18 +49,21 @@ fmt.Printf("Created client %s\n", c.ClientID)
 
 The following Auth0 resources are supported:
 
+- [x] [Branding](https://auth0.com/docs/api/management/v2/#!/Branding/get_branding)
 - [x] [Clients (Applications)](https://auth0.com/docs/api/management/v2#!/Clients/get_clients)
 - [x] [Client Grants](https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants)
 - [x] [Connections](https://auth0.com/docs/api/management/v2#!/Connections/get_connections)
 - [x] [Custom Domains](https://auth0.com/docs/api/management/v2#!/Custom_Domains/get_custom_domains)
 - [ ] [Device Credentials](https://auth0.com/docs/api/management/v2#!/Device_Credentials/get_device_credentials)
 - [x] [Grants](https://auth0.com/docs/api/management/v2#!/Grants/get_grants)
+- [x] [Hooks](https://auth0.com/docs/api/management/v2#!/Hooks/get_hooks)
 - [x] [Logs](https://auth0.com/docs/api/management/v2#!/Logs/get_logs)
+- [x] [Prompts](https://auth0.com/docs/api/management/v2#!/Prompts/get_prompts)
 - [x] [Resource Servers (APIs)](https://auth0.com/docs/api/management/v2#!/Resource_Servers/get_resource_servers)
 - [x] [Roles](https://auth0.com/docs/api/management/v2#!/Roles)
 - [x] [Rules](https://auth0.com/docs/api/management/v2#!/Rules/get_rules)
 - [x] [Rules Configs](https://auth0.com/docs/api/management/v2#!/Rules_Configs/get_rules_configs)
-- [ ] [User Blocks](https://auth0.com/docs/api/management/v2#!/User_Blocks/get_user_blocks)
+- [x] [User Blocks](https://auth0.com/docs/api/management/v2#!/User_Blocks/get_user_blocks)
 - [x] [Users](https://auth0.com/docs/api/management/v2#!/Users/get_users)
 - [x] [Users By Email](https://auth0.com/docs/api/management/v2#!/Users_By_Email/get_users_by_email)
 - [x] [Blacklists](https://auth0.com/docs/api/management/v2#!/Blacklists/get_tokens)
@@ -70,9 +73,8 @@ The following Auth0 resources are supported:
 - [x] [Jobs](https://auth0.com/docs/api/management/v2#!/Jobs/get_jobs_by_id)
 - [x] [Stats](https://auth0.com/docs/api/management/v2#!/Stats/get_active_users)
 - [x] [Tenants](https://auth0.com/docs/api/management/v2#!/Tenants/get_settings)
+- [ ] [Anomaly](https://auth0.com/docs/api/management/v2#!/Anomaly/get_ips_by_id)
 - [x] [Tickets](https://auth0.com/docs/api/management/v2#!/Tickets/post_email_verification)
-- [x] [Branding](https://auth0.com/docs/api/management/v2/#!/Branding/get_branding)
-- [x] [Prompts](https://auth0.com/docs/api/management/v2#!/Prompts/get_prompts)
 
 ## What is Auth0?
 
