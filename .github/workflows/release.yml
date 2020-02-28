@@ -19,7 +19,7 @@ jobs:
         go-version: 1.12
       id: go
 
-    - name: Set VERSION env var
+    - name: Determine version
       run: echo ::set-env name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
 
     - name: Create release notes
@@ -29,6 +29,9 @@ jobs:
       uses: goreleaser/goreleaser-action@v1
       with:
         version: latest
-        args: --skip-validate --release-notes release-notes.md
+        args: |
+          --config=release.yml \
+          --skip-validate \
+          --release-notes release-notes.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
