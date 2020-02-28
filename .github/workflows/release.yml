@@ -29,9 +29,6 @@ jobs:
       uses: goreleaser/goreleaser-action@v1
       with:
         version: latest
-        args: |
-          --config=release.yml \
-          --skip-validate \
-          --release-notes release-notes.md
+        args: --config=.github/release.yml --skip-validate --release-notes release-notes.md
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
