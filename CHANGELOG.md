@@ -1,4 +1,4 @@
-## 0.5.2 (Unreleased)
+## v0.5.2 (Unreleased)
 
 FEATURES:
 
@@ -16,7 +16,7 @@ BUG FIXES:
 
 * resource/auth0_user: unassiging a role won't fail if the role has already been deleted.
 
-## 0.5.1 (January 29, 2020)
+## v0.5.1 (January 29, 2020)
 
 Initial release under releases.hashicorp.com
 
