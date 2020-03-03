@@ -29,13 +29,6 @@ func TestProvider(t *testing.T) {
 	}
 }
 
-func TestProviderConfigure(t *testing.T) {
-	c := terraform.NewResourceConfigRaw(nil)
-	if err := Provider().Configure(c); err != nil {
-		t.Fatal(err)
-	}
-}
-
 func TestProvider_debugDefaults(t *testing.T) {
 	for value, expected := range map[string]bool{
 		"1":     true,
