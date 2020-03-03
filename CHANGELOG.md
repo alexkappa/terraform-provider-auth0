@@ -1,4 +1,4 @@
-## v0.5.2 (Unreleased)
+## 0.6.0 (Unreleased)
 
 FEATURES:
 
