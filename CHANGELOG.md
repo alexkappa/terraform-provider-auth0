@@ -1,4 +1,9 @@
 ## 0.8.0 (Unreleased)
+
+FEATURES:
+
+* **New Resource:** auth0_prompt ([#8](https://github.com/terraform-providers/terraform-provider-auth0/pull/8))
+
 ## 0.7.0 (March 23, 2020)
 
 FEATURES:

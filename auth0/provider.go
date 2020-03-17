@@ -50,6 +50,7 @@ func Provider() *schema.Provider {
 			"auth0_rule":            newRule(),
 			"auth0_rule_config":     newRuleConfig(),
 			"auth0_hook":            newHook(),
+			"auth0_prompt":          newPrompt(),
 			"auth0_email":           newEmail(),
 			"auth0_email_template":  newEmailTemplate(),
 			"auth0_user":            newUser(),
