@@ -24,14 +24,21 @@ func newConnection() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Name of the connection",
+			},
+			"display_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name used in login screen",
 			},
 			"is_domain_connection": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Indicates whether or not the connection is domain level",
 			},
 			"strategy": {
 				Type:     schema.TypeString,
@@ -52,7 +59,8 @@ func newConnection() *schema.Resource {
 					"waad", "weibo", "windowslive", "wordpress", "yahoo",
 					"yammer", "yandex", "line",
 				}, true),
-				ForceNew: true,
+				ForceNew:    true,
+				Description: "Type of the connection, which indicates the identity provider",
 			},
 			"options": {
 				Type:     schema.TypeList,
@@ -71,6 +79,7 @@ func newConnection() *schema.Resource {
 							ValidateFunc: validation.StringInSlice([]string{
 								"none", "low", "fair", "good", "excellent",
 							}, false),
+							Description: "Indicates level of password strength to enforce during authentication. A strong password policy will make it difficult, if not improbable, for someone to guess a password through either manual or automated means. Options include `none`, `low`, `fair`, `good`, `excellent`",
 						},
 						"password_history": {
 							Type:     schema.TypeList,
@@ -88,6 +97,7 @@ func newConnection() *schema.Resource {
 									},
 								},
 							},
+							Description: "Configuration settings for the password history that is maintained for each user to prevent the reuse of passwords",
 						},
 						"password_no_personal_info": {
 							Type:     schema.TypeList,
@@ -101,6 +111,7 @@ func newConnection() *schema.Resource {
 									},
 								},
 							},
+							Description: "Configuration settings for the password personal info check, which does not allow passwords that contain any part of the user's personal data, including user's name, username, nickname, user_metadata.name, user_metadata.first, user_metadata.last, user's email, or firstpart of the user's email",
 						},
 						"password_dictionary": {
 							Type:     schema.TypeList,
@@ -119,6 +130,7 @@ func newConnection() *schema.Resource {
 									},
 								},
 							},
+							Description: "Configuration settings for the password dictionary check, which does not allow passwords that are part of the password dictionary",
 						},
 						"password_complexity_options": {
 							Type:     schema.TypeList,
@@ -133,67 +145,71 @@ func newConnection() *schema.Resource {
 									},
 								},
 							},
+							Description: "Configuration settings for password complexity",
 						},
-						"api_enable_users": {
-							Type:     schema.TypeBool,
-							Optional: true,
-						},
-						"basic_profile": {
-							Type:     schema.TypeBool,
-							Optional: true,
-						},
-						"ext_admin": {
-							Type:     schema.TypeBool,
-							Optional: true,
-						},
-						"ext_is_suspended": {
-							Type:     schema.TypeBool,
-							Optional: true,
-						},
-						"ext_agreed_terms": {
-							Type:     schema.TypeBool,
-							Optional: true,
-						},
-						"ext_groups": {
-							Type:     schema.TypeBool,
-							Optional: true,
-						},
-						"ext_nested_groups": {
-							Type:     schema.TypeBool,
-							Optional: true,
-						},
-						"ext_assigned_plans": {
-							Type:     schema.TypeBool,
-							Optional: true,
-						},
-						"ext_profile": {
-							Type:     schema.TypeBool,
-							Optional: true,
-						},
+
+						// "basic_profile": {
+						// 	Type:     schema.TypeBool,
+						// 	Optional: true,
+						// },
+						// "ext_admin": {
+						// 	Type:     schema.TypeBool,
+						// 	Optional: true,
+						// },
+						// "ext_is_suspended": {
+						// 	Type:     schema.TypeBool,
+						// 	Optional: true,
+						// },
+						// "ext_agreed_terms": {
+						// 	Type:     schema.TypeBool,
+						// 	Optional: true,
+						// },
+						// "ext_groups": {
+						// 	Type:     schema.TypeBool,
+						// 	Optional: true,
+						// },
+						// "ext_nested_groups": {
+						// 	Type:     schema.TypeBool,
+						// 	Optional: true,
+						// },
+						// "ext_assigned_plans": {
+						// 	Type:     schema.TypeBool,
+						// 	Optional: true,
+						// },
+						// "ext_profile": {
+						// 	Type:     schema.TypeBool,
+						// 	Optional: true,
+						// },
 						"enabled_database_customization": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "",
 						},
 						"brute_force_protection": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Indicates whether or not to enable brute force protection, which will limit the number of signups and failed logins from a suspicious IP address",
 						},
 						"import_mode": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Indicates whether or not you have a legacy user store and want to gradually migrate those users to the Auth0 user store",
 						},
 						"disable_signup": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Indicates whether or not to allow user sign-ups to your application",
 						},
 						"requires_username": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Indicates whether or not the user is required to provide a username in addition to an email address",
 						},
 						"custom_scripts": {
-							Type:     schema.TypeMap,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-							Optional: true,
+							Type:        schema.TypeMap,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Optional:    true,
+							Description: "",
 						},
 						"configuration": {
 							Type:      schema.TypeMap,
@@ -203,81 +219,148 @@ func newConnection() *schema.Resource {
 							DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
 								return strings.HasPrefix(old, "2.0$") || new == old
 							},
-						},
-						// waad options
-						"app_id": {
-							Type:     schema.TypeString,
-							Optional: true,
-						},
-						"app_domain": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Description: "",
 						},
 						"client_id": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
 						},
 						"client_secret": {
-							Type:      schema.TypeString,
-							Optional:  true,
-							Sensitive: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Sensitive:   true,
+							Description: "",
+						},
+						"allowed_audiences": {
+							Type:        schema.TypeSet,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Optional:    true,
+							Description: "",
+						},
+						"api_enable_users": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
+						"app_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
+						},
+						"app_domain": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
+							Deprecated:  "use domain instead",
+						},
+						"domain": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
 						},
 						"domain_aliases": {
-							Type:     schema.TypeList,
-							Elem:     &schema.Schema{Type: schema.TypeString},
-							Optional: true,
+							Type:        schema.TypeSet,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Optional:    true,
+							Description: "",
 						},
 						"max_groups_to_retrieve": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
 						},
 						"tenant_domain": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
 						},
 						"use_wsfed": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "",
 						},
 						"waad_protocol": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
 						},
 						"waad_common_endpoint": {
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "",
 						},
-
-						// Twilio/sms options
+						"icon_url": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
+						},
+						"identity_api": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
+						},
+						"ips": {
+							Type:        schema.TypeSet,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Optional:    true,
+							Description: "",
+						},
+						"use_cert_auth": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "",
+						},
+						"use_kerberos": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "",
+						},
+						"disable_cache": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "",
+						},
 						"name": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
 						},
 						"twilio_sid": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
 						},
 						"twilio_token": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Sensitive:   true,
 							DefaultFunc: schema.EnvDefaultFunc("TWILIO_TOKEN", nil),
+							Description: "",
 						},
 						"from": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
 						},
 						"syntax": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
+						},
+						"subject": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
 						},
 						"template": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
 						},
 						"totp": {
-							Type:     schema.TypeMap,
+							Type:     schema.TypeList,
 							Optional: true,
+							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"time_step": {
@@ -290,6 +373,7 @@ func newConnection() *schema.Resource {
 									},
 								},
 							},
+							Description: "",
 						},
 						"messaging_service_sid": {
 							Type:     schema.TypeString,
@@ -307,26 +391,35 @@ func newConnection() *schema.Resource {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
+
+						"scopes": {
+							Type:     schema.TypeSet,
+							Optional: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
+						},
 					},
 				},
+				Description: "Configuration settings for connection options",
 			},
 			"enabled_clients": {
-				Type:     schema.TypeSet,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Optional: true,
+				Type:        schema.TypeSet,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Optional:    true,
+				Description: "IDs of the clients for which the connection is enabled",
 			},
 			"realms": {
-				Type:     schema.TypeList,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Optional: true,
-				Computed: true,
+				Type:        schema.TypeList,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Optional:    true,
+				Computed:    true,
+				Description: "Defines the realms for which the connection will be used (i.e., email domains). If not specified, the connection name is added as the realm",
 			},
 		},
 	}
 }
 
 func createConnection(d *schema.ResourceData, m interface{}) error {
-	c := buildConnection(d)
+	c := expandConnection(d)
 	api := m.(*management.Management)
 	if err := api.Connection.Create(c); err != nil {
 		return err
@@ -352,60 +445,13 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 	d.Set("name", c.Name)
 	d.Set("is_domain_connection", c.IsDomainConnection)
 	d.Set("strategy", c.Strategy)
-	d.Set("options", []map[string]interface{}{
-		{
-			"validation":                     c.Options.Validation,
-			"password_policy":                auth0.StringValue(c.Options.PasswordPolicy),
-			"password_history":               c.Options.PasswordHistory,
-			"password_no_personal_info":      c.Options.PasswordNoPersonalInfo,
-			"password_dictionary":            c.Options.PasswordDictionary,
-			"password_complexity_options":    c.Options.PasswordComplexityOptions,
-			"api_enable_users":               auth0.BoolValue(c.Options.APIEnableUsers),
-			"basic_profile":                  auth0.BoolValue(c.Options.BasicProfile),
-			"ext_admin":                      auth0.BoolValue(c.Options.ExtAdmin),
-			"ext_is_suspended":               auth0.BoolValue(c.Options.ExtIsSuspended),
-			"ext_agreed_terms":               auth0.BoolValue(c.Options.ExtAgreedTerms),
-			"ext_groups":                     auth0.BoolValue(c.Options.ExtGroups),
-			"ext_nested_groups":              auth0.BoolValue(c.Options.ExtNestedGroups),
-			"ext_assigned_plans":             auth0.BoolValue(c.Options.ExtAssignedPlans),
-			"ext_profile":                    auth0.BoolValue(c.Options.ExtProfile),
-			"enabled_database_customization": auth0.BoolValue(c.Options.EnabledDatabaseCustomization),
-			"brute_force_protection":         auth0.BoolValue(c.Options.BruteForceProtection),
-			"import_mode":                    auth0.BoolValue(c.Options.ImportMode),
-			"disable_signup":                 auth0.BoolValue(c.Options.DisableSignup),
-			"requires_username":              auth0.BoolValue(c.Options.RequiresUsername),
-			"custom_scripts":                 c.Options.CustomScripts,
-			"configuration":                  c.Options.Configuration,
+	d.Set("options", flattenConnectionOptions(c.Options))
 
-			// waad
-			"app_id":                 auth0.StringValue(c.Options.AppID),
-			"app_domain":             auth0.StringValue(c.Options.AppDomain),
-			"client_id":              auth0.StringValue(c.Options.ClientID),
-			"client_secret":          auth0.StringValue(c.Options.ClientSecret),
-			"domain_aliases":         c.Options.DomainAliases,
-			"max_groups_to_retrieve": auth0.StringValue(c.Options.MaxGroupsToRetrieve),
-			"tenant_domain":          auth0.StringValue(c.Options.TenantDomain),
-			"use_wsfed":              auth0.BoolValue(c.Options.UseWsfed),
-			"waad_protocol":          auth0.StringValue(c.Options.WaadProtocol),
-			"waad_common_endpoint":   auth0.BoolValue(c.Options.WaadCommonEndpoint),
+	// // adfs
+	// "adfs_server": auth0.StringValue(c.Options.AdfsServer),
 
-			// twilio/sms
-			"name":                  auth0.StringValue(c.Options.Name),
-			"twilio_sid":            auth0.StringValue(c.Options.TwilioSid),
-			"twilio_token":          auth0.StringValue(c.Options.TwilioToken),
-			"from":                  auth0.StringValue(c.Options.From),
-			"syntax":                auth0.StringValue(c.Options.Syntax),
-			"template":              auth0.StringValue(c.Options.Template),
-			"messaging_service_sid": auth0.StringValue(c.Options.MessagingServiceSid),
-			"totp":                  c.Options.Totp,
-
-			// adfs
-			"adfs_server": auth0.StringValue(c.Options.AdfsServer),
-
-			// salesforce
-			"community_base_url": auth0.StringValue(c.Options.CommunityBaseURL),
-		},
-	})
+	// // salesforce
+	// "community_base_url": auth0.StringValue(c.Options.CommunityBaseURL),
 
 	d.Set("enabled_clients", c.EnabledClients)
 	d.Set("realms", c.Realms)
@@ -413,9 +459,7 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 }
 
 func updateConnection(d *schema.ResourceData, m interface{}) error {
-	c := buildConnection(d)
-	c.Strategy = nil
-	c.Name = nil
+	c := expandConnection(d)
 	api := m.(*management.Management)
 	err := api.Connection.Update(d.Id(), c)
 	if err != nil {
@@ -436,108 +480,4 @@ func deleteConnection(d *schema.ResourceData, m interface{}) error {
 		}
 	}
 	return err
-}
-
-func buildConnection(d *schema.ResourceData) *management.Connection {
-
-	c := &management.Connection{
-		Name:               String(d, "name"),
-		IsDomainConnection: Bool(d, "is_domain_connection"),
-		Strategy:           String(d, "strategy"),
-		EnabledClients:     Set(d, "enabled_clients").Slice(),
-		Realms:             Slice(d, "realms"),
-	}
-
-	List(d, "options").First(func(v interface{}) {
-
-		m := v.(map[string]interface{})
-
-		c.Options = &management.ConnectionOptions{
-			Validation:                   Map(MapData(m), "validation"),
-			PasswordPolicy:               String(MapData(m), "password_policy"),
-			APIEnableUsers:               Bool(MapData(m), "api_enable_users"),
-			BasicProfile:                 Bool(MapData(m), "basic_profile"),
-			ExtAdmin:                     Bool(MapData(m), "ext_admin"),
-			ExtIsSuspended:               Bool(MapData(m), "ext_is_suspended"),
-			ExtAgreedTerms:               Bool(MapData(m), "ext_agreed_terms"),
-			ExtGroups:                    Bool(MapData(m), "ext_groups"),
-			ExtNestedGroups:              Bool(MapData(m), "ext_nested_groups"),
-			ExtAssignedPlans:             Bool(MapData(m), "ext_assigned_plans"),
-			ExtProfile:                   Bool(MapData(m), "ext_profile"),
-			EnabledDatabaseCustomization: Bool(MapData(m), "enabled_database_customization"),
-			BruteForceProtection:         Bool(MapData(m), "brute_force_protection"),
-			ImportMode:                   Bool(MapData(m), "import_mode"),
-			DisableSignup:                Bool(MapData(m), "disable_signup"),
-			RequiresUsername:             Bool(MapData(m), "requires_username"),
-			CustomScripts:                Map(MapData(m), "custom_scripts"),
-			Configuration:                Map(MapData(m), "configuration"),
-
-			// Waad
-			AppID:               String(MapData(m), "app_id"),
-			AppDomain:           String(MapData(m), "app_domain"),
-			ClientID:            String(MapData(m), "client_id"),
-			ClientSecret:        String(MapData(m), "client_secret"),
-			DomainAliases:       Slice(MapData(m), "domain_aliases"),
-			MaxGroupsToRetrieve: String(MapData(m), "max_groups_to_retrieve"),
-			TenantDomain:        String(MapData(m), "tenant_domain"),
-			UseWsfed:            Bool(MapData(m), "use_wsfed"),
-			WaadProtocol:        String(MapData(m), "waad_protocol"),
-			WaadCommonEndpoint:  Bool(MapData(m), "waad_common_endpoint"),
-
-			// Twilio
-			Name:                String(MapData(m), "name"),
-			TwilioSid:           String(MapData(m), "twilio_sid"),
-			TwilioToken:         String(MapData(m), "twilio_token"),
-			From:                String(MapData(m), "from"),
-			Syntax:              String(MapData(m), "syntax"),
-			Template:            String(MapData(m), "template"),
-			MessagingServiceSid: String(MapData(m), "messaging_service_sid"),
-			Totp: &management.ConnectionOptionsTotp{
-				TimeStep: Int(MapData(m), "time_step"),
-				Length:   Int(MapData(m), "length"),
-			},
-
-			// adfs
-			AdfsServer: String(MapData(m), "adfs_server"),
-
-			// salesforce
-			CommunityBaseURL: String(MapData(m), "community_base_url"),
-		}
-
-		List(MapData(m), "password_history").First(func(v interface{}) {
-
-			m := v.(map[string]interface{})
-
-			c.Options.PasswordHistory = make(map[string]interface{})
-			c.Options.PasswordHistory["enable"] = Bool(MapData(m), "enable")
-			c.Options.PasswordHistory["size"] = Int(MapData(m), "size")
-		})
-
-		List(MapData(m), "password_no_personal_info").First(func(v interface{}) {
-
-			m := v.(map[string]interface{})
-
-			c.Options.PasswordNoPersonalInfo = make(map[string]interface{})
-			c.Options.PasswordNoPersonalInfo["enable"] = Bool(MapData(m), "enable")
-		})
-
-		List(MapData(m), "password_dictionary").First(func(v interface{}) {
-
-			m := v.(map[string]interface{})
-
-			c.Options.PasswordDictionary = make(map[string]interface{})
-			c.Options.PasswordDictionary["enable"] = Bool(MapData(m), "enable")
-			c.Options.PasswordDictionary["dictionary"] = Set(MapData(m), "dictionary").Slice()
-		})
-
-		List(MapData(m), "password_complexity_options").First(func(v interface{}) {
-
-			m := v.(map[string]interface{})
-
-			c.Options.PasswordComplexityOptions = make(map[string]interface{})
-			c.Options.PasswordComplexityOptions["min_length"] = Int(MapData(m), "min_length")
-		})
-	})
-
-	return c
 }
