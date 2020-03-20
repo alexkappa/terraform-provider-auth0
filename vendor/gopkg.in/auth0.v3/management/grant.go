@@ -32,3 +32,9 @@ func (m *GrantManager) List(opts ...ListOption) (g []*Grant, err error) {
 	err = m.get(m.uri("grants")+m.q(opts), &g)
 	return
 }
+
+// Delete revokes a grant associated with a user-id
+// https://auth0.com/docs/api/management/v2#!/Grants/delete_grants_by_id
+func (m *GrantManager) Delete(id string, opts ...ListOption) error {
+	return m.delete(m.uri("grants", id) + m.q(opts))
+}
