@@ -381,14 +381,6 @@ func (c *Connection) GetName() string {
 	return *c.Name
 }
 
-// GetOptions returns the Options field.
-func (c *Connection) GetOptions() *ConnectionOptions {
-	if c == nil {
-		return nil
-	}
-	return c.Options
-}
-
 // GetStrategy returns the Strategy field if it's non-nil, zero value otherwise.
 func (c *Connection) GetStrategy() string {
 	if c == nil || c.Strategy == nil {
@@ -407,76 +399,12 @@ func (c *ConnectionList) String() string {
 	return Stringify(c)
 }
 
-// GetAdfsServer returns the AdfsServer field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetAdfsServer() string {
-	if c == nil || c.AdfsServer == nil {
-		return ""
-	}
-	return *c.AdfsServer
-}
-
-// GetAPIEnableUsers returns the APIEnableUsers field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetAPIEnableUsers() bool {
-	if c == nil || c.APIEnableUsers == nil {
-		return false
-	}
-	return *c.APIEnableUsers
-}
-
-// GetAppDomain returns the AppDomain field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetAppDomain() string {
-	if c == nil || c.AppDomain == nil {
-		return ""
-	}
-	return *c.AppDomain
-}
-
-// GetAppID returns the AppID field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetAppID() string {
-	if c == nil || c.AppID == nil {
-		return ""
-	}
-	return *c.AppID
-}
-
-// GetBasicProfile returns the BasicProfile field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetBasicProfile() bool {
-	if c == nil || c.BasicProfile == nil {
-		return false
-	}
-	return *c.BasicProfile
-}
-
 // GetBruteForceProtection returns the BruteForceProtection field if it's non-nil, zero value otherwise.
 func (c *ConnectionOptions) GetBruteForceProtection() bool {
 	if c == nil || c.BruteForceProtection == nil {
 		return false
 	}
 	return *c.BruteForceProtection
-}
-
-// GetClientID returns the ClientID field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetClientID() string {
-	if c == nil || c.ClientID == nil {
-		return ""
-	}
-	return *c.ClientID
-}
-
-// GetClientSecret returns the ClientSecret field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetClientSecret() string {
-	if c == nil || c.ClientSecret == nil {
-		return ""
-	}
-	return *c.ClientSecret
-}
-
-// GetCommunityBaseURL returns the CommunityBaseURL field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetCommunityBaseURL() string {
-	if c == nil || c.CommunityBaseURL == nil {
-		return ""
-	}
-	return *c.CommunityBaseURL
 }
 
 // GetDisableSignup returns the DisableSignup field if it's non-nil, zero value otherwise.
@@ -495,100 +423,12 @@ func (c *ConnectionOptions) GetEnabledDatabaseCustomization() bool {
 	return *c.EnabledDatabaseCustomization
 }
 
-// GetExtAdmin returns the ExtAdmin field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetExtAdmin() bool {
-	if c == nil || c.ExtAdmin == nil {
-		return false
-	}
-	return *c.ExtAdmin
-}
-
-// GetExtAgreedTerms returns the ExtAgreedTerms field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetExtAgreedTerms() bool {
-	if c == nil || c.ExtAgreedTerms == nil {
-		return false
-	}
-	return *c.ExtAgreedTerms
-}
-
-// GetExtAssignedPlans returns the ExtAssignedPlans field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetExtAssignedPlans() bool {
-	if c == nil || c.ExtAssignedPlans == nil {
-		return false
-	}
-	return *c.ExtAssignedPlans
-}
-
-// GetExtGroups returns the ExtGroups field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetExtGroups() bool {
-	if c == nil || c.ExtGroups == nil {
-		return false
-	}
-	return *c.ExtGroups
-}
-
-// GetExtIsSuspended returns the ExtIsSuspended field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetExtIsSuspended() bool {
-	if c == nil || c.ExtIsSuspended == nil {
-		return false
-	}
-	return *c.ExtIsSuspended
-}
-
-// GetExtNestedGroups returns the ExtNestedGroups field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetExtNestedGroups() bool {
-	if c == nil || c.ExtNestedGroups == nil {
-		return false
-	}
-	return *c.ExtNestedGroups
-}
-
-// GetExtProfile returns the ExtProfile field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetExtProfile() bool {
-	if c == nil || c.ExtProfile == nil {
-		return false
-	}
-	return *c.ExtProfile
-}
-
-// GetFrom returns the From field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetFrom() string {
-	if c == nil || c.From == nil {
-		return ""
-	}
-	return *c.From
-}
-
 // GetImportMode returns the ImportMode field if it's non-nil, zero value otherwise.
 func (c *ConnectionOptions) GetImportMode() bool {
 	if c == nil || c.ImportMode == nil {
 		return false
 	}
 	return *c.ImportMode
-}
-
-// GetMaxGroupsToRetrieve returns the MaxGroupsToRetrieve field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetMaxGroupsToRetrieve() string {
-	if c == nil || c.MaxGroupsToRetrieve == nil {
-		return ""
-	}
-	return *c.MaxGroupsToRetrieve
-}
-
-// GetMessagingServiceSid returns the MessagingServiceSid field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetMessagingServiceSid() string {
-	if c == nil || c.MessagingServiceSid == nil {
-		return ""
-	}
-	return *c.MessagingServiceSid
-}
-
-// GetName returns the Name field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetName() string {
-	if c == nil || c.Name == nil {
-		return ""
-	}
-	return *c.Name
 }
 
 // GetPasswordPolicy returns the PasswordPolicy field if it's non-nil, zero value otherwise.
@@ -607,76 +447,12 @@ func (c *ConnectionOptions) GetRequiresUsername() bool {
 	return *c.RequiresUsername
 }
 
-// GetSyntax returns the Syntax field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetSyntax() string {
-	if c == nil || c.Syntax == nil {
-		return ""
+// GetStrategyVersion returns the StrategyVersion field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptions) GetStrategyVersion() int {
+	if c == nil || c.StrategyVersion == nil {
+		return 0
 	}
-	return *c.Syntax
-}
-
-// GetTemplate returns the Template field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetTemplate() string {
-	if c == nil || c.Template == nil {
-		return ""
-	}
-	return *c.Template
-}
-
-// GetTenantDomain returns the TenantDomain field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetTenantDomain() string {
-	if c == nil || c.TenantDomain == nil {
-		return ""
-	}
-	return *c.TenantDomain
-}
-
-// GetTotp returns the Totp field.
-func (c *ConnectionOptions) GetTotp() *ConnectionOptionsTotp {
-	if c == nil {
-		return nil
-	}
-	return c.Totp
-}
-
-// GetTwilioSid returns the TwilioSid field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetTwilioSid() string {
-	if c == nil || c.TwilioSid == nil {
-		return ""
-	}
-	return *c.TwilioSid
-}
-
-// GetTwilioToken returns the TwilioToken field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetTwilioToken() string {
-	if c == nil || c.TwilioToken == nil {
-		return ""
-	}
-	return *c.TwilioToken
-}
-
-// GetUseWsfed returns the UseWsfed field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetUseWsfed() bool {
-	if c == nil || c.UseWsfed == nil {
-		return false
-	}
-	return *c.UseWsfed
-}
-
-// GetWaadCommonEndpoint returns the WaadCommonEndpoint field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetWaadCommonEndpoint() bool {
-	if c == nil || c.WaadCommonEndpoint == nil {
-		return false
-	}
-	return *c.WaadCommonEndpoint
-}
-
-// GetWaadProtocol returns the WaadProtocol field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptions) GetWaadProtocol() string {
-	if c == nil || c.WaadProtocol == nil {
-		return ""
-	}
-	return *c.WaadProtocol
+	return *c.StrategyVersion
 }
 
 // String returns a string representation of ConnectionOptions.
@@ -684,8 +460,1399 @@ func (c *ConnectionOptions) String() string {
 	return Stringify(c)
 }
 
+// GetBruteForceProtection returns the BruteForceProtection field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAD) GetBruteForceProtection() bool {
+	if c == nil || c.BruteForceProtection == nil {
+		return false
+	}
+	return *c.BruteForceProtection
+}
+
+// GetCertAuth returns the CertAuth field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAD) GetCertAuth() bool {
+	if c == nil || c.CertAuth == nil {
+		return false
+	}
+	return *c.CertAuth
+}
+
+// GetDisableCache returns the DisableCache field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAD) GetDisableCache() bool {
+	if c == nil || c.DisableCache == nil {
+		return false
+	}
+	return *c.DisableCache
+}
+
+// GetKerberos returns the Kerberos field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAD) GetKerberos() bool {
+	if c == nil || c.Kerberos == nil {
+		return false
+	}
+	return *c.Kerberos
+}
+
+// GetLogoURL returns the LogoURL field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAD) GetLogoURL() string {
+	if c == nil || c.LogoURL == nil {
+		return ""
+	}
+	return *c.LogoURL
+}
+
+// GetSetUserAttributes returns the SetUserAttributes field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAD) GetSetUserAttributes() string {
+	if c == nil || c.SetUserAttributes == nil {
+		return ""
+	}
+	return *c.SetUserAttributes
+}
+
+// GetTenantDomain returns the TenantDomain field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAD) GetTenantDomain() string {
+	if c == nil || c.TenantDomain == nil {
+		return ""
+	}
+	return *c.TenantDomain
+}
+
+// String returns a string representation of ConnectionOptionsAD.
+func (c *ConnectionOptionsAD) String() string {
+	return Stringify(c)
+}
+
+// GetADFSServer returns the ADFSServer field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsADFS) GetADFSServer() string {
+	if c == nil || c.ADFSServer == nil {
+		return ""
+	}
+	return *c.ADFSServer
+}
+
+// GetEnableUsersAPI returns the EnableUsersAPI field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsADFS) GetEnableUsersAPI() bool {
+	if c == nil || c.EnableUsersAPI == nil {
+		return false
+	}
+	return *c.EnableUsersAPI
+}
+
+// GetLogoURL returns the LogoURL field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsADFS) GetLogoURL() string {
+	if c == nil || c.LogoURL == nil {
+		return ""
+	}
+	return *c.LogoURL
+}
+
+// GetSetUserAttributes returns the SetUserAttributes field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsADFS) GetSetUserAttributes() string {
+	if c == nil || c.SetUserAttributes == nil {
+		return ""
+	}
+	return *c.SetUserAttributes
+}
+
+// GetTenantDomain returns the TenantDomain field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsADFS) GetTenantDomain() string {
+	if c == nil || c.TenantDomain == nil {
+		return ""
+	}
+	return *c.TenantDomain
+}
+
+// String returns a string representation of ConnectionOptionsADFS.
+func (c *ConnectionOptionsADFS) String() string {
+	return Stringify(c)
+}
+
+// GetClientID returns the ClientID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsApple) GetClientID() string {
+	if c == nil || c.ClientID == nil {
+		return ""
+	}
+	return *c.ClientID
+}
+
+// GetClientSecret returns the ClientSecret field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsApple) GetClientSecret() string {
+	if c == nil || c.ClientSecret == nil {
+		return ""
+	}
+	return *c.ClientSecret
+}
+
+// GetEmail returns the Email field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsApple) GetEmail() bool {
+	if c == nil || c.Email == nil {
+		return false
+	}
+	return *c.Email
+}
+
+// GetKeyID returns the KeyID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsApple) GetKeyID() string {
+	if c == nil || c.KeyID == nil {
+		return ""
+	}
+	return *c.KeyID
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsApple) GetName() bool {
+	if c == nil || c.Name == nil {
+		return false
+	}
+	return *c.Name
+}
+
+// GetScope returns the Scope field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsApple) GetScope() string {
+	if c == nil || c.Scope == nil {
+		return ""
+	}
+	return *c.Scope
+}
+
+// GetTeamID returns the TeamID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsApple) GetTeamID() string {
+	if c == nil || c.TeamID == nil {
+		return ""
+	}
+	return *c.TeamID
+}
+
+// String returns a string representation of ConnectionOptionsApple.
+func (c *ConnectionOptionsApple) String() string {
+	return Stringify(c)
+}
+
+// GetAdmin returns the Admin field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetAdmin() bool {
+	if c == nil || c.Admin == nil {
+		return false
+	}
+	return *c.Admin
+}
+
+// GetAgreedTerms returns the AgreedTerms field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetAgreedTerms() bool {
+	if c == nil || c.AgreedTerms == nil {
+		return false
+	}
+	return *c.AgreedTerms
+}
+
+// GetAppID returns the AppID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetAppID() string {
+	if c == nil || c.AppID == nil {
+		return ""
+	}
+	return *c.AppID
+}
+
+// GetAssignedPlans returns the AssignedPlans field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetAssignedPlans() bool {
+	if c == nil || c.AssignedPlans == nil {
+		return false
+	}
+	return *c.AssignedPlans
+}
+
+// GetBasicProfile returns the BasicProfile field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetBasicProfile() bool {
+	if c == nil || c.BasicProfile == nil {
+		return false
+	}
+	return *c.BasicProfile
+}
+
+// GetClientID returns the ClientID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetClientID() string {
+	if c == nil || c.ClientID == nil {
+		return ""
+	}
+	return *c.ClientID
+}
+
+// GetClientSecret returns the ClientSecret field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetClientSecret() string {
+	if c == nil || c.ClientSecret == nil {
+		return ""
+	}
+	return *c.ClientSecret
+}
+
+// GetDomain returns the Domain field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetDomain() string {
+	if c == nil || c.Domain == nil {
+		return ""
+	}
+	return *c.Domain
+}
+
+// GetEnableUsersAPI returns the EnableUsersAPI field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetEnableUsersAPI() bool {
+	if c == nil || c.EnableUsersAPI == nil {
+		return false
+	}
+	return *c.EnableUsersAPI
+}
+
+// GetExtendedProfile returns the ExtendedProfile field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetExtendedProfile() bool {
+	if c == nil || c.ExtendedProfile == nil {
+		return false
+	}
+	return *c.ExtendedProfile
+}
+
+// GetGroups returns the Groups field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetGroups() bool {
+	if c == nil || c.Groups == nil {
+		return false
+	}
+	return *c.Groups
+}
+
+// GetIdentityAPI returns the IdentityAPI field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetIdentityAPI() string {
+	if c == nil || c.IdentityAPI == nil {
+		return ""
+	}
+	return *c.IdentityAPI
+}
+
+// GetIsSuspended returns the IsSuspended field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetIsSuspended() bool {
+	if c == nil || c.IsSuspended == nil {
+		return false
+	}
+	return *c.IsSuspended
+}
+
+// GetLogoURL returns the LogoURL field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetLogoURL() string {
+	if c == nil || c.LogoURL == nil {
+		return ""
+	}
+	return *c.LogoURL
+}
+
+// GetMaxGroupsToRetrieve returns the MaxGroupsToRetrieve field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetMaxGroupsToRetrieve() string {
+	if c == nil || c.MaxGroupsToRetrieve == nil {
+		return ""
+	}
+	return *c.MaxGroupsToRetrieve
+}
+
+// GetNestedGroups returns the NestedGroups field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetNestedGroups() bool {
+	if c == nil || c.NestedGroups == nil {
+		return false
+	}
+	return *c.NestedGroups
+}
+
+// GetTenantDomain returns the TenantDomain field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetTenantDomain() string {
+	if c == nil || c.TenantDomain == nil {
+		return ""
+	}
+	return *c.TenantDomain
+}
+
+// GetUseCommonEndpoint returns the UseCommonEndpoint field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetUseCommonEndpoint() bool {
+	if c == nil || c.UseCommonEndpoint == nil {
+		return false
+	}
+	return *c.UseCommonEndpoint
+}
+
+// GetUseWSFederation returns the UseWSFederation field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetUseWSFederation() bool {
+	if c == nil || c.UseWSFederation == nil {
+		return false
+	}
+	return *c.UseWSFederation
+}
+
+// GetWAADCommonEndpoint returns the WAADCommonEndpoint field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetWAADCommonEndpoint() bool {
+	if c == nil || c.WAADCommonEndpoint == nil {
+		return false
+	}
+	return *c.WAADCommonEndpoint
+}
+
+// GetWAADProtocol returns the WAADProtocol field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsAzureAD) GetWAADProtocol() string {
+	if c == nil || c.WAADProtocol == nil {
+		return ""
+	}
+	return *c.WAADProtocol
+}
+
+// String returns a string representation of ConnectionOptionsAzureAD.
+func (c *ConnectionOptionsAzureAD) String() string {
+	return Stringify(c)
+}
+
+// GetBruteForceProtection returns the BruteForceProtection field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsEmail) GetBruteForceProtection() bool {
+	if c == nil || c.BruteForceProtection == nil {
+		return false
+	}
+	return *c.BruteForceProtection
+}
+
+// GetDisableSignup returns the DisableSignup field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsEmail) GetDisableSignup() bool {
+	if c == nil || c.DisableSignup == nil {
+		return false
+	}
+	return *c.DisableSignup
+}
+
+// GetEmail returns the Email field.
+func (c *ConnectionOptionsEmail) GetEmail() *ConnectionOptionsEmailSettings {
+	if c == nil {
+		return nil
+	}
+	return c.Email
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsEmail) GetName() string {
+	if c == nil || c.Name == nil {
+		return ""
+	}
+	return *c.Name
+}
+
+// GetOTP returns the OTP field.
+func (c *ConnectionOptionsEmail) GetOTP() *ConnectionOptionsOTP {
+	if c == nil {
+		return nil
+	}
+	return c.OTP
+}
+
+// String returns a string representation of ConnectionOptionsEmail.
+func (c *ConnectionOptionsEmail) String() string {
+	return Stringify(c)
+}
+
+// GetBody returns the Body field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsEmailSettings) GetBody() string {
+	if c == nil || c.Body == nil {
+		return ""
+	}
+	return *c.Body
+}
+
+// GetFrom returns the From field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsEmailSettings) GetFrom() string {
+	if c == nil || c.From == nil {
+		return ""
+	}
+	return *c.From
+}
+
+// GetSubject returns the Subject field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsEmailSettings) GetSubject() string {
+	if c == nil || c.Subject == nil {
+		return ""
+	}
+	return *c.Subject
+}
+
+// GetSyntax returns the Syntax field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsEmailSettings) GetSyntax() string {
+	if c == nil || c.Syntax == nil {
+		return ""
+	}
+	return *c.Syntax
+}
+
+// String returns a string representation of ConnectionOptionsEmailSettings.
+func (c *ConnectionOptionsEmailSettings) String() string {
+	return Stringify(c)
+}
+
+// GetAdsManagement returns the AdsManagement field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetAdsManagement() bool {
+	if c == nil || c.AdsManagement == nil {
+		return false
+	}
+	return *c.AdsManagement
+}
+
+// GetAdsRead returns the AdsRead field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetAdsRead() bool {
+	if c == nil || c.AdsRead == nil {
+		return false
+	}
+	return *c.AdsRead
+}
+
+// GetAllowContextProfileField returns the AllowContextProfileField field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetAllowContextProfileField() bool {
+	if c == nil || c.AllowContextProfileField == nil {
+		return false
+	}
+	return *c.AllowContextProfileField
+}
+
+// GetBusinessManagement returns the BusinessManagement field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetBusinessManagement() bool {
+	if c == nil || c.BusinessManagement == nil {
+		return false
+	}
+	return *c.BusinessManagement
+}
+
+// GetClientID returns the ClientID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetClientID() string {
+	if c == nil || c.ClientID == nil {
+		return ""
+	}
+	return *c.ClientID
+}
+
+// GetClientSecret returns the ClientSecret field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetClientSecret() string {
+	if c == nil || c.ClientSecret == nil {
+		return ""
+	}
+	return *c.ClientSecret
+}
+
+// GetEmail returns the Email field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetEmail() bool {
+	if c == nil || c.Email == nil {
+		return false
+	}
+	return *c.Email
+}
+
+// GetGroupsAccessMemberInfo returns the GroupsAccessMemberInfo field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetGroupsAccessMemberInfo() bool {
+	if c == nil || c.GroupsAccessMemberInfo == nil {
+		return false
+	}
+	return *c.GroupsAccessMemberInfo
+}
+
+// GetLeadsRetrieval returns the LeadsRetrieval field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetLeadsRetrieval() bool {
+	if c == nil || c.LeadsRetrieval == nil {
+		return false
+	}
+	return *c.LeadsRetrieval
+}
+
+// GetManageNotifications returns the ManageNotifications field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetManageNotifications() bool {
+	if c == nil || c.ManageNotifications == nil {
+		return false
+	}
+	return *c.ManageNotifications
+}
+
+// GetManagePages returns the ManagePages field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetManagePages() bool {
+	if c == nil || c.ManagePages == nil {
+		return false
+	}
+	return *c.ManagePages
+}
+
+// GetPagesManageCTA returns the PagesManageCTA field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetPagesManageCTA() bool {
+	if c == nil || c.PagesManageCTA == nil {
+		return false
+	}
+	return *c.PagesManageCTA
+}
+
+// GetPagesManageInstantArticles returns the PagesManageInstantArticles field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetPagesManageInstantArticles() bool {
+	if c == nil || c.PagesManageInstantArticles == nil {
+		return false
+	}
+	return *c.PagesManageInstantArticles
+}
+
+// GetPagesMessaging returns the PagesMessaging field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetPagesMessaging() bool {
+	if c == nil || c.PagesMessaging == nil {
+		return false
+	}
+	return *c.PagesMessaging
+}
+
+// GetPagesMessagingPhoneNumber returns the PagesMessagingPhoneNumber field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetPagesMessagingPhoneNumber() bool {
+	if c == nil || c.PagesMessagingPhoneNumber == nil {
+		return false
+	}
+	return *c.PagesMessagingPhoneNumber
+}
+
+// GetPagesMessagingSubscriptions returns the PagesMessagingSubscriptions field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetPagesMessagingSubscriptions() bool {
+	if c == nil || c.PagesMessagingSubscriptions == nil {
+		return false
+	}
+	return *c.PagesMessagingSubscriptions
+}
+
+// GetPagesShowList returns the PagesShowList field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetPagesShowList() bool {
+	if c == nil || c.PagesShowList == nil {
+		return false
+	}
+	return *c.PagesShowList
+}
+
+// GetPublicProfile returns the PublicProfile field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetPublicProfile() bool {
+	if c == nil || c.PublicProfile == nil {
+		return false
+	}
+	return *c.PublicProfile
+}
+
+// GetPublishActions returns the PublishActions field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetPublishActions() bool {
+	if c == nil || c.PublishActions == nil {
+		return false
+	}
+	return *c.PublishActions
+}
+
+// GetPublishPages returns the PublishPages field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetPublishPages() bool {
+	if c == nil || c.PublishPages == nil {
+		return false
+	}
+	return *c.PublishPages
+}
+
+// GetPublishToGroups returns the PublishToGroups field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetPublishToGroups() bool {
+	if c == nil || c.PublishToGroups == nil {
+		return false
+	}
+	return *c.PublishToGroups
+}
+
+// GetPublishVideo returns the PublishVideo field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetPublishVideo() bool {
+	if c == nil || c.PublishVideo == nil {
+		return false
+	}
+	return *c.PublishVideo
+}
+
+// GetReadAudienceNetworkInsights returns the ReadAudienceNetworkInsights field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetReadAudienceNetworkInsights() bool {
+	if c == nil || c.ReadAudienceNetworkInsights == nil {
+		return false
+	}
+	return *c.ReadAudienceNetworkInsights
+}
+
+// GetReadInsights returns the ReadInsights field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetReadInsights() bool {
+	if c == nil || c.ReadInsights == nil {
+		return false
+	}
+	return *c.ReadInsights
+}
+
+// GetReadMailbox returns the ReadMailbox field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetReadMailbox() bool {
+	if c == nil || c.ReadMailbox == nil {
+		return false
+	}
+	return *c.ReadMailbox
+}
+
+// GetReadPageMailboxes returns the ReadPageMailboxes field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetReadPageMailboxes() bool {
+	if c == nil || c.ReadPageMailboxes == nil {
+		return false
+	}
+	return *c.ReadPageMailboxes
+}
+
+// GetReadStream returns the ReadStream field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetReadStream() bool {
+	if c == nil || c.ReadStream == nil {
+		return false
+	}
+	return *c.ReadStream
+}
+
+// GetScope returns the Scope field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetScope() string {
+	if c == nil || c.Scope == nil {
+		return ""
+	}
+	return *c.Scope
+}
+
+// GetUserAgeRange returns the UserAgeRange field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserAgeRange() bool {
+	if c == nil || c.UserAgeRange == nil {
+		return false
+	}
+	return *c.UserAgeRange
+}
+
+// GetUserBirthday returns the UserBirthday field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserBirthday() bool {
+	if c == nil || c.UserBirthday == nil {
+		return false
+	}
+	return *c.UserBirthday
+}
+
+// GetUserEvents returns the UserEvents field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserEvents() bool {
+	if c == nil || c.UserEvents == nil {
+		return false
+	}
+	return *c.UserEvents
+}
+
+// GetUserFriends returns the UserFriends field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserFriends() bool {
+	if c == nil || c.UserFriends == nil {
+		return false
+	}
+	return *c.UserFriends
+}
+
+// GetUserGender returns the UserGender field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserGender() bool {
+	if c == nil || c.UserGender == nil {
+		return false
+	}
+	return *c.UserGender
+}
+
+// GetUserGroups returns the UserGroups field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserGroups() bool {
+	if c == nil || c.UserGroups == nil {
+		return false
+	}
+	return *c.UserGroups
+}
+
+// GetUserHometown returns the UserHometown field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserHometown() bool {
+	if c == nil || c.UserHometown == nil {
+		return false
+	}
+	return *c.UserHometown
+}
+
+// GetUserLikes returns the UserLikes field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserLikes() bool {
+	if c == nil || c.UserLikes == nil {
+		return false
+	}
+	return *c.UserLikes
+}
+
+// GetUserLink returns the UserLink field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserLink() bool {
+	if c == nil || c.UserLink == nil {
+		return false
+	}
+	return *c.UserLink
+}
+
+// GetUserLocation returns the UserLocation field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserLocation() bool {
+	if c == nil || c.UserLocation == nil {
+		return false
+	}
+	return *c.UserLocation
+}
+
+// GetUserManagedGroups returns the UserManagedGroups field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserManagedGroups() bool {
+	if c == nil || c.UserManagedGroups == nil {
+		return false
+	}
+	return *c.UserManagedGroups
+}
+
+// GetUserPhotos returns the UserPhotos field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserPhotos() bool {
+	if c == nil || c.UserPhotos == nil {
+		return false
+	}
+	return *c.UserPhotos
+}
+
+// GetUserPosts returns the UserPosts field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserPosts() bool {
+	if c == nil || c.UserPosts == nil {
+		return false
+	}
+	return *c.UserPosts
+}
+
+// GetUserStatus returns the UserStatus field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserStatus() bool {
+	if c == nil || c.UserStatus == nil {
+		return false
+	}
+	return *c.UserStatus
+}
+
+// GetUserTaggedPlaces returns the UserTaggedPlaces field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserTaggedPlaces() bool {
+	if c == nil || c.UserTaggedPlaces == nil {
+		return false
+	}
+	return *c.UserTaggedPlaces
+}
+
+// GetUserVideos returns the UserVideos field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsFacebook) GetUserVideos() bool {
+	if c == nil || c.UserVideos == nil {
+		return false
+	}
+	return *c.UserVideos
+}
+
+// String returns a string representation of ConnectionOptionsFacebook.
+func (c *ConnectionOptionsFacebook) String() string {
+	return Stringify(c)
+}
+
+// GetAdminOrg returns the AdminOrg field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetAdminOrg() bool {
+	if c == nil || c.AdminOrg == nil {
+		return false
+	}
+	return *c.AdminOrg
+}
+
+// GetAdminPublicKey returns the AdminPublicKey field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetAdminPublicKey() bool {
+	if c == nil || c.AdminPublicKey == nil {
+		return false
+	}
+	return *c.AdminPublicKey
+}
+
+// GetAdminRepoHook returns the AdminRepoHook field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetAdminRepoHook() bool {
+	if c == nil || c.AdminRepoHook == nil {
+		return false
+	}
+	return *c.AdminRepoHook
+}
+
+// GetClientID returns the ClientID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetClientID() string {
+	if c == nil || c.ClientID == nil {
+		return ""
+	}
+	return *c.ClientID
+}
+
+// GetClientSecret returns the ClientSecret field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetClientSecret() string {
+	if c == nil || c.ClientSecret == nil {
+		return ""
+	}
+	return *c.ClientSecret
+}
+
+// GetDeleteRepo returns the DeleteRepo field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetDeleteRepo() bool {
+	if c == nil || c.DeleteRepo == nil {
+		return false
+	}
+	return *c.DeleteRepo
+}
+
+// GetEmail returns the Email field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetEmail() bool {
+	if c == nil || c.Email == nil {
+		return false
+	}
+	return *c.Email
+}
+
+// GetFollow returns the Follow field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetFollow() bool {
+	if c == nil || c.Follow == nil {
+		return false
+	}
+	return *c.Follow
+}
+
+// GetGist returns the Gist field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetGist() bool {
+	if c == nil || c.Gist == nil {
+		return false
+	}
+	return *c.Gist
+}
+
+// GetNotifications returns the Notifications field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetNotifications() bool {
+	if c == nil || c.Notifications == nil {
+		return false
+	}
+	return *c.Notifications
+}
+
+// GetProfile returns the Profile field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetProfile() bool {
+	if c == nil || c.Profile == nil {
+		return false
+	}
+	return *c.Profile
+}
+
+// GetPublicRepo returns the PublicRepo field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetPublicRepo() bool {
+	if c == nil || c.PublicRepo == nil {
+		return false
+	}
+	return *c.PublicRepo
+}
+
+// GetReadOrg returns the ReadOrg field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetReadOrg() bool {
+	if c == nil || c.ReadOrg == nil {
+		return false
+	}
+	return *c.ReadOrg
+}
+
+// GetReadPublicKey returns the ReadPublicKey field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetReadPublicKey() bool {
+	if c == nil || c.ReadPublicKey == nil {
+		return false
+	}
+	return *c.ReadPublicKey
+}
+
+// GetReadRepoHook returns the ReadRepoHook field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetReadRepoHook() bool {
+	if c == nil || c.ReadRepoHook == nil {
+		return false
+	}
+	return *c.ReadRepoHook
+}
+
+// GetReadUser returns the ReadUser field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetReadUser() bool {
+	if c == nil || c.ReadUser == nil {
+		return false
+	}
+	return *c.ReadUser
+}
+
+// GetRepo returns the Repo field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetRepo() bool {
+	if c == nil || c.Repo == nil {
+		return false
+	}
+	return *c.Repo
+}
+
+// GetRepoDeployment returns the RepoDeployment field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetRepoDeployment() bool {
+	if c == nil || c.RepoDeployment == nil {
+		return false
+	}
+	return *c.RepoDeployment
+}
+
+// GetRepoStatus returns the RepoStatus field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetRepoStatus() bool {
+	if c == nil || c.RepoStatus == nil {
+		return false
+	}
+	return *c.RepoStatus
+}
+
+// GetSetUserAttributes returns the SetUserAttributes field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetSetUserAttributes() string {
+	if c == nil || c.SetUserAttributes == nil {
+		return ""
+	}
+	return *c.SetUserAttributes
+}
+
+// GetWriteOrg returns the WriteOrg field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetWriteOrg() bool {
+	if c == nil || c.WriteOrg == nil {
+		return false
+	}
+	return *c.WriteOrg
+}
+
+// GetWritePublicKey returns the WritePublicKey field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetWritePublicKey() bool {
+	if c == nil || c.WritePublicKey == nil {
+		return false
+	}
+	return *c.WritePublicKey
+}
+
+// GetWriteRepoHook returns the WriteRepoHook field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGitHub) GetWriteRepoHook() bool {
+	if c == nil || c.WriteRepoHook == nil {
+		return false
+	}
+	return *c.WriteRepoHook
+}
+
+// String returns a string representation of ConnectionOptionsGitHub.
+func (c *ConnectionOptionsGitHub) String() string {
+	return Stringify(c)
+}
+
+// GetAdsenseManagement returns the AdsenseManagement field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetAdsenseManagement() bool {
+	if c == nil || c.AdsenseManagement == nil {
+		return false
+	}
+	return *c.AdsenseManagement
+}
+
+// GetAnalytics returns the Analytics field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetAnalytics() bool {
+	if c == nil || c.Analytics == nil {
+		return false
+	}
+	return *c.Analytics
+}
+
+// GetBlogger returns the Blogger field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetBlogger() bool {
+	if c == nil || c.Blogger == nil {
+		return false
+	}
+	return *c.Blogger
+}
+
+// GetCalendar returns the Calendar field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetCalendar() bool {
+	if c == nil || c.Calendar == nil {
+		return false
+	}
+	return *c.Calendar
+}
+
+// GetChromeWebStore returns the ChromeWebStore field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetChromeWebStore() bool {
+	if c == nil || c.ChromeWebStore == nil {
+		return false
+	}
+	return *c.ChromeWebStore
+}
+
+// GetClientID returns the ClientID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetClientID() string {
+	if c == nil || c.ClientID == nil {
+		return ""
+	}
+	return *c.ClientID
+}
+
+// GetClientSecret returns the ClientSecret field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetClientSecret() string {
+	if c == nil || c.ClientSecret == nil {
+		return ""
+	}
+	return *c.ClientSecret
+}
+
+// GetContacts returns the Contacts field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetContacts() bool {
+	if c == nil || c.Contacts == nil {
+		return false
+	}
+	return *c.Contacts
+}
+
+// GetContentAPIForShopping returns the ContentAPIForShopping field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetContentAPIForShopping() bool {
+	if c == nil || c.ContentAPIForShopping == nil {
+		return false
+	}
+	return *c.ContentAPIForShopping
+}
+
+// GetCoordinate returns the Coordinate field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetCoordinate() bool {
+	if c == nil || c.Coordinate == nil {
+		return false
+	}
+	return *c.Coordinate
+}
+
+// GetCoordinateReadonly returns the CoordinateReadonly field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetCoordinateReadonly() bool {
+	if c == nil || c.CoordinateReadonly == nil {
+		return false
+	}
+	return *c.CoordinateReadonly
+}
+
+// GetDocumentList returns the DocumentList field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetDocumentList() bool {
+	if c == nil || c.DocumentList == nil {
+		return false
+	}
+	return *c.DocumentList
+}
+
+// GetEmail returns the Email field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetEmail() bool {
+	if c == nil || c.Email == nil {
+		return false
+	}
+	return *c.Email
+}
+
+// GetGmail returns the Gmail field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetGmail() bool {
+	if c == nil || c.Gmail == nil {
+		return false
+	}
+	return *c.Gmail
+}
+
+// GetGoogleAffiliateNetwork returns the GoogleAffiliateNetwork field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetGoogleAffiliateNetwork() bool {
+	if c == nil || c.GoogleAffiliateNetwork == nil {
+		return false
+	}
+	return *c.GoogleAffiliateNetwork
+}
+
+// GetGoogleBooks returns the GoogleBooks field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetGoogleBooks() bool {
+	if c == nil || c.GoogleBooks == nil {
+		return false
+	}
+	return *c.GoogleBooks
+}
+
+// GetGoogleCloudStorage returns the GoogleCloudStorage field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetGoogleCloudStorage() bool {
+	if c == nil || c.GoogleCloudStorage == nil {
+		return false
+	}
+	return *c.GoogleCloudStorage
+}
+
+// GetGoogleDrive returns the GoogleDrive field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetGoogleDrive() bool {
+	if c == nil || c.GoogleDrive == nil {
+		return false
+	}
+	return *c.GoogleDrive
+}
+
+// GetGoogleDriveFiles returns the GoogleDriveFiles field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetGoogleDriveFiles() bool {
+	if c == nil || c.GoogleDriveFiles == nil {
+		return false
+	}
+	return *c.GoogleDriveFiles
+}
+
+// GetGooglePlus returns the GooglePlus field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetGooglePlus() bool {
+	if c == nil || c.GooglePlus == nil {
+		return false
+	}
+	return *c.GooglePlus
+}
+
+// GetLatitudeBest returns the LatitudeBest field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetLatitudeBest() bool {
+	if c == nil || c.LatitudeBest == nil {
+		return false
+	}
+	return *c.LatitudeBest
+}
+
+// GetLatitudeCity returns the LatitudeCity field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetLatitudeCity() bool {
+	if c == nil || c.LatitudeCity == nil {
+		return false
+	}
+	return *c.LatitudeCity
+}
+
+// GetModerator returns the Moderator field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetModerator() bool {
+	if c == nil || c.Moderator == nil {
+		return false
+	}
+	return *c.Moderator
+}
+
+// GetOrkut returns the Orkut field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetOrkut() bool {
+	if c == nil || c.Orkut == nil {
+		return false
+	}
+	return *c.Orkut
+}
+
+// GetPicasaWeb returns the PicasaWeb field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetPicasaWeb() bool {
+	if c == nil || c.PicasaWeb == nil {
+		return false
+	}
+	return *c.PicasaWeb
+}
+
+// GetProfile returns the Profile field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetProfile() bool {
+	if c == nil || c.Profile == nil {
+		return false
+	}
+	return *c.Profile
+}
+
+// GetSites returns the Sites field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetSites() bool {
+	if c == nil || c.Sites == nil {
+		return false
+	}
+	return *c.Sites
+}
+
+// GetSpreadsheets returns the Spreadsheets field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetSpreadsheets() bool {
+	if c == nil || c.Spreadsheets == nil {
+		return false
+	}
+	return *c.Spreadsheets
+}
+
+// GetTasks returns the Tasks field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetTasks() bool {
+	if c == nil || c.Tasks == nil {
+		return false
+	}
+	return *c.Tasks
+}
+
+// GetURLShortener returns the URLShortener field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetURLShortener() bool {
+	if c == nil || c.URLShortener == nil {
+		return false
+	}
+	return *c.URLShortener
+}
+
+// GetWebmasterTools returns the WebmasterTools field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetWebmasterTools() bool {
+	if c == nil || c.WebmasterTools == nil {
+		return false
+	}
+	return *c.WebmasterTools
+}
+
+// GetYoutube returns the Youtube field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleOAuth2) GetYoutube() bool {
+	if c == nil || c.Youtube == nil {
+		return false
+	}
+	return *c.Youtube
+}
+
+// String returns a string representation of ConnectionOptionsGoogleOAuth2.
+func (c *ConnectionOptionsGoogleOAuth2) String() string {
+	return Stringify(c)
+}
+
+// GetBasicProfile returns the BasicProfile field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsLinkedin) GetBasicProfile() bool {
+	if c == nil || c.BasicProfile == nil {
+		return false
+	}
+	return *c.BasicProfile
+}
+
+// GetClientID returns the ClientID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsLinkedin) GetClientID() string {
+	if c == nil || c.ClientID == nil {
+		return ""
+	}
+	return *c.ClientID
+}
+
+// GetClientSecret returns the ClientSecret field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsLinkedin) GetClientSecret() string {
+	if c == nil || c.ClientSecret == nil {
+		return ""
+	}
+	return *c.ClientSecret
+}
+
+// GetEmail returns the Email field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsLinkedin) GetEmail() bool {
+	if c == nil || c.Email == nil {
+		return false
+	}
+	return *c.Email
+}
+
+// GetProfile returns the Profile field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsLinkedin) GetProfile() bool {
+	if c == nil || c.Profile == nil {
+		return false
+	}
+	return *c.Profile
+}
+
+// GetSetUserAttributes returns the SetUserAttributes field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsLinkedin) GetSetUserAttributes() string {
+	if c == nil || c.SetUserAttributes == nil {
+		return ""
+	}
+	return *c.SetUserAttributes
+}
+
+// GetStrategyVersion returns the StrategyVersion field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsLinkedin) GetStrategyVersion() int {
+	if c == nil || c.StrategyVersion == nil {
+		return 0
+	}
+	return *c.StrategyVersion
+}
+
+// String returns a string representation of ConnectionOptionsLinkedin.
+func (c *ConnectionOptionsLinkedin) String() string {
+	return Stringify(c)
+}
+
+// GetAuthorizationEndpoint returns the AuthorizationEndpoint field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsOIDC) GetAuthorizationEndpoint() string {
+	if c == nil || c.AuthorizationEndpoint == nil {
+		return ""
+	}
+	return *c.AuthorizationEndpoint
+}
+
+// GetClientID returns the ClientID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsOIDC) GetClientID() string {
+	if c == nil || c.ClientID == nil {
+		return ""
+	}
+	return *c.ClientID
+}
+
+// GetClientSecret returns the ClientSecret field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsOIDC) GetClientSecret() string {
+	if c == nil || c.ClientSecret == nil {
+		return ""
+	}
+	return *c.ClientSecret
+}
+
+// GetDiscoveryURL returns the DiscoveryURL field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsOIDC) GetDiscoveryURL() string {
+	if c == nil || c.DiscoveryURL == nil {
+		return ""
+	}
+	return *c.DiscoveryURL
+}
+
+// GetIssuer returns the Issuer field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsOIDC) GetIssuer() string {
+	if c == nil || c.Issuer == nil {
+		return ""
+	}
+	return *c.Issuer
+}
+
+// GetJWKSURI returns the JWKSURI field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsOIDC) GetJWKSURI() string {
+	if c == nil || c.JWKSURI == nil {
+		return ""
+	}
+	return *c.JWKSURI
+}
+
+// GetLogoURL returns the LogoURL field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsOIDC) GetLogoURL() string {
+	if c == nil || c.LogoURL == nil {
+		return ""
+	}
+	return *c.LogoURL
+}
+
+// GetScope returns the Scope field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsOIDC) GetScope() string {
+	if c == nil || c.Scope == nil {
+		return ""
+	}
+	return *c.Scope
+}
+
+// GetTenantDomain returns the TenantDomain field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsOIDC) GetTenantDomain() string {
+	if c == nil || c.TenantDomain == nil {
+		return ""
+	}
+	return *c.TenantDomain
+}
+
+// GetTokenEndpoint returns the TokenEndpoint field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsOIDC) GetTokenEndpoint() string {
+	if c == nil || c.TokenEndpoint == nil {
+		return ""
+	}
+	return *c.TokenEndpoint
+}
+
+// GetType returns the Type field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsOIDC) GetType() string {
+	if c == nil || c.Type == nil {
+		return ""
+	}
+	return *c.Type
+}
+
+// GetUserInfoEndpoint returns the UserInfoEndpoint field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsOIDC) GetUserInfoEndpoint() string {
+	if c == nil || c.UserInfoEndpoint == nil {
+		return ""
+	}
+	return *c.UserInfoEndpoint
+}
+
+// String returns a string representation of ConnectionOptionsOIDC.
+func (c *ConnectionOptionsOIDC) String() string {
+	return Stringify(c)
+}
+
 // GetLength returns the Length field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptionsTotp) GetLength() int {
+func (c *ConnectionOptionsOTP) GetLength() int {
 	if c == nil || c.Length == nil {
 		return 0
 	}
@@ -693,15 +1860,358 @@ func (c *ConnectionOptionsTotp) GetLength() int {
 }
 
 // GetTimeStep returns the TimeStep field if it's non-nil, zero value otherwise.
-func (c *ConnectionOptionsTotp) GetTimeStep() int {
+func (c *ConnectionOptionsOTP) GetTimeStep() int {
 	if c == nil || c.TimeStep == nil {
 		return 0
 	}
 	return *c.TimeStep
 }
 
-// String returns a string representation of ConnectionOptionsTotp.
-func (c *ConnectionOptionsTotp) String() string {
+// String returns a string representation of ConnectionOptionsOTP.
+func (c *ConnectionOptionsOTP) String() string {
+	return Stringify(c)
+}
+
+// GetClientID returns the ClientID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSalesforce) GetClientID() string {
+	if c == nil || c.ClientID == nil {
+		return ""
+	}
+	return *c.ClientID
+}
+
+// GetClientSecret returns the ClientSecret field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSalesforce) GetClientSecret() string {
+	if c == nil || c.ClientSecret == nil {
+		return ""
+	}
+	return *c.ClientSecret
+}
+
+// GetCommunityBaseURL returns the CommunityBaseURL field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSalesforce) GetCommunityBaseURL() string {
+	if c == nil || c.CommunityBaseURL == nil {
+		return ""
+	}
+	return *c.CommunityBaseURL
+}
+
+// GetProfile returns the Profile field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSalesforce) GetProfile() bool {
+	if c == nil || c.Profile == nil {
+		return false
+	}
+	return *c.Profile
+}
+
+// GetSetUserAttributes returns the SetUserAttributes field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSalesforce) GetSetUserAttributes() string {
+	if c == nil || c.SetUserAttributes == nil {
+		return ""
+	}
+	return *c.SetUserAttributes
+}
+
+// String returns a string representation of ConnectionOptionsSalesforce.
+func (c *ConnectionOptionsSalesforce) String() string {
+	return Stringify(c)
+}
+
+// GetBruteForceProtection returns the BruteForceProtection field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSMS) GetBruteForceProtection() bool {
+	if c == nil || c.BruteForceProtection == nil {
+		return false
+	}
+	return *c.BruteForceProtection
+}
+
+// GetDisableSignup returns the DisableSignup field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSMS) GetDisableSignup() bool {
+	if c == nil || c.DisableSignup == nil {
+		return false
+	}
+	return *c.DisableSignup
+}
+
+// GetFrom returns the From field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSMS) GetFrom() string {
+	if c == nil || c.From == nil {
+		return ""
+	}
+	return *c.From
+}
+
+// GetMessagingServiceSID returns the MessagingServiceSID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSMS) GetMessagingServiceSID() string {
+	if c == nil || c.MessagingServiceSID == nil {
+		return ""
+	}
+	return *c.MessagingServiceSID
+}
+
+// GetName returns the Name field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSMS) GetName() string {
+	if c == nil || c.Name == nil {
+		return ""
+	}
+	return *c.Name
+}
+
+// GetOTP returns the OTP field.
+func (c *ConnectionOptionsSMS) GetOTP() *ConnectionOptionsOTP {
+	if c == nil {
+		return nil
+	}
+	return c.OTP
+}
+
+// GetSyntax returns the Syntax field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSMS) GetSyntax() string {
+	if c == nil || c.Syntax == nil {
+		return ""
+	}
+	return *c.Syntax
+}
+
+// GetTemplate returns the Template field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSMS) GetTemplate() string {
+	if c == nil || c.Template == nil {
+		return ""
+	}
+	return *c.Template
+}
+
+// GetTwilioSID returns the TwilioSID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSMS) GetTwilioSID() string {
+	if c == nil || c.TwilioSID == nil {
+		return ""
+	}
+	return *c.TwilioSID
+}
+
+// GetTwilioToken returns the TwilioToken field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSMS) GetTwilioToken() string {
+	if c == nil || c.TwilioToken == nil {
+		return ""
+	}
+	return *c.TwilioToken
+}
+
+// String returns a string representation of ConnectionOptionsSMS.
+func (c *ConnectionOptionsSMS) String() string {
+	return Stringify(c)
+}
+
+// GetCalendars returns the Calendars field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetCalendars() bool {
+	if c == nil || c.Calendars == nil {
+		return false
+	}
+	return *c.Calendars
+}
+
+// GetCalendarsUpdate returns the CalendarsUpdate field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetCalendarsUpdate() bool {
+	if c == nil || c.CalendarsUpdate == nil {
+		return false
+	}
+	return *c.CalendarsUpdate
+}
+
+// GetClientID returns the ClientID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetClientID() string {
+	if c == nil || c.ClientID == nil {
+		return ""
+	}
+	return *c.ClientID
+}
+
+// GetClientSecret returns the ClientSecret field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetClientSecret() string {
+	if c == nil || c.ClientSecret == nil {
+		return ""
+	}
+	return *c.ClientSecret
+}
+
+// GetContacts returns the Contacts field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetContacts() bool {
+	if c == nil || c.Contacts == nil {
+		return false
+	}
+	return *c.Contacts
+}
+
+// GetContactsUpdate returns the ContactsUpdate field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetContactsUpdate() bool {
+	if c == nil || c.ContactsUpdate == nil {
+		return false
+	}
+	return *c.ContactsUpdate
+}
+
+// GetDevice returns the Device field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetDevice() bool {
+	if c == nil || c.Device == nil {
+		return false
+	}
+	return *c.Device
+}
+
+// GetDeviceCommand returns the DeviceCommand field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetDeviceCommand() bool {
+	if c == nil || c.DeviceCommand == nil {
+		return false
+	}
+	return *c.DeviceCommand
+}
+
+// GetEmails returns the Emails field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetEmails() bool {
+	if c == nil || c.Emails == nil {
+		return false
+	}
+	return *c.Emails
+}
+
+// GetEmailsUpdate returns the EmailsUpdate field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetEmailsUpdate() bool {
+	if c == nil || c.EmailsUpdate == nil {
+		return false
+	}
+	return *c.EmailsUpdate
+}
+
+// GetFiles returns the Files field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetFiles() bool {
+	if c == nil || c.Files == nil {
+		return false
+	}
+	return *c.Files
+}
+
+// GetFilesAll returns the FilesAll field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetFilesAll() bool {
+	if c == nil || c.FilesAll == nil {
+		return false
+	}
+	return *c.FilesAll
+}
+
+// GetFilesAllUpdate returns the FilesAllUpdate field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetFilesAllUpdate() bool {
+	if c == nil || c.FilesAllUpdate == nil {
+		return false
+	}
+	return *c.FilesAllUpdate
+}
+
+// GetFilesUpdate returns the FilesUpdate field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetFilesUpdate() bool {
+	if c == nil || c.FilesUpdate == nil {
+		return false
+	}
+	return *c.FilesUpdate
+}
+
+// GetNotes returns the Notes field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetNotes() bool {
+	if c == nil || c.Notes == nil {
+		return false
+	}
+	return *c.Notes
+}
+
+// GetNotesCreate returns the NotesCreate field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetNotesCreate() bool {
+	if c == nil || c.NotesCreate == nil {
+		return false
+	}
+	return *c.NotesCreate
+}
+
+// GetNotesUpdate returns the NotesUpdate field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetNotesUpdate() bool {
+	if c == nil || c.NotesUpdate == nil {
+		return false
+	}
+	return *c.NotesUpdate
+}
+
+// GetOfflineAccess returns the OfflineAccess field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetOfflineAccess() bool {
+	if c == nil || c.OfflineAccess == nil {
+		return false
+	}
+	return *c.OfflineAccess
+}
+
+// GetSetUserAttributes returns the SetUserAttributes field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetSetUserAttributes() string {
+	if c == nil || c.SetUserAttributes == nil {
+		return ""
+	}
+	return *c.SetUserAttributes
+}
+
+// GetSignin returns the Signin field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetSignin() bool {
+	if c == nil || c.Signin == nil {
+		return false
+	}
+	return *c.Signin
+}
+
+// GetStrategyVersion returns the StrategyVersion field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetStrategyVersion() int {
+	if c == nil || c.StrategyVersion == nil {
+		return 0
+	}
+	return *c.StrategyVersion
+}
+
+// GetTasks returns the Tasks field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetTasks() bool {
+	if c == nil || c.Tasks == nil {
+		return false
+	}
+	return *c.Tasks
+}
+
+// GetTasksUpdate returns the TasksUpdate field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetTasksUpdate() bool {
+	if c == nil || c.TasksUpdate == nil {
+		return false
+	}
+	return *c.TasksUpdate
+}
+
+// GetUser returns the User field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetUser() bool {
+	if c == nil || c.User == nil {
+		return false
+	}
+	return *c.User
+}
+
+// GetUserActivity returns the UserActivity field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetUserActivity() bool {
+	if c == nil || c.UserActivity == nil {
+		return false
+	}
+	return *c.UserActivity
+}
+
+// GetUserUpdate returns the UserUpdate field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsWindowsLive) GetUserUpdate() bool {
+	if c == nil || c.UserUpdate == nil {
+		return false
+	}
+	return *c.UserUpdate
+}
+
+// String returns a string representation of ConnectionOptionsWindowsLive.
+func (c *ConnectionOptionsWindowsLive) String() string {
 	return Stringify(c)
 }
 
