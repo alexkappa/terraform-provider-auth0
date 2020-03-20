@@ -40,7 +40,7 @@ func newResourceServer() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"value": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Required: true,
 						},
 						"description": {
 							Type:     schema.TypeString,
@@ -115,7 +115,7 @@ func newResourceServer() *schema.Resource {
 }
 
 func createResourceServer(d *schema.ResourceData, m interface{}) error {
-	s := buildResourceServer(d)
+	s := expandResourceServer(d)
 	api := m.(*management.Management)
 	if err := api.ResourceServer.Create(s); err != nil {
 		return err
@@ -163,7 +163,7 @@ func readResourceServer(d *schema.ResourceData, m interface{}) error {
 }
 
 func updateResourceServer(d *schema.ResourceData, m interface{}) error {
-	s := buildResourceServer(d)
+	s := expandResourceServer(d)
 	s.Identifier = nil
 	api := m.(*management.Management)
 	err := api.ResourceServer.Update(d.Id(), s)
@@ -187,30 +187,28 @@ func deleteResourceServer(d *schema.ResourceData, m interface{}) error {
 	return err
 }
 
-func buildResourceServer(d *schema.ResourceData) *management.ResourceServer {
+func expandResourceServer(d *schema.ResourceData) *management.ResourceServer {
 
 	s := &management.ResourceServer{
-		Name:                String(d, "name"),
-		Identifier:          String(d, "identifier"),
-		SigningAlgorithm:    String(d, "signing_alg"),
-		SigningSecret:       String(d, "signing_secret"),
-		AllowOfflineAccess:  Bool(d, "allow_offline_access"),
-		TokenLifetime:       Int(d, "token_lifetime"),
-		TokenLifetimeForWeb: Int(d, "token_lifetime_for_web"),
+		Name:                 String(d, "name"),
+		Identifier:           String(d, "identifier"),
+		SigningAlgorithm:     String(d, "signing_alg"),
+		SigningSecret:        String(d, "signing_secret"),
+		AllowOfflineAccess:   Bool(d, "allow_offline_access"),
+		TokenLifetime:        Int(d, "token_lifetime"),
+		TokenLifetimeForWeb:  Int(d, "token_lifetime_for_web"),
+		VerificationLocation: String(d, "verification_location"),
+		Options:              Map(d, "options"),
+		EnforcePolicies:      Bool(d, "enforce_policies"),
+		TokenDialect:         String(d, "token_dialect"),
+
 		SkipConsentForVerifiableFirstPartyClients: Bool(d, "skip_consent_for_verifiable_first_party_clients"),
-		VerificationLocation:                      String(d, "verification_location"),
-		Options:                                   Map(d, "options"),
-		EnforcePolicies:                           Bool(d, "enforce_policies"),
-		TokenDialect:                              String(d, "token_dialect"),
 	}
 
-	Set(d, "scopes").All(func(key int, value interface{}) {
-
-		scopes := value.(map[string]interface{})
-
+	Set(d, "scopes").Elem(func(d Data) {
 		s.Scopes = append(s.Scopes, &management.ResourceServerScope{
-			Value:       String(MapData(scopes), "value"),
-			Description: String(MapData(scopes), "description"),
+			Value:       String(d, "value"),
+			Description: String(d, "description"),
 		})
 	})
 
