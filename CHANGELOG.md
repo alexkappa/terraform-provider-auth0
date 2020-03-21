@@ -105,7 +105,7 @@ NOTES:
 
 ENHANCEMENTS:
 
-* Switch to using Github Actions in favour of Wercker.
+* Switch to using Github Actions in favor of Wercker.
 
 ## v0.2.1 (October 21, 2019)
 

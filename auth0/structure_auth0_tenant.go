@@ -43,6 +43,7 @@ func flattenTenantFlags(f *management.TenantFlags) []interface{} {
 			"enable_legacy_logs_search_v2":           f.EnableLegacyLogsSearchV2,
 			"disable_clickjack_protection_headers":   f.DisableClickjackProtectionHeaders,
 			"enable_public_signup_user_exists_error": f.EnablePublicSignupUserExistsError,
+			"use_scope_descriptions_for_consent":     f.UseScopeDescriptionsForConsent,
 		},
 	}
 }
@@ -104,6 +105,7 @@ func expandTenantFlags(d Data) (f *management.TenantFlags) {
 			EnableLegacyLogsSearchV2:          Bool(d, "enable_legacy_logs_search_v2"),
 			DisableClickjackProtectionHeaders: Bool(d, "disable_clickjack_protection_headers"),
 			EnablePublicSignupUserExistsError: Bool(d, "enable_public_signup_user_exists_error"),
+			UseScopeDescriptionsForConsent:    Bool(d, "use_scope_descriptions_for_consent"),
 		}
 	})
 	return
