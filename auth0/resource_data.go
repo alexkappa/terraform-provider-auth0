@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/structure"
 
-	"gopkg.in/auth0.v3"
+	"gopkg.in/auth0.v4"
 )
 
 // Data generalises schema.ResourceData so that we can reuse the accessor

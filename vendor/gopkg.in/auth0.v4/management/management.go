@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"gopkg.in/auth0.v3/internal/client"
+	"gopkg.in/auth0.v4/internal/client"
 )
 
 // Management is an Auth0 management client used to interact with the Auth0
