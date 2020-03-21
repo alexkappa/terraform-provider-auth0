@@ -1,7 +1,7 @@
 Auth0 Terraform Provider
 ========================
 
-[![Build Status](https://travis-ci.org/terraform-providers/terraform-provider-auth0.svg?branch=master)](https://travis-ci.org/terraform-providers/terraform-provider-auth0)
+[![Build Status](https://travis-ci.org/alexkappa/terraform-provider-auth0.svg?branch=master)](https://travis-ci.org/alexkappa/terraform-provider-auth0)
 [![Maintainability](https://api.codeclimate.com/v1/badges/9c49c10286123b716c79/maintainability)](https://codeclimate.com/github/alexkappa/terraform-provider-auth0/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/9c49c10286123b716c79/test_coverage)](https://codeclimate.com/github/alexkappa/terraform-provider-auth0/test_coverage)
 
@@ -90,7 +90,7 @@ successfully run.
 Supporting the provider
 -----------------------
 
-This project is maintained by myself ([@alexkappa](https://github.com/alexkappa)) with contributions from great people across the community. 
+This project is maintained by myself ([@alexkappa](https://github.com/alexkappa)) with contributions from [great people](https://github.com/alexkappa/terraform-provider-auth0/graphs/contributors) across the community. 
 
 I am not affiliated with [Auth0](https://auth0.com/) and all work that goes into this provider is done during my spare time. Please be patient with issues and pull requests.
 
