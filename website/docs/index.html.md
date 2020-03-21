@@ -14,34 +14,36 @@ Use the navigation to the left to read about the available resources.
 ## Example Usage
 
 ```hcl
-# Configure the Auth0 Provider
 provider "auth0" {
   domain = "<domain>"
   client_id = "<client-id>"
   client_secret = "<client-secret>"
   debug = "<debug>"
 }
-
-# Add a tenant
-resource "auth0_tenant" "tenant" {
-  default_audience  = "<client_id>"
-  friendly_name = "Tenant Name"
-  picture_url   = "http://mysite/logo.png"
-  support_email = "support@mysite"
-  support_url   = "http://mysite/support"
-  allowed_logout_urls = [
-    "http://mysite/logout"
-  ]
-  session_lifetime = 46000
-  sandbox_version  = "8"
-  }
 ```
 
-These variables can also be accessed via the `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, and `AUTH0_CLIENT_SECRET` environment variables, respectively.
+~> **Note**: Hard-coding credentials into any Terraform configuration is not recommended, and risks secret leakage should this file ever be committed to a public version control system. See [Environment Variables](#environment-variables) for a better alternative.
 
 ## Argument Reference
 
-* `domain` - (Required) String. Your Auth0 domain name.
-* `client_id` - (Required) String. Your Auth0 client ID.
-* `client_secret` - (Required) String. Your Auth0 client secret.
-* `debug` - (Optional) Boolean. Indicates whether or not to turn on debug mode.
+* `domain` - (Required) Your Auth0 domain name. It can also be sourced from the `AUTH0_DOMAIN` environment variable.
+* `client_id` - (Required) Your Auth0 client ID. It can also be sourced from the `AUTH0_CLIENT_ID` environment variable.
+* `client_secret` - (Required) Your Auth0 client secret. It can also be sourced from the `AUTH0_CLIENT_SECRET` environment variable.
+* `debug` - (Optional) Indicates whether or not to turn on debug mode.
+
+## Environment Variables
+
+You can provide your credentials via the `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID` and `AUTH0_CLIENT_SECRET` environment variables, respectively.
+
+```hcl
+provider "auth0" {}
+```
+
+Usage:
+
+```bash
+$ export AUTH0_DOMAIN="<domain>"
+$ export AUTH0_CLIENT_ID="<client-id>"
+$ export AUTH0_CLIENT_SECRET="<client_secret>"
+$ terraform plan
+```

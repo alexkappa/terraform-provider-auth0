@@ -2,11 +2,12 @@ package auth0
 
 import (
 	"reflect"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/structure"
 
-	"gopkg.in/auth0.v3"
+	"gopkg.in/auth0.v4"
 )
 
 // Data generalises schema.ResourceData so that we can reuse the accessor
@@ -20,11 +21,46 @@ type Data interface {
 	// HasChange reports whether or not the given key has been changed.
 	HasChange(key string) bool
 
+	// GetChange returns the old and new value for a given key.
+	GetChange(key string) (interface{}, interface{})
+
+	// Get returns the data for the given key, or nil if the key doesn't exist
+	// in the schema.
+	Get(key string) interface{}
+
 	// GetOkExists returns the data for a given key and whether or not the key
 	// has been set to a non-zero value. This is only useful for determining
 	// if boolean attributes have been set, if they are Optional but do not
 	// have a Default value.
 	GetOkExists(key string) (interface{}, bool)
+}
+
+type data struct {
+	prefix string
+	Data
+}
+
+func dataAtKey(key string, d Data) Data { return &data{key, d} }
+func dataAtIndex(i int, d Data) Data    { return &data{strconv.Itoa(i), d} }
+
+func (d *data) IsNewResource() bool {
+	return d.Data.IsNewResource()
+}
+
+func (d *data) HasChange(key string) bool {
+	return d.Data.HasChange(d.prefix + "." + key)
+}
+
+func (d *data) GetChange(key string) (interface{}, interface{}) {
+	return d.Data.GetChange(d.prefix + "." + key)
+}
+
+func (d *data) Get(key string) interface{} {
+	return d.Data.Get(d.prefix + "." + key)
+}
+
+func (d *data) GetOkExists(key string) (interface{}, bool) {
+	return d.Data.GetOkExists(d.prefix + "." + key)
 }
 
 // MapData wraps a map satisfying the Data interface, so it can be used in the
@@ -38,6 +74,14 @@ func (md MapData) IsNewResource() bool {
 func (md MapData) HasChange(key string) bool {
 	_, ok := md[key]
 	return ok
+}
+
+func (md MapData) GetChange(key string) (interface{}, interface{}) {
+	return md[key], md[key]
+}
+
+func (md MapData) Get(key string) interface{} {
+	return md[key]
 }
 
 func (md MapData) GetOkExists(key string) (interface{}, bool) {
@@ -114,67 +158,115 @@ func Map(d Data, key string) (m map[string]interface{}) {
 }
 
 // List accesses the value held by key and returns an iterator able to go over
-// the items of the list.
-//
-// The iterator can go over all the items in the list or just the first one,
-// which is a common use case for defining nested schemas in Terraform.
-func List(d Data, key string) *iterator {
+// its elements.
+func List(d Data, key string) Iterator {
 	if d.IsNewResource() || d.HasChange(key) {
 		v, ok := d.GetOkExists(key)
 		if ok {
-			return &iterator{v.([]interface{})}
+			return &list{dataAtKey(key, d), v.([]interface{})}
 		}
 	}
-	return &iterator{}
+	return &list{}
 }
 
 // Set accesses the value held by key, type asserts it to a set and returns an
-// iterator able to go over the items of the list.
-func Set(d Data, key string) *iterator {
+// iterator able to go over its elements.
+func Set(d Data, key string) Iterator {
 	if d.IsNewResource() || d.HasChange(key) {
 		v, ok := d.GetOkExists(key)
 		if ok {
 			if s, ok := v.(*schema.Set); ok {
-				return &iterator{s.List()}
+				return &set{dataAtKey(key, d), s}
 			}
 		}
 	}
-	return &iterator{}
+	return &set{nil, &schema.Set{}}
 }
 
-type iterator struct {
-	i []interface{}
+type Iterator interface {
+
+	// Elem iterates over all elements of the list or set, calling fn with each
+	// iteration.
+	//
+	// The callback takes a Data interface as argument which is prefixed with
+	// its parents key, making nested data access more convenient.
+	//
+	// The operation
+	//
+	// 	bar = d.Get("foo.0.bar").(string)
+	//
+	// can be expressed as
+	//
+	// 	List(d, "foo").Elem(func (d Data) {
+	//		bar = String(d, "bar")
+	// 	})
+	//
+	// making data access more intuitive for nested structures.
+	Elem(func(d Data))
+
+	// Range iterates over all elements of the list, calling fn in each iteration.
+	Range(func(k int, v interface{}))
+
+	// List returns the underlying list as a Go slice.
+	List() []interface{}
 }
 
-// All iterates over all elements of the list, calling f in each iteration.
-func (i *iterator) All(f func(key int, value interface{})) {
-	for key, value := range i.i {
-		f(key, value)
+type list struct {
+	d Data
+	v []interface{}
+}
+
+func (l *list) Range(fn func(key int, value interface{})) {
+	for key, value := range l.v {
+		fn(key, value)
 	}
 }
 
-// First iterates over the first element of the list, calling f with the value
-// at the first key.
-//
-// The function f will be called at most one time, as the list may be empty.
-func (i *iterator) First(f func(value interface{})) {
-	for _, value := range i.i {
-		f(value)
-		return
+func (l *list) Elem(fn func(Data)) {
+	for idx := range l.v {
+		fn(dataAtIndex(idx, l.d))
 	}
 }
 
-// Slice returns the underlying list as a raw slice.
-func (i *iterator) Slice() []interface{} {
-	return i.i
+func (l *list) List() []interface{} {
+	return l.v
 }
 
-// Set accesses the value held by key, type asserts it to a set. It then
-// compares it's changes if any and returns what needs to be added (created) and
-// what needs to be removed (delete).
-func Diff(d *schema.ResourceData, key string) (add []interface{}, rm []interface{}) {
+type set struct {
+	d Data
+	s *schema.Set
+}
+
+func (s *set) hash(item interface{}) string {
+	code := s.s.F(item)
+	if code < 0 {
+		code = -code
+	}
+	return strconv.Itoa(code)
+}
+
+func (s *set) Range(fn func(key int, value interface{})) {
+	for key, value := range s.s.List() {
+		fn(key, value)
+	}
+}
+
+func (s *set) Elem(fn func(Data)) {
+	for _, v := range s.s.List() {
+		fn(dataAtKey(s.hash(v), s.d))
+	}
+}
+
+func (s *set) List() []interface{} {
+	return s.s.List()
+}
+
+// Diff accesses the value held by key and type asserts it to a set. It then
+// compares it's changes if any and returns what needs to be added and what
+// needs to be removed.
+func Diff(d Data, key string) (add []interface{}, rm []interface{}) {
 	if d.IsNewResource() {
-		add = Set(d, key).Slice()
+		add = Set(d, key).List()
 	}
 	if d.HasChange(key) {
 		o, n := d.GetChange(key)

@@ -5,6 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/terraform-providers/terraform-provider-auth0/auth0/internal/debug"
 )
 
 func TestAccTenant(t *testing.T) {
@@ -34,15 +35,16 @@ func TestAccTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "session_lifetime", "1080"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "sandbox_version", "8"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "idle_session_lifetime", "720"),
-					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "enabled_locales.0", "en"),
-					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "enabled_locales.1", "de"),
-					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "enabled_locales.2", "fr"),
+					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "enabled_locales.4213735380", "en"),
+					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "enabled_locales.421448744", "de"),
+					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "enabled_locales.521772240", "fr"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.universal_login", "true"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.disable_clickjack_protection_headers", "true"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.enable_public_signup_user_exists_error", "true"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "universal_login.0.colors.0.primary", "#0059d6"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "universal_login.0.colors.0.page_background", "#000000"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "default_redirection_uri", "https://example.com/login"),
+					debug.DumpAttr("auth0_tenant.my_tenant"),
 				),
 			},
 			// This test case confirms issue #160 where boolean values from a
@@ -51,13 +53,13 @@ func TestAccTenant(t *testing.T) {
 			//
 			// See: https://github.com/alexkappa/terraform-provider-auth0/issues/160
 			//
-			// {
-			// 	Config: testAccTenantConfigUpdate,
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.disable_clickjack_protection_headers", "false"),
-			// 		resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.enable_public_signup_user_exists_error", "true"),
-			// 	),
-			// },
+			{
+				Config: testAccTenantConfigUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.disable_clickjack_protection_headers", "false"),
+					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.enable_public_signup_user_exists_error", "true"),
+				),
+			},
 		},
 	})
 }
@@ -106,6 +108,7 @@ resource "auth0_tenant" "my_tenant" {
 `
 
 const testAccTenantConfigUpdate = `
+
 resource "auth0_tenant" "my_tenant" {
 	change_password {
 		enabled = true
