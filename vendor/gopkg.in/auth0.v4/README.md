@@ -1,6 +1,6 @@
 # Auth0 Go SDK
 
-[![GoDoc](https://godoc.org/gopkg.in/auth0.v3?status.svg)](https://godoc.org/gopkg.in/auth0.v3)
+[![GoDoc](https://godoc.org/gopkg.in/auth0.v4?status.svg)](https://godoc.org/gopkg.in/auth0.v4)
 [![build status](https://img.shields.io/github/workflow/status/go-auth0/auth0/Go)](https://github.com/go-auth0/auth0/actions?query=workflow%3ABuild+branch%3Amaster)
 [![Maintainability](https://img.shields.io/codeclimate/maintainability/go-auth0/auth0)](https://codeclimate.com/github/go-auth0/auth0/maintainability)
 [![Test Coverage](https://img.shields.io/codeclimate/coverage/go-auth0/auth0)](https://codeclimate.com/github/go-auth0/auth0/test_coverage)
@@ -17,8 +17,8 @@ The Auth0 Management API is meant to be used by back-end servers or trusted part
 
 ```go
 import (
-	gopkg.in/auth0.v3
-	gopkg.in/auth0.v3/management
+	gopkg.in/auth0.v4
+	gopkg.in/auth0.v4/management
 )
 ```
 

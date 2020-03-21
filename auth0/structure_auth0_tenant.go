@@ -1,6 +1,6 @@
 package auth0
 
-import "gopkg.in/auth0.v3/management"
+import "gopkg.in/auth0.v4/management"
 
 func flattenTenantChangePassword(cp *management.TenantChangePassword) []interface{} {
 	return []interface{}{

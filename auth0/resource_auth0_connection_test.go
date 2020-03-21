@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/terraform-providers/terraform-provider-auth0/auth0/internal/debug"
 	"github.com/terraform-providers/terraform-provider-auth0/auth0/internal/random"
-	"gopkg.in/auth0.v3/management"
+	"gopkg.in/auth0.v4/management"
 )
 
 func init() {
