@@ -139,6 +139,10 @@ type TenantFlags struct {
 	// which will prevent users from being able to find out if an e-mail address
 	// or username has previously registered.
 	EnablePublicSignupUserExistsError *bool `json:"enable_public_signup_user_exists_error,omitempty"`
+
+	// If enabled, this will use the scope description when generating a consent
+	// prompt. Otherwise the scope name is used.
+	UseScopeDescriptionsForConsent *bool `json:"use_scope_descriptions_for_consent,omitempty"`
 }
 
 type TenantUniversalLogin struct {

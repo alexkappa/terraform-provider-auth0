@@ -3550,6 +3550,14 @@ func (t *TenantFlags) GetUniversalLogin() bool {
 	return *t.UniversalLogin
 }
 
+// GetUseScopeDescriptionsForConsent returns the UseScopeDescriptionsForConsent field if it's non-nil, zero value otherwise.
+func (t *TenantFlags) GetUseScopeDescriptionsForConsent() bool {
+	if t == nil || t.UseScopeDescriptionsForConsent == nil {
+		return false
+	}
+	return *t.UseScopeDescriptionsForConsent
+}
+
 // String returns a string representation of TenantFlags.
 func (t *TenantFlags) String() string {
 	return Stringify(t)

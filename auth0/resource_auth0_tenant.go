@@ -172,6 +172,10 @@ func newTenant() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},
+						"use_scope_descriptions_for_consent": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
 					},
 				},
 			},
