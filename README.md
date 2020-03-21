@@ -85,7 +85,13 @@ for custom domains (`TestAccCustomDomain`), also require a paid Auth0 subscripti
 At the time of writing, the following configuration steps are also required for the test tenant:
 
 * The `Username-Password-Authentication` connection must have _Requires Username_ option enabled for the user tests to 
-succesfully run.
+successfully run.
 
+Supporting the provider
+-----------------------
 
+This project is maintained by myself ([@alexkappa](https://github.com/alexkappa)) with contributions from great people across the community. 
 
+I am not affiliated with [Auth0](https://auth0.com/) and all work that goes into this provider is done during my spare time. Please be patient with issues and pull requests.
+
+If you or your company relies on this plugin or the [Go SDK](https://github.com/go-auth0/auth0) and would like to ensure its continuing support please consider [donating](https://github.com/sponsors/alexkappa).

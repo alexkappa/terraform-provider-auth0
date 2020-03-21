@@ -1,14 +1,16 @@
 package auth0
 
 import (
+	"log"
 	"strings"
 	"testing"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/terraform-providers/terraform-provider-auth0/auth0/internal/debug"
 	"github.com/terraform-providers/terraform-provider-auth0/auth0/internal/random"
-	"gopkg.in/auth0.v3/management"
+	"gopkg.in/auth0.v4/management"
 )
 
 func init() {
@@ -21,13 +23,16 @@ func init() {
 			}
 			var page int
 			for {
-				l, err := api.Connection.List(management.Page(page))
+				l, err := api.Connection.List(
+					management.WithFields("id", "name"),
+					management.Page(page))
 				if err != nil {
 					return err
 				}
 				for _, connection := range l.Connections {
 					if strings.Contains(connection.GetName(), "Acceptance-Test") {
-						if e := api.Client.Delete(connection.GetID()); e != nil {
+						log.Printf("[DEBUG] Deleting connection %v\n", connection.GetName())
+						if e := api.Connection.Delete(connection.GetID()); e != nil {
 							multierror.Append(err, e)
 						}
 					}
@@ -162,8 +167,15 @@ func TestAccConnectionAD(t *testing.T) {
 			resource.TestStep{
 				Config: random.Template(testAccConnectionADConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					random.TestCheckResourceAttr("auth0_connection.my_ad_connection", "name", "Acceptance-Test-AD-Connection-{{.random}}", rand),
-					resource.TestCheckResourceAttr("auth0_connection.my_ad_connection", "strategy", "ad"),
+					random.TestCheckResourceAttr("auth0_connection.ad", "name", "Acceptance-Test-AD-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.ad", "strategy", "ad"),
+					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.domain_aliases.#", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.tenant_domain", "example.com"),
+					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.use_kerberos", "false"),
+					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.ips.3011009788", "192.168.1.2"),
+					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.ips.2555711295", "192.168.1.1"),
+					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.domain_aliases.3506632655", "example.com"),
+					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.domain_aliases.3154807651", "api.example.com"),
 				),
 			},
 		},
@@ -172,13 +184,21 @@ func TestAccConnectionAD(t *testing.T) {
 
 const testAccConnectionADConfig = `
 
-resource "auth0_connection" "my_ad_connection" {
-	name = "Acceptance-Test-AD-Connection-{{.random}}"
+resource "auth0_connection" "ad" {
+	name = "Acceptance-Test-AD-{{.random}}"
 	strategy = "ad"
+	options {
+		tenant_domain = "example.com"
+		domain_aliases = [
+			"example.com",
+			"api.example.com"
+		]
+		ips = [ "192.168.1.1", "192.168.1.2" ]
+	}
 }
 `
 
-func TestAccConnectionWAAD(t *testing.T) {
+func TestAccConnectionAzureAD(t *testing.T) {
 
 	rand := random.String(6)
 
@@ -188,36 +208,50 @@ func TestAccConnectionWAAD(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: random.Template(testAccConnectionWAADConfig, rand),
+				Config: random.Template(testAccConnectionAzureADConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					random.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-WAAD-Connection-{{.random}}", rand),
-					resource.TestCheckResourceAttr("auth0_connection.my_connection", "strategy", "waad"),
+					random.TestCheckResourceAttr("auth0_connection.azure_ad", "name", "Acceptance-Test-Azure-AD-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "strategy", "waad"),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.client_id", "123456"),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.client_secret", "123456"),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.tenant_domain", "example.onmicrosoft.com"),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.domain", "example.onmicrosoft.com"),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.domain_aliases.#", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.domain_aliases.3506632655", "example.com"),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.domain_aliases.3154807651", "api.example.com"),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.scopes.#", "3"),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.scopes.370042894", "basic_profile"),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.scopes.1268340351", "ext_profile"),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.scopes.541325467", "ext_groups"),
 				),
 			},
 		},
 	})
 }
 
-const testAccConnectionWAADConfig = `
+const testAccConnectionAzureADConfig = `
 
-resource "auth0_connection" "my_connection" {
-	name     = "Acceptance-Test-WAAD-Connection-{{.random}}"
+resource "auth0_connection" "azure_ad" {
+	name     = "Acceptance-Test-Azure-AD-{{.random}}"
 	strategy = "waad"
 	options {
 		client_id     = "123456"
 		client_secret = "123456"
 		tenant_domain = "example.onmicrosoft.com"
+		domain        = "example.onmicrosoft.com"
 		domain_aliases = [
-			"example.io",
+			"example.com",
+			"api.example.com"
 		]
 		use_wsfed            = false
 		waad_protocol        = "openid-connect"
 		waad_common_endpoint = false
-		app_domain       = "my-auth0-app.eu.auth0.com"
-		api_enable_users = true
-		basic_profile    = true
-		ext_groups       = true
-		ext_profile      = true
+		api_enable_users     = true
+		scopes               = [
+			"basic_profile",
+			"ext_groups",
+			"ext_profile"
+		]
 	}
 }
 `
@@ -281,7 +315,7 @@ resource "auth0_connection" "my_connection" {
 }
 `
 
-func TestAccTwilioConnection(t *testing.T) {
+func TestAccConnectionSMS(t *testing.T) {
 
 	rand := random.String(6)
 
@@ -291,27 +325,32 @@ func TestAccTwilioConnection(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: random.Template(testAccTwilioConnectionConfig, rand),
+				Config: random.Template(testAccConnectionSMSConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					random.TestCheckResourceAttr("auth0_connection.sms_connection", "name", "Acceptance-Test-SMS-Connection-{{.random}}", rand),
-					resource.TestCheckResourceAttr("auth0_connection.sms_connection", "strategy", "sms"),
-					resource.TestCheckResourceAttr("auth0_connection.sms_connection", "options.0.twilio_token", "DEF456"),
+					random.TestCheckResourceAttr("auth0_connection.sms", "name", "Acceptance-Test-SMS-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "strategy", "sms"),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.twilio_sid", "ABC123"),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.twilio_token", "DEF456"),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.totp.#", "1"),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.totp.0.time_step", "300"),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.totp.0.length", "6"),
+					debug.DumpAttr("auth0_connection.sms"),
 				),
 			},
 		},
 	})
 }
 
-const testAccTwilioConnectionConfig = `
+const testAccConnectionSMSConfig = `
 
-resource "auth0_connection" "sms_connection" {
-	name = "Acceptance-Test-SMS-Connection-{{.random}}"
+resource "auth0_connection" "sms" {
+	name = "Acceptance-Test-SMS-{{.random}}"
 	is_domain_connection = false
 	strategy = "sms"
-	
+
 	options {
 		disable_signup = false
-		name = "sms-connection"
+		name = "SMS OTP"
 		twilio_sid = "ABC123"
 		twilio_token = "DEF456"
 		from = "+12345678"
@@ -319,8 +358,8 @@ resource "auth0_connection" "sms_connection" {
 		template = "@@password@@"
 		messaging_service_sid = "GHI789"
 		brute_force_protection = true
-		
-		totp = {
+
+		totp {
 			time_step = 300
 			length = 6
 		}
@@ -328,7 +367,7 @@ resource "auth0_connection" "sms_connection" {
 }
 `
 
-func TestAccSalesforceCommunityConnection(t *testing.T) {
+func TestAccConnectionEmail(t *testing.T) {
 
 	rand := random.String(6)
 
@@ -338,28 +377,124 @@ func TestAccSalesforceCommunityConnection(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			resource.TestStep{
-				Config: random.Template(testAccSalesforceConnectionConfig, rand),
+				Config: random.Template(testAccConnectionEmailConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					random.TestCheckResourceAttr("auth0_connection.salesforce_community", "name", "Acceptance-Test-Salesforce-Connection-{{.random}}", rand),
-					resource.TestCheckResourceAttr("auth0_connection.salesforce_community", "strategy", "salesforce-community"),
-					resource.TestCheckResourceAttr("auth0_connection.salesforce_community", "options.0.community_base_url", "https://salesforce-community.example"),
+					random.TestCheckResourceAttr("auth0_connection.email", "name", "Acceptance-Test-Email-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.email", "strategy", "email"),
+					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.from", "Magic Password <password@example.com>"),
+					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.subject", "Sign in!"),
+					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.#", "1"),
+					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.0.time_step", "300"),
+					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.0.length", "6"),
+					debug.DumpAttr("auth0_connection.email"),
 				),
 			},
 		},
 	})
 }
 
-const testAccSalesforceConnectionConfig = `
+const testAccConnectionEmailConfig = `
+
+resource "auth0_connection" "email" {
+	name = "Acceptance-Test-Email-{{.random}}"
+	is_domain_connection = false
+	strategy = "email"
+
+	options {
+		disable_signup = false
+		name = "Email OTP"
+		from = "Magic Password <password@example.com>"
+		subject = "Sign in!"
+		syntax = "liquid"
+		template = "<html><body><h1>Here's your password!</h1></body></html>"
+		
+		brute_force_protection = true
+
+		totp {
+			time_step = 300
+			length = 6
+		}
+	}
+}
+`
+
+func TestAccConnectionSalesforce(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: random.Template(testAccConnectionSalesforceConfig, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.salesforce_community", "name", "Acceptance-Test-Salesforce-Connection-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.salesforce_community", "strategy", "salesforce-community"),
+					resource.TestCheckResourceAttr("auth0_connection.salesforce_community", "options.0.community_base_url", "https://salesforce.example.com"),
+					debug.DumpAttr("auth0_connection.salesforce_community"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionSalesforceConfig = `
 
 resource "auth0_connection" "salesforce_community" {
 	name = "Acceptance-Test-Salesforce-Connection-{{.random}}"
 	is_domain_connection = false
 	strategy = "salesforce-community"
-	
+
 	options {
 		client_id = false
 		client_secret = "sms-connection"
-		community_base_url = "https://salesforce-community.example"
+		community_base_url = "https://salesforce.example.com"
+	}
+}
+`
+
+func TestAccConnectionGoogleOAuth2(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: random.Template(testAccConnectionGoogleOAuth2Config, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.google_oauth2", "name", "Acceptance-Test-Google-OAuth2-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "strategy", "google-oauth2"),
+					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.client_id", ""),
+					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.client_secret", ""),
+					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.allowed_audiences.#", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.allowed_audiences.3506632655", "example.com"),
+					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.allowed_audiences.3154807651", "api.example.com"),
+					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.scopes.#", "4"),
+					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.scopes.881205744", "email"),
+					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.scopes.4080487570", "profile"),
+					// debug.DumpAttr("auth0_connection.google_oauth2"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionGoogleOAuth2Config = `
+
+resource "auth0_connection" "google_oauth2" {
+	name = "Acceptance-Test-Google-OAuth2-{{.random}}"
+	is_domain_connection = false
+	strategy = "google-oauth2"
+	options {
+		client_id = ""
+		client_secret = ""
+		allowed_audiences = [ "example.com", "api.example.com" ]
+		scopes = [ "email", "profile", "gmail", "youtube" ]
 	}
 }
 `

@@ -4,8 +4,8 @@ Package auth0 provides a client for using the Auth0 Management API.
 Usage
 
     import (
-        gopkg.in/auth0.v3
-        gopkg.in/auth0.v3/management
+        gopkg.in/auth0.v4
+        gopkg.in/auth0.v4/management
     )
 
 Initialize a new client using a domain, client ID and secret.

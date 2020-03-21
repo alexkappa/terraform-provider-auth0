@@ -5,8 +5,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
-	"gopkg.in/auth0.v3"
-	"gopkg.in/auth0.v3/management"
+	"gopkg.in/auth0.v4"
+	"gopkg.in/auth0.v4/management"
 )
 
 func newEmail() *schema.Resource {
@@ -171,19 +171,19 @@ func buildEmail(d *schema.ResourceData) *management.Email {
 		DefaultFromAddress: String(d, "default_from_address"),
 	}
 
-	List(d, "credentials").First(func(v interface{}) {
+	List(d, "credentials").Elem(func(d Data) {
 		// e.Credentials = buildEmailCredentials(v.(map[string]interface{}))
 		e.Credentials = &management.EmailCredentials{
-			APIUser:         String(d, "credentials.0.api_user"),
-			APIKey:          String(d, "credentials.0.api_key"),
-			AccessKeyID:     String(d, "credentials.0.access_key_id"),
-			SecretAccessKey: String(d, "credentials.0.secret_access_key"),
-			Region:          String(d, "credentials.0.region"),
-			Domain:          String(d, "credentials.0.domain"),
-			SMTPHost:        String(d, "credentials.0.smtp_host"),
-			SMTPPort:        Int(d, "credentials.0.smtp_port"),
-			SMTPUser:        String(d, "credentials.0.smtp_user"),
-			SMTPPass:        String(d, "credentials.0.smtp_pass"),
+			APIUser:         String(d, "api_user"),
+			APIKey:          String(d, "api_key"),
+			AccessKeyID:     String(d, "access_key_id"),
+			SecretAccessKey: String(d, "secret_access_key"),
+			Region:          String(d, "region"),
+			Domain:          String(d, "domain"),
+			SMTPHost:        String(d, "smtp_host"),
+			SMTPPort:        Int(d, "smtp_port"),
+			SMTPUser:        String(d, "smtp_user"),
+			SMTPPass:        String(d, "smtp_pass"),
 		}
 	})
 

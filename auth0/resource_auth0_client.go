@@ -7,8 +7,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
-	"gopkg.in/auth0.v3"
-	"gopkg.in/auth0.v3/management"
+	"gopkg.in/auth0.v4"
+	"gopkg.in/auth0.v4/management"
 
 	v "github.com/terraform-providers/terraform-provider-auth0/auth0/internal/validation"
 )
@@ -588,22 +588,22 @@ func buildClient(d *schema.ResourceData) *management.Client {
 		InitiateLoginURI:               String(d, "initiate_login_uri"),
 	}
 
-	List(d, "jwt_configuration").First(func(v interface{}) {
-
-		m := v.(map[string]interface{})
-
+	List(d, "jwt_configuration").Elem(func(d Data) {
 		c.JWTConfiguration = &management.ClientJWTConfiguration{
-			LifetimeInSeconds: Int(MapData(m), "lifetime_in_seconds"),
-			Algorithm:         String(MapData(m), "alg"),
-			Scopes:            Map(MapData(m), "scopes"),
+			LifetimeInSeconds: Int(d, "lifetime_in_seconds"),
+			Algorithm:         String(d, "alg"),
+			Scopes:            Map(d, "scopes"),
 		}
 	})
 
-	List(d, "encryption_key").First(func(v interface{}) {
-		c.EncryptionKey = v.(map[string]string)
-	})
+	if m := Map(d, "encryption_key"); m != nil {
+		c.EncryptionKey = map[string]string{}
+		for k, v := range m {
+			c.EncryptionKey[k] = v.(string)
+		}
+	}
 
-	List(d, "addons").First(func(v interface{}) {
+	List(d, "addons").Range(func(k int, v interface{}) {
 
 		c.Addons = make(map[string]interface{})
 
@@ -637,7 +637,7 @@ func buildClient(d *schema.ResourceData) *management.Client {
 		}
 	}
 
-	List(d, "mobile").First(func(v interface{}) {
+	List(d, "mobile").Range(func(k int, v interface{}) {
 
 		c.Mobile = make(map[string]interface{})
 
