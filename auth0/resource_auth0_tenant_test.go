@@ -41,6 +41,7 @@ func TestAccTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.universal_login", "true"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.disable_clickjack_protection_headers", "true"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.enable_public_signup_user_exists_error", "true"),
+					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.use_scope_descriptions_for_consent", "true"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "universal_login.0.colors.0.primary", "#0059d6"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "universal_login.0.colors.0.page_background", "#000000"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "default_redirection_uri", "https://example.com/login"),
@@ -58,6 +59,7 @@ func TestAccTenant(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.disable_clickjack_protection_headers", "false"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.enable_public_signup_user_exists_error", "true"),
+					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.use_scope_descriptions_for_consent", "false"),
 				),
 			},
 		},
@@ -96,6 +98,7 @@ resource "auth0_tenant" "my_tenant" {
 		universal_login = true
 		disable_clickjack_protection_headers = true
 		enable_public_signup_user_exists_error = true
+		use_scope_descriptions_for_consent = true
 	}
 	universal_login {
 		colors {
@@ -137,8 +140,9 @@ resource "auth0_tenant" "my_tenant" {
 	idle_session_lifetime = 720
 	flags {
 		universal_login = true
-		disable_clickjack_protection_headers = false # <---- disable and test
 		enable_public_signup_user_exists_error = true
+		disable_clickjack_protection_headers = false # <---- disable and test
+		use_scope_descriptions_for_consent = false   #
 	}
 	universal_login {
 		colors {
