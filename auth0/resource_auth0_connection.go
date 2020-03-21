@@ -148,38 +148,50 @@ func newConnection() *schema.Resource {
 							Description: "Configuration settings for password complexity",
 						},
 
-						// "basic_profile": {
-						// 	Type:     schema.TypeBool,
-						// 	Optional: true,
-						// },
-						// "ext_admin": {
-						// 	Type:     schema.TypeBool,
-						// 	Optional: true,
-						// },
-						// "ext_is_suspended": {
-						// 	Type:     schema.TypeBool,
-						// 	Optional: true,
-						// },
-						// "ext_agreed_terms": {
-						// 	Type:     schema.TypeBool,
-						// 	Optional: true,
-						// },
-						// "ext_groups": {
-						// 	Type:     schema.TypeBool,
-						// 	Optional: true,
-						// },
-						// "ext_nested_groups": {
-						// 	Type:     schema.TypeBool,
-						// 	Optional: true,
-						// },
-						// "ext_assigned_plans": {
-						// 	Type:     schema.TypeBool,
-						// 	Optional: true,
-						// },
-						// "ext_profile": {
-						// 	Type:     schema.TypeBool,
-						// 	Optional: true,
-						// },
+						/*
+
+						 */
+						"basic_profile": {
+							Type:       schema.TypeBool,
+							Optional:   true,
+							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
+						},
+						"ext_admin": {
+							Type:       schema.TypeBool,
+							Optional:   true,
+							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
+						},
+						"ext_is_suspended": {
+							Type:       schema.TypeBool,
+							Optional:   true,
+							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
+						},
+						"ext_agreed_terms": {
+							Type:       schema.TypeBool,
+							Optional:   true,
+							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
+						},
+						"ext_groups": {
+							Type:       schema.TypeBool,
+							Optional:   true,
+							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
+						},
+						"ext_nested_groups": {
+							Type:       schema.TypeBool,
+							Optional:   true,
+							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
+						},
+						"ext_assigned_plans": {
+							Type:       schema.TypeBool,
+							Optional:   true,
+							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
+						},
+						"ext_profile": {
+							Type:       schema.TypeBool,
+							Optional:   true,
+							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
+						},
+
 						"enabled_database_customization": {
 							Type:        schema.TypeBool,
 							Optional:    true,
