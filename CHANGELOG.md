@@ -1,4 +1,20 @@
 ## 0.7.0 (Unreleased)
+
+FEATURES:
+
+* resource/connection: support for the passwordless `email` connection strategy.
+
+ENHANCEMENTS:
+
+* resource/connection: now using the more powerful connection options from `gopkg.in/auth0.v4`.
+
+BUG FIXES:
+* resource/tenant, resource/connection: issues setting boolean attributes within nested blocks should now be resolved ([#163](https://github.com/alexkappa/terraform-provider-auth0/issues/163), [#160](https://github.com/alexkappa/terraform-provider-auth0/issues/160))
+
+NOTES:
+
+* Upgrade to `gopkg.in/auth0.v4` (`v4.0.0`)
+
 ## 0.6.0 (March 03, 2020)
 
 FEATURES:
