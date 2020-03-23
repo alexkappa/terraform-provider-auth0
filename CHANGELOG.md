@@ -38,7 +38,7 @@ ENHANCEMENTS:
 
 BUG FIXES:
 
-* resource/auth0_user: unassiging a role won't fail if the role has already been deleted.
+* resource/auth0_user: unassigning a role won't fail if the role has already been deleted.
 
 ## v0.5.1 (January 29, 2020)
 
@@ -147,7 +147,7 @@ ENHANCEMENTS:
 
 BUG FIXES:
 
-* resource/auth0_connection: Fix icorrect schema of `password_no_personal_info`
+* resource/auth0_connection: Fix incorrect schema of `password_no_personal_info`
 
 NOTES:
 
@@ -157,7 +157,7 @@ NOTES:
 
 FEATURES:
 
-* resource/auth0_connection: Add twillio for guardian mfa
+* resource/auth0_connection: Add twillio for guardian MFA
 
 ## v0.1.19 (May 14, 2019)
 
