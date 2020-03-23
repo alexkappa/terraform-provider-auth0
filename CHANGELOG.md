@@ -3,19 +3,20 @@
 FEATURES:
 
 * **New Resource:** auth0_prompt ([#8](https://github.com/terraform-providers/terraform-provider-auth0/pull/8))
+* resource/auth0_tenant: add `use_scope_descriptions_for_consent` flag ([#180](https://github.com/alexkappa/terraform-provider-auth0/pull/180)).
 
 ## 0.7.0 (March 23, 2020)
 
 FEATURES:
 
-* resource/connection: support for the passwordless `email` connection strategy.
+* resource/auth0_connection: support for the passwordless `email` connection strategy.
 
 ENHANCEMENTS:
 
-* resource/connection: now using the more powerful connection options from `gopkg.in/auth0.v4`.
+* resource/auth0_connection: now using the more powerful connection options from `gopkg.in/auth0.v4`.
 
 BUG FIXES:
-* resource/tenant, resource/connection: issues setting boolean attributes within nested blocks should now be resolved ([#163](https://github.com/alexkappa/terraform-provider-auth0/issues/163), [#160](https://github.com/alexkappa/terraform-provider-auth0/issues/160))
+* resource/auth0_tenant, resource/auth0_connection: issues setting boolean attributes within nested blocks should now be resolved ([#163](https://github.com/alexkappa/terraform-provider-auth0/issues/163), [#160](https://github.com/alexkappa/terraform-provider-auth0/issues/160))
 
 NOTES:
 
