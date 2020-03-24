@@ -2,68 +2,68 @@ package auth0
 
 import "gopkg.in/auth0.v4/management"
 
-func flattenTenantChangePassword(cp *management.TenantChangePassword) []interface{} {
-	return []interface{}{
-		map[string]interface{}{
-			"enabled": cp.Enabled,
-			"html":    cp.HTML,
-		},
+func flattenTenantChangePassword(changePassword *management.TenantChangePassword) []interface{} {
+	m := make(map[string]interface{})
+	if changePassword != nil {
+		m["enabled"] = changePassword.Enabled
+		m["html"] = changePassword.HTML
 	}
+	return []interface{}{m}
 }
 
 func flattenTenantGuardianMFAPage(mfa *management.TenantGuardianMFAPage) []interface{} {
-	return []interface{}{
-		map[string]interface{}{
-			"enabled": mfa.Enabled,
-			"html":    mfa.HTML,
-		},
+	m := make(map[string]interface{})
+	if mfa != nil {
+		m["enabled"] = mfa.Enabled
+		m["html"] = mfa.HTML
 	}
+	return []interface{}{m}
 }
 
-func flattenTenantErrorPage(ep *management.TenantErrorPage) []interface{} {
-	return []interface{}{
-		map[string]interface{}{
-			"html":          ep.HTML,
-			"show_log_link": ep.ShowLogLink,
-			"url":           ep.URL,
-		},
+func flattenTenantErrorPage(errorPage *management.TenantErrorPage) []interface{} {
+	m := make(map[string]interface{})
+	if errorPage != nil {
+		m["html"] = errorPage.HTML
+		m["show_log_link"] = errorPage.ShowLogLink
+		m["url"] = errorPage.URL
 	}
+	return []interface{}{m}
 }
 
-func flattenTenantFlags(f *management.TenantFlags) []interface{} {
-	return []interface{}{
-		map[string]interface{}{
-			"change_pwd_flow_v1":                     f.ChangePasswordFlowV1,
-			"enable_client_connections":              f.EnableClientConnections,
-			"enable_apis_section":                    f.EnableAPIsSection,
-			"enable_pipeline2":                       f.EnablePipeline2,
-			"enable_dynamic_client_registration":     f.EnableDynamicClientRegistration,
-			"enable_custom_domain_in_emails":         f.EnableCustomDomainInEmails,
-			"universal_login":                        f.UniversalLogin,
-			"enable_legacy_logs_search_v2":           f.EnableLegacyLogsSearchV2,
-			"disable_clickjack_protection_headers":   f.DisableClickjackProtectionHeaders,
-			"enable_public_signup_user_exists_error": f.EnablePublicSignupUserExistsError,
-			"use_scope_descriptions_for_consent":     f.UseScopeDescriptionsForConsent,
-		},
+func flattenTenantFlags(flags *management.TenantFlags) []interface{} {
+	m := make(map[string]interface{})
+	if flags != nil {
+		m["change_pwd_flow_v1"] = flags.ChangePasswordFlowV1
+		m["enable_client_connections"] = flags.EnableClientConnections
+		m["enable_apis_section"] = flags.EnableAPIsSection
+		m["enable_pipeline2"] = flags.EnablePipeline2
+		m["enable_dynamic_client_registration"] = flags.EnableDynamicClientRegistration
+		m["enable_custom_domain_in_emails"] = flags.EnableCustomDomainInEmails
+		m["universal_login"] = flags.UniversalLogin
+		m["enable_legacy_logs_search_v2"] = flags.EnableLegacyLogsSearchV2
+		m["disable_clickjack_protection_headers"] = flags.DisableClickjackProtectionHeaders
+		m["enable_public_signup_user_exists_error"] = flags.EnablePublicSignupUserExistsError
+		m["use_scope_descriptions_for_consent"] = flags.UseScopeDescriptionsForConsent
 	}
+	return []interface{}{m}
 }
 
-func flattenTenantUniversalLogin(ul *management.TenantUniversalLogin) []interface{} {
-	return []interface{}{
-		map[string]interface{}{
-			"colors": []interface{}{
-				map[string]interface{}{
-					"primary":         ul.Colors.Primary,
-					"page_background": ul.Colors.PageBackground,
-				},
+func flattenTenantUniversalLogin(universalLogin *management.TenantUniversalLogin) []interface{} {
+	m := make(map[string]interface{})
+	if universalLogin != nil && universalLogin.Colors != nil {
+		m["colors"] = []interface{}{
+			map[string]interface{}{
+				"primary":         universalLogin.Colors.Primary,
+				"page_background": universalLogin.Colors.PageBackground,
 			},
-		},
+		}
 	}
+	return []interface{}{m}
 }
 
-func expandTenantChangePassword(d Data) (c *management.TenantChangePassword) {
+func expandTenantChangePassword(d Data) (changePassword *management.TenantChangePassword) {
 	List(d, "change_password").Elem(func(d Data) {
-		c = &management.TenantChangePassword{
+		changePassword = &management.TenantChangePassword{
 			Enabled: Bool(d, "enabled"),
 			HTML:    String(d, "html"),
 		}
@@ -81,9 +81,9 @@ func expandTenantGuardianMFAPage(d Data) (mfa *management.TenantGuardianMFAPage)
 	return
 }
 
-func expandTenantErrorPage(d Data) (e *management.TenantErrorPage) {
+func expandTenantErrorPage(d Data) (errorPage *management.TenantErrorPage) {
 	List(d, "error_page").Elem(func(d Data) {
-		e = &management.TenantErrorPage{
+		errorPage = &management.TenantErrorPage{
 			HTML:        String(d, "html"),
 			ShowLogLink: Bool(d, "show_log_link"),
 			URL:         String(d, "url"),
@@ -92,9 +92,9 @@ func expandTenantErrorPage(d Data) (e *management.TenantErrorPage) {
 	return
 }
 
-func expandTenantFlags(d Data) (f *management.TenantFlags) {
+func expandTenantFlags(d Data) (flags *management.TenantFlags) {
 	List(d, "flags").Elem(func(d Data) {
-		f = &management.TenantFlags{
+		flags = &management.TenantFlags{
 			ChangePasswordFlowV1:              Bool(d, "change_pwd_flow_v1"),
 			EnableClientConnections:           Bool(d, "enable_client_connections"),
 			EnableAPIsSection:                 Bool(d, "enable_apis_section"),
@@ -111,10 +111,10 @@ func expandTenantFlags(d Data) (f *management.TenantFlags) {
 	return
 }
 
-func expandTenantUniversalLogin(d Data) (u *management.TenantUniversalLogin) {
+func expandTenantUniversalLogin(d Data) (universalLogin *management.TenantUniversalLogin) {
 	List(d, "universal_login").Elem(func(d Data) {
 		List(d, "colors").Elem(func(d Data) {
-			u = &management.TenantUniversalLogin{
+			universalLogin = &management.TenantUniversalLogin{
 				Colors: &management.TenantUniversalLoginColors{
 					Primary:        String(d, "primary"),
 					PageBackground: String(d, "page_background"),
