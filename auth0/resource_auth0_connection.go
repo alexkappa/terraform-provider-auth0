@@ -458,13 +458,6 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 	d.Set("is_domain_connection", c.IsDomainConnection)
 	d.Set("strategy", c.Strategy)
 	d.Set("options", flattenConnectionOptions(c.Options))
-
-	// // adfs
-	// "adfs_server": auth0.StringValue(c.Options.AdfsServer),
-
-	// // salesforce
-	// "community_base_url": auth0.StringValue(c.Options.CommunityBaseURL),
-
 	d.Set("enabled_clients", c.EnabledClients)
 	d.Set("realms", c.Realms)
 	return nil

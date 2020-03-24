@@ -1,9 +1,12 @@
-## 0.8.0 (Unreleased)
+## 0.7.1 (Unreleased)
 
 FEATURES:
 
 * **New Resource:** auth0_prompt ([#8](https://github.com/terraform-providers/terraform-provider-auth0/pull/8))
 * resource/auth0_tenant: add `use_scope_descriptions_for_consent` flag ([#180](https://github.com/alexkappa/terraform-provider-auth0/pull/180)).
+
+BUG FIXES:
+* resource/auth0_tenant: fix crash when the `change_password` field was not defined ([#181](https://github.com/alexkappa/terraform-provider-auth0/issues/181)).
 
 ## 0.7.0 (March 23, 2020)
 
