@@ -498,3 +498,62 @@ resource "auth0_connection" "google_oauth2" {
 	}
 }
 `
+
+func TestAccConnectionGitHub(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			resource.TestStep{
+				Config: random.Template(testAccConnectionGitHubConfig, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.github", "name", "Acceptance-Test-GitHub-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.github", "strategy", "github"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.client_id", "client-id"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.client_secret", "client-secret"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.#", "20"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.881205744", "email"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.4080487570", "profile"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.862208977", "follow"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.347111084", "read_repo_hook"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.718177942", "admin_public_key"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.2480957806", "write_public_key"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.356496889", "write_repo_hook"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.3006585776", "write_org"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.855904415", "read_user"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.1560560783", "admin_repo_hook"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.2933527251", "admin_org"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.1314370975", "repo"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.2175618052", "repo_status"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.188173322", "read_org"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.133261078", "gist"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.1820025999", "repo_deployment"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.3220703903", "public_repo"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.2092139895", "notifications"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.672436223", "delete_repo"),
+					resource.TestCheckResourceAttr("auth0_connection.github", "options.0.scopes.2296398814", "read_public_key"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionGitHubConfig = `
+
+resource "auth0_connection" "github" {
+	name = "Acceptance-Test-GitHub-{{.random}}"
+	strategy = "github"
+	options {
+		client_id = "client-id"
+		client_secret = "client-secret"
+		scopes = [ "email", "profile", "read_user", "follow", "public_repo", "repo", "repo_deployment", "repo_status", 
+				   "delete_repo", "notifications", "gist", "read_repo_hook", "write_repo_hook", "admin_repo_hook",
+				   "read_org", "admin_org", "read_public_key", "write_public_key", "admin_public_key", "write_org"
+		]
+	}
+}
+`
