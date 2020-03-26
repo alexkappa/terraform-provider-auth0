@@ -1,4 +1,9 @@
 ## 0.9.0 (Unreleased)
+
+FEATURES:
+
+* resource/auth0_connection: support for the `github` connection strategy ([#184](https://github.com/alexkappa/terraform-provider-auth0/pull/184)).
+
 ## 0.8.0 (March 24, 2020)
 
 FEATURES:
