@@ -20,8 +20,8 @@ func flattenConnectionOptions(options interface{}) []interface{} {
 	// 	m = flattenConnectionOptionsApple(o)
 	// case *management.ConnectionOptionsLinkedin:
 	// 	m = flattenConnectionOptionsLinkedin(o)
-	// case *management.ConnectionOptionsGitHub:
-	// 	m = flattenConnectionOptionsGitHub(o)
+	case *management.ConnectionOptionsGitHub:
+		m = flattenConnectionOptionsGitHub(o)
 	// case *management.ConnectionOptionsWindowsLive:
 	// 	m = flattenConnectionOptionsWindowsLive(o)
 	case *management.ConnectionOptionsSalesforce:
@@ -39,6 +39,15 @@ func flattenConnectionOptions(options interface{}) []interface{} {
 	}
 
 	return []interface{}{m}
+}
+
+func flattenConnectionOptionsGitHub(o *management.ConnectionOptionsGitHub) interface{} {
+	return map[string]interface{}{
+		"client_id":                o.GetClientID(),
+		"client_secret":            o.GetClientSecret(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"scopes":                   o.Scopes(),
+	}
 }
 
 func flattenConnectionOptionsAuth0(o *management.ConnectionOptions) interface{} {
@@ -164,7 +173,8 @@ func expandConnection(d Data) *management.Connection {
 		// case management.ConnectionStrategyFacebook
 		// 	management.ConnectionStrategyApple
 		// 	management.ConnectionStrategyLinkedin
-		// 	management.ConnectionStrategyGitHub
+		case management.ConnectionStrategyGitHub:
+			c.Options = expandConnectionOptionsGitHub(d)
 		// 	management.ConnectionStrategyWindowsLive:
 		case management.ConnectionStrategySalesforce,
 			management.ConnectionStrategySalesforceCommunity,
@@ -181,6 +191,18 @@ func expandConnection(d Data) *management.Connection {
 	})
 
 	return c
+}
+
+func expandConnectionOptionsGitHub(d Data) *management.ConnectionOptionsGitHub {
+	o := &management.ConnectionOptionsGitHub{
+		ClientID:          String(d, "client_id"),
+		ClientSecret:      String(d, "client_secret"),
+		SetUserAttributes: String(d, "set_user_root_attributes"),
+	}
+
+	expandConnectionOptionsScopes(d, o)
+
+	return o
 }
 
 func expandConnectionOptionsAuth0(d Data) *management.ConnectionOptions {
