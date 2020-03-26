@@ -458,25 +458,23 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(auth0.StringValue(c.ID))
-	if err = d.Set("name", c.Name); err != nil {
-		return err
+	err = d.Set("name", c.Name)
+	if err == nil {
+	    err = d.Set("is_domain_connection", c.IsDomainConnection)
+    }
+	if err ==  nil {
+		err = d.Set("strategy", c.Strategy)
 	}
-	if err = d.Set("is_domain_connection", c.IsDomainConnection); err != nil {
-		return err
+	if err == nil {
+		err = d.Set("options", flattenConnectionOptions(c.Options))
 	}
-	if err = d.Set("strategy", c.Strategy); err != nil {
-		return err
+	if err == nil {
+		err = d.Set("enabled_clients", c.EnabledClients)
 	}
-	if err = d.Set("options", flattenConnectionOptions(c.Options)); err != nil {
-		return err
+	if err == nil {
+		err = d.Set("realms", c.Realms)
 	}
-	if err = d.Set("enabled_clients", c.EnabledClients); err != nil {
-		return err
-	}
-	if err = d.Set("realms", c.Realms); err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func updateConnection(d *schema.ResourceData, m interface{}) error {
