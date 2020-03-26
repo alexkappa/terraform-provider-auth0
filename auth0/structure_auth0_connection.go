@@ -3,18 +3,18 @@ package auth0
 import (
 	"gopkg.in/auth0.v4"
 	"gopkg.in/auth0.v4/management"
+	"log"
 )
 
-func flattenConnectionOptions(options interface{}) []interface{} {
-
-	var m interface{}
+func flattenConnectionOptions(options interface{}) []map[string]interface{} {
+	var m map[string]interface{}
 
 	switch o := options.(type) {
 	case *management.ConnectionOptions:
 		m = flattenConnectionOptionsAuth0(o)
 	case *management.ConnectionOptionsGoogleOAuth2:
 		m = flattenConnectionOptionsGoogleOAuth2(o)
-	// case *management.ConnectionOptionsFacebook:
+		// case *management.ConnectionOptionsFacebook:
 	// 	m = flattenConnectionOptionsFacebook(o)
 	// case *management.ConnectionOptionsApple:
 	// 	m = flattenConnectionOptionsApple(o)
@@ -27,10 +27,11 @@ func flattenConnectionOptions(options interface{}) []interface{} {
 	case *management.ConnectionOptionsSalesforce:
 		m = flattenConnectionOptionsSalesforce(o)
 	case *management.ConnectionOptionsEmail:
+		log.Printf("[1ST] Reading email options")
 		m = flattenConnectionOptionsEmail(o)
 	case *management.ConnectionOptionsSMS:
 		m = flattenConnectionOptionsSMS(o)
-	// case *management.ConnectionOptionsOIDC:
+		// case *management.ConnectionOptionsOIDC:
 	// 	m = flattenConnectionOptionsOIDC(o)
 	case *management.ConnectionOptionsAD:
 		m = flattenConnectionOptionsAD(o)
@@ -38,17 +39,17 @@ func flattenConnectionOptions(options interface{}) []interface{} {
 		m = flattenConnectionOptionsAzureAD(o)
 	}
 
-	return []interface{}{m}
+	return []map[string]interface{}{m}
 }
 
-func flattenConnectionOptionsAuth0(o *management.ConnectionOptions) interface{} {
+func flattenConnectionOptionsAuth0(o *management.ConnectionOptions) map[string]interface{} {
 	return map[string]interface{}{
 		"validation":                     o.Validation,
 		"password_policy":                o.GetPasswordPolicy(),
-		"password_history":               o.PasswordHistory,
-		"password_no_personal_info":      o.PasswordNoPersonalInfo,
-		"password_dictionary":            o.PasswordDictionary,
-		"password_complexity_options":    o.PasswordComplexityOptions,
+		"password_history":               toMapSlice(o.PasswordHistory),
+		"password_no_personal_info":      toMapSlice(o.PasswordNoPersonalInfo),
+		"password_dictionary":            toMapSlice(o.PasswordDictionary),
+		"password_complexity_options":    toMapSlice(o.PasswordComplexityOptions),
 		"enabled_database_customization": o.GetEnabledDatabaseCustomization(),
 		"brute_force_protection":         o.GetBruteForceProtection(),
 		"import_mode":                    o.GetImportMode(),
@@ -59,7 +60,7 @@ func flattenConnectionOptionsAuth0(o *management.ConnectionOptions) interface{} 
 	}
 }
 
-func flattenConnectionOptionsGoogleOAuth2(o *management.ConnectionOptionsGoogleOAuth2) interface{} {
+func flattenConnectionOptionsGoogleOAuth2(o *management.ConnectionOptionsGoogleOAuth2) map[string]interface{} {
 	return map[string]interface{}{
 		"client_id":         o.GetClientID(),
 		"client_secret":     o.GetClientSecret(),
@@ -68,7 +69,7 @@ func flattenConnectionOptionsGoogleOAuth2(o *management.ConnectionOptionsGoogleO
 	}
 }
 
-func flattenConnectionOptionsSalesforce(o *management.ConnectionOptionsSalesforce) interface{} {
+func flattenConnectionOptionsSalesforce(o *management.ConnectionOptionsSalesforce) map[string]interface{} {
 	return map[string]interface{}{
 		"client_id":          o.GetClientID(),
 		"client_secret":      o.GetClientSecret(),
@@ -77,7 +78,7 @@ func flattenConnectionOptionsSalesforce(o *management.ConnectionOptionsSalesforc
 	}
 }
 
-func flattenConnectionOptionsSMS(o *management.ConnectionOptionsSMS) interface{} {
+func flattenConnectionOptionsSMS(o *management.ConnectionOptionsSMS) map[string]interface{} {
 	return map[string]interface{}{
 		"name":                   o.GetName(),
 		"from":                   o.GetFrom(),
@@ -88,14 +89,15 @@ func flattenConnectionOptionsSMS(o *management.ConnectionOptionsSMS) interface{}
 		"messaging_service_sid":  o.GetMessagingServiceSID(),
 		"disable_signup":         o.GetDisableSignup(),
 		"brute_force_protection": o.GetBruteForceProtection(),
-		"totp": map[string]interface{}{
-			"time_step": o.OTP.GetTimeStep(),
-			"length":    o.OTP.GetLength(),
-		},
+		"auth_params":            o.AuthParams,
+		"totp": toMapSlice(map[string]interface{}{
+			"time_step": o.GetOTP().GetTimeStep(),
+			"length":    o.GetOTP().GetLength(),
+		}),
 	}
 }
 
-func flattenConnectionOptionsEmail(o *management.ConnectionOptionsEmail) interface{} {
+func flattenConnectionOptionsEmail(o *management.ConnectionOptionsEmail) map[string]interface{} {
 	return map[string]interface{}{
 		"name":                   o.GetName(),
 		"from":                   o.GetEmail().GetFrom(),
@@ -104,14 +106,15 @@ func flattenConnectionOptionsEmail(o *management.ConnectionOptionsEmail) interfa
 		"template":               o.GetEmail().GetBody(),
 		"disable_signup":         o.GetDisableSignup(),
 		"brute_force_protection": o.GetBruteForceProtection(),
-		"totp": map[string]interface{}{
-			"time_step": o.OTP.GetTimeStep(),
-			"length":    o.OTP.GetLength(),
-		},
+		"auth_params":            o.AuthParams,
+		"totp": toMapSlice(map[string]interface{}{
+			"time_step": o.GetOTP().GetTimeStep(),
+			"length":    o.GetOTP().GetLength(),
+		}),
 	}
 }
 
-func flattenConnectionOptionsAD(o *management.ConnectionOptionsAD) interface{} {
+func flattenConnectionOptionsAD(o *management.ConnectionOptionsAD) map[string]interface{} {
 	return map[string]interface{}{
 		"tenant_domain":          o.GetTenantDomain(),
 		"domain_aliases":         o.DomainAliases,
@@ -124,7 +127,7 @@ func flattenConnectionOptionsAD(o *management.ConnectionOptionsAD) interface{} {
 	}
 }
 
-func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) interface{} {
+func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) map[string]interface{} {
 	return map[string]interface{}{
 		"client_id":              o.GetClientID(),
 		"client_secret":          o.GetClientSecret(),
@@ -155,13 +158,15 @@ func expandConnection(d Data) *management.Connection {
 
 	s := d.Get("strategy").(string)
 
+	// Elem func will only be called if the resource is new or the 'options' element has changed so
+	// it is safe to assume in any "expand*" func that all keys should be set (ignoring if changes happen or not)
 	List(d, "options").Elem(func(d Data) {
 		switch s {
 		case management.ConnectionStrategyAuth0:
 			c.Options = expandConnectionOptionsAuth0(d)
 		case management.ConnectionStrategyGoogleOAuth2:
 			c.Options = expandConnectionOptionsGoogleOAuth2(d)
-		// case management.ConnectionStrategyFacebook
+			// case management.ConnectionStrategyFacebook
 		// 	management.ConnectionStrategyApple
 		// 	management.ConnectionStrategyLinkedin
 		// 	management.ConnectionStrategyGitHub
@@ -170,9 +175,11 @@ func expandConnection(d Data) *management.Connection {
 			management.ConnectionStrategySalesforceCommunity,
 			management.ConnectionStrategySalesforceSandbox:
 			c.Options = expandConnectionOptionsSalesforce(d)
+		case management.ConnectionStrategyEmail:
+			c.Options = expandConnectionOptionsEmail(d)
 		case management.ConnectionStrategySMS:
 			c.Options = expandConnectionOptionsSMS(d)
-		// case management.ConnectionStrategyOIDC:
+			// case management.ConnectionStrategyOIDC:
 		case management.ConnectionStrategyAD:
 			c.Options = expandConnectionOptionsAD(d)
 		case management.ConnectionStrategyAzureAD:
@@ -184,51 +191,48 @@ func expandConnection(d Data) *management.Connection {
 }
 
 func expandConnectionOptionsAuth0(d Data) *management.ConnectionOptions {
-
 	o := &management.ConnectionOptions{
-		Validation:     Map(d, "validation"),
-		PasswordPolicy: String(d, "password_policy"),
+		Validation:     MapIfExists(d, "validation"),
+		PasswordPolicy: StringIfExists(d, "password_policy"),
 	}
 
-	List(d, "password_history").Elem(func(d Data) {
+	ListIfExists(d, "password_history").Elem(func(d Data) {
 		o.PasswordHistory = make(map[string]interface{})
-		o.PasswordHistory["enable"] = Bool(d, "enable")
-		o.PasswordHistory["size"] = Int(d, "size")
+		o.PasswordHistory["enable"] = BoolIfExists(d, "enable")
+		o.PasswordHistory["size"] = IntIfExists(d, "size")
 	})
 
-	List(d, "password_no_personal_info").Elem(func(d Data) {
+	ListIfExists(d, "password_no_personal_info").Elem(func(d Data) {
 		o.PasswordNoPersonalInfo = make(map[string]interface{})
-		o.PasswordNoPersonalInfo["enable"] = Bool(d, "enable")
+		o.PasswordNoPersonalInfo["enable"] = BoolIfExists(d, "enable")
 	})
 
-	List(d, "password_dictionary").Elem(func(d Data) {
+	ListIfExists(d, "password_dictionary").Elem(func(d Data) {
 		o.PasswordDictionary = make(map[string]interface{})
-		o.PasswordDictionary["enable"] = Bool(d, "enable")
-		o.PasswordDictionary["dictionary"] = Set(d, "dictionary").List()
+		o.PasswordDictionary["enable"] = BoolIfExists(d, "enable")
+		o.PasswordDictionary["dictionary"] = SetIfExists(d, "dictionary").List()
 	})
 
-	List(d, "password_complexity_options").Elem(func(d Data) {
+	ListIfExists(d, "password_complexity_options").Elem(func(d Data) {
 		o.PasswordComplexityOptions = make(map[string]interface{})
-		o.PasswordComplexityOptions["min_length"] = Int(d, "min_length")
+		o.PasswordComplexityOptions["min_length"] = IntIfExists(d, "min_length")
 	})
 
-	o.EnabledDatabaseCustomization = Bool(d, "enabled_database_customization")
-	o.BruteForceProtection = Bool(d, "brute_force_protection")
-	o.ImportMode = Bool(d, "import_mode")
-	o.DisableSignup = Bool(d, "disable_signup")
-	o.RequiresUsername = Bool(d, "requires_username")
-	o.CustomScripts = Map(d, "custom_scripts")
-	o.Configuration = Map(d, "configuration")
-
-	return o
+	o.EnabledDatabaseCustomization = BoolIfExists(d, "enabled_database_customization")
+	o.BruteForceProtection = BoolIfExists(d, "brute_force_protection")
+	o.ImportMode = BoolIfExists(d, "import_mode")
+	o.DisableSignup = BoolIfExists(d, "disable_signup")
+	o.RequiresUsername = BoolIfExists(d, "requires_username")
+	o.CustomScripts = MapIfExists(d, "custom_scripts")
+	o.Configuration = MapIfExists(d, "configuration")
 }
 
 func expandConnectionOptionsGoogleOAuth2(d Data) *management.ConnectionOptionsGoogleOAuth2 {
 
 	o := &management.ConnectionOptionsGoogleOAuth2{
-		ClientID:         String(d, "client_id"),
-		ClientSecret:     String(d, "client_secret"),
-		AllowedAudiences: Set(d, "allowed_audiences").List(),
+		ClientID:         StringIfExists(d, "client_id"),
+		ClientSecret:     StringIfExists(d, "client_secret"),
+		AllowedAudiences: SetIfExists(d, "allowed_audiences").List(),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -239,9 +243,9 @@ func expandConnectionOptionsGoogleOAuth2(d Data) *management.ConnectionOptionsGo
 func expandConnectionOptionsSalesforce(d Data) *management.ConnectionOptionsSalesforce {
 
 	o := &management.ConnectionOptionsSalesforce{
-		ClientID:         String(d, "client_id"),
-		ClientSecret:     String(d, "client_secret"),
-		CommunityBaseURL: String(d, "community_base_url"),
+		ClientID:         StringIfExists(d, "client_id"),
+		ClientSecret:     StringIfExists(d, "client_secret"),
+		CommunityBaseURL: StringIfExists(d, "community_base_url"),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -252,21 +256,22 @@ func expandConnectionOptionsSalesforce(d Data) *management.ConnectionOptionsSale
 func expandConnectionOptionsSMS(d Data) *management.ConnectionOptionsSMS {
 
 	o := &management.ConnectionOptionsSMS{
-		Name:                 String(d, "name"),
-		From:                 String(d, "from"),
-		Syntax:               String(d, "syntax"),
-		Template:             String(d, "template"),
-		TwilioSID:            String(d, "twilio_sid"),
-		TwilioToken:          String(d, "twilio_token"),
-		MessagingServiceSID:  String(d, "messaging_service_sid"),
-		DisableSignup:        Bool(d, "disable_signup"),
-		BruteForceProtection: Bool(d, "brute_force_protection"),
+		Name:                 StringIfExists(d, "name"),
+		From:                 StringIfExists(d, "from"),
+		Syntax:               StringIfExists(d, "syntax"),
+		Template:             StringIfExists(d, "template"),
+		TwilioSID:            StringIfExists(d, "twilio_sid"),
+		TwilioToken:          StringIfExists(d, "twilio_token"),
+		MessagingServiceSID:  StringIfExists(d, "messaging_service_sid"),
+		DisableSignup:        BoolIfExists(d, "disable_signup"),
+		BruteForceProtection: BoolIfExists(d, "brute_force_protection"),
+		AuthParams:           StringMapIfExists(d, "auth_params"),
 	}
 
-	List(d, "totp").Elem(func(d Data) {
+	ListIfExists(d, "totp").Elem(func(d Data) {
 		o.OTP = &management.ConnectionOptionsOTP{
-			TimeStep: Int(d, "time_step"),
-			Length:   Int(d, "length"),
+			TimeStep: IntIfExists(d, "time_step"),
+			Length:   IntIfExists(d, "length"),
 		}
 	})
 
@@ -274,69 +279,58 @@ func expandConnectionOptionsSMS(d Data) *management.ConnectionOptionsSMS {
 }
 
 func expandConnectionOptionsEmail(d Data) *management.ConnectionOptionsEmail {
-
 	o := &management.ConnectionOptionsEmail{
-		Name:          String(d, "name"),
-		DisableSignup: Bool(d, "disable_signup"),
+		Name:                 StringIfExists(d, "name"),
+		DisableSignup:        BoolIfExists(d, "disable_signup"),
+		BruteForceProtection: BoolIfExists(d, "brute_force_protection"),
+		AuthParams:           StringMapIfExists(d, "auth_params"),
 		Email: &management.ConnectionOptionsEmailSettings{
-			Syntax:  String(d, "syntax"),
-			From:    String(d, "from"),
-			Subject: String(d, "subject"),
-			Body:    String(d, "template"),
+			From:    StringIfExists(d, "from"),
+			Syntax:  StringIfExists(d, "syntax"),
+			Body:    StringIfExists(d, "template"),
+			Subject: StringIfExists(d, "subject"),
 		},
-		BruteForceProtection: Bool(d, "brute_force_protection"),
 	}
-
-	List(d, "totp").Elem(func(d Data) {
+	ListIfExists(d, "totp").Elem(func(d Data) {
 		o.OTP = &management.ConnectionOptionsOTP{
-			TimeStep: Int(d, "time_step"),
-			Length:   Int(d, "length"),
+			TimeStep: IntIfExists(d, "time_step"),
+			Length:   IntIfExists(d, "length"),
 		}
 	})
-
 	return o
 }
 
 func expandConnectionOptionsAD(d Data) *management.ConnectionOptionsAD {
 
 	o := &management.ConnectionOptionsAD{
-		DomainAliases: Set(d, "domain_aliases").List(),
-		TenantDomain:  String(d, "tenant_domain"),
-		LogoURL:       String(d, "icon_url"),
-		IPs:           Set(d, "ips").List(),
-		CertAuth:      Bool(d, "use_cert_auth"),
-		Kerberos:      Bool(d, "use_kerberos"),
-		DisableCache:  Bool(d, "disable_cache"),
+		DomainAliases:        SetIfExists(d, "domain_aliases").List(),
+		TenantDomain:         StringIfExists(d, "tenant_domain"),
+		LogoURL:              StringIfExists(d, "icon_url"),
+		IPs:                  SetIfExists(d, "ips").List(),
+		CertAuth:             BoolIfExists(d, "use_cert_auth"),
+		Kerberos:             BoolIfExists(d, "use_kerberos"),
+		DisableCache:         BoolIfExists(d, "disable_cache"),
+		BruteForceProtection: BoolIfExists(d, "brute_force_protection"),
 	}
-
-	// `brute_force_protection` will default to true by the API if we don't
-	// specify it. Therefore if it's not specified we'll set it to false
-	// ourselves.
-	v, ok := d.GetOkExists("brute_force_protection")
-	if !ok {
-		v = false
-	}
-	o.BruteForceProtection = auth0.Bool(v.(bool))
-
 	return o
 }
 
 func expandConnectionOptionsAzureAD(d Data) *management.ConnectionOptionsAzureAD {
 
 	o := &management.ConnectionOptionsAzureAD{
-		ClientID:            String(d, "client_id"),
-		ClientSecret:        String(d, "client_secret"),
-		AppID:               String(d, "app_id"),
-		Domain:              String(d, "domain"),
-		DomainAliases:       Set(d, "domain_aliases").List(),
-		TenantDomain:        String(d, "tenant_domain"),
-		MaxGroupsToRetrieve: String(d, "max_groups_to_retrieve"),
-		UseWSFederation:     Bool(d, "use_wsfed"),
-		WAADProtocol:        String(d, "waad_protocol"),
-		UseCommonEndpoint:   Bool(d, "waad_common_endpoint"),
-		EnableUsersAPI:      Bool(d, "api_enable_users"),
-		LogoURL:             String(d, "icon_url"),
-		IdentityAPI:         String(d, "identity_api"),
+		ClientID:            StringIfExists(d, "client_id"),
+		ClientSecret:        StringIfExists(d, "client_secret"),
+		AppID:               StringIfExists(d, "app_id"),
+		Domain:              StringIfExists(d, "domain"),
+		DomainAliases:       SetIfExists(d, "domain_aliases").List(),
+		TenantDomain:        StringIfExists(d, "tenant_domain"),
+		MaxGroupsToRetrieve: StringIfExists(d, "max_groups_to_retrieve"),
+		UseWSFederation:     BoolIfExists(d, "use_wsfed"),
+		WAADProtocol:        StringIfExists(d, "waad_protocol"),
+		UseCommonEndpoint:   BoolIfExists(d, "waad_common_endpoint"),
+		EnableUsersAPI:      BoolIfExists(d, "api_enable_users"),
+		LogoURL:             StringIfExists(d, "icon_url"),
+		IdentityAPI:         StringIfExists(d, "identity_api"),
 	}
 
 	add, rm := Diff(d, "scopes")
@@ -363,4 +357,12 @@ func expandConnectionOptionsScopes(d Data, s scoper) {
 	for _, scope := range rm {
 		s.SetScopes(false, scope.(string))
 	}
+}
+
+// If the given map contains any keys, return a single value slice of the map otherwise nil
+func toMapSlice(m map[string]interface{}) []map[string]interface{} {
+	if len(m) > 0 {
+		return []map[string]interface{}{m}
+	}
+	return nil
 }

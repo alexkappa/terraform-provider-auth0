@@ -21,6 +21,9 @@ type Data interface {
 	// HasChange reports whether or not the given key has been changed.
 	HasChange(key string) bool
 
+	// HasChanges reports whether or not any of the given keys have been changed.
+	HasChanges(keys ...string) bool
+
 	// GetChange returns the old and new value for a given key.
 	GetChange(key string) (interface{}, interface{})
 
@@ -49,6 +52,15 @@ func (d *data) IsNewResource() bool {
 
 func (d *data) HasChange(key string) bool {
 	return d.Data.HasChange(d.prefix + "." + key)
+}
+
+func (d *data) HasChanges(keys ...string) bool {
+	for _, key := range keys {
+		if d.HasChange(key) {
+			return true
+		}
+	}
+	return false
 }
 
 func (d *data) GetChange(key string) (interface{}, interface{}) {
@@ -103,10 +115,16 @@ var _ Data = (*schema.ResourceData)(nil)
 // string.
 func String(d Data, key string) (s *string) {
 	if d.IsNewResource() || d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			s = auth0.String(v.(string))
-		}
+		s = StringIfExists(d, key)
+	}
+	return
+}
+
+// Returns a pointer to the value of the given key cast to a string or nil (ignores if changes exist or not)
+func StringIfExists(d Data, key string) (s *string) {
+	v, ok := d.GetOkExists(key)
+	if ok {
+		s = auth0.String(v.(string))
 	}
 	return
 }
@@ -115,10 +133,16 @@ func String(d Data, key string) (s *string) {
 // int.
 func Int(d Data, key string) (i *int) {
 	if d.IsNewResource() || d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			i = auth0.Int(v.(int))
-		}
+		i = IntIfExists(d, key)
+	}
+	return
+}
+
+// IntIfExists a pointer to the value of the given key cast to an integer or nil (ignores if changes exist or not)
+func IntIfExists(d Data, key string) (i *int) {
+	v, ok := d.GetOkExists(key)
+	if ok {
+		i = auth0.Int(v.(int))
 	}
 	return
 }
@@ -127,10 +151,16 @@ func Int(d Data, key string) (i *int) {
 // bool.
 func Bool(d Data, key string) (b *bool) {
 	if d.IsNewResource() || d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			b = auth0.Bool(v.(bool))
-		}
+		b = BoolIfExists(d, key)
+	}
+	return
+}
+
+// BoolIfExists returns a pointer to the value of the key cast to bool (ignores if changes exist or not)
+func BoolIfExists(d Data, key string) (b *bool) {
+	v, ok := d.GetOkExists(key)
+	if ok {
+		b = auth0.Bool(v.(bool))
 	}
 	return
 }
@@ -146,19 +176,59 @@ func Slice(d Data, key string) (s []interface{}) {
 	return
 }
 
+// SliceIfExists returns a pointer to the value of the key cast to []interface{} (ignores if changes exist or not)
+func SliceIfExists(d Data, key string) (s []interface{}) {
+	v, ok := d.GetOkExists(key)
+	if ok {
+		s = v.([]interface{})
+	}
+	return
+}
+
 // Map accesses the value held by key and type asserts it to a map.
 func Map(d Data, key string) (m map[string]interface{}) {
 	if d.IsNewResource() || d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			m = v.(map[string]interface{})
+		m = MapIfExists(d, key)
+	}
+	return
+}
+
+// Returns a pointer to the value of the key cast to map[string]interface{} (ignores if changes exist or not)
+func MapIfExists(d Data, key string) (m map[string]interface{}) {
+	v, ok := d.GetOkExists(key)
+	if ok {
+		m = v.(map[string]interface{})
+	}
+	return
+}
+
+// Map accesses the value held by key and fills a new map[string]string with the contents if the object is new or has changed.
+func StringMap(d Data, key string) (m map[string]string) {
+	values := Map(d, key)
+	if values != nil {
+		m = make(map[string]string)
+		for key, value := range values {
+			m[key] = value.(string)
+		}
+	}
+	return
+}
+
+// Map accesses the value held by key and fills a new map[string]string with the contents. (ignores if changes exist or not)
+func StringMapIfExists(d Data, key string) (m map[string]string) {
+	values := MapIfExists(d, key)
+	if values != nil {
+		m = make(map[string]string)
+		for key, value := range values {
+			m[key] = value.(string)
 		}
 	}
 	return
 }
 
 // List accesses the value held by key and returns an iterator able to go over
-// its elements.
+// its elements only if the resource is new or the key has changed.
+// Returns an empty list if the resource is not new and the key is unchanged
 func List(d Data, key string) Iterator {
 	if d.IsNewResource() || d.HasChange(key) {
 		v, ok := d.GetOkExists(key)
@@ -169,15 +239,33 @@ func List(d Data, key string) Iterator {
 	return &list{}
 }
 
+// List accesses the value held by key and returns an iterator able to go over
+// its elements. (ignores if the resource is new or the key has changed).
+// Ignores if the resource is new or the key has changed.
+func ListIfExists(d Data, key string) Iterator {
+	v, ok := d.GetOkExists(key)
+	if ok {
+		return &list{dataAtKey(key, d), v.([]interface{})}
+	}
+	return &list{}
+}
+
 // Set accesses the value held by key, type asserts it to a set and returns an
-// iterator able to go over its elements.
+// iterator able to go over its elements. Returns empty iterator if the resource is not new and the key is unchanged
 func Set(d Data, key string) Iterator {
 	if d.IsNewResource() || d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			if s, ok := v.(*schema.Set); ok {
-				return &set{dataAtKey(key, d), s}
-			}
+		return SetIfExists(d, key)
+	}
+	return &set{nil, &schema.Set{}}
+}
+
+// Set accesses the value held by key, type asserts it to a set and returns an
+// iterator able to go over its elements. Ignores if the resource is new or the key has changed.
+func SetIfExists(d Data, key string) Iterator {
+	v, ok := d.GetOkExists(key)
+	if ok {
+		if s, ok := v.(*schema.Set); ok {
+			return &set{dataAtKey(key, d), s}
 		}
 	}
 	return &set{nil, &schema.Set{}}

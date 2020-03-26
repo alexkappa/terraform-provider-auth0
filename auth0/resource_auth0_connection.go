@@ -369,6 +369,11 @@ func newConnection() *schema.Resource {
 							Optional:    true,
 							Description: "",
 						},
+						"auth_params": {
+							Type:     schema.TypeMap,
+							Optional: true,
+							Elem:     &schema.Schema{Type: schema.TypeString},
+						},
 						"totp": {
 							Type:     schema.TypeList,
 							Optional: true,
@@ -452,14 +457,25 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 		}
 		return err
 	}
-
 	d.SetId(auth0.StringValue(c.ID))
-	d.Set("name", c.Name)
-	d.Set("is_domain_connection", c.IsDomainConnection)
-	d.Set("strategy", c.Strategy)
-	d.Set("options", flattenConnectionOptions(c.Options))
-	d.Set("enabled_clients", c.EnabledClients)
-	d.Set("realms", c.Realms)
+	if err = d.Set("name", c.Name); err != nil {
+		return err
+	}
+	if err = d.Set("is_domain_connection", c.IsDomainConnection); err != nil {
+		return err
+	}
+	if err = d.Set("strategy", c.Strategy); err != nil {
+		return err
+	}
+	if err = d.Set("options", flattenConnectionOptions(c.Options)); err != nil {
+		return err
+	}
+	if err = d.Set("enabled_clients", c.EnabledClients); err != nil {
+		return err
+	}
+	if err = d.Set("realms", c.Realms); err != nil {
+		return err
+	}
 	return nil
 }
 

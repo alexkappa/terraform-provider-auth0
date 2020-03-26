@@ -377,7 +377,10 @@ func (c *ConnectionOptionsGitHub) SetScopes(enable bool, scopes ...string) {
 type ConnectionOptionsEmail struct {
 	Name  *string                         `json:"name,omitempty"`
 	Email *ConnectionOptionsEmailSettings `json:"email,omitempty"`
-	OTP   *ConnectionOptionsOTP           `json:"totp,omitempty"`
+
+	OTP *ConnectionOptionsOTP `json:"totp,omitempty"`
+
+	AuthParams map[string]string `json:"authParams,omitempty"`
 
 	DisableSignup        *bool `json:"disable_signup,omitempty"`
 	BruteForceProtection *bool `json:"brute_force_protection,omitempty"`
@@ -402,6 +405,8 @@ type ConnectionOptionsSMS struct {
 	Template *string `json:"template,omitempty"`
 
 	OTP *ConnectionOptionsOTP `json:"totp,omitempty"`
+
+	AuthParams map[string]string `json:"authParams,omitempty"`
 
 	TwilioSID           *string `json:"twilio_sid"`
 	TwilioToken         *string `json:"twilio_token"`

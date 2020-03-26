@@ -3,6 +3,7 @@ package auth0
 import (
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -586,6 +587,8 @@ func buildClient(d *schema.ResourceData) *management.Client {
 		FormTemplate:                   String(d, "form_template"),
 		TokenEndpointAuthMethod:        String(d, "token_endpoint_auth_method"),
 		InitiateLoginURI:               String(d, "initiate_login_uri"),
+		EncryptionKey:                  StringMap(d, "encryption_key"),
+		ClientMetadata:                 StringMap(d, "client_metadata"),
 	}
 
 	List(d, "jwt_configuration").Elem(func(d Data) {
@@ -596,13 +599,6 @@ func buildClient(d *schema.ResourceData) *management.Client {
 			SecretEncoded:     Bool(d, "secret_encoded"),
 		}
 	})
-
-	if m := Map(d, "encryption_key"); m != nil {
-		c.EncryptionKey = map[string]string{}
-		for k, v := range m {
-			c.EncryptionKey[k] = v.(string)
-		}
-	}
 
 	List(d, "addons").Range(func(k int, v interface{}) {
 
@@ -618,25 +614,18 @@ func buildClient(d *schema.ResourceData) *management.Client {
 					addon := v.(map[string]interface{})
 
 					if len(addon) > 0 {
-						c.Addons[addonKey] = buildClientAddon(addon)
+						c.Addons[addonKey] = buildClientAddon(addon, true)
 					}
 				}
 
 			default:
 				addon := addonValue.(map[string]interface{})
 				if len(addon) > 0 {
-					c.Addons[addonKey] = buildClientAddon(addon)
+					c.Addons[addonKey] = buildClientAddon(addon, false)
 				}
 			}
 		}
 	})
-
-	if v, ok := d.GetOk("client_metadata"); ok {
-		c.ClientMetadata = make(map[string]string)
-		for key, value := range v.(map[string]interface{}) {
-			c.ClientMetadata[key] = (value.(string))
-		}
-	}
 
 	List(d, "mobile").Range(func(k int, v interface{}) {
 
@@ -653,11 +642,15 @@ func buildClient(d *schema.ResourceData) *management.Client {
 	return c
 }
 
-func buildClientAddon(d map[string]interface{}) map[string]interface{} {
+func buildClientAddon(d map[string]interface{}, camelCase bool) map[string]interface{} {
 
 	addon := make(map[string]interface{})
 
 	for key, value := range d {
+
+		if camelCase {
+			key = snakeCaseToCamelCase(key)
+		}
 
 		switch v := value.(type) {
 
@@ -673,7 +666,7 @@ func buildClientAddon(d map[string]interface{}) map[string]interface{} {
 			}
 
 		case map[string]interface{}:
-			addon[key] = buildClientAddon(v)
+			addon[key] = buildClientAddon(v, camelCase)
 
 		case []interface{}:
 			addon[key] = v
@@ -700,4 +693,29 @@ func rotateClientSecret(d *schema.ResourceData, m interface{}) error {
 
 func clientHasChange(c *management.Client) bool {
 	return c.String() != "{}"
+}
+
+func snakeCaseToCamelCase(inputUnderScoreStr string) (camelCase string) {
+	//snake_case to camelCase
+
+	isToUpper := false
+
+	for k, v := range inputUnderScoreStr {
+		if k == 0 {
+			camelCase = strings.ToLower(string(inputUnderScoreStr[0])) //lowercase first letter
+		} else {
+			if isToUpper {
+				camelCase += strings.ToUpper(string(v))
+				isToUpper = false
+			} else {
+				if v == '_' {
+					isToUpper = true
+				} else {
+					camelCase += string(v)
+				}
+			}
+		}
+	}
+	return
+
 }
