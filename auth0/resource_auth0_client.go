@@ -593,6 +593,7 @@ func buildClient(d *schema.ResourceData) *management.Client {
 			LifetimeInSeconds: Int(d, "lifetime_in_seconds"),
 			Algorithm:         String(d, "alg"),
 			Scopes:            Map(d, "scopes"),
+			SecretEncoded:     Bool(d, "secret_encoded"),
 		}
 	})
 
