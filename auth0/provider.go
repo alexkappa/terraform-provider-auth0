@@ -57,6 +57,10 @@ func Provider() *schema.Provider {
 			"auth0_tenant":          newTenant(),
 			"auth0_role":            newRole(),
 		},
+		DataSourcesMap: map[string]*schema.Resource{
+			"auth0_client":        newDataClient(),
+			"auth0_global_client": newDataGlobalClient(),
+		},
 		ConfigureFunc: Configure,
 	}
 }
@@ -74,4 +78,20 @@ func Configure(data *schema.ResourceData) (interface{}, error) {
 	return management.New(domain, id, secret,
 		management.WithDebug(debug),
 		management.WithUserAgent(userAgent))
+}
+
+func makeComputed(s map[string]*schema.Schema) {
+	for _, p := range s {
+		p.Optional = false
+		p.Required = false
+		p.Computed = true
+		p.MaxItems = 0
+		p.MinItems = 0
+		p.ValidateFunc = nil
+		p.DefaultFunc = nil
+		p.Default = nil
+		if resource, ok := p.Elem.(*schema.Resource); ok {
+			makeComputed(resource.Schema)
+		}
+	}
 }
