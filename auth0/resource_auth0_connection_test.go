@@ -30,7 +30,7 @@ func init() {
 					return err
 				}
 				for _, connection := range l.Connections {
-					if strings.Contains(connection.GetName(), "Acceptance-Test") {
+					if strings.Contains(connection.GetName(), "Test") {
 						log.Printf("[DEBUG] Deleting connection %v\n", connection.GetName())
 						if e := api.Connection.Delete(connection.GetID()); e != nil {
 							multierror.Append(err, e)
