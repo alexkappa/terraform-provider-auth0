@@ -614,14 +614,14 @@ func buildClient(d *schema.ResourceData) *management.Client {
 					addon := v.(map[string]interface{})
 
 					if len(addon) > 0 {
-						c.Addons[addonKey] = buildClientAddon(addon, true)
+						c.Addons[addonKey] = buildClientAddon(addon)
 					}
 				}
 
 			default:
 				addon := addonValue.(map[string]interface{})
 				if len(addon) > 0 {
-					c.Addons[addonKey] = buildClientAddon(addon, false)
+					c.Addons[addonKey] = buildClientAddon(addon)
 				}
 			}
 		}
@@ -642,15 +642,11 @@ func buildClient(d *schema.ResourceData) *management.Client {
 	return c
 }
 
-func buildClientAddon(d map[string]interface{}, camelCase bool) map[string]interface{} {
+func buildClientAddon(d map[string]interface{}) map[string]interface{} {
 
 	addon := make(map[string]interface{})
 
 	for key, value := range d {
-
-		//if camelCase {
-		//	key = snakeCaseToCamelCase(key)
-		//}
 
 		switch v := value.(type) {
 
@@ -666,7 +662,7 @@ func buildClientAddon(d map[string]interface{}, camelCase bool) map[string]inter
 			}
 
 		case map[string]interface{}:
-			addon[key] = buildClientAddon(v, camelCase)
+			addon[key] = buildClientAddon(v)
 
 		case []interface{}:
 			addon[key] = v
