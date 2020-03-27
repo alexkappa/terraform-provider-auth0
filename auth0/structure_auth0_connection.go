@@ -1,7 +1,6 @@
 package auth0
 
 import (
-	"gopkg.in/auth0.v4"
 	"gopkg.in/auth0.v4/management"
 	"log"
 )
@@ -225,6 +224,8 @@ func expandConnectionOptionsAuth0(d Data) *management.ConnectionOptions {
 	o.RequiresUsername = BoolIfExists(d, "requires_username")
 	o.CustomScripts = MapIfExists(d, "custom_scripts")
 	o.Configuration = MapIfExists(d, "configuration")
+
+	return o
 }
 
 func expandConnectionOptionsGoogleOAuth2(d Data) *management.ConnectionOptionsGoogleOAuth2 {

@@ -207,8 +207,8 @@ func expandResourceServer(d *schema.ResourceData) *management.ResourceServer {
 
 	Set(d, "scopes").Elem(func(d Data) {
 		s.Scopes = append(s.Scopes, &management.ResourceServerScope{
-			Value:       String(d, "value"),
-			Description: String(d, "description"),
+			Value:       StringIfExists(d, "value"),
+			Description: StringIfExists(d, "description"),
 		})
 	})
 

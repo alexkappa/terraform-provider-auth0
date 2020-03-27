@@ -593,10 +593,10 @@ func buildClient(d *schema.ResourceData) *management.Client {
 
 	List(d, "jwt_configuration").Elem(func(d Data) {
 		c.JWTConfiguration = &management.ClientJWTConfiguration{
-			LifetimeInSeconds: Int(d, "lifetime_in_seconds"),
-			Algorithm:         String(d, "alg"),
-			Scopes:            Map(d, "scopes"),
-			SecretEncoded:     Bool(d, "secret_encoded"),
+			LifetimeInSeconds: IntIfExists(d, "lifetime_in_seconds"),
+			Algorithm:         StringIfExists(d, "alg"),
+			Scopes:            MapIfExists(d, "scopes"),
+			SecretEncoded:     BoolIfExists(d, "secret_encoded"),
 		}
 	})
 
@@ -648,9 +648,9 @@ func buildClientAddon(d map[string]interface{}, camelCase bool) map[string]inter
 
 	for key, value := range d {
 
-		if camelCase {
-			key = snakeCaseToCamelCase(key)
-		}
+		//if camelCase {
+		//	key = snakeCaseToCamelCase(key)
+		//}
 
 		switch v := value.(type) {
 

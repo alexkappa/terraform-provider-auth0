@@ -72,7 +72,7 @@ func Configure(data *schema.ResourceData) (interface{}, error) {
 	secret := data.Get("client_secret").(string)
 	debug := data.Get("debug").(bool)
 
-	userAgent := fmt.Sprintf("Go-Auth0-SDK/v3; Terraform/%s",
+	userAgent := fmt.Sprintf("Go-Auth0-SDK/v4; Terraform/%s",
 		meta.SDKVersionString())
 
 	return management.New(domain, id, secret,

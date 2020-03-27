@@ -460,9 +460,9 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 	d.SetId(auth0.StringValue(c.ID))
 	err = d.Set("name", c.Name)
 	if err == nil {
-	    err = d.Set("is_domain_connection", c.IsDomainConnection)
-    }
-	if err ==  nil {
+		err = d.Set("is_domain_connection", c.IsDomainConnection)
+	}
+	if err == nil {
 		err = d.Set("strategy", c.Strategy)
 	}
 	if err == nil {

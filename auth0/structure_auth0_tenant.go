@@ -64,8 +64,8 @@ func flattenTenantUniversalLogin(universalLogin *management.TenantUniversalLogin
 func expandTenantChangePassword(d Data) (changePassword *management.TenantChangePassword) {
 	List(d, "change_password").Elem(func(d Data) {
 		changePassword = &management.TenantChangePassword{
-			Enabled: Bool(d, "enabled"),
-			HTML:    String(d, "html"),
+			Enabled: BoolIfExists(d, "enabled"),
+			HTML:    StringIfExists(d, "html"),
 		}
 	})
 	return
@@ -74,8 +74,8 @@ func expandTenantChangePassword(d Data) (changePassword *management.TenantChange
 func expandTenantGuardianMFAPage(d Data) (mfa *management.TenantGuardianMFAPage) {
 	List(d, "guardian_mfa_page").Elem(func(d Data) {
 		mfa = &management.TenantGuardianMFAPage{
-			Enabled: Bool(d, "enabled"),
-			HTML:    String(d, "html"),
+			Enabled: BoolIfExists(d, "enabled"),
+			HTML:    StringIfExists(d, "html"),
 		}
 	})
 	return
@@ -84,9 +84,9 @@ func expandTenantGuardianMFAPage(d Data) (mfa *management.TenantGuardianMFAPage)
 func expandTenantErrorPage(d Data) (errorPage *management.TenantErrorPage) {
 	List(d, "error_page").Elem(func(d Data) {
 		errorPage = &management.TenantErrorPage{
-			HTML:        String(d, "html"),
-			ShowLogLink: Bool(d, "show_log_link"),
-			URL:         String(d, "url"),
+			HTML:        StringIfExists(d, "html"),
+			ShowLogLink: BoolIfExists(d, "show_log_link"),
+			URL:         StringIfExists(d, "url"),
 		}
 	})
 	return
@@ -116,8 +116,8 @@ func expandTenantUniversalLogin(d Data) (universalLogin *management.TenantUniver
 		List(d, "colors").Elem(func(d Data) {
 			universalLogin = &management.TenantUniversalLogin{
 				Colors: &management.TenantUniversalLoginColors{
-					Primary:        String(d, "primary"),
-					PageBackground: String(d, "page_background"),
+					Primary:        StringIfExists(d, "primary"),
+					PageBackground: StringIfExists(d, "page_background"),
 				},
 			}
 		})
