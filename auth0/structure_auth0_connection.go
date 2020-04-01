@@ -187,6 +187,8 @@ func expandConnection(d Data) *management.Connection {
 			c.Options = expandConnectionOptionsAD(d)
 		case management.ConnectionStrategyAzureAD:
 			c.Options = expandConnectionOptionsAzureAD(d)
+		case management.ConnectionStrategyEmail:
+			c.Options = expandConnectionOptionsEmail(d)
 		}
 	})
 
