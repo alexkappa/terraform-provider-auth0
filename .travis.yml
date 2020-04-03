@@ -12,6 +12,9 @@ cache:
   directories:
   - $GOPATH/pkg/mod
 
+env:
+  - GO111MODULE=on
+
 install:
   # This script is used by the Travis build to install a cookie for
   # go.googlesource.com so rate limits are higher when using `go get` to fetch
@@ -20,8 +23,8 @@ install:
   - bash scripts/gogetcookie.sh
   # This script installs Code Climate test coverage reporter.
   # See: https://docs.codeclimate.com/docs/travis-ci-test-coverage
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > /home/travis/bin/cc-test-reporter
-  - chmod +x /home/travis/bin/cc-test-reporter
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > $HOME/bin/cc-test-reporter
+  - chmod +x $HOME/bin/cc-test-reporter
 
 before_script:
   - cc-test-reporter before-build
