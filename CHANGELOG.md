@@ -1,4 +1,9 @@
-## 0.9.0 (Unreleased)
+## 0.8.2 (Unreleased)
+
+BUG FIXES:
+
+* resource/auth0_connection: with `email` strategy `totp` settings were not handled correctly ([#191](https://github.com/alexkappa/terraform-provider-auth0/pull/191)).
+
 ## 0.8.1 (March 27, 2020)
 
 FEATURES:
