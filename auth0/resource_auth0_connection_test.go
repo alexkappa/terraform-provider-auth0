@@ -376,7 +376,7 @@ func TestAccConnectionEmail(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: random.Template(testAccConnectionEmailConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.email", "name", "Acceptance-Test-Email-{{.random}}", rand),
@@ -386,6 +386,15 @@ func TestAccConnectionEmail(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.#", "1"),
 					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.0.time_step", "300"),
 					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.0.length", "6"),
+					debug.DumpAttr("auth0_connection.email"),
+				),
+			},
+			{
+				Config: random.Template(testAccConnectionEmailConfigUpdate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.#", "1"),
+					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.0.time_step", "360"),
+					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.0.length", "4"),
 					debug.DumpAttr("auth0_connection.email"),
 				),
 			},
@@ -413,6 +422,32 @@ resource "auth0_connection" "email" {
 		totp {
 			time_step = 300
 			length = 6
+		}
+	}
+}
+
+`
+
+const testAccConnectionEmailConfigUpdate = `
+
+resource "auth0_connection" "email" {
+	name = "Acceptance-Test-Email-{{.random}}"
+	is_domain_connection = false
+	strategy = "email"
+
+	options {
+		disable_signup = false
+		name = "Email OTP"
+		from = "Magic Password <password@example.com>"
+		subject = "Sign in!"
+		syntax = "liquid"
+		template = "<html><body><h1>Here's your password!</h1></body></html>"
+		
+		brute_force_protection = true
+
+		totp {
+			time_step = 360
+			length = 4
 		}
 	}
 }
