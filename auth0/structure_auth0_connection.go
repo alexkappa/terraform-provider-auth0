@@ -1,6 +1,8 @@
 package auth0
 
 import (
+	"log"
+
 	"gopkg.in/auth0.v4"
 	"gopkg.in/auth0.v4/management"
 )
@@ -189,6 +191,10 @@ func expandConnection(d Data) *management.Connection {
 			c.Options = expandConnectionOptionsAzureAD(d)
 		case management.ConnectionStrategyEmail:
 			c.Options = expandConnectionOptionsEmail(d)
+		default:
+			log.Printf("[WARN]: Unsupported connection strategy %s", s)
+			log.Printf("[WARN]: Raise an issue with the auth0 provider in order to support it:")
+			log.Printf("[WARN]: 	https://github.com/terraform-providers/terraform-provider-auth0/issues/new")
 		}
 	})
 
