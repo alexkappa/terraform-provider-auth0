@@ -152,7 +152,7 @@ func deleteRole(d *schema.ResourceData, m interface{}) error {
 
 func buildRole(d *schema.ResourceData) *management.Role {
 	return &management.Role{
-		ID:          String(d, "role_id"),
+		ID:          String(d, "role_id", IsNewResource(), HasChange()),
 		Name:        String(d, "name"),
 		Description: String(d, "description"),
 	}

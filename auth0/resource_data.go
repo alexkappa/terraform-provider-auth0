@@ -99,85 +99,128 @@ func isZero(v interface{}) bool {
 
 var _ Data = (*schema.ResourceData)(nil)
 
+// Condition is a function that checks whether a condition holds true for a
+// value being accessed.
+//
+// It is used with accessor functions such as Int, String, etc to only retrieve
+// the value if the conditions hold true.
+type Condition func(d Data, key string) bool
+
+// Eval performs the evaluation of the condition.
+func (c Condition) Eval(d Data, key string) bool {
+	return c(d, key)
+}
+
+// IsNewResource is a condition that evaluates to true if the resource access is
+// new.
+func IsNewResource() Condition {
+	return func(d Data, key string) bool {
+		return d.IsNewResource()
+	}
+}
+
+// HasChange is a condition that evaluates to true if the value accessed has
+// changed.
+func HasChange() Condition {
+	return func(d Data, key string) bool {
+		return d.HasChange(key)
+	}
+}
+
+// Any is a condition that evaluates to true if any of its child conditions
+// evaluate to true. If it has no child conditions it will evaluate to true.
+func Any(conditions ...Condition) Condition {
+	return func(d Data, key string) bool {
+		if len(conditions) == 0 {
+			return true
+		}
+		for _, condition := range conditions {
+			if condition.Eval(d, key) {
+				return true
+			}
+		}
+		return false
+	}
+}
+
+// All is a condition that evaluates to true if all of its child conditions
+// evaluate to true.
+func All(conditions ...Condition) Condition {
+	return func(d Data, key string) bool {
+		for _, condition := range conditions {
+			if !condition.Eval(d, key) {
+				return false
+			}
+		}
+		return true
+	}
+}
+
 // String accesses the value held by key and type asserts it to a pointer to a
 // string.
-func String(d Data, key string) (s *string) {
-	if d.IsNewResource() || d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			s = auth0.String(v.(string))
-		}
+func String(d Data, key string, conditions ...Condition) (s *string) {
+	v, ok := d.GetOkExists(key)
+	if ok && Any(conditions...).Eval(d, key) {
+		s = auth0.String(v.(string))
 	}
 	return
 }
 
 // Int accesses the value held by key and type asserts it to a pointer to a
 // int.
-func Int(d Data, key string) (i *int) {
-	if d.IsNewResource() || d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			i = auth0.Int(v.(int))
-		}
+func Int(d Data, key string, conditions ...Condition) (i *int) {
+	v, ok := d.GetOkExists(key)
+	if ok && Any(conditions...).Eval(d, key) {
+		i = auth0.Int(v.(int))
 	}
 	return
 }
 
 // Bool accesses the value held by key and type asserts it to a pointer to a
 // bool.
-func Bool(d Data, key string) (b *bool) {
-	if d.IsNewResource() || d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			b = auth0.Bool(v.(bool))
-		}
+func Bool(d Data, key string, conditions ...Condition) (b *bool) {
+	v, ok := d.GetOkExists(key)
+	if ok && Any(conditions...).Eval(d, key) {
+		b = auth0.Bool(v.(bool))
 	}
 	return
 }
 
 // Slice accesses the value held by key and type asserts it to a slice.
-func Slice(d Data, key string) (s []interface{}) {
-	if d.IsNewResource() || d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			s = v.([]interface{})
-		}
+func Slice(d Data, key string, conditions ...Condition) (s []interface{}) {
+	v, ok := d.GetOkExists(key)
+	if ok && Any(conditions...).Eval(d, key) {
+		s = v.([]interface{})
 	}
 	return
 }
 
 // Map accesses the value held by key and type asserts it to a map.
-func Map(d Data, key string) (m map[string]interface{}) {
-	if d.IsNewResource() || d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			m = v.(map[string]interface{})
-		}
+func Map(d Data, key string, conditions ...Condition) (m map[string]interface{}) {
+	v, ok := d.GetOkExists(key)
+	if ok && Any(conditions...).Eval(d, key) {
+		m = v.(map[string]interface{})
 	}
 	return
 }
 
 // List accesses the value held by key and returns an iterator able to go over
 // its elements.
-func List(d Data, key string) Iterator {
-	if d.IsNewResource() || d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			return &list{dataAtKey(key, d), v.([]interface{})}
-		}
+func List(d Data, key string, conditions ...Condition) Iterator {
+	v, ok := d.GetOkExists(key)
+	if ok && Any(conditions...).Eval(d, key) {
+		return &list{dataAtKey(key, d), v.([]interface{})}
 	}
 	return &list{}
 }
 
 // Set accesses the value held by key, type asserts it to a set and returns an
 // iterator able to go over its elements.
-func Set(d Data, key string) Iterator {
-	if d.IsNewResource() || d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			if s, ok := v.(*schema.Set); ok {
-				return &set{dataAtKey(key, d), s}
-			}
+func Set(d Data, key string, conditions ...Condition) Iterator {
+	v, ok := d.GetOkExists(key)
+	if ok && Any(conditions...).Eval(d, key) {
+		if s, ok := v.(*schema.Set); ok {
+			return &set{dataAtKey(key, d), s}
 		}
 	}
 	return &set{nil, &schema.Set{}}
@@ -278,13 +321,11 @@ func Diff(d Data, key string) (add []interface{}, rm []interface{}) {
 
 // JSON accesses the value held by key and unmarshals it into a map.
 func JSON(d Data, key string) (m map[string]interface{}, err error) {
-	if d.IsNewResource() || d.HasChange(key) {
-		v, ok := d.GetOkExists(key)
-		if ok {
-			m, err = structure.ExpandJsonFromString(v.(string))
-			if err != nil {
-				return
-			}
+	v, ok := d.GetOkExists(key)
+	if ok {
+		m, err = structure.ExpandJsonFromString(v.(string))
+		if err != nil {
+			return
 		}
 	}
 	return

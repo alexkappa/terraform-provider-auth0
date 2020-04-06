@@ -566,7 +566,7 @@ func buildClient(d *schema.ResourceData) *management.Client {
 	c := &management.Client{
 		Name:                           String(d, "name"),
 		Description:                    String(d, "description"),
-		AppType:                        String(d, "app_type"),
+		AppType:                        String(d, "app_type", IsNewResource(), HasChange()),
 		LogoURI:                        String(d, "logo_uri"),
 		IsFirstParty:                   Bool(d, "is_first_party"),
 		IsTokenEndpointIPHeaderTrusted: Bool(d, "is_token_endpoint_ip_header_trusted"),
@@ -579,12 +579,12 @@ func buildClient(d *schema.ResourceData) *management.Client {
 		SSO:                            Bool(d, "sso"),
 		SSODisabled:                    Bool(d, "sso_disabled"),
 		CrossOriginAuth:                Bool(d, "cross_origin_auth"),
-		CrossOriginLocation:            String(d, "cross_origin_loc"),
+		CrossOriginLocation:            String(d, "cross_origin_loc", IsNewResource(), HasChange()),
 		CustomLoginPageOn:              Bool(d, "custom_login_page_on"),
 		CustomLoginPage:                String(d, "custom_login_page"),
 		CustomLoginPagePreview:         String(d, "custom_login_page_preview"),
 		FormTemplate:                   String(d, "form_template"),
-		TokenEndpointAuthMethod:        String(d, "token_endpoint_auth_method"),
+		TokenEndpointAuthMethod:        String(d, "token_endpoint_auth_method", IsNewResource(), HasChange()),
 		InitiateLoginURI:               String(d, "initiate_login_uri"),
 	}
 
