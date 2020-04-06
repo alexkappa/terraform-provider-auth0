@@ -320,9 +320,9 @@ func Diff(d Data, key string) (add []interface{}, rm []interface{}) {
 }
 
 // JSON accesses the value held by key and unmarshals it into a map.
-func JSON(d Data, key string) (m map[string]interface{}, err error) {
+func JSON(d Data, key string, conditions ...Condition) (m map[string]interface{}, err error) {
 	v, ok := d.GetOkExists(key)
-	if ok {
+	if ok && Any(conditions...).Eval(d, key) {
 		m, err = structure.ExpandJsonFromString(v.(string))
 		if err != nil {
 			return
