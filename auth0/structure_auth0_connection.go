@@ -157,11 +157,11 @@ func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) int
 func expandConnection(d Data) *management.Connection {
 
 	c := &management.Connection{
-		Name:               String(d, "name"),
+		Name:               String(d, "name", IsNewResource()),
+		Strategy:           String(d, "strategy", IsNewResource()),
 		IsDomainConnection: Bool(d, "is_domain_connection"),
-		Strategy:           String(d, "strategy"),
 		EnabledClients:     Set(d, "enabled_clients").List(),
-		Realms:             Slice(d, "realms"),
+		Realms:             Slice(d, "realms", IsNewResource(), HasChange()),
 	}
 
 	s := d.Get("strategy").(string)
