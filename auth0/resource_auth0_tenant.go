@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -63,16 +64,18 @@ func newTenant() *schema.Resource {
 			"default_audience": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"default_directory": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"error_page": {
 				Type:     schema.TypeList,
 				Optional: true,
-				MaxItems: 1,
 				Computed: true,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"html": {
@@ -93,27 +96,33 @@ func newTenant() *schema.Resource {
 			"friendly_name": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"picture_url": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"support_email": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"support_url": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"allowed_logout_urls": {
 				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
+				Computed: true,
 			},
 			"session_lifetime": {
 				Type:     schema.TypeInt,
 				Optional: true,
+				Computed: true,
 			},
 			"sandbox_version": {
 				Type:     schema.TypeString,
@@ -123,61 +132,75 @@ func newTenant() *schema.Resource {
 			"idle_session_lifetime": {
 				Type:     schema.TypeInt,
 				Optional: true,
+				Computed: true,
 			},
 			"enabled_locales": {
 				Type:     schema.TypeSet,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
+				Computed: true,
 			},
 			"flags": {
 				Type:     schema.TypeList,
 				Optional: true,
+				Computed: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"change_pwd_flow_v1": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Computed: true,
 						},
 						"enable_client_connections": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Computed: true,
 						},
 						"enable_apis_section": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Computed: true,
 						},
 						"enable_pipeline2": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Computed: true,
 						},
 						"enable_dynamic_client_registration": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Computed: true,
 						},
 						"enable_custom_domain_in_emails": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Computed: true,
 						},
 						"universal_login": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Computed: true,
 						},
 						"enable_legacy_logs_search_v2": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Computed: true,
 						},
 						"disable_clickjack_protection_headers": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Computed: true,
 						},
 						"enable_public_signup_user_exists_error": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Computed: true,
 						},
 						"use_scope_descriptions_for_consent": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Computed: true,
 						},
 					},
 				},
@@ -185,6 +208,7 @@ func newTenant() *schema.Resource {
 			"universal_login": {
 				Type:     schema.TypeList,
 				Optional: true,
+				Computed: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -211,6 +235,7 @@ func newTenant() *schema.Resource {
 			"default_redirection_uri": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 				ValidateFunc: validation.All(
 					v.IsURLWithNoFragment,
 					validation.IsURLWithScheme([]string{"https"}),
@@ -290,7 +315,7 @@ func buildTenant(d *schema.ResourceData) *management.Tenant {
 		AllowedLogoutURLs:   Slice(d, "allowed_logout_urls"),
 		SessionLifetime:     Int(d, "session_lifetime"),
 		SandboxVersion:      String(d, "sandbox_version"),
-		IdleSessionLifetime: Int(d, "idle_session_lifetime"),
+		IdleSessionLifetime: Int(d, "idle_session_lifetime", IsNewResource(), HasChange()),
 		EnabledLocales:      Set(d, "enabled_locales").List(),
 		ChangePassword:      expandTenantChangePassword(d),
 		GuardianMFAPage:     expandTenantGuardianMFAPage(d),
@@ -298,6 +323,8 @@ func buildTenant(d *schema.ResourceData) *management.Tenant {
 		Flags:               expandTenantFlags(d),
 		UniversalLogin:      expandTenantUniversalLogin(d),
 	}
+
+	log.Printf("[DEBUG] idle_session_lifetime: %v", Int(d, "idle_session_lifetime", IsNewResource(), HasChange()))
 
 	return t
 }
