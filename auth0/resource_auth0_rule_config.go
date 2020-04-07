@@ -89,7 +89,7 @@ func deleteRuleConfig(d *schema.ResourceData, m interface{}) error {
 
 func buildRuleConfig(d *schema.ResourceData) *management.RuleConfig {
 	return &management.RuleConfig{
-		Key:   String(d, "key"),
-		Value: String(d, "value"),
+		Key:   StringIfExists(d, "key"),
+		Value: StringIfExists(d, "value"),
 	}
 }
