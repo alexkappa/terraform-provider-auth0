@@ -15,6 +15,7 @@ func newCustomDomain() *schema.Resource {
 
 		Create: createCustomDomain,
 		Read:   readCustomDomain,
+		Update: autoVerifyCustomDomain,
 		Delete: deleteCustomDomain,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -42,6 +43,10 @@ func newCustomDomain() *schema.Resource {
 			"status": {
 				Type:     schema.TypeString,
 				Computed: true,
+			},
+			"auto_verify": {
+				Type:     schema.TypeBool,
+				Optional: true,
 			},
 			"verification_method": {
 				Type:         schema.TypeString,
@@ -74,6 +79,8 @@ func createCustomDomain(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(auth0.StringValue(c.ID))
+
+	_ = autoVerifyCustomDomain(d, m) // attempt but don't error if it fails on create
 	return readCustomDomain(d, m)
 }
 
@@ -95,6 +102,10 @@ func readCustomDomain(d *schema.ResourceData, m interface{}) error {
 	d.Set("type", c.Type)
 	d.Set("primary", c.Primary)
 	d.Set("status", c.Status)
+
+	if auth0.BoolValue(Bool(d, "auto_verify")) && auth0.StringValue(String(d, "status")) == "pending_verification" {
+		d.Set("auto_verify", false) // this ensures the record keeps needing to be updated until it is verified
+	}
 
 	if c.Verification != nil {
 		d.Set("verification", []map[string]interface{}{
@@ -125,4 +136,14 @@ func buildCustomDomain(d *schema.ResourceData) *management.CustomDomain {
 		Type:               String(d, "type"),
 		VerificationMethod: String(d, "verification_method"),
 	}
+}
+
+func autoVerifyCustomDomain(d *schema.ResourceData, m interface{}) error {
+	if auth0.BoolValue(Bool(d, "auto_verify")) && auth0.StringValue(String(d, "status")) == "pending_verification" {
+		api := m.(*management.Management)
+		if _, err := api.CustomDomain.Verify(d.Id()); err != nil {
+			return err
+		}
+	}
+	return nil
 }
