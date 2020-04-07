@@ -2,7 +2,9 @@ package auth0
 
 import (
 	"net/http"
+	"reflect"
 	"regexp"
+	"sort"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -54,9 +56,16 @@ func newHook() *schema.Resource {
 					"post-user-registration, post-change-password" +
 					", or send-phone-message",
 			},
+			"secrets": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "The secrets associated with the hook",
+				Elem:        schema.TypeString,
+			},
 			"enabled": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 				Description: "Whether the hook is enabled, or disabled",
 			},
 		},
@@ -70,6 +79,9 @@ func createHook(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(auth0.StringValue(c.ID))
+	if err := upsertHookSecrets(d, m); err != nil {
+		return err
+	}
 	return readHook(d, m)
 }
 
@@ -100,7 +112,52 @@ func updateHook(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	if err = upsertHookSecrets(d, m); err != nil {
+		return err
+	}
 	return readHook(d, m)
+}
+
+func upsertHookSecrets(d *schema.ResourceData, m interface{}) error {
+	if d.IsNewResource() || d.HasChange("secrets") {
+		secrets := MapIfExists(d, "secrets")
+		api := m.(*management.Management)
+		hookSecrets := management.HookSecrets{}
+		for key, value := range secrets {
+			if strVal, ok := value.(string); ok {
+				hookSecrets[key] = strVal
+			}
+		}
+		if !d.IsNewResource() {
+			if secretsBefore, err := api.Hook.Secrets(d.Id()); err == nil && secretsBefore != nil {
+				keysBefore := secretsBefore.Keys()
+				if len(secrets) > 0 && len(keysBefore) > 0 {
+					sort.Strings(keysBefore)
+					i := 0
+					keysNow := make([]string, len(secrets))
+					for k := range secrets {
+						keysNow[i] = k
+						i++
+					}
+					sort.Strings(keysNow)
+					if reflect.DeepEqual(keysBefore, keysNow) {
+						// can only update secrets if the keys are unchanged (i.e. you can't add a key)
+						return api.Hook.UpdateSecrets(d.Id(), &hookSecrets)
+					}
+				}
+				if len(keysBefore) > 0 {
+					// otherwise remove all the secrets before we try to create
+					if err := api.Hook.RemoveSecrets(d.Id(), keysBefore...); err != nil {
+						return err
+					}
+				}
+			}
+		}
+		if len(secrets) > 0 {
+			return api.Hook.CreateSecrets(d.Id(), &hookSecrets)
+		}
+	}
+	return nil
 }
 
 func deleteHook(d *schema.ResourceData, m interface{}) error {
@@ -120,9 +177,9 @@ func deleteHook(d *schema.ResourceData, m interface{}) error {
 
 func buildHook(d *schema.ResourceData) *management.Hook {
 	return &management.Hook{
-		Name:      String(d, "name"),
-		Script:    String(d, "script"),
+		Name:      StringIfExists(d, "name"),
+		Script:    StringIfExists(d, "script"),
+		Enabled:   BoolIfExists(d, "enabled"),
 		TriggerID: String(d, "trigger_id"),
-		Enabled:   Bool(d, "enabled"),
 	}
 }
