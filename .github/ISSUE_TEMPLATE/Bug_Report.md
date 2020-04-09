@@ -4,6 +4,15 @@ about: If something isn't working as expected 🤔.
 
 ---
 
+<!-- 
+
+**IMPORTANT:** make sure you are submitting your issue to `alexkappa/terraform-provider-auth0`. This helps maintainers organize work more efficiently.
+
+Use the link below if you are not certain:
+https://github.com/alexkappa/terraform-provider-auth0/issues/new
+
+-->
+
 <!---
 Please note the following potential times when an issue might be in Terraform core:
 

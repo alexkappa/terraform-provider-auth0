@@ -4,6 +4,15 @@ about: I have a suggestion (and might want to implement myself 🙂)!
 labels: enhancement
 ---
 
+<!-- 
+
+**IMPORTANT:** make sure you are submitting your issue to `alexkappa/terraform-provider-auth0`. This helps maintainers organize work more efficiently.
+
+Use the link below if you are not certain:
+https://github.com/alexkappa/terraform-provider-auth0/issues/new
+
+-->
+
 <!--- Please keep this note for the community --->
 
 ### Community Note

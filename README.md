@@ -11,6 +11,32 @@ Requirements
 -	[Terraform](https://www.terraform.io/downloads.html) `0.11.x` || `0.12.x`
 -	[Go](https://golang.org/doc/install) 1.10 (to build the provider plugin)
 
+Using the provider
+------------------
+
+To install this provider, copy and paste this code into your Terraform configuration. Then, run `terraform init`.
+
+```
+provider "auth0" {
+  version = "> 0.8"
+}
+```
+
+To configure the provider with your personal client credentials, define the `domain`, `client_id` and `client_secret`.
+
+```
+provider "auth0" {
+  version = "> 0.8"
+  domain = "<domain>"
+  client_id = "<client-id>"
+  client_secret = "<client-secret>"
+}
+```
+
+These variables can also be accessed via the `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID` and `AUTH0_CLIENT_SECRET` environment variables respectively.
+
+Examples of resources can be found in the [examples directory](example/).
+
 Building The Provider
 ---------------------
 
@@ -28,29 +54,10 @@ $ cd $GOPATH/src/github.com/alexkappa/terraform-provider-auth0
 $ make build
 ```
 
-Using the provider
-------------------
-
-The provider isn't listed in the official Terraform repository, so using `terraform init` to download the provider won't work. To install the auth0 provider, you can [download the binary](https://github.com/alexkappa/terraform-provider-auth0/releases) and place in the directory `~/.terraform.d/plugins` (or `%APPDATA%/terraform.d/plugins/` if you're on Windows).
-
-To use the provider define the `auth0` provider in your `*.tf` file.
-
-```
-provider "auth0" {
-  "domain" = "<domain>"
-  "client_id" = "<client-id>"
-  "client_secret" = "<client-secret>"
-}
-```
-
-These variables can also be accessed via the `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID` and `AUTH0_CLIENT_SECRET` environment variables respectively.
-
-Examples of resources can be found in the [examples directory](example/).
-
 Developing the Provider
----------------------------
+-----------------------
 
-If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (version 1.10+ is *required*). You'll also need to correctly setup a [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding `$GOPATH/bin` to your `$PATH`.
+If you wish to work on the provider, you'll need [Go](http://www.golang.org) installed on your machine (version 1.10+ is *required*). You'll also need to correctly setup a [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding `$GOPATH/bin` to your `$PATH`.
 
 On how to develop custom terraform providers, read the [official guide](https://www.terraform.io/docs/extend/writing-custom-providers.html).
 
