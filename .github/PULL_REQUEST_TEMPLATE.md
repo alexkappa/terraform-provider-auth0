@@ -1,4 +1,10 @@
-<!--- See what makes a good Pull Request at : https://github.com/yieldr/terraform-provider-auth0/blob/master/.github/CONTRIBUTING.md#pull-requests --->
+<!--- 
+
+**IMPORTANT:** Please submit pull requests to [alexkappa/terraform-provider-auth0](https://github.com/alexkappa/terraform-provider-auth0). This helps maintainers organize work more efficiently.
+
+See what makes a good Pull Request at : https://github.com/alexkappa/terraform-provider-auth0/blob/master/.github/CONTRIBUTING.md#pull-requests 
+
+--->
 
 <!--- Please keep this note for the community --->
 
