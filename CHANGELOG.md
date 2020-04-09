@@ -1,4 +1,5 @@
-## 0.8.2 (Unreleased)
+## 0.9.0 (Unreleased)
+## 0.8.2 (April 08, 2020)
 
 BUG FIXES:
 
