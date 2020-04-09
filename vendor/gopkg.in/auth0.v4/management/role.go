@@ -11,6 +11,11 @@ type Role struct {
 	Description *string `json:"description,omitempty"`
 }
 
+type RoleList struct {
+	List
+	Roles []*Role `json:"roles"`
+}
+
 type Permission struct {
 	// The resource server that the permission is attached to.
 	ResourceServerIdentifier *string `json:"resource_server_identifier,omitempty"`
@@ -25,9 +30,9 @@ type Permission struct {
 	Description *string `json:"description,omitempty"`
 }
 
-type RoleList struct {
+type PermissionList struct {
 	List
-	Roles []*Role `json:"roles"`
+	Permissions []*Permission `json:"permissions"`
 }
 
 type RoleManager struct {
@@ -91,7 +96,8 @@ func (m *RoleManager) AssignUsers(id string, users ...*User) error {
 // Users retrieves all users associated with a role.
 //
 // See: https://auth0.com/docs/api/management/v2#!/Roles/get_role_user
-func (m *RoleManager) Users(id string, opts ...ListOption) (u []*User, err error) {
+func (m *RoleManager) Users(id string, opts ...ListOption) (u *UserList, err error) {
+	opts = m.defaults(opts)
 	err = m.get(m.uri("roles", id, "users")+m.q(opts), &u)
 	return
 }
@@ -108,7 +114,8 @@ func (m *RoleManager) AssociatePermissions(id string, permissions ...*Permission
 // Permissions retrieves all permissions granted by a role.
 //
 // See: https://auth0.com/docs/api/management/v2#!/Roles/get_role_permission
-func (m *RoleManager) Permissions(id string, opts ...ListOption) (p []*Permission, err error) {
+func (m *RoleManager) Permissions(id string, opts ...ListOption) (p *PermissionList, err error) {
+	opts = m.defaults(opts)
 	err = m.get(m.uri("roles", id, "permissions")+m.q(opts), &p)
 	return
 }

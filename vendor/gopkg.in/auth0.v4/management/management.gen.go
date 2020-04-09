@@ -56,6 +56,14 @@ func (b *BrandingColors) GetPageBackground() string {
 	return *b.PageBackground
 }
 
+// GetPageBackgroundGradient returns the PageBackgroundGradient field.
+func (b *BrandingColors) GetPageBackgroundGradient() *BrandingPageBackgroundGradient {
+	if b == nil {
+		return nil
+	}
+	return b.PageBackgroundGradient
+}
+
 // GetPrimary returns the Primary field if it's non-nil, zero value otherwise.
 func (b *BrandingColors) GetPrimary() string {
 	if b == nil || b.Primary == nil {
@@ -79,6 +87,43 @@ func (b *BrandingFont) GetURL() string {
 
 // String returns a string representation of BrandingFont.
 func (b *BrandingFont) String() string {
+	return Stringify(b)
+}
+
+// GetAngleDegree returns the AngleDegree field if it's non-nil, zero value otherwise.
+func (b *BrandingPageBackgroundGradient) GetAngleDegree() int {
+	if b == nil || b.AngleDegree == nil {
+		return 0
+	}
+	return *b.AngleDegree
+}
+
+// GetEnd returns the End field if it's non-nil, zero value otherwise.
+func (b *BrandingPageBackgroundGradient) GetEnd() string {
+	if b == nil || b.End == nil {
+		return ""
+	}
+	return *b.End
+}
+
+// GetStart returns the Start field if it's non-nil, zero value otherwise.
+func (b *BrandingPageBackgroundGradient) GetStart() string {
+	if b == nil || b.Start == nil {
+		return ""
+	}
+	return *b.Start
+}
+
+// GetType returns the Type field if it's non-nil, zero value otherwise.
+func (b *BrandingPageBackgroundGradient) GetType() string {
+	if b == nil || b.Type == nil {
+		return ""
+	}
+	return *b.Type
+}
+
+// String returns a string representation of BrandingPageBackgroundGradient.
+func (b *BrandingPageBackgroundGradient) String() string {
 	return Stringify(b)
 }
 

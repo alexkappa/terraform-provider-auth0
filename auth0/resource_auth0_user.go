@@ -152,12 +152,12 @@ func readUser(d *schema.ResourceData, m interface{}) error {
 	}
 	d.Set("app_metadata", appMeta)
 
-	roles, err := api.User.Roles(d.Id())
+	l, err := api.User.Roles(d.Id())
 	if err != nil {
 		return err
 	}
 	d.Set("roles", func() (v []interface{}) {
-		for _, role := range roles {
+		for _, role := range l.Roles {
 			v = append(v, auth0.StringValue(role.ID))
 		}
 		return
