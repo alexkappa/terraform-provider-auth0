@@ -57,6 +57,7 @@ The following Auth0 resources are supported:
 - [ ] [Device Credentials](https://auth0.com/docs/api/management/v2#!/Device_Credentials/get_device_credentials)
 - [x] [Grants](https://auth0.com/docs/api/management/v2#!/Grants/get_grants)
 - [x] [Hooks](https://auth0.com/docs/api/management/v2#!/Hooks/get_hooks)
+- [x] [Hook Secrets](https://auth0.com/docs/api/management/v2/#!/Hooks/get_secrets)
 - [x] [Logs](https://auth0.com/docs/api/management/v2#!/Logs/get_logs)
 - [x] [Prompts](https://auth0.com/docs/api/management/v2#!/Prompts/get_prompts)
 - [x] [Resource Servers (APIs)](https://auth0.com/docs/api/management/v2#!/Resource_Servers/get_resource_servers)
