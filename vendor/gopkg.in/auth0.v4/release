@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -e
+
+function update_version {
+  local version="$1"
+  sed -i.backup "s/const Version =.*/const Version = \"${version}\"/" meta.go
+  rm -rf meta.go.backup
+}
+
+function commit_changes {
+  local version="$1"
+  git add meta.go
+  git commit -m "v${version}"
+  git tag -a "v${version}" -m "v${version}"
+}
+
+function push_changes {
+  local version="$1"
+  git push origin master
+  git push origin "v${version}"
+}
+
+function main {
+  local version="$1"
+  update_version $version
+  commit_changes $version
+  push_changes $version
+}
+
+main "$@"

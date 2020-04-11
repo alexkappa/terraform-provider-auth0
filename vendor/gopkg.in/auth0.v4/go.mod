@@ -4,5 +4,6 @@ go 1.12
 
 require (
 	github.com/PuerkitoBio/rehttp v0.0.0-20180310210549-11cf6ea5d3e9
+	github.com/hashicorp/go-version v1.2.0
 	golang.org/x/oauth2 v0.0.0-20190402181905-9f3314589c9a
 )

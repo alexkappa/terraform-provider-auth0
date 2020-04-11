@@ -30,6 +30,9 @@ type HookList struct {
 	Hooks []*Hook `json:"hooks"`
 }
 
+// HookSecrets are the secret keys and values associated with a hook
+type HookSecrets map[string]string
+
 type HookManager struct {
 	*Management
 }
@@ -76,4 +79,59 @@ func (m *HookManager) List(opts ...ListOption) (r *HookList, err error) {
 	opts = m.defaults(opts)
 	err = m.get(m.uri("roles")+m.q(opts), &r)
 	return
+}
+
+// CreateSecrets creates hook secrets on a hook that has no secrets defined
+//
+// See: https://auth0.com/docs/api/management/v2#!/Hooks/post_secrets
+func (m *HookManager) CreateSecrets(hookID string, r *HookSecrets) (err error) {
+	return m.post(m.uri("hooks", hookID, "secrets"), r)
+}
+
+// UpdateSecrets updates the values of a hook's secrets that have previously been created
+//
+// See: https://auth0.com/docs/api/management/v2#!/Hooks/patch_secrets
+func (m *HookManager) UpdateSecrets(hookID string, r *HookSecrets) (err error) {
+	return m.patch(m.uri("hooks", hookID, "secrets"), r)
+}
+
+// Secrets list all secrets configured for the given hook
+//
+// Note: For security, hook secret values cannot be retrieved outside rule
+// execution (they all appear as "_VALUE_NOT_SHOWN_")
+//
+// See: https://auth0.com/docs/api/management/v2/#!/Hooks/get_secrets
+func (m *HookManager) Secrets(hookID string) (r *HookSecrets, err error) {
+	err = m.get(m.uri("hooks", hookID, "secrets"), &r)
+	return
+}
+
+// RemoveSecrets removes a list of hook secret keys from a given hook's secrets by the keys of the secrets
+//
+// See: https://auth0.com/docs/api/management/v2/#!/Hooks/delete_secrets
+func (m *HookManager) RemoveSecrets(hookID string, keys ...string) (err error) {
+	return m.request("DELETE", m.uri("hooks", hookID, "secrets"), keys)
+}
+
+// RemoveAllSecrets removes all secrets associated with a given hook
+func (m *HookManager) RemoveAllSecrets(hookID string) (err error) {
+	r, err := m.Secrets(hookID)
+	if err == nil {
+        keys := r.Keys()
+        if len(keys) > 0 {
+            err = m.RemoveSecrets(hookID, keys...)
+        }
+	}
+	return err
+}
+
+// Keys gets the configured hook secret keys
+func (s *HookSecrets) Keys() []string {
+	keys := make([]string, len(*s))
+	i := 0
+	for k := range *s {
+        keys[i] = k
+		i++
+	}
+	return keys
 }
