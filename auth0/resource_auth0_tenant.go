@@ -1,7 +1,6 @@
 package auth0
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -130,9 +129,10 @@ func newTenant() *schema.Resource {
 				Computed: true,
 			},
 			"idle_session_lifetime": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Computed: true,
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validation.IntAtLeast(1),
 			},
 			"enabled_locales": {
 				Type:     schema.TypeSet,
@@ -221,10 +221,12 @@ func newTenant() *schema.Resource {
 									"primary": {
 										Type:     schema.TypeString,
 										Optional: true,
+										Computed: true,
 									},
 									"page_background": {
 										Type:     schema.TypeString,
 										Optional: true,
+										Computed: true,
 									},
 								},
 							},
@@ -323,8 +325,6 @@ func buildTenant(d *schema.ResourceData) *management.Tenant {
 		Flags:               expandTenantFlags(d),
 		UniversalLogin:      expandTenantUniversalLogin(d),
 	}
-
-	log.Printf("[DEBUG] idle_session_lifetime: %v", Int(d, "idle_session_lifetime", IsNewResource(), HasChange()))
 
 	return t
 }
