@@ -44,6 +44,7 @@ func expandBrandingColors(d Data) (colors *management.BrandingColors) {
 		}
 
 		List(d, "page_background_gradient").Elem(func(d Data) {
+			colors.PageBackground = nil
 			colors.PageBackgroundGradient = &management.BrandingPageBackgroundGradient{
 				Type:        String(d, "type"),
 				Start:       String(d, "start"),
