@@ -1,4 +1,15 @@
 ## 0.9.0 (Unreleased)
+
+BUG FIXES:
+
+* resource/auth0_resource_server: fixed rename scope bug ([#197](https://github.com/alexkappa/terraform-provider-auth0/issues/197))
+* resource/auth0_tenant: fix "too few properties defined" bug by sending certain fields in every update ([#185](https://github.com/alexkappa/terraform-provider-auth0/issues/185))
+
+NOTES:
+
+* User Agent is now more accurate and follows the package version of `go-auth0/auth0`.
+* Updates (PATCH) will include most fields in requests by default even if no changes were observed. [#194](https://github.com/alexkappa/terraform-provider-auth0/pull/194)
+
 ## 0.8.2 (April 08, 2020)
 
 BUG FIXES:
