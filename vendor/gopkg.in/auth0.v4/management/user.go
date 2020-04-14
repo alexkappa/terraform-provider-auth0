@@ -1,6 +1,11 @@
 package management
 
-import "time"
+import (
+	"encoding/json"
+	"reflect"
+	"strconv"
+	"time"
+)
 
 // User represents an Auth0 user resource
 //
@@ -84,9 +89,62 @@ type User struct {
 
 type UserIdentity struct {
 	Connection *string `json:"connection,omitempty"`
-	UserID     *string `json:"user_id,omitempty"`
+	UserID     *string `json:"-"`
 	Provider   *string `json:"provider,omitempty"`
 	IsSocial   *bool   `json:"isSocial,omitempty"`
+}
+
+// UnmarshalJSON is a custom deserializer for the UserIdentity type.
+//
+// We have to use a custom one due to a bug in the Auth0 Management API which
+// might return a number for `user_id` instead of a string.
+//
+// See https://community.auth0.com/t/users-user-id-returns-inconsistent-type-for-identities-user-id/39236
+func (i *UserIdentity) UnmarshalJSON(b []byte) error {
+
+	type userIdentity UserIdentity
+	type userIdentityAlias struct {
+		*userIdentity
+		RawUserID interface{} `json:"user_id,omitempty"`
+	}
+
+	alias := &userIdentityAlias{(*userIdentity)(i), nil}
+
+	err := json.Unmarshal(b, alias)
+	if err != nil {
+		return err
+	}
+
+	if alias.RawUserID != nil {
+		var id string
+		switch rawID := alias.RawUserID.(type) {
+		case string:
+			id = rawID
+		case float64:
+			id = strconv.Itoa(int(rawID))
+		default:
+			panic(reflect.TypeOf(rawID))
+		}
+		alias.UserID = &id
+	}
+
+	return nil
+}
+
+func (i *UserIdentity) MarshalJSON() ([]byte, error) {
+
+	type userIdentity UserIdentity
+	type userIdentityAlias struct {
+		*userIdentity
+		RawUserID interface{} `json:"user_id,omitempty"`
+	}
+
+	alias := &userIdentityAlias{userIdentity: (*userIdentity)(i)}
+	if i.UserID != nil {
+		alias.RawUserID = i.UserID
+	}
+
+	return json.Marshal(alias)
 }
 
 type userBlock struct {
@@ -207,9 +265,10 @@ func (m *UserManager) ListByEmail(email string, opts ...ListOption) (us []*User,
 // Roles lists all roles associated with a user.
 //
 // See: https://auth0.com/docs/api/management/v2#!/Users/get_user_roles
-func (m *UserManager) Roles(id string, opts ...ListOption) (roles []*Role, err error) {
-	err = m.get(m.uri("users", id, "roles")+m.q(opts), &roles)
-	return roles, err
+func (m *UserManager) Roles(id string, opts ...ListOption) (r *RoleList, err error) {
+	opts = m.defaults(opts)
+	err = m.get(m.uri("users", id, "roles")+m.q(opts), &r)
+	return r, err
 }
 
 // AssignRoles assignes roles to a user.
@@ -239,9 +298,10 @@ func (m *UserManager) RemoveRoles(id string, roles ...*Role) error {
 // Permissions lists the permissions associated to the user.
 //
 // See: https://auth0.com/docs/api/management/v2#!/Users/get_permissions
-func (m *UserManager) Permissions(id string, opts ...ListOption) (permissions []*Permission, err error) {
-	err = m.get(m.uri("users", id, "permissions")+m.q(opts), &permissions)
-	return permissions, err
+func (m *UserManager) Permissions(id string, opts ...ListOption) (p *PermissionList, err error) {
+	opts = m.defaults(opts)
+	err = m.get(m.uri("users", id, "permissions")+m.q(opts), &p)
+	return p, err
 }
 
 // AssignPermissions assigns permissions to the user.

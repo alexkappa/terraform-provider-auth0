@@ -3,31 +3,31 @@ provider "auth0" {}
 resource "auth0_tenant" "tenant" {
   change_password {
     enabled = true
-    html    = "${file("./password_reset.html")}"
+    html    = "<html>Change Password</html>"
   }
 
   guardian_mfa_page {
     enabled = true
-    html    = "${file("./guardian_multifactor.html")}"
+    html    = "<html>MFA</html>"
   }
 
-  default_audience  = "<client_id>"
-  default_directory = "Connection-Name"
+  # default_audience  = "<client_id>"
+  # default_directory = "Connection-Name"
 
   error_page {
-    html          = "${file("./error.html")}"
+    html          = "<html>Error Page</html>"
     show_log_link = true
-    url           = "http://mysite/errors"
+    url           = "http://example.com/errors"
   }
 
   friendly_name = "Tenant Name"
-  picture_url   = "http://mysite/logo.png"
-  support_email = "support@mysite"
-  support_url   = "http://mysite/support"
+  picture_url   = "http://example.com/logo.png"
+  support_email = "support@example.com"
+  support_url   = "http://example.com/support"
   allowed_logout_urls = [
-    "http://mysite/logout"
+    "http://example.com/logout"
   ]
-  session_lifetime = 46000
+  session_lifetime = 8760
   sandbox_version  = "8"
   enabled_locales = ["en"]
 }
