@@ -21,11 +21,6 @@ func newRole() *schema.Resource {
 		},
 
 		Schema: map[string]*schema.Schema{
-			"role_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
@@ -63,7 +58,7 @@ func newRole() *schema.Resource {
 
 func createRole(d *schema.ResourceData, m interface{}) error {
 
-	c := buildRole(d)
+	c := expandRole(d)
 	api := m.(*management.Management)
 	if err := api.Role.Create(c); err != nil {
 		return err
@@ -99,8 +94,7 @@ func readRole(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	d.SetId(auth0.StringValue(c.ID))
-	d.Set("role_id", c.ID)
+	d.SetId(c.GetID())
 	d.Set("name", c.Name)
 	d.Set("description", c.Description)
 
@@ -108,21 +102,13 @@ func readRole(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	d.Set("permissions", func() (m []map[string]interface{}) {
-		for _, permission := range l.Permissions {
-			m = append(m, map[string]interface{}{
-				"name":                       permission.Name,
-				"resource_server_identifier": permission.ResourceServerIdentifier,
-			})
-		}
-		return m
-	}())
+	d.Set("permissions", flattenRolePermissions(l.Permissions))
 
 	return nil
 }
 
 func updateRole(d *schema.ResourceData, m interface{}) error {
-	c := buildRole(d)
+	c := expandRole(d)
 	api := m.(*management.Management)
 	err := api.Role.Update(d.Id(), c)
 	if err != nil {
@@ -150,9 +136,8 @@ func deleteRole(d *schema.ResourceData, m interface{}) error {
 	return err
 }
 
-func buildRole(d *schema.ResourceData) *management.Role {
+func expandRole(d *schema.ResourceData) *management.Role {
 	return &management.Role{
-		ID:          String(d, "role_id", IsNewResource(), HasChange()),
 		Name:        String(d, "name"),
 		Description: String(d, "description"),
 	}
@@ -198,4 +183,15 @@ func assignRolePermissions(d *schema.ResourceData, m interface{}) error {
 
 	d.SetPartial("permissions")
 	return nil
+}
+
+func flattenRolePermissions(permissions []*management.Permission) []interface{} {
+	var v []interface{}
+	for _, permission := range permissions {
+		v = append(v, map[string]interface{}{
+			"name":                       permission.Name,
+			"resource_server_identifier": permission.ResourceServerIdentifier,
+		})
+	}
+	return v
 }
