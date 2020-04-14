@@ -193,14 +193,14 @@ func expandResourceServer(d *schema.ResourceData) *management.ResourceServer {
 		Name:                 String(d, "name"),
 		Identifier:           String(d, "identifier"),
 		SigningAlgorithm:     String(d, "signing_alg"),
-		SigningSecret:        String(d, "signing_secret"),
+		SigningSecret:        String(d, "signing_secret", IsNewResource(), HasChange()),
 		AllowOfflineAccess:   Bool(d, "allow_offline_access"),
 		TokenLifetime:        Int(d, "token_lifetime"),
 		TokenLifetimeForWeb:  Int(d, "token_lifetime_for_web"),
 		VerificationLocation: String(d, "verification_location"),
 		Options:              Map(d, "options"),
 		EnforcePolicies:      Bool(d, "enforce_policies"),
-		TokenDialect:         String(d, "token_dialect"),
+		TokenDialect:         String(d, "token_dialect", IsNewResource(), HasChange()),
 
 		SkipConsentForVerifiableFirstPartyClients: Bool(d, "skip_consent_for_verifiable_first_party_clients"),
 	}

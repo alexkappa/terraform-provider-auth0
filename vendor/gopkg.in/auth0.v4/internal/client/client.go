@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -12,10 +13,11 @@ import (
 	"github.com/PuerkitoBio/rehttp"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
+	"gopkg.in/auth0.v4"
 )
 
-// UserAgent holds the default user agent string
-const UserAgent = "Go-Auth0-SDK/v3"
+// UserAgent is the default user agent string
+var UserAgent = fmt.Sprintf("Go-Auth0-SDK/v%s", auth0.VersionMajor())
 
 func WrapRateLimit(c *http.Client) *http.Client {
 	return &http.Client{

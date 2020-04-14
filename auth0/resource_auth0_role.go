@@ -104,12 +104,12 @@ func readRole(d *schema.ResourceData, m interface{}) error {
 	d.Set("name", c.Name)
 	d.Set("description", c.Description)
 
-	permissions, err := api.Role.Permissions(d.Id())
+	l, err := api.Role.Permissions(d.Id())
 	if err != nil {
 		return err
 	}
 	d.Set("permissions", func() (m []map[string]interface{}) {
-		for _, permission := range permissions {
+		for _, permission := range l.Permissions {
 			m = append(m, map[string]interface{}{
 				"name":                       permission.Name,
 				"resource_server_identifier": permission.ResourceServerIdentifier,
@@ -152,7 +152,7 @@ func deleteRole(d *schema.ResourceData, m interface{}) error {
 
 func buildRole(d *schema.ResourceData) *management.Role {
 	return &management.Role{
-		ID:          String(d, "role_id"),
+		ID:          String(d, "role_id", IsNewResource(), HasChange()),
 		Name:        String(d, "name"),
 		Description: String(d, "description"),
 	}

@@ -60,18 +60,25 @@ func TestAccResourceServer(t *testing.T) {
 					random.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "name", "Acceptance Test - {{.random}}", rand),
 					random.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "identifier", "https://uat.api.alexkappa.com/{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "signing_alg", "RS256"),
-					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "scopes.#", "2"),
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "allow_offline_access", "true"),
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "token_lifetime", "7200"),
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "token_lifetime_for_web", "3600"),
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "skip_consent_for_verifiable_first_party_clients", "true"),
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "enforce_policies", "true"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "scopes.#", "2"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "scopes.1906583762.value", "create:foo"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "scopes.1906583762.description", "Create foos"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "scopes.3536702635.value", "create:bar"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "scopes.3536702635.description", "Create bars"),
 				),
 			},
 			{
 				Config: random.Template(testAccResourceServerConfigUpdate, rand),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "allow_offline_access", "false"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "scopes.#", "2"),
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "scopes.1448666690.value", "create:bar"), // set id changes
+					resource.TestCheckResourceAttr("auth0_resource_server.my_resource_server", "scopes.1448666690.description", "Create bars for bar reasons"),
 				),
 			},
 		},
@@ -112,7 +119,7 @@ resource "auth0_resource_server" "my_resource_server" {
 	}
 	scopes {
 		value = "create:bar"
-		description = "Create bars"
+		description = "Create bars for bar reasons"
 	}
 	allow_offline_access = false # <--- set to false
 	token_lifetime = 7200
