@@ -217,7 +217,7 @@ func expandConnectionOptionsAuth0(d Data) *management.ConnectionOptions {
 
 	o := &management.ConnectionOptions{
 		Validation:     Map(d, "validation"),
-		PasswordPolicy: String(d, "password_policy"),
+		PasswordPolicy: String(d, "password_policy", IsNewResource(), HasChange()),
 	}
 
 	List(d, "password_history").Elem(func(d Data) {
@@ -242,11 +242,11 @@ func expandConnectionOptionsAuth0(d Data) *management.ConnectionOptions {
 		o.PasswordComplexityOptions["min_length"] = Int(d, "min_length")
 	})
 
-	o.EnabledDatabaseCustomization = Bool(d, "enabled_database_customization")
-	o.BruteForceProtection = Bool(d, "brute_force_protection")
-	o.ImportMode = Bool(d, "import_mode")
-	o.DisableSignup = Bool(d, "disable_signup")
-	o.RequiresUsername = Bool(d, "requires_username")
+	o.EnabledDatabaseCustomization = Bool(d, "enabled_database_customization", IsNewResource(), HasChange())
+	o.BruteForceProtection = Bool(d, "brute_force_protection", IsNewResource(), HasChange())
+	o.ImportMode = Bool(d, "import_mode", IsNewResource(), HasChange())
+	o.DisableSignup = Bool(d, "disable_signup", IsNewResource(), HasChange())
+	o.RequiresUsername = Bool(d, "requires_username", IsNewResource(), HasChange())
 	o.CustomScripts = Map(d, "custom_scripts")
 	o.Configuration = Map(d, "configuration")
 

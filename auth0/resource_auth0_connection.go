@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"log"
 	"net/http"
 	"strings"
 
@@ -76,6 +77,7 @@ func newConnection() *schema.Resource {
 						"password_policy": {
 							Type:     schema.TypeString,
 							Optional: true,
+							Computed: true,
 							ValidateFunc: validation.StringInSlice([]string{
 								"none", "low", "fair", "good", "excellent",
 							}, false),
@@ -147,51 +149,6 @@ func newConnection() *schema.Resource {
 							},
 							Description: "Configuration settings for password complexity",
 						},
-
-						/*
-
-						 */
-						"basic_profile": {
-							Type:       schema.TypeBool,
-							Optional:   true,
-							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
-						},
-						"ext_admin": {
-							Type:       schema.TypeBool,
-							Optional:   true,
-							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
-						},
-						"ext_is_suspended": {
-							Type:       schema.TypeBool,
-							Optional:   true,
-							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
-						},
-						"ext_agreed_terms": {
-							Type:       schema.TypeBool,
-							Optional:   true,
-							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
-						},
-						"ext_groups": {
-							Type:       schema.TypeBool,
-							Optional:   true,
-							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
-						},
-						"ext_nested_groups": {
-							Type:       schema.TypeBool,
-							Optional:   true,
-							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
-						},
-						"ext_assigned_plans": {
-							Type:       schema.TypeBool,
-							Optional:   true,
-							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
-						},
-						"ext_profile": {
-							Type:       schema.TypeBool,
-							Optional:   true,
-							Deprecated: "This field is deprecated. Please use the `scopes` field instead.",
-						},
-
 						"enabled_database_customization": {
 							Type:        schema.TypeBool,
 							Optional:    true,
@@ -229,6 +186,10 @@ func newConnection() *schema.Resource {
 							Sensitive: true,
 							Optional:  true,
 							DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+								log.Printf(`[DEBUG] DiffSuppressFunc(%q, %q, %q)`, k, old, new)
+								if strings.HasSuffix(k, "%") {
+									return new == old
+								}
 								return strings.HasPrefix(old, "2.0$") || new == old
 							},
 							Description: "",
@@ -404,6 +365,12 @@ func newConnection() *schema.Resource {
 							Optional: true,
 						},
 
+						"strategy_version": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+						},
+
 						"scopes": {
 							Type:     schema.TypeSet,
 							Optional: true,
@@ -417,6 +384,7 @@ func newConnection() *schema.Resource {
 				Type:        schema.TypeSet,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Optional:    true,
+				Computed:    true,
 				Description: "IDs of the clients for which the connection is enabled",
 			},
 			"realms": {
