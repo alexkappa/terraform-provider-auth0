@@ -1,4 +1,9 @@
-## 0.10.0 (Unreleased)
+## 0.9.1 (Unreleased)
+
+BUG FIXES:
+
+* resource/auth0_client, resource/auth0_global_client: fix `null` scope issue ([#204](https://github.com/alexkappa/terraform-provider-auth0/pull/204))
+
 ## 0.9.0 (April 14, 2020)
 
 BUG FIXES:
