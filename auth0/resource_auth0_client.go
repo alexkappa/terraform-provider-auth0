@@ -104,6 +104,7 @@ func newClient() *schema.Resource {
 			"jwt_configuration": {
 				Type:     schema.TypeList,
 				Optional: true,
+				Computed: true,
 				MaxItems: 1,
 				MinItems: 1,
 				Elem: &schema.Resource{
@@ -111,11 +112,13 @@ func newClient() *schema.Resource {
 						"lifetime_in_seconds": {
 							Type:     schema.TypeInt,
 							Optional: true,
+							Computed: true,
 						},
 						"secret_encoded": {
 							Type:     schema.TypeBool,
 							Optional: true,
 							Computed: true,
+							ForceNew: true,
 						},
 						"scopes": {
 							Type:     schema.TypeMap,
@@ -465,7 +468,7 @@ func newClient() *schema.Resource {
 }
 
 func createClient(d *schema.ResourceData, m interface{}) error {
-	c := buildClient(d)
+	c := expandClient(d)
 	api := m.(*management.Management)
 	if err := api.Client.Create(c); err != nil {
 		return err
@@ -510,16 +513,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("custom_login_page_preview", c.CustomLoginPagePreview)
 	d.Set("form_template", c.FormTemplate)
 	d.Set("token_endpoint_auth_method", c.TokenEndpointAuthMethod)
-
-	if jwtConfiguration := c.JWTConfiguration; jwtConfiguration != nil {
-		d.Set("jwt_configuration", map[string]interface{}{
-			"lifetime_in_seconds": jwtConfiguration.LifetimeInSeconds,
-			"secret_encoded":      jwtConfiguration.SecretEncoded,
-			"scopes":              jwtConfiguration.Scopes,
-			"alg":                 jwtConfiguration.Algorithm,
-		})
-	}
-
+	d.Set("jwt_configuration", flattenClientJwtConfiguration(c.JWTConfiguration))
 	d.Set("encryption_key", c.EncryptionKey)
 	d.Set("addons", c.Addons)
 	d.Set("client_metadata", c.ClientMetadata)
@@ -530,7 +524,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 }
 
 func updateClient(d *schema.ResourceData, m interface{}) error {
-	c := buildClient(d)
+	c := expandClient(d)
 	api := m.(*management.Management)
 	if clientHasChange(c) {
 		err := api.Client.Update(d.Id(), c)
@@ -561,7 +555,7 @@ func deleteClient(d *schema.ResourceData, m interface{}) error {
 	return err
 }
 
-func buildClient(d *schema.ResourceData) *management.Client {
+func expandClient(d *schema.ResourceData) *management.Client {
 
 	c := &management.Client{
 		Name:                           String(d, "name"),
@@ -590,8 +584,9 @@ func buildClient(d *schema.ResourceData) *management.Client {
 
 	List(d, "jwt_configuration").Elem(func(d Data) {
 		c.JWTConfiguration = &management.ClientJWTConfiguration{
-			LifetimeInSeconds: Int(d, "lifetime_in_seconds"),
-			Algorithm:         String(d, "alg"),
+			LifetimeInSeconds: Int(d, "lifetime_in_seconds", IsNewResource(), HasChange()),
+			SecretEncoded:     Bool(d, "secret_encoded", IsNewResource()),
+			Algorithm:         String(d, "alg", IsNewResource(), HasChange()),
 			Scopes:            Map(d, "scopes"),
 		}
 	})
@@ -699,4 +694,15 @@ func rotateClientSecret(d *schema.ResourceData, m interface{}) error {
 
 func clientHasChange(c *management.Client) bool {
 	return c.String() != "{}"
+}
+
+func flattenClientJwtConfiguration(jwt *management.ClientJWTConfiguration) []interface{} {
+	m := make(map[string]interface{})
+	if jwt != nil {
+		m["lifetime_in_seconds"] = jwt.LifetimeInSeconds
+		m["secret_encoded"] = jwt.SecretEncoded
+		m["scopes"] = jwt.Scopes
+		m["alg"] = jwt.Algorithm
+	}
+	return []interface{}{m}
 }

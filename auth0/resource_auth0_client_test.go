@@ -274,3 +274,80 @@ resource "auth0_client" "my_client" {
   initiate_login_uri = "https://example.com/login#fragment"
 }
 `
+
+func TestAccClientJwtScopes(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccClientConfigJwtScopes, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_client.my_client", "jwt_configuration.#", "1"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "jwt_configuration.0.secret_encoded", "true"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "jwt_configuration.0.lifetime_in_seconds", "300"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "jwt_configuration.0.scopes.%", "0"),
+				),
+			},
+			{
+				Config: random.Template(testAccClientConfigJwtScopesUpdate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_client.my_client", "jwt_configuration.#", "1"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "jwt_configuration.0.alg", "RS256"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "jwt_configuration.0.lifetime_in_seconds", "300"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "jwt_configuration.0.scopes.%", "1"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "jwt_configuration.0.scopes.foo", "bar"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "jwt_configuration.0.secret_encoded", "true"),
+				),
+			},
+			// {
+			// 	Config: random.Template(testAccClientConfigJwtScopesUpdateAgain, rand),
+			// },
+		},
+	})
+}
+
+const testAccClientConfigJwtScopes = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - JWT Scopes - {{.random}}"
+  jwt_configuration {
+    lifetime_in_seconds = 300
+    secret_encoded = true
+    alg = "RS256"
+    scopes = {}
+  }
+}
+`
+
+const testAccClientConfigJwtScopesUpdate = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - JWT Scopes - {{.random}}"
+  jwt_configuration {
+    lifetime_in_seconds = 300
+    secret_encoded = true
+    alg = "RS256"
+    scopes = {
+		foo = "bar"
+	}
+  }
+}
+`
+
+const testAccClientConfigJwtScopesUpdateAgain = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - JWT Scopes - {{.random}}"
+  jwt_configuration {
+    lifetime_in_seconds = 300
+    secret_encoded = true
+    alg = "RS256"
+    scopes = {} # leaving scopes empty will not update, known json behavior which triggers this bug
+  }
+}
+`
