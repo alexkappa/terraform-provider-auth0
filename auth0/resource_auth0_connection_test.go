@@ -164,7 +164,7 @@ func TestAccConnectionAD(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: random.Template(testAccConnectionADConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.ad", "name", "Acceptance-Test-AD-{{.random}}", rand),
@@ -207,7 +207,7 @@ func TestAccConnectionAzureAD(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: random.Template(testAccConnectionAzureADConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.azure_ad", "name", "Acceptance-Test-Azure-AD-{{.random}}", rand),
@@ -265,7 +265,7 @@ func TestAccConnectionWithEnbledClients(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: random.Template(testAccConnectionWithEnabledClientsConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-Connection-{{.random}}", rand),
@@ -324,7 +324,7 @@ func TestAccConnectionSMS(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: random.Template(testAccConnectionSMSConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.sms", "name", "Acceptance-Test-SMS-{{.random}}", rand),
@@ -462,7 +462,7 @@ func TestAccConnectionSalesforce(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: random.Template(testAccConnectionSalesforceConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.salesforce_community", "name", "Acceptance-Test-Salesforce-Connection-{{.random}}", rand),
@@ -499,7 +499,7 @@ func TestAccConnectionGoogleOAuth2(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: random.Template(testAccConnectionGoogleOAuth2Config, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.google_oauth2", "name", "Acceptance-Test-Google-OAuth2-{{.random}}", rand),
@@ -543,7 +543,7 @@ func TestAccConnectionGitHub(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: random.Template(testAccConnectionGitHubConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.github", "name", "Acceptance-Test-GitHub-{{.random}}", rand),
@@ -589,6 +589,67 @@ resource "auth0_connection" "github" {
 				   "delete_repo", "notifications", "gist", "read_repo_hook", "write_repo_hook", "admin_repo_hook",
 				   "read_org", "admin_org", "read_public_key", "write_public_key", "admin_public_key", "write_org"
 		]
+	}
+}
+`
+
+func TestAccConnectionConfiguration(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccConnectionConfigurationCreate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.configuration.foo", "xxx"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.configuration.bar", "zzz"),
+					debug.DumpAttr("auth0_connection.my_connection"),
+				),
+			},
+			{
+				Config: random.Template(testAccConnectionConfigurationUpdate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.configuration.foo", "xxx"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.configuration.bar", "yyy"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.configuration.baz", "zzz"),
+					debug.DumpAttr("auth0_connection.my_connection"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionConfigurationCreate = `
+
+resource "auth0_connection" "my_connection" {
+	name = "Acceptance-Test-Connection-{{.random}}"
+	is_domain_connection = true
+	strategy = "auth0"
+	options {
+		configuration = {
+			foo = "xxx"
+			bar = "zzz"
+		}
+	}
+}
+`
+
+const testAccConnectionConfigurationUpdate = `
+
+resource "auth0_connection" "my_connection" {
+	name = "Acceptance-Test-Connection-{{.random}}"
+	is_domain_connection = true
+	strategy = "auth0"
+	options {
+		configuration = {
+			foo = "xxx"
+			bar = "yyy"
+			baz = "zzz"
+		}
 	}
 }
 `
