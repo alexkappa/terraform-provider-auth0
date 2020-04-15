@@ -8,7 +8,7 @@ WEBSITE_REPO = github.com/hashicorp/terraform-website
 default: build
 
 build: fmtcheck
-	@go install -mod=vendor
+	@go install
 
 install: build
 	@cp $(GOPATH)/bin/terraform-provider-auth0 ~/.terraform.d/plugins

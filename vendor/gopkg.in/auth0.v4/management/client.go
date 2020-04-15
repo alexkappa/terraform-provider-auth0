@@ -94,7 +94,7 @@ type ClientJWTConfiguration struct {
 	// true
 	SecretEncoded *bool `json:"secret_encoded,omitempty"`
 
-	Scopes interface{} `json:"scopes,omitempty"`
+	Scopes map[string]interface{} `json:"scopes,omitempty"`
 
 	// Algorithm used to sign JWTs. Can be "HS256" or "RS256"
 	Algorithm *string `json:"alg,omitempty"`
