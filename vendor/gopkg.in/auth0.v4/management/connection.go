@@ -182,7 +182,7 @@ type ConnectionOptions struct {
 	// configuration variables that can be used in custom scripts
 	Configuration map[string]interface{} `json:"configuration,omitempty"`
 
-	StrategyVersion *int `json:"strategy_version"`
+	StrategyVersion *int `json:"strategy_version,omitempty"`
 }
 
 type ConnectionOptionsGoogleOAuth2 struct {
@@ -317,7 +317,7 @@ type ConnectionOptionsLinkedin struct {
 	ClientID     *string `json:"client_id,omitempty"`
 	ClientSecret *string `json:"client_secret,omitempty"`
 
-	StrategyVersion *int `json:"strategy_version"`
+	StrategyVersion *int `json:"strategy_version,omitempty"`
 
 	Email        *bool `json:"email,omitempty" scope:"email"`
 	Profile      *bool `json:"profile,omitempty" scope:"profile"`
@@ -420,7 +420,7 @@ type ConnectionOptionsWindowsLive struct {
 	ClientID     *string `json:"client_id,omitempty"`
 	ClientSecret *string `json:"client_secret,omitempty"`
 
-	StrategyVersion *int `json:"strategy_version"`
+	StrategyVersion *int `json:"strategy_version,omitempty"`
 
 	OfflineAccess   *bool `json:"offline_access,omitempty" scope:"offline_access"`
 	UserUpdate      *bool `json:"graph_user_update,omitempty" scope:"graph_user_update"`
