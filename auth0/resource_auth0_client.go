@@ -104,6 +104,7 @@ func newClient() *schema.Resource {
 			"jwt_configuration": {
 				Type:     schema.TypeList,
 				Optional: true,
+				Computed: true,
 				MaxItems: 1,
 				MinItems: 1,
 				Elem: &schema.Resource{
@@ -111,6 +112,7 @@ func newClient() *schema.Resource {
 						"lifetime_in_seconds": {
 							Type:     schema.TypeInt,
 							Optional: true,
+							Computed: true,
 						},
 						"secret_encoded": {
 							Type:     schema.TypeBool,
@@ -584,7 +586,7 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		c.JWTConfiguration = &management.ClientJWTConfiguration{
 			LifetimeInSeconds: Int(d, "lifetime_in_seconds"),
 			SecretEncoded:     Bool(d, "secret_encoded", IsNewResource()),
-			Algorithm:         String(d, "alg"),
+			Algorithm:         String(d, "alg", IsNewResource(), HasChange()),
 			Scopes:            Map(d, "scopes"),
 		}
 	})
