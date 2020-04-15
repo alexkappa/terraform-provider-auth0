@@ -98,11 +98,24 @@ func readRole(d *schema.ResourceData, m interface{}) error {
 	d.Set("name", c.Name)
 	d.Set("description", c.Description)
 
-	l, err := api.Role.Permissions(d.Id())
-	if err != nil {
-		return err
+	var permissions []*management.Permission
+
+	var page int
+	for {
+		l, err := api.Role.Permissions(d.Id(), management.Page(page))
+		if err != nil {
+			return err
+		}
+		for _, permission := range l.Permissions {
+			permissions = append(permissions, permission)
+		}
+		if !l.HasNext() {
+			break
+		}
+		page++
 	}
-	d.Set("permissions", flattenRolePermissions(l.Permissions))
+
+	d.Set("permissions", flattenRolePermissions(permissions))
 
 	return nil
 }
