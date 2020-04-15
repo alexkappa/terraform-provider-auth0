@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+# set -x
 
 function update_version {
   local version="$1"
@@ -25,6 +25,10 @@ function main {
   local version="$1"
   if [[ $version = v* ]]; then
     echo "version should be in the format X.Y.Z"
+    exit 1
+  fi
+  if git rev-parse "v$version" > /dev/null 2>&1; then
+    echo "version $version already exists"
     exit 1
   fi
   update_version $version
