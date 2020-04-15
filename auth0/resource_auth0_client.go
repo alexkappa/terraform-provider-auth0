@@ -584,7 +584,7 @@ func expandClient(d *schema.ResourceData) *management.Client {
 
 	List(d, "jwt_configuration").Elem(func(d Data) {
 		c.JWTConfiguration = &management.ClientJWTConfiguration{
-			LifetimeInSeconds: Int(d, "lifetime_in_seconds"),
+			LifetimeInSeconds: Int(d, "lifetime_in_seconds", IsNewResource(), HasChange()),
 			SecretEncoded:     Bool(d, "secret_encoded", IsNewResource()),
 			Algorithm:         String(d, "alg", IsNewResource(), HasChange()),
 			Scopes:            Map(d, "scopes"),
