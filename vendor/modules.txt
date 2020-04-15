@@ -6,7 +6,7 @@ cloud.google.com/go/internal/optional
 cloud.google.com/go/internal/trace
 cloud.google.com/go/internal/version
 cloud.google.com/go/storage
-# github.com/PuerkitoBio/rehttp v0.0.0-20180310210549-11cf6ea5d3e9
+# github.com/PuerkitoBio/rehttp v1.0.0
 github.com/PuerkitoBio/rehttp
 # github.com/agext/levenshtein v1.2.2
 github.com/agext/levenshtein
@@ -276,7 +276,7 @@ golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
-# golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
+# golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 golang.org/x/oauth2
 golang.org/x/oauth2/clientcredentials
 golang.org/x/oauth2/google
@@ -362,7 +362,7 @@ google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
 google.golang.org/grpc/test/bufconn
-# gopkg.in/auth0.v4 v4.3.1
+# gopkg.in/auth0.v4 v4.3.3
 gopkg.in/auth0.v4
 gopkg.in/auth0.v4/internal/client
 gopkg.in/auth0.v4/internal/tag

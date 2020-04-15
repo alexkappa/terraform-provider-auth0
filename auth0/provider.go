@@ -70,7 +70,7 @@ func Configure(data *schema.ResourceData) (interface{}, error) {
 	debug := data.Get("debug").(bool)
 
 	userAgent := fmt.Sprintf("Go-Auth0-SDK/%s; Terraform-SDK/%s",
-		auth0.VersionMajor(),
+		auth0.Version,
 		meta.SDKVersionString())
 
 	return management.New(domain, id, secret,

@@ -13,7 +13,7 @@ cache:
   - $GOPATH/pkg/mod
 
 env:
-  - GO111MODULE=on
+  - GO111MODULE=on GOFLAGS=-mod=vendor
 
 install:
   # This script is used by the Travis build to install a cookie for

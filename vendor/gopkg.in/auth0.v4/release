@@ -4,7 +4,7 @@ set -e
 
 function update_version {
   local version="$1"
-  sed -i.backup "s/const Version =.*/const Version = \"${version}\"/" meta.go
+  sed -i.backup "s/var Version =.*/var Version = \"${version}\"/" meta.go
   rm -rf meta.go.backup
 }
 
@@ -23,6 +23,10 @@ function push_changes {
 
 function main {
   local version="$1"
+  if [[ $version = v* ]]; then
+    echo "version should be in the format X.Y.Z"
+    exit 1
+  fi
   update_version $version
   commit_changes $version
   push_changes $version
