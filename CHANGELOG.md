@@ -4,6 +4,7 @@ BUG FIXES:
 
 * resource/auth0_client, resource/auth0_global_client: fix `null` scope issue ([#204](https://github.com/alexkappa/terraform-provider-auth0/pull/204))
 * resource/auth0_connection: various bug fixes for auth0 type connections.
+* resource/auth0_role: paginating role permissions for large amounts of permissions defined per role.
 
 ## 0.9.0 (April 14, 2020)
 

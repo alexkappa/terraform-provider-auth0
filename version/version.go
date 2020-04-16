@@ -1,4 +1,4 @@
 package version
 
-// Version is set during the release process.
-var Version = "latest"
+// ProviderVersion is set during the release process.
+var ProviderVersion = "dev"
