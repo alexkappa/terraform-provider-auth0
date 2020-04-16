@@ -9,6 +9,8 @@ builds:
       - windows
     goarch:
       - amd64
+    ldflags:
+      - -s -w -X version.ProviderVersion={{.Version}}
 archives:
   - name_template: "{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     format: tar.gz
