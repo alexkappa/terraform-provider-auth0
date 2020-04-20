@@ -7,13 +7,13 @@ import (
 	"gopkg.in/auth0.v4/management"
 )
 
-func flattenConnectionOptions(options interface{}) []interface{} {
+func flattenConnectionOptions(d Data, options interface{}) []interface{} {
 
 	var m interface{}
 
 	switch o := options.(type) {
 	case *management.ConnectionOptions:
-		m = flattenConnectionOptionsAuth0(o)
+		m = flattenConnectionOptionsAuth0(d, o)
 	case *management.ConnectionOptionsGoogleOAuth2:
 		m = flattenConnectionOptionsGoogleOAuth2(o)
 	// case *management.ConnectionOptionsFacebook:
@@ -52,7 +52,7 @@ func flattenConnectionOptionsGitHub(o *management.ConnectionOptionsGitHub) inter
 	}
 }
 
-func flattenConnectionOptionsAuth0(o *management.ConnectionOptions) interface{} {
+func flattenConnectionOptionsAuth0(d Data, o *management.ConnectionOptions) interface{} {
 	return map[string]interface{}{
 		"validation":                     o.Validation,
 		"password_policy":                o.GetPasswordPolicy(),
@@ -66,7 +66,7 @@ func flattenConnectionOptionsAuth0(o *management.ConnectionOptions) interface{} 
 		"disable_signup":                 o.GetDisableSignup(),
 		"requires_username":              o.GetRequiresUsername(),
 		"custom_scripts":                 o.CustomScripts,
-		"configuration":                  o.Configuration,
+		"configuration":                  Map(d, "configuration"), // does not get read back
 	}
 }
 
