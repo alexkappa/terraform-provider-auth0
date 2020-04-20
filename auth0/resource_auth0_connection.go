@@ -1,9 +1,7 @@
 package auth0
 
 import (
-	"log"
 	"net/http"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -181,17 +179,10 @@ func newConnection() *schema.Resource {
 							Description: "",
 						},
 						"configuration": {
-							Type:      schema.TypeMap,
-							Elem:      &schema.Schema{Type: schema.TypeString},
-							Sensitive: true,
-							Optional:  true,
-							DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-								log.Printf(`[DEBUG] DiffSuppressFunc(%q, %q, %q)`, k, old, new)
-								if strings.HasSuffix(k, "%") {
-									return new == old
-								}
-								return strings.HasPrefix(old, "2.0$") || new == old
-							},
+							Type:        schema.TypeMap,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Sensitive:   true,
+							Optional:    true,
 							Description: "",
 						},
 						"client_id": {
@@ -425,7 +416,7 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 	d.Set("name", c.Name)
 	d.Set("is_domain_connection", c.IsDomainConnection)
 	d.Set("strategy", c.Strategy)
-	d.Set("options", flattenConnectionOptions(c.Options))
+	d.Set("options", flattenConnectionOptions(d, c.Options))
 	d.Set("enabled_clients", c.EnabledClients)
 	d.Set("realms", c.Realms)
 	return nil
