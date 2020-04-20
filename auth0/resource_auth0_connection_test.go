@@ -8,7 +8,6 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"github.com/terraform-providers/terraform-provider-auth0/auth0/internal/debug"
 	"github.com/terraform-providers/terraform-provider-auth0/auth0/internal/random"
 	"gopkg.in/auth0.v4/management"
 )
@@ -334,7 +333,6 @@ func TestAccConnectionSMS(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.totp.#", "1"),
 					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.totp.0.time_step", "300"),
 					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.totp.0.length", "6"),
-					debug.DumpAttr("auth0_connection.sms"),
 				),
 			},
 		},
@@ -386,7 +384,6 @@ func TestAccConnectionEmail(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.#", "1"),
 					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.0.time_step", "300"),
 					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.0.length", "6"),
-					debug.DumpAttr("auth0_connection.email"),
 				),
 			},
 			{
@@ -395,7 +392,6 @@ func TestAccConnectionEmail(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.#", "1"),
 					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.0.time_step", "360"),
 					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.0.length", "4"),
-					debug.DumpAttr("auth0_connection.email"),
 				),
 			},
 		},
@@ -468,7 +464,6 @@ func TestAccConnectionSalesforce(t *testing.T) {
 					random.TestCheckResourceAttr("auth0_connection.salesforce_community", "name", "Acceptance-Test-Salesforce-Connection-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.salesforce_community", "strategy", "salesforce-community"),
 					resource.TestCheckResourceAttr("auth0_connection.salesforce_community", "options.0.community_base_url", "https://salesforce.example.com"),
-					debug.DumpAttr("auth0_connection.salesforce_community"),
 				),
 			},
 		},
@@ -512,7 +507,6 @@ func TestAccConnectionGoogleOAuth2(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.scopes.#", "4"),
 					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.scopes.881205744", "email"),
 					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.scopes.4080487570", "profile"),
-					// debug.DumpAttr("auth0_connection.google_oauth2"),
 				),
 			},
 		},
@@ -605,18 +599,18 @@ func TestAccConnectionConfiguration(t *testing.T) {
 			{
 				Config: random.Template(testAccConnectionConfigurationCreate, rand),
 				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.configuration.%", "2"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.configuration.foo", "xxx"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.configuration.bar", "zzz"),
-					debug.DumpAttr("auth0_connection.my_connection"),
 				),
 			},
 			{
 				Config: random.Template(testAccConnectionConfigurationUpdate, rand),
 				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.configuration.%", "3"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.configuration.foo", "xxx"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.configuration.bar", "yyy"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.configuration.baz", "zzz"),
-					debug.DumpAttr("auth0_connection.my_connection"),
 				),
 			},
 		},
