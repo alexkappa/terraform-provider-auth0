@@ -1,4 +1,9 @@
-## 0.10.0 (Unreleased)
+## 0.9.2 (Unreleased)
+
+BUG FIXES: 
+
+* resource/auth0_connection: `configuration` properties are now write-only ([#208](https://github.com/alexkappa/terraform-provider-auth0/pull/208))
+
 ## 0.9.1 (April 16, 2020)
 
 BUG FIXES:
