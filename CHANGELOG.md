@@ -1,9 +1,14 @@
-## 0.10.0 (Unreleased)
+## 0.9.3 (Unreleased)
+
+BUG FIXES: 
+
+* resource/auth0_hook: avoid sending `trigger_id` during updates ([#210](https://github.com/alexkappa/terraform-provider-auth0/pull/210)).
+
 ## 0.9.2 (April 20, 2020)
 
 BUG FIXES: 
 
-* resource/auth0_connection: `configuration` properties are now write-only ([#208](https://github.com/alexkappa/terraform-provider-auth0/pull/208))
+* resource/auth0_connection: `configuration` properties are now write-only ([#208](https://github.com/alexkappa/terraform-provider-auth0/pull/208)).
 
 ## 0.9.1 (April 16, 2020)
 
