@@ -11,8 +11,6 @@ import (
 	"gopkg.in/auth0.v4/management"
 )
 
-var hookNameRegexp = regexp.MustCompile("^[^\\s-][\\w -]+[^\\s-]$")
-
 func newHook() *schema.Resource {
 	return &schema.Resource{
 
@@ -26,13 +24,10 @@ func newHook() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
-				ValidateFunc: validation.StringMatch(
-					hookNameRegexp,
-					"Can only contain alphanumeric characters, spaces and '-'. "+
-						"Can neither start nor end with '-' or spaces."),
-				Description: "Name of this hook",
+				Type:         schema.TypeString,
+				Required:     true,
+				ValidateFunc: validateHookNameFunc(),
+				Description:  "Name of this hook",
 			},
 			"script": {
 				Type:        schema.TypeString,
@@ -122,7 +117,13 @@ func buildHook(d *schema.ResourceData) *management.Hook {
 	return &management.Hook{
 		Name:      String(d, "name"),
 		Script:    String(d, "script"),
-		TriggerID: String(d, "trigger_id"),
+		TriggerID: String(d, "trigger_id", IsNewResource()),
 		Enabled:   Bool(d, "enabled"),
 	}
+}
+
+func validateHookNameFunc() schema.SchemaValidateFunc {
+	return validation.StringMatch(
+		regexp.MustCompile("^[^\\s-][\\w -]+[^\\s-]$"),
+		"Can only contain alphanumeric characters, spaces and '-'. Can neither start nor end with '-' or spaces.")
 }
