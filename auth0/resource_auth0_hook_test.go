@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
@@ -15,8 +14,8 @@ func TestAccHook(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			resource.TestStep{
-				Config: testAccHook,
+			{
+				Config: testAccHookCreate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_hook.my_hook", "name", "pre-user-reg-hook"),
 					resource.TestCheckResourceAttr("auth0_hook.my_hook", "script", "function (user, context, callback) { callback(null, { user }); }"),
@@ -24,59 +23,57 @@ func TestAccHook(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_hook.my_hook", "enabled", "true"),
 				),
 			},
+			{
+				Config: testAccHookUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_hook.my_hook", "name", "pre-user-reg-hook"),
+					resource.TestCheckResourceAttr("auth0_hook.my_hook", "script", "function (user, context, callback) { console.log(user); callback(null, { user }); }"),
+					resource.TestCheckResourceAttr("auth0_hook.my_hook", "trigger_id", "pre-user-registration"),
+					resource.TestCheckResourceAttr("auth0_hook.my_hook", "enabled", "false"),
+				),
+			},
 		},
 	})
 }
 
-const testAccHook = `
+const testAccHookCreate = `
 
 resource "auth0_hook" "my_hook" {
   name = "pre-user-reg-hook"
-  script = "function (user, context, callback) { callback(null, { user }); }"
   trigger_id = "pre-user-registration"
+  script = "function (user, context, callback) { callback(null, { user }); }"
   enabled = true
 }
 `
 
-func TestHookNameRegexp(t *testing.T) {
-	testCases := []struct {
-		name  string
-		valid bool
-	}{
-		{
-			name:  "my-hook-1",
-			valid: true,
-		},
-		{
-			name:  "hook 2 name with spaces",
-			valid: true,
-		},
-		{
-			name:  " hook with a space prefix",
-			valid: false,
-		},
-		{
-			name:  "hook with a space suffix ",
-			valid: false,
-		},
-		{
-			name:  " ", // hook with only one space,
-			valid: false,
-		},
-		{
-			name:  "   ", // hook with only three spaces,
-			valid: false,
-		},
-	}
+const testAccHookUpdate = `
 
-	vf := validation.StringMatch(hookNameRegexp, "invalid name")
-	for _, tc := range testCases {
-		_, errs := vf(tc.name, "name")
-		if errs != nil && tc.valid {
-			t.Fatalf("Expected %q to be valid, but got validation errors %v", tc.name, errs)
+resource "auth0_hook" "my_hook" {
+  name = "pre-user-reg-hook"
+  trigger_id = "pre-user-registration"
+  script = "function (user, context, callback) { console.log(user); callback(null, { user }); }"
+  enabled = false
+}
+`
+
+func TestHookNameRegexp(t *testing.T) {
+	for name, valid := range map[string]bool{
+		"my-hook-1":                 true,
+		"hook 2 name with spaces":   true,
+		" hook with a space prefix": false,
+		"hook with a space suffix ": false,
+		" ":                         false,
+		"   ":                       false,
+	} {
+		fn := validateHookNameFunc()
+
+		_, errs := fn(name, "name")
+		if errs != nil && valid {
+			t.Fatalf("Expected %q to be valid, but got validation errors %v", name, errs)
 		}
-		if errs == nil && !tc.valid {
-			t.Fatalf("Expected %q to be invalid, but got no validation errors.", tc.name)
+
+		if errs == nil && !valid {
+			t.Fatalf("Expected %q to be invalid, but got no validation errors.", name)
 		}
 	}
 }
