@@ -32,8 +32,8 @@ func flattenConnectionOptions(d Data, options interface{}) []interface{} {
 		m = flattenConnectionOptionsEmail(o)
 	case *management.ConnectionOptionsSMS:
 		m = flattenConnectionOptionsSMS(o)
-	// case *management.ConnectionOptionsOIDC:
-	// 	m = flattenConnectionOptionsOIDC(o)
+	case *management.ConnectionOptionsOIDC:
+		m = flattenConnectionOptionsOIDC(d, o)
 	case *management.ConnectionOptionsAD:
 		m = flattenConnectionOptionsAD(o)
 	case *management.ConnectionOptionsAzureAD:
@@ -103,6 +103,27 @@ func flattenConnectionOptionsSMS(o *management.ConnectionOptionsSMS) interface{}
 			"time_step": o.OTP.GetTimeStep(),
 			"length":    o.OTP.GetLength(),
 		},
+	}
+}
+
+func flattenConnectionOptionsOIDC(d Data, o *management.ConnectionOptionsOIDC) interface{} {
+	return map[string]interface{}{
+		"client_id":      o.GetClientID(),
+		"client_secret":  o.GetClientSecret(),
+		"icon_url":       o.GetLogoURL(),
+		"tenant_domain":  o.GetTenantDomain(),
+		"domain_aliases": o.DomainAliases,
+
+		"type":                   o.GetType(),
+		"scope":                  o.GetScope(),
+		"issuer":                 o.GetIssuer(),
+		"jwks_uri":               o.GetJWKSURI(),
+		"discovery_url":          o.GetDiscoveryURL(),
+		"token_endpoint":         o.GetTokenEndpoint(),
+		"userinfo_endpoint":      o.GetUserInfoEndpoint(),
+		"authorization_endpoint": o.GetAuthorizationEndpoint(),
+
+		//"configuration": Map(d, "configuration"), // does not get read back
 	}
 }
 
@@ -184,7 +205,8 @@ func expandConnection(d Data) *management.Connection {
 			c.Options = expandConnectionOptionsSalesforce(d)
 		case management.ConnectionStrategySMS:
 			c.Options = expandConnectionOptionsSMS(d)
-		// case management.ConnectionStrategyOIDC:
+		case management.ConnectionStrategyOIDC:
+			c.Options = expandConnectionOptionsOIDC(d)
 		case management.ConnectionStrategyAD:
 			c.Options = expandConnectionOptionsAD(d)
 		case management.ConnectionStrategyAzureAD:
@@ -375,6 +397,27 @@ func expandConnectionOptionsAzureAD(d Data) *management.ConnectionOptionsAzureAD
 	}
 	for _, scope := range rm {
 		o.SetScopes(false, scope.(string))
+	}
+
+	return o
+}
+
+func expandConnectionOptionsOIDC(d Data) *management.ConnectionOptionsOIDC {
+
+	o := &management.ConnectionOptionsOIDC{
+		ClientID:              String(d, "client_id"),
+		ClientSecret:          String(d, "client_secret"),
+		TenantDomain:          String(d, "tenant_domain"),
+		DomainAliases:         Set(d, "domain_aliases").List(),
+		LogoURL:               String(d, "icon_url"),
+		DiscoveryURL:          String(d, "discovery_url"),
+		AuthorizationEndpoint: String(d, "authorization_endpoint"),
+		Issuer:                String(d, "issuer"),
+		JWKSURI:               String(d, "jwks_uri"),
+		Type:                  String(d, "type"),
+		UserInfoEndpoint:      String(d, "userinfo_endpoint"),
+		TokenEndpoint:         String(d, "token_endpoint"),
+		Scope:                 String(d, "scope"),
 	}
 
 	return o

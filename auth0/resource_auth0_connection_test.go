@@ -255,6 +255,64 @@ resource "auth0_connection" "azure_ad" {
 }
 `
 
+func TestAccConnectionOIDC(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccConnectionOIDCConfig, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.oidc", "name", "Acceptance-Test-OIDC-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "strategy", "oidc"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.client_id", "123456"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.client_secret", "123456"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.domain_aliases.#", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.domain_aliases.3506632655", "example.com"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.domain_aliases.3154807651", "api.example.com"),
+
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scope", "openid profile email"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.type", "back_channel"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.issuer", "https://api.login.yahoo.com"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.jwks_uri", "https://api.login.yahoo.com/openid/v1/certs"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.discovery_url", "https://api.login.yahoo.com/.well-known/openid-configuration"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.token_endpoint", "https://api.login.yahoo.com/oauth2/get_token"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.userinfo_endpoint", "https://api.login.yahoo.com/openid/v1/userinfo"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.authorization_endpoint", "https://api.login.yahoo.com/oauth2/request_auth"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionOIDCConfig = `
+
+resource "auth0_connection" "oidc" {
+	name     = "Acceptance-Test-OIDC-{{.random}}"
+	strategy = "oidc"
+	options {
+		client_id     = "123456"
+		client_secret = "123456"
+		domain_aliases = [
+			"example.com",
+			"api.example.com"
+		]
+		scope        					 = "openid profile email"
+		type                   = "back_channel"
+		issuer                 = "https://api.login.yahoo.com"
+		jwks_uri               = "https://api.login.yahoo.com/openid/v1/certs"
+		discovery_url          = "https://api.login.yahoo.com/.well-known/openid-configuration"
+		token_endpoint         = "https://api.login.yahoo.com/oauth2/get_token"
+		userinfo_endpoint      = "https://api.login.yahoo.com/openid/v1/userinfo"
+		authorization_endpoint = "https://api.login.yahoo.com/oauth2/request_auth"
+	}
+}
+`
+
 func TestAccConnectionWithEnbledClients(t *testing.T) {
 
 	rand := random.String(6)

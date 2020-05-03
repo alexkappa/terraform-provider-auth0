@@ -367,6 +367,48 @@ func newConnection() *schema.Resource {
 							Optional: true,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 						},
+
+						// OIDC options
+						"type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
+						},
+						"scope": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
+						},
+						"issuer": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
+						},
+						"jwks_uri": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
+						},
+						"discovery_url": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
+						},
+						"token_endpoint": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
+						},
+						"userinfo_endpoint": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
+						},
+						"authorization_endpoint": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "",
+						},
 					},
 				},
 				Description: "Configuration settings for connection options",
