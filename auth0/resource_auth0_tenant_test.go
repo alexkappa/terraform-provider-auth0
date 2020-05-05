@@ -33,7 +33,7 @@ func TestAccTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "allowed_logout_urls.0", "https://mycompany.org/logoutCallback"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "session_lifetime", "720"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "sandbox_version", "8"),
-					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "idle_session_lifetime", "720"),
+					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "idle_session_lifetime", "72"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "enabled_locales.4213735380", "en"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "enabled_locales.421448744", "de"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "enabled_locales.521772240", "fr"),
@@ -90,7 +90,7 @@ resource "auth0_tenant" "my_tenant" {
 	]
 	session_lifetime = 720
 	sandbox_version = "8"
-	idle_session_lifetime = 720
+	idle_session_lifetime = 72
 	enabled_locales = ["en", "de", "fr"]
 	flags {
 		universal_login = true
@@ -135,7 +135,7 @@ resource "auth0_tenant" "my_tenant" {
 	]
 	session_lifetime = 720
 	sandbox_version = "8"
-	idle_session_lifetime = 720
+	idle_session_lifetime = 72
 	flags {
 		universal_login = true
 		enable_public_signup_user_exists_error = true

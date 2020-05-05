@@ -120,6 +120,7 @@ func TestAccConnectionSalesforceWithEnbledClients(t *testing.T) {
 					random.TestCheckResourceAttr("auth0_connection_salesforce.my_connection", "name", "Acceptance-Test-Connection-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection_salesforce.my_connection", "enabled_clients.#", "4"),
 				),
+				ExpectNonEmptyPlan: true,
 			},
 		},
 	})
