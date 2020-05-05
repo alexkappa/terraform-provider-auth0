@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
 	"gopkg.in/auth0.v4/management"
@@ -16,7 +17,7 @@ func Auth0() (*management.Management, error) {
 	if err := p.Configure(c); err != nil {
 		return nil, err
 	}
-	return p.Meta().(*management.Management), nil
+	return p.(*schema.Provider).Meta().(*management.Management), nil
 }
 
 func TestMain(m *testing.M) {
@@ -24,7 +25,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestProvider(t *testing.T) {
-	if err := Provider().InternalValidate(); err != nil {
+	if err := Provider().(*schema.Provider).InternalValidate(); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -46,7 +47,7 @@ func TestProvider_debugDefaults(t *testing.T) {
 		}
 
 		p := Provider()
-		debug, err := p.Schema["debug"].DefaultValue()
+		debug, err := p.(*schema.Provider).Schema["debug"].DefaultValue()
 		if err != nil {
 			t.Fatalf("Unexpected error: %v", err)
 		}

@@ -6,16 +6,16 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/meta"
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/terraform-providers/terraform-provider-auth0/version"
 
 	"gopkg.in/auth0.v4"
 	"gopkg.in/auth0.v4/management"
 )
 
-var provider *schema.Provider
-
-func init() {
-	provider = &schema.Provider{
+// Provider returns a terraform.ResourceProvider.
+func Provider() terraform.ResourceProvider {
+	provider := &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"domain": {
 				Type:        schema.TypeString,
@@ -61,44 +61,24 @@ func init() {
 			"auth0_tenant":          newTenant(),
 			"auth0_role":            newRole(),
 		},
-		ConfigureFunc: Configure,
 	}
-}
 
-func Provider() *schema.Provider {
+	provider.ConfigureFunc = func(data *schema.ResourceData) (interface{}, error) {
+		domain := data.Get("domain").(string)
+		id := data.Get("client_id").(string)
+		secret := data.Get("client_secret").(string)
+		debug := data.Get("debug").(bool)
+
+		userAgent := fmt.Sprintf("Terraform-Provider-Auth0/%s (Go-Auth0-SDK/%s; Terraform-SDK/%s; Terraform/%s)",
+			version.ProviderVersion,
+			auth0.Version,
+			meta.SDKVersionString(),
+			provider.TerraformVersion)
+
+		return management.New(domain, id, secret,
+			management.WithDebug(debug),
+			management.WithUserAgent(userAgent))
+	}
+
 	return provider
-}
-
-func Configure(data *schema.ResourceData) (interface{}, error) {
-
-	domain := data.Get("domain").(string)
-	id := data.Get("client_id").(string)
-	secret := data.Get("client_secret").(string)
-	debug := data.Get("debug").(bool)
-
-	userAgent := fmt.Sprintf("Terraform-Provider-Auth0/%s (Go-Auth0-SDK/%s; Terraform-SDK/%s; Terraform/%s)",
-		Version(),
-		SDKVersion(),
-		TerraformSDKVersion(),
-		TerraformVersion())
-
-	return management.New(domain, id, secret,
-		management.WithDebug(debug),
-		management.WithUserAgent(userAgent))
-}
-
-func Version() string {
-	return version.ProviderVersion
-}
-
-func SDKVersion() string {
-	return auth0.Version
-}
-
-func TerraformVersion() string {
-	return provider.TerraformVersion
-}
-
-func TerraformSDKVersion() string {
-	return meta.SDKVersionString()
 }
