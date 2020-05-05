@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"fmt"
 	"log"
 	"strings"
 	"testing"
@@ -154,7 +155,7 @@ resource "auth0_connection" "my_connection" {
 }
 `
 
-func TestAccConnectionAD(t *testing.T) {
+func TestAccConnectionADStrategy(t *testing.T) {
 
 	rand := random.String(6)
 
@@ -164,7 +165,7 @@ func TestAccConnectionAD(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: random.Template(testAccConnectionADConfig, rand),
+				Config: random.Template(testAccConnectionADStrategyConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.ad", "name", "Acceptance-Test-AD-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.ad", "strategy", "ad"),
@@ -181,7 +182,7 @@ func TestAccConnectionAD(t *testing.T) {
 	})
 }
 
-const testAccConnectionADConfig = `
+const testAccConnectionADStrategyConfig = `
 
 resource "auth0_connection" "ad" {
 	name = "Acceptance-Test-AD-{{.random}}"
@@ -197,7 +198,7 @@ resource "auth0_connection" "ad" {
 }
 `
 
-func TestAccConnectionAzureAD(t *testing.T) {
+func TestAccConnectionAzureADStrategy(t *testing.T) {
 
 	rand := random.String(6)
 
@@ -207,7 +208,7 @@ func TestAccConnectionAzureAD(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: random.Template(testAccConnectionAzureADConfig, rand),
+				Config: random.Template(testAccConnectionAzureADStrategyConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.azure_ad", "name", "Acceptance-Test-Azure-AD-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "strategy", "waad"),
@@ -228,7 +229,7 @@ func TestAccConnectionAzureAD(t *testing.T) {
 	})
 }
 
-const testAccConnectionAzureADConfig = `
+const testAccConnectionAzureADStrategyConfig = `
 
 resource "auth0_connection" "azure_ad" {
 	name     = "Acceptance-Test-Azure-AD-{{.random}}"
@@ -314,7 +315,7 @@ resource "auth0_connection" "my_connection" {
 }
 `
 
-func TestAccConnectionSMS(t *testing.T) {
+func TestAccConnectionSMSStrategy(t *testing.T) {
 
 	rand := random.String(6)
 
@@ -324,7 +325,7 @@ func TestAccConnectionSMS(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: random.Template(testAccConnectionSMSConfig, rand),
+				Config: random.Template(testAccConnectionSMSStrategyConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.sms", "name", "Acceptance-Test-SMS-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.sms", "strategy", "sms"),
@@ -339,7 +340,7 @@ func TestAccConnectionSMS(t *testing.T) {
 	})
 }
 
-const testAccConnectionSMSConfig = `
+const testAccConnectionSMSStrategyConfig = `
 
 resource "auth0_connection" "sms" {
 	name = "Acceptance-Test-SMS-{{.random}}"
@@ -365,7 +366,7 @@ resource "auth0_connection" "sms" {
 }
 `
 
-func TestAccConnectionEmail(t *testing.T) {
+func TestAccConnectionEmailStrategy(t *testing.T) {
 
 	rand := random.String(6)
 
@@ -375,7 +376,7 @@ func TestAccConnectionEmail(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: random.Template(testAccConnectionEmailConfig, rand),
+				Config: random.Template(testAccConnectionEmailStrategyConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.email", "name", "Acceptance-Test-Email-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.email", "strategy", "email"),
@@ -387,7 +388,7 @@ func TestAccConnectionEmail(t *testing.T) {
 				),
 			},
 			{
-				Config: random.Template(testAccConnectionEmailConfigUpdate, rand),
+				Config: random.Template(testAccConnectionEmailStrategyConfigUpdate, rand),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.#", "1"),
 					resource.TestCheckResourceAttr("auth0_connection.email", "options.0.totp.0.time_step", "360"),
@@ -398,7 +399,7 @@ func TestAccConnectionEmail(t *testing.T) {
 	})
 }
 
-const testAccConnectionEmailConfig = `
+const testAccConnectionEmailStrategyConfig = `
 
 resource "auth0_connection" "email" {
 	name = "Acceptance-Test-Email-{{.random}}"
@@ -412,7 +413,7 @@ resource "auth0_connection" "email" {
 		subject = "Sign in!"
 		syntax = "liquid"
 		template = "<html><body><h1>Here's your password!</h1></body></html>"
-		
+
 		brute_force_protection = true
 
 		totp {
@@ -424,7 +425,7 @@ resource "auth0_connection" "email" {
 
 `
 
-const testAccConnectionEmailConfigUpdate = `
+const testAccConnectionEmailStrategyConfigUpdate = `
 
 resource "auth0_connection" "email" {
 	name = "Acceptance-Test-Email-{{.random}}"
@@ -438,7 +439,7 @@ resource "auth0_connection" "email" {
 		subject = "Sign in!"
 		syntax = "liquid"
 		template = "<html><body><h1>Here's your password!</h1></body></html>"
-		
+
 		brute_force_protection = true
 
 		totp {
@@ -449,7 +450,7 @@ resource "auth0_connection" "email" {
 }
 `
 
-func TestAccConnectionSalesforce(t *testing.T) {
+func TestAccConnectionSalesforceStrategy(t *testing.T) {
 
 	rand := random.String(6)
 
@@ -459,7 +460,7 @@ func TestAccConnectionSalesforce(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: random.Template(testAccConnectionSalesforceConfig, rand),
+				Config: random.Template(testAccConnectionSalesforceStrategyConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.salesforce_community", "name", "Acceptance-Test-Salesforce-Connection-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.salesforce_community", "strategy", "salesforce-community"),
@@ -470,7 +471,7 @@ func TestAccConnectionSalesforce(t *testing.T) {
 	})
 }
 
-const testAccConnectionSalesforceConfig = `
+const testAccConnectionSalesforceStrategyConfig = `
 
 resource "auth0_connection" "salesforce_community" {
 	name = "Acceptance-Test-Salesforce-Connection-{{.random}}"
@@ -485,7 +486,7 @@ resource "auth0_connection" "salesforce_community" {
 }
 `
 
-func TestAccConnectionGoogleOAuth2(t *testing.T) {
+func TestAccConnectionGoogleOAuth2Strategy(t *testing.T) {
 
 	rand := random.String(6)
 
@@ -495,7 +496,7 @@ func TestAccConnectionGoogleOAuth2(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: random.Template(testAccConnectionGoogleOAuth2Config, rand),
+				Config: random.Template(testAccConnectionGoogleOAuth2StrategyConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.google_oauth2", "name", "Acceptance-Test-Google-OAuth2-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "strategy", "google-oauth2"),
@@ -513,7 +514,7 @@ func TestAccConnectionGoogleOAuth2(t *testing.T) {
 	})
 }
 
-const testAccConnectionGoogleOAuth2Config = `
+const testAccConnectionGoogleOAuth2StrategyConfig = `
 
 resource "auth0_connection" "google_oauth2" {
 	name = "Acceptance-Test-Google-OAuth2-{{.random}}"
@@ -528,7 +529,7 @@ resource "auth0_connection" "google_oauth2" {
 }
 `
 
-func TestAccConnectionGitHub(t *testing.T) {
+func TestAccConnectionGitHubStrategy(t *testing.T) {
 
 	rand := random.String(6)
 
@@ -538,7 +539,7 @@ func TestAccConnectionGitHub(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: random.Template(testAccConnectionGitHubConfig, rand),
+				Config: random.Template(testAccConnectionGitHubStrategyConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.github", "name", "Acceptance-Test-GitHub-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.github", "strategy", "github"),
@@ -571,7 +572,7 @@ func TestAccConnectionGitHub(t *testing.T) {
 	})
 }
 
-const testAccConnectionGitHubConfig = `
+const testAccConnectionGitHubStrategyConfig = `
 
 resource "auth0_connection" "github" {
 	name = "Acceptance-Test-GitHub-{{.random}}"
@@ -647,3 +648,43 @@ resource "auth0_connection" "my_connection" {
 	}
 }
 `
+
+func testAccGenericConnectionWithEnabledClientsConfig(strategy string) string {
+
+	return fmt.Sprintf(`
+		resource "auth0_client" "my_client_1" {
+			name = "Application - Acceptance Test - 1 - {{.random}}"
+			description = "Test Applications Long Description"
+			app_type = "non_interactive"
+		}
+
+		resource "auth0_client" "my_client_2" {
+			name = "Application - Acceptance Test - 2 - {{.random}}"
+			description = "Test Applications Long Description"
+			app_type = "non_interactive"
+		}
+
+		resource "auth0_client" "my_client_3" {
+			name = "Application - Acceptance Test - 3 - {{.random}}"
+			description = "Test Applications Long Description"
+			app_type = "non_interactive"
+		}
+
+		resource "auth0_client" "my_client_4" {
+			name = "Application - Acceptance Test - 4 - {{.random}}"
+			description = "Test Applications Long Description"
+			app_type = "non_interactive"
+		}
+
+		resource "auth0_connection_%s" "my_connection" {
+			name = "Acceptance-Test-Connection-{{.random}}"
+			is_domain_connection = true
+			enabled_clients = [
+				"${auth0_client.my_client_1.id}",
+				"${auth0_client.my_client_2.id}",
+				"${auth0_client.my_client_3.id}",
+				"${auth0_client.my_client_4.id}",
+			]
+		}
+	`, strategy)
+}

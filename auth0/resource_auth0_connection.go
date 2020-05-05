@@ -12,11 +12,11 @@ import (
 
 func newConnection() *schema.Resource {
 	return &schema.Resource{
-
-		Create: createConnection,
-		Read:   readConnection,
-		Update: updateConnection,
-		Delete: deleteConnection,
+		DeprecationMessage: "The auth0_connection resource is deprecated. Please use the connection provider specific resources instead.",
+		Create:             createConnection,
+		Read:               readConnection,
+		Update:             updateConnection,
+		Delete:             deleteConnection,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -397,6 +397,13 @@ func createConnection(d *schema.ResourceData, m interface{}) error {
 	}
 	d.SetId(auth0.StringValue(c.ID))
 	return readConnection(d, m)
+}
+
+func createConnectionWithStrategy(strategy string) func(d *schema.ResourceData, m interface{}) error {
+	return func(d *schema.ResourceData, m interface{}) error {
+		d.Set("strategy", strategy)
+		return createConnection(d, m)
+	}
 }
 
 func readConnection(d *schema.ResourceData, m interface{}) error {
