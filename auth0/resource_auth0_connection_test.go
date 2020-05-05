@@ -528,6 +528,45 @@ resource "auth0_connection" "google_oauth2" {
 }
 `
 
+func TestAccConnectionFacebook(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccConnectionFacebookConfig, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.facebook", "name", "Acceptance-Test-Facebook-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.facebook", "strategy", "facebook"),
+					resource.TestCheckResourceAttr("auth0_connection.facebook", "options.0.client_id", ""),
+					resource.TestCheckResourceAttr("auth0_connection.facebook", "options.0.client_secret", ""),
+					resource.TestCheckResourceAttr("auth0_connection.facebook", "options.0.scopes.#", "4"),
+					resource.TestCheckResourceAttr("auth0_connection.facebook", "options.0.scopes.3590537325", "public_profile"),
+					resource.TestCheckResourceAttr("auth0_connection.facebook", "options.0.scopes.881205744", "email"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionFacebookConfig = `
+
+resource "auth0_connection" "facebook" {
+	name = "Acceptance-Test-Facebook-{{.random}}"
+	is_domain_connection = false
+	strategy = "facebook"
+	options {
+		client_id = ""
+		client_secret = ""
+		scopes = [ "public_profile", "email", "groups_access_member_info", "user_birthday" ]
+	}
+}
+`
+
 func TestAccConnectionGitHub(t *testing.T) {
 
 	rand := random.String(6)
