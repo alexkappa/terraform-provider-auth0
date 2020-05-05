@@ -102,6 +102,12 @@ Arguments accepted by this resource include:
 * `custom_scripts` - (Optional) Map(String). 
 * `configuration` - (Optional) Map(String), Case-sensitive.
 
+**Linkedin**
+
+* `client_id` - (Optional) String. Linkedin API Key.
+* `client_secret` - (Optional) String. Case-sensitive. Linkedin secret key.
+* `strategy_version` - (Optional) Int. Version 1 is deprecated, use version 2.
+
 **Azure AD Options**
 
 * `app_id` - (Optional) String
