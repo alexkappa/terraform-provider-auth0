@@ -51,6 +51,7 @@ func Provider() terraform.ResourceProvider {
 			"auth0_connection":                      newConnection(),
 			"auth0_connection_auth0":                newAuth0Connection(),
 			"auth0_connection_ad":                   newADConnection(),
+			"auth0_connection_adfs":                 newADFSConnection(),
 			"auth0_connection_waad":                 newAzureADConnection(),
 			"auth0_connection_google_oauth2":        newGoogleOAuth2Connection(),
 			"auth0_connection_github":               newGitHubConnection(),

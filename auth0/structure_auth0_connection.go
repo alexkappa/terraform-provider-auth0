@@ -38,6 +38,8 @@ func flattenConnectionOptions(d Data, options interface{}) []interface{} {
 		m = flattenConnectionOptionsAD(o)
 	case *management.ConnectionOptionsAzureAD:
 		m = flattenConnectionOptionsAzureAD(o)
+	case *management.ConnectionOptionsADFS:
+		m = flattenConnectionOptionsADFS(o)
 	}
 
 	return []interface{}{m}
@@ -154,6 +156,16 @@ func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) int
 	}
 }
 
+func flattenConnectionOptionsADFS(o *management.ConnectionOptionsADFS) interface{} {
+	return map[string]interface{}{
+		"tenant_domain":    o.GetTenantDomain(),
+		"domain_aliases":   o.DomainAliases,
+		"icon_url":         o.GetLogoURL(),
+		"api_enable_users": o.GetEnableUsersAPI(),
+		"adfs_server":      o.GetADFSServer(),
+	}
+}
+
 func expandConnection(d Data) *management.Connection {
 
 	c := &management.Connection{
@@ -191,6 +203,8 @@ func expandConnection(d Data) *management.Connection {
 			c.Options = expandConnectionOptionsAzureAD(d)
 		case management.ConnectionStrategyEmail:
 			c.Options = expandConnectionOptionsEmail(d)
+		case "adfs":
+			c.Options = expandConnectionOptionsADFS(d)
 		default:
 			log.Printf("[WARN]: Unsupported connection strategy %s", s)
 			log.Printf("[WARN]: Raise an issue with the auth0 provider in order to support it:")
@@ -375,6 +389,19 @@ func expandConnectionOptionsAzureAD(d Data) *management.ConnectionOptionsAzureAD
 	}
 	for _, scope := range rm {
 		o.SetScopes(false, scope.(string))
+	}
+
+	return o
+}
+
+func expandConnectionOptionsADFS(d Data) *management.ConnectionOptionsADFS {
+
+	o := &management.ConnectionOptionsADFS{
+		DomainAliases:  Set(d, "domain_aliases").List(),
+		TenantDomain:   String(d, "tenant_domain"),
+		LogoURL:        String(d, "icon_url"),
+		ADFSServer:     String(d, "adfs_server"),
+		EnableUsersAPI: Bool(d, "api_enable_users"),
 	}
 
 	return o
