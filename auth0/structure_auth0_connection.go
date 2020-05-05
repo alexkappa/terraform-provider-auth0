@@ -20,8 +20,8 @@ func flattenConnectionOptions(d Data, options interface{}) []interface{} {
 	// 	m = flattenConnectionOptionsFacebook(o)
 	// case *management.ConnectionOptionsApple:
 	// 	m = flattenConnectionOptionsApple(o)
-	// case *management.ConnectionOptionsLinkedin:
-	// 	m = flattenConnectionOptionsLinkedin(o)
+	case *management.ConnectionOptionsLinkedin:
+		m = flattenConnectionOptionsLinkedin(o)
 	case *management.ConnectionOptionsGitHub:
 		m = flattenConnectionOptionsGitHub(o)
 	// case *management.ConnectionOptionsWindowsLive:
@@ -76,6 +76,15 @@ func flattenConnectionOptionsGoogleOAuth2(o *management.ConnectionOptionsGoogleO
 		"client_secret":     o.GetClientSecret(),
 		"allowed_audiences": o.AllowedAudiences,
 		"scopes":            o.Scopes(),
+	}
+}
+
+func flattenConnectionOptionsLinkedin(o *management.ConnectionOptionsLinkedin) interface{} {
+	return map[string]interface{}{
+		"client_id":        o.GetClientID(),
+		"client_secret":    o.GetClientSecret(),
+		"strategy_version": o.GetStrategyVersion(),
+		"scopes":           o.Scopes(),
 	}
 }
 
@@ -174,7 +183,8 @@ func expandConnection(d Data) *management.Connection {
 			c.Options = expandConnectionOptionsGoogleOAuth2(d)
 		// case management.ConnectionStrategyFacebook
 		// 	management.ConnectionStrategyApple
-		// 	management.ConnectionStrategyLinkedin
+		case management.ConnectionStrategyLinkedin:
+			c.Options = expandConnectionOptionsLinkedin(d)
 		case management.ConnectionStrategyGitHub:
 			c.Options = expandConnectionOptionsGitHub(d)
 		// 	management.ConnectionStrategyWindowsLive:
@@ -259,6 +269,19 @@ func expandConnectionOptionsGoogleOAuth2(d Data) *management.ConnectionOptionsGo
 		ClientID:         String(d, "client_id"),
 		ClientSecret:     String(d, "client_secret"),
 		AllowedAudiences: Set(d, "allowed_audiences").List(),
+	}
+
+	expandConnectionOptionsScopes(d, o)
+
+	return o
+}
+
+func expandConnectionOptionsLinkedin(d Data) *management.ConnectionOptionsLinkedin {
+
+	o := &management.ConnectionOptionsLinkedin{
+		ClientID:        String(d, "client_id"),
+		ClientSecret:    String(d, "client_secret"),
+		StrategyVersion: Int(d, "strategy_version"),
 	}
 
 	expandConnectionOptionsScopes(d, o)
