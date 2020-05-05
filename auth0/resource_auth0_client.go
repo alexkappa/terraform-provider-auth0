@@ -503,6 +503,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("allowed_logout_urls", c.AllowedLogoutURLs)
 	d.Set("allowed_origins", c.AllowedOrigins)
 	d.Set("grant_types", c.GrantTypes)
+	d.Set("signing_keys", c.SigningKeys)
 	d.Set("web_origins", c.WebOrigins)
 	d.Set("sso", c.SSO)
 	d.Set("sso_disabled", c.SSODisabled)
