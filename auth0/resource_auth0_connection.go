@@ -344,6 +344,18 @@ func newConnection() *schema.Resource {
 							Optional: true,
 						},
 
+						// apple options
+						"team_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Apple Team ID",
+						},
+						"key_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Apple Key ID",
+						},
+
 						// adfs options
 						"adfs_server": {
 							Type:     schema.TypeString,
