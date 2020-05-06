@@ -18,8 +18,8 @@ func flattenConnectionOptions(d Data, options interface{}) []interface{} {
 		m = flattenConnectionOptionsGoogleOAuth2(o)
 	// case *management.ConnectionOptionsFacebook:
 	// 	m = flattenConnectionOptionsFacebook(o)
-	// case *management.ConnectionOptionsApple:
-	// 	m = flattenConnectionOptionsApple(o)
+	case *management.ConnectionOptionsApple:
+		m = flattenConnectionOptionsApple(o)
 	// case *management.ConnectionOptionsLinkedin:
 	// 	m = flattenConnectionOptionsLinkedin(o)
 	case *management.ConnectionOptionsGitHub:
@@ -76,6 +76,16 @@ func flattenConnectionOptionsGoogleOAuth2(o *management.ConnectionOptionsGoogleO
 		"client_secret":     o.GetClientSecret(),
 		"allowed_audiences": o.AllowedAudiences,
 		"scopes":            o.Scopes(),
+	}
+}
+
+func flattenConnectionOptionsApple(o *management.ConnectionOptionsApple) interface{} {
+	return map[string]interface{}{
+		"client_id":     o.GetClientID(),
+		"client_secret": o.GetClientSecret(),
+		"team_id":       o.GetTeamID(),
+		"key_id":        o.GetKeyID(),
+		"scopes":        o.Scopes(),
 	}
 }
 
@@ -172,8 +182,9 @@ func expandConnection(d Data) *management.Connection {
 			c.Options = expandConnectionOptionsAuth0(d)
 		case management.ConnectionStrategyGoogleOAuth2:
 			c.Options = expandConnectionOptionsGoogleOAuth2(d)
+		case management.ConnectionStrategyApple:
+			c.Options = expandConnectionOptionsApple(d)
 		// case management.ConnectionStrategyFacebook
-		// 	management.ConnectionStrategyApple
 		// 	management.ConnectionStrategyLinkedin
 		case management.ConnectionStrategyGitHub:
 			c.Options = expandConnectionOptionsGitHub(d)
@@ -259,6 +270,20 @@ func expandConnectionOptionsGoogleOAuth2(d Data) *management.ConnectionOptionsGo
 		ClientID:         String(d, "client_id"),
 		ClientSecret:     String(d, "client_secret"),
 		AllowedAudiences: Set(d, "allowed_audiences").List(),
+	}
+
+	expandConnectionOptionsScopes(d, o)
+
+	return o
+}
+
+func expandConnectionOptionsApple(d Data) *management.ConnectionOptionsApple {
+
+	o := &management.ConnectionOptionsApple{
+		ClientID:     String(d, "client_id"),
+		ClientSecret: String(d, "client_secret"),
+		TeamID:       String(d, "team_id"),
+		KeyID:        String(d, "key_id"),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -369,13 +394,7 @@ func expandConnectionOptionsAzureAD(d Data) *management.ConnectionOptionsAzureAD
 		IdentityAPI:         String(d, "identity_api"),
 	}
 
-	add, rm := Diff(d, "scopes")
-	for _, scope := range add {
-		o.SetScopes(true, scope.(string))
-	}
-	for _, scope := range rm {
-		o.SetScopes(false, scope.(string))
-	}
+	expandConnectionOptionsScopes(d, o)
 
 	return o
 }
@@ -386,7 +405,8 @@ type scoper interface {
 }
 
 func expandConnectionOptionsScopes(d Data, s scoper) {
-	add, rm := Diff(d, "scopes")
+	add := Set(d, "scopes").List()
+	_, rm := Diff(d, "scopes")
 	for _, scope := range add {
 		s.SetScopes(true, scope.(string))
 	}

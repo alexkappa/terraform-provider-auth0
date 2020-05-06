@@ -528,6 +528,74 @@ resource "auth0_connection" "google_oauth2" {
 }
 `
 
+func TestAccConnectionApple(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccConnectionAppleConfig, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.apple", "name", "Acceptance-Test-Apple-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "strategy", "apple"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.client_id", "client_id"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.client_secret", "-----BEGIN PRIVATE KEY-----\nMIHBAgEAMA0GCSqGSIb3DQEBAQUABIGsMIGpAgEAAiEA3+luhVHxSJ8cv3VNzQDP\nEL6BPs7FjBq4oro0MWM+QJMCAwEAAQIgWbq6/pRK4/ZXV+ZTSj7zuxsWZuK5i3ET\nfR2TCEkZR3kCEQD2ElqDr/pY5aHA++9HioY9AhEA6PIxC1c/K3gJqu+K+EsfDwIQ\nG5MS8Y7Wzv9skOOqfKnZQQIQdG24vaZZ2GwiyOD5YKiLWQIQYNtrb3j0BWsT4LI+\nN9+l1g==\n-----END PRIVATE KEY-----"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.team_id", "team_id"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.key_id", "key_id"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.#", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.2318696674", "name"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.881205744", "email"),
+				),
+			},
+			{
+				Config: random.Template(testAccConnectionAppleConfigUpdate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.team_id", "team_id_update"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.key_id", "key_id_update"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.#", "1"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.881205744", "email"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionAppleConfig = `
+
+resource "auth0_connection" "apple" {
+	name = "Acceptance-Test-Apple-{{.random}}"
+	is_domain_connection = false
+	strategy = "apple"
+	options {
+		client_id = "client_id"
+		client_secret = "-----BEGIN PRIVATE KEY-----\nMIHBAgEAMA0GCSqGSIb3DQEBAQUABIGsMIGpAgEAAiEA3+luhVHxSJ8cv3VNzQDP\nEL6BPs7FjBq4oro0MWM+QJMCAwEAAQIgWbq6/pRK4/ZXV+ZTSj7zuxsWZuK5i3ET\nfR2TCEkZR3kCEQD2ElqDr/pY5aHA++9HioY9AhEA6PIxC1c/K3gJqu+K+EsfDwIQ\nG5MS8Y7Wzv9skOOqfKnZQQIQdG24vaZZ2GwiyOD5YKiLWQIQYNtrb3j0BWsT4LI+\nN9+l1g==\n-----END PRIVATE KEY-----"
+		team_id = "team_id"
+		key_id = "key_id"
+		scopes = ["email", "name"]
+	}
+}
+`
+
+const testAccConnectionAppleConfigUpdate = `
+
+resource "auth0_connection" "apple" {
+	name = "Acceptance-Test-Apple-{{.random}}"
+	is_domain_connection = false
+	strategy = "apple"
+	options {
+		client_id = "client_id"
+		client_secret = "-----BEGIN PRIVATE KEY-----\nMIHBAgEAMA0GCSqGSIb3DQEBAQUABIGsMIGpAgEAAiEA3+luhVHxSJ8cv3VNzQDP\nEL6BPs7FjBq4oro0MWM+QJMCAwEAAQIgWbq6/pRK4/ZXV+ZTSj7zuxsWZuK5i3ET\nfR2TCEkZR3kCEQD2ElqDr/pY5aHA++9HioY9AhEA6PIxC1c/K3gJqu+K+EsfDwIQ\nG5MS8Y7Wzv9skOOqfKnZQQIQdG24vaZZ2GwiyOD5YKiLWQIQYNtrb3j0BWsT4LI+\nN9+l1g==\n-----END PRIVATE KEY-----"
+		team_id = "team_id_update"
+		key_id = "key_id_update"
+		scopes = ["email"]
+	}
+}
+`
+
 func TestAccConnectionGitHub(t *testing.T) {
 
 	rand := random.String(6)
