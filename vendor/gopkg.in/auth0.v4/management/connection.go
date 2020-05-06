@@ -230,7 +230,7 @@ func (c *ConnectionOptionsGoogleOAuth2) Scopes() []string {
 }
 
 func (c *ConnectionOptionsGoogleOAuth2) SetScopes(enable bool, scopes ...string) {
-	tag.SetScopes(c, true, scopes...)
+	tag.SetScopes(c, enable, scopes...)
 }
 
 type ConnectionOptionsFacebook struct {
@@ -289,7 +289,7 @@ func (c *ConnectionOptionsFacebook) Scopes() []string {
 }
 
 func (c *ConnectionOptionsFacebook) SetScopes(enable bool, scopes ...string) {
-	tag.SetScopes(c, true, scopes...)
+	tag.SetScopes(c, enable, scopes...)
 }
 
 type ConnectionOptionsApple struct {
@@ -310,7 +310,7 @@ func (c *ConnectionOptionsApple) Scopes() []string {
 }
 
 func (c *ConnectionOptionsApple) SetScopes(enable bool, scopes ...string) {
-	tag.SetScopes(c, true, scopes...)
+	tag.SetScopes(c, enable, scopes...)
 }
 
 type ConnectionOptionsLinkedin struct {
@@ -333,7 +333,7 @@ func (c *ConnectionOptionsLinkedin) Scopes() []string {
 }
 
 func (c *ConnectionOptionsLinkedin) SetScopes(enable bool, scopes ...string) {
-	tag.SetScopes(c, true, scopes...)
+	tag.SetScopes(c, enable, scopes...)
 }
 
 type ConnectionOptionsGitHub struct {
@@ -371,7 +371,7 @@ func (c *ConnectionOptionsGitHub) Scopes() []string {
 }
 
 func (c *ConnectionOptionsGitHub) SetScopes(enable bool, scopes ...string) {
-	tag.SetScopes(c, true, scopes...)
+	tag.SetScopes(c, enable, scopes...)
 }
 
 type ConnectionOptionsEmail struct {
@@ -455,7 +455,7 @@ func (c *ConnectionOptionsWindowsLive) Scopes() []string {
 }
 
 func (c *ConnectionOptionsWindowsLive) SetScopes(enable bool, scopes ...string) {
-	tag.SetScopes(c, true, scopes...)
+	tag.SetScopes(c, enable, scopes...)
 }
 
 type ConnectionOptionsSalesforce struct {
@@ -475,7 +475,7 @@ func (c *ConnectionOptionsSalesforce) Scopes() []string {
 }
 
 func (c *ConnectionOptionsSalesforce) SetScopes(enable bool, scopes ...string) {
-	tag.SetScopes(c, true, scopes...)
+	tag.SetScopes(c, enable, scopes...)
 }
 
 type ConnectionOptionsOIDC struct {
