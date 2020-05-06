@@ -546,6 +546,9 @@ func TestAccConnectionApple(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.client_secret", "-----BEGIN PRIVATE KEY-----\nMIHBAgEAMA0GCSqGSIb3DQEBAQUABIGsMIGpAgEAAiEA3+luhVHxSJ8cv3VNzQDP\nEL6BPs7FjBq4oro0MWM+QJMCAwEAAQIgWbq6/pRK4/ZXV+ZTSj7zuxsWZuK5i3ET\nfR2TCEkZR3kCEQD2ElqDr/pY5aHA++9HioY9AhEA6PIxC1c/K3gJqu+K+EsfDwIQ\nG5MS8Y7Wzv9skOOqfKnZQQIQdG24vaZZ2GwiyOD5YKiLWQIQYNtrb3j0BWsT4LI+\nN9+l1g==\n-----END PRIVATE KEY-----"),
 					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.team_id", "team_id"),
 					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.key_id", "key_id"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.#", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.2318696674", "name"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.881205744", "email"),
 				),
 			},
 			{
@@ -553,6 +556,8 @@ func TestAccConnectionApple(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.team_id", "team_id_update"),
 					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.key_id", "key_id_update"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.#", "1"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.881205744", "email"),
 				),
 			},
 		},
@@ -570,6 +575,7 @@ resource "auth0_connection" "apple" {
 		client_secret = "-----BEGIN PRIVATE KEY-----\nMIHBAgEAMA0GCSqGSIb3DQEBAQUABIGsMIGpAgEAAiEA3+luhVHxSJ8cv3VNzQDP\nEL6BPs7FjBq4oro0MWM+QJMCAwEAAQIgWbq6/pRK4/ZXV+ZTSj7zuxsWZuK5i3ET\nfR2TCEkZR3kCEQD2ElqDr/pY5aHA++9HioY9AhEA6PIxC1c/K3gJqu+K+EsfDwIQ\nG5MS8Y7Wzv9skOOqfKnZQQIQdG24vaZZ2GwiyOD5YKiLWQIQYNtrb3j0BWsT4LI+\nN9+l1g==\n-----END PRIVATE KEY-----"
 		team_id = "team_id"
 		key_id = "key_id"
+		scopes = ["email", "name"]
 	}
 }
 `
@@ -585,6 +591,7 @@ resource "auth0_connection" "apple" {
 		client_secret = "-----BEGIN PRIVATE KEY-----\nMIHBAgEAMA0GCSqGSIb3DQEBAQUABIGsMIGpAgEAAiEA3+luhVHxSJ8cv3VNzQDP\nEL6BPs7FjBq4oro0MWM+QJMCAwEAAQIgWbq6/pRK4/ZXV+ZTSj7zuxsWZuK5i3ET\nfR2TCEkZR3kCEQD2ElqDr/pY5aHA++9HioY9AhEA6PIxC1c/K3gJqu+K+EsfDwIQ\nG5MS8Y7Wzv9skOOqfKnZQQIQdG24vaZZ2GwiyOD5YKiLWQIQYNtrb3j0BWsT4LI+\nN9+l1g==\n-----END PRIVATE KEY-----"
 		team_id = "team_id_update"
 		key_id = "key_id_update"
+		scopes = ["email"]
 	}
 }
 `
