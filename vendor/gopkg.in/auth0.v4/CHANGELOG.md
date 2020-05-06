@@ -1,3 +1,7 @@
+## v4.3.5
+
+* `management.ConnectionOptions*`: `SetScopes()` was ignoring the `enable` argument.
+
 ## v4.2.0
 
 * `management.UserManager`: `Roles()` returns `RoleList` ([#109](https://github.com/go-auth0/auth0/pull/109)).

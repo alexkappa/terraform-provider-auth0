@@ -394,13 +394,7 @@ func expandConnectionOptionsAzureAD(d Data) *management.ConnectionOptionsAzureAD
 		IdentityAPI:         String(d, "identity_api"),
 	}
 
-	add, rm := Diff(d, "scopes")
-	for _, scope := range add {
-		o.SetScopes(true, scope.(string))
-	}
-	for _, scope := range rm {
-		o.SetScopes(false, scope.(string))
-	}
+	expandConnectionOptionsScopes(d, o)
 
 	return o
 }
@@ -411,7 +405,8 @@ type scoper interface {
 }
 
 func expandConnectionOptionsScopes(d Data, s scoper) {
-	add, rm := Diff(d, "scopes")
+	add := Set(d, "scopes").List()
+	_, rm := Diff(d, "scopes")
 	for _, scope := range add {
 		s.SetScopes(true, scope.(string))
 	}
