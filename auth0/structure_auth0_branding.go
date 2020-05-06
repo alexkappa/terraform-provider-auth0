@@ -58,9 +58,16 @@ func expandBrandingColors(d Data) (colors *management.BrandingColors) {
 
 func expandBrandingFont(d Data) (font *management.BrandingFont) {
 	List(d, "font").Elem(func(d Data) {
-		font = &management.BrandingFont{
-			URL: String(d, "url"),
+		url := String(d, "url")
+
+		// Avoid 400 Bad Request if we send the font object with an empty URL
+		if url != nil {
+			font = &management.BrandingFont{
+				URL: String(d, "url"),
+			}
 		}
+
 	})
+
 	return
 }
