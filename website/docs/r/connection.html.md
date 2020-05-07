@@ -102,6 +102,11 @@ Arguments accepted by this resource include:
 * `custom_scripts` - (Optional) Map(String). 
 * `configuration` - (Optional) Map(String), Case-sensitive.
 
+**Facebook**
+
+* `client_id` - (Optional) String. Corresponds to the Facebook application ID.
+* `client_secret` - (Optional) String, Case-sensitive. The Facebook application client secret.
+
 **Azure AD Options**
 
 * `app_id` - (Optional) String
