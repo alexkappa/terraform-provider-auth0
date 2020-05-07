@@ -274,7 +274,6 @@ func TestAccConnectionOIDC(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.domain_aliases.#", "2"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.domain_aliases.3506632655", "example.com"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.domain_aliases.3154807651", "api.example.com"),
-
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scope", "openid profile email"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.type", "back_channel"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.issuer", "https://api.login.yahoo.com"),
@@ -283,6 +282,23 @@ func TestAccConnectionOIDC(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.token_endpoint", "https://api.login.yahoo.com/oauth2/get_token"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.userinfo_endpoint", "https://api.login.yahoo.com/openid/v1/userinfo"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.authorization_endpoint", "https://api.login.yahoo.com/oauth2/request_auth"),
+				),
+			},
+			{
+				Config: random.Template(testAccConnectionOIDCConfigUpdate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.client_id", "1234567"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.client_secret", "1234567"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.domain_aliases.#", "1"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.domain_aliases.3506632655", "example.com"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scope", "openid profile"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.type", "front_channel"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.issuer", "https://www.paypalobjects.com"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.jwks_uri", "https://api.paypal.com/v1/oauth2/certs"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.discovery_url", "https://www.paypalobjects.com/.well-known/openid-configuration"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.token_endpoint", "https://api.paypal.com/v1/oauth2/token"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.userinfo_endpoint", "https://api.paypal.com/v1/oauth2/token/userinfo"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.authorization_endpoint", "https://www.paypal.com/signin/authorize"),
 				),
 			},
 		},
@@ -309,6 +325,29 @@ resource "auth0_connection" "oidc" {
 		token_endpoint         = "https://api.login.yahoo.com/oauth2/get_token"
 		userinfo_endpoint      = "https://api.login.yahoo.com/openid/v1/userinfo"
 		authorization_endpoint = "https://api.login.yahoo.com/oauth2/request_auth"
+	}
+}
+`
+
+const testAccConnectionOIDCConfigUpdate = `
+
+resource "auth0_connection" "oidc" {
+	name     = "Acceptance-Test-OIDC-{{.random}}"
+	strategy = "oidc"
+	options {
+		client_id     = "1234567"
+		client_secret = "1234567"
+		domain_aliases = [
+			"example.com"
+		]
+		scope        					 = "openid profile"
+		type                   = "front_channel"
+		issuer                 = "https://www.paypalobjects.com"
+		jwks_uri               = "https://api.paypal.com/v1/oauth2/certs"
+		discovery_url          = "https://www.paypalobjects.com/.well-known/openid-configuration"
+		token_endpoint         = "https://api.paypal.com/v1/oauth2/token"
+		userinfo_endpoint      = "https://api.paypal.com/v1/oauth2/token/userinfo"
+		authorization_endpoint = "https://www.paypal.com/signin/authorize"
 	}
 }
 `
