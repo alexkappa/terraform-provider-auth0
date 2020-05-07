@@ -82,7 +82,7 @@ Arguments accepted by this resource include:
 * `validation` - (Optional) String.
 * `password_policy` - (Optional) String. Indicates level of password strength to enforce during authentication. A strong password policy will make it difficult, if not improbable, for someone to guess a password through either manual or automated means. Options include `none`, `low`, `fair`, `good`, `excellent`.
 * `password_history` - (Optional) List(Resource). Configuration settings for the password history that is maintained for each user to prevent the reuse of passwords. For details, see [Password History](#password-history).
-* `password_no_personal_info` - (Optional) List(Resource). Configuration settings for the password personal info check, which does not allow passwords that contain any part of the user's personal data, including user's name, username, nickname, user_metadata.name, user_metadata.first, user_metadata.last, user's email, or firstpart of the user's email. For details, see [Password No Personal Info](#password-no-personal-info).
+* `password_no_personal_info` - (Optional) List(Resource). Configuration settings for the password personal info check, which does not allow passwords that contain any part of the user's personal data, including user's name, username, nickname, user_metadata.name, user_metadata.first, user_metadata.last, user's email, or first part of the user's email. For details, see [Password No Personal Info](#password-no-personal-info).
 * `password_dictionary` - (Optional) List(Resource). Configuration settings for the password dictionary check, which does not allow passwords that are part of the password dictionary. For details, see [Password Dictionary](#password-dictionary).
 * `password_complexity_options` - (Optional) List(Resource). Configuration settings for password complexity. For details, see [Password Complexity Options](#password-complexity-options).
 * `api_enable_users` - (Optional) Boolean.
@@ -106,6 +106,12 @@ Arguments accepted by this resource include:
 
 * `client_id` - (Optional) String. Corresponds to the Facebook application ID.
 * `client_secret` - (Optional) String, Case-sensitive. The Facebook application client secret.
+
+**Linkedin**
+
+* `client_id` - (Optional) String. Linkedin API Key.
+* `client_secret` - (Optional) String. Case-sensitive. Linkedin secret key.
+* `strategy_version` - (Optional) Int. Version 1 is deprecated, use version 2.
 
 **Azure AD Options**
 
