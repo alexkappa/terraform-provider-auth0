@@ -20,8 +20,8 @@ func flattenConnectionOptions(d Data, options interface{}) []interface{} {
 		m = flattenConnectionOptionsFacebook(o)
 	case *management.ConnectionOptionsApple:
 		m = flattenConnectionOptionsApple(o)
-	// case *management.ConnectionOptionsLinkedin:
-	// 	m = flattenConnectionOptionsLinkedin(o)
+	case *management.ConnectionOptionsLinkedin:
+		m = flattenConnectionOptionsLinkedin(o)
 	case *management.ConnectionOptionsGitHub:
 		m = flattenConnectionOptionsGitHub(o)
 	// case *management.ConnectionOptionsWindowsLive:
@@ -94,6 +94,15 @@ func flattenConnectionOptionsApple(o *management.ConnectionOptionsApple) interfa
 		"team_id":       o.GetTeamID(),
 		"key_id":        o.GetKeyID(),
 		"scopes":        o.Scopes(),
+	}
+}
+
+func flattenConnectionOptionsLinkedin(o *management.ConnectionOptionsLinkedin) interface{} {
+	return map[string]interface{}{
+		"client_id":        o.GetClientID(),
+		"client_secret":    o.GetClientSecret(),
+		"strategy_version": o.GetStrategyVersion(),
+		"scopes":           o.Scopes(),
 	}
 }
 
@@ -194,7 +203,8 @@ func expandConnection(d Data) *management.Connection {
 			c.Options = expandConnectionOptionsFacebook(d)
 		case management.ConnectionStrategyApple:
 			c.Options = expandConnectionOptionsApple(d)
-		// 	management.ConnectionStrategyLinkedin
+		case management.ConnectionStrategyLinkedin:
+			c.Options = expandConnectionOptionsLinkedin(d)
 		case management.ConnectionStrategyGitHub:
 			c.Options = expandConnectionOptionsGitHub(d)
 		// 	management.ConnectionStrategyWindowsLive:
@@ -305,6 +315,19 @@ func expandConnectionOptionsApple(d Data) *management.ConnectionOptionsApple {
 		ClientSecret: String(d, "client_secret"),
 		TeamID:       String(d, "team_id"),
 		KeyID:        String(d, "key_id"),
+	}
+
+	expandConnectionOptionsScopes(d, o)
+
+	return o
+}
+
+func expandConnectionOptionsLinkedin(d Data) *management.ConnectionOptionsLinkedin {
+
+	o := &management.ConnectionOptionsLinkedin{
+		ClientID:        String(d, "client_id"),
+		ClientSecret:    String(d, "client_secret"),
+		StrategyVersion: Int(d, "strategy_version"),
 	}
 
 	expandConnectionOptionsScopes(d, o)
