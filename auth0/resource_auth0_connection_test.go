@@ -282,6 +282,10 @@ func TestAccConnectionOIDC(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.token_endpoint", "https://api.login.yahoo.com/oauth2/get_token"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.userinfo_endpoint", "https://api.login.yahoo.com/openid/v1/userinfo"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.authorization_endpoint", "https://api.login.yahoo.com/oauth2/request_auth"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.#", "3"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.881205744", "email"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.4080487570", "profile"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.862208977", "openid"),
 				),
 			},
 			{
@@ -299,6 +303,9 @@ func TestAccConnectionOIDC(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.token_endpoint", "https://api.paypal.com/v1/oauth2/token"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.userinfo_endpoint", "https://api.paypal.com/v1/oauth2/token/userinfo"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.authorization_endpoint", "https://www.paypal.com/signin/authorize"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.#", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.881205744", "email"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.4080487570", "profile"),
 				),
 			},
 		},
@@ -317,7 +324,6 @@ resource "auth0_connection" "oidc" {
 			"example.com",
 			"api.example.com"
 		]
-		scope        					 = "openid profile email"
 		type                   = "back_channel"
 		issuer                 = "https://api.login.yahoo.com"
 		jwks_uri               = "https://api.login.yahoo.com/openid/v1/certs"
@@ -325,6 +331,7 @@ resource "auth0_connection" "oidc" {
 		token_endpoint         = "https://api.login.yahoo.com/oauth2/get_token"
 		userinfo_endpoint      = "https://api.login.yahoo.com/openid/v1/userinfo"
 		authorization_endpoint = "https://api.login.yahoo.com/oauth2/request_auth"
+		scopes = [ "email", "profile", "openid" ]
 	}
 }
 `
@@ -340,7 +347,6 @@ resource "auth0_connection" "oidc" {
 		domain_aliases = [
 			"example.com"
 		]
-		scope        					 = "openid profile"
 		type                   = "front_channel"
 		issuer                 = "https://www.paypalobjects.com"
 		jwks_uri               = "https://api.paypal.com/v1/oauth2/certs"
@@ -348,6 +354,7 @@ resource "auth0_connection" "oidc" {
 		token_endpoint         = "https://api.paypal.com/v1/oauth2/token"
 		userinfo_endpoint      = "https://api.paypal.com/v1/oauth2/token/userinfo"
 		authorization_endpoint = "https://www.paypal.com/signin/authorize"
+		scopes = [ "email", "profile" ]
 	}
 }
 `
