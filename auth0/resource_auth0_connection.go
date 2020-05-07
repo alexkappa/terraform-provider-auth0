@@ -369,7 +369,7 @@ func newConnection() *schema.Resource {
 						},
 
 						"strategy_version": {
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Optional: true,
 							Computed: true,
 						},
