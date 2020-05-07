@@ -132,8 +132,6 @@ func flattenConnectionOptionsOIDC(d Data, o *management.ConnectionOptionsOIDC) i
 		"token_endpoint":         o.GetTokenEndpoint(),
 		"userinfo_endpoint":      o.GetUserInfoEndpoint(),
 		"authorization_endpoint": o.GetAuthorizationEndpoint(),
-
-		//"configuration": Map(d, "configuration"), // does not get read back
 	}
 }
 
