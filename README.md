@@ -4,6 +4,7 @@ Auth0 Terraform Provider
 [![Build Status](https://travis-ci.org/alexkappa/terraform-provider-auth0.svg?branch=master)](https://travis-ci.org/alexkappa/terraform-provider-auth0)
 [![Maintainability](https://api.codeclimate.com/v1/badges/9c49c10286123b716c79/maintainability)](https://codeclimate.com/github/alexkappa/terraform-provider-auth0/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/9c49c10286123b716c79/test_coverage)](https://codeclimate.com/github/alexkappa/terraform-provider-auth0/test_coverage)
+[![Gitter](https://badges.gitter.im/terraform-provider-auth0/community.svg)](https://gitter.im/terraform-provider-auth0/community)
 
 This provider has recently been accepted in the [Terraform Provider Developer Program](https://www.terraform.io/guides/terraform-provider-development-program.html). This means you can install this provider with the same ease as other officially supported providers!
 
