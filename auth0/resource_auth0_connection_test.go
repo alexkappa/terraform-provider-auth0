@@ -594,7 +594,6 @@ resource "auth0_connection" "facebook" {
 `
 
 func TestAccConnectionApple(t *testing.T) {
-
 	rand := random.String(6)
 
 	resource.Test(t, resource.TestCase{
@@ -657,6 +656,71 @@ resource "auth0_connection" "apple" {
 		team_id = "team_id_update"
 		key_id = "key_id_update"
 		scopes = ["email"]
+	}
+}
+`
+
+func TestAccConnectionLinkedin(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccConnectionLinkedinConfig, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.linkedin", "name", "Acceptance-Test-Linkedin-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.linkedin", "strategy", "linkedin"),
+					resource.TestCheckResourceAttr("auth0_connection.linkedin", "options.0.client_id", "client_id"),
+					resource.TestCheckResourceAttr("auth0_connection.linkedin", "options.0.client_secret", "client_secret"),
+					resource.TestCheckResourceAttr("auth0_connection.linkedin", "options.0.strategy_version", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.linkedin", "options.0.scopes.#", "3"),
+					resource.TestCheckResourceAttr("auth0_connection.linkedin", "options.0.scopes.370042894", "basic_profile"),
+					resource.TestCheckResourceAttr("auth0_connection.linkedin", "options.0.scopes.881205744", "email"),
+				),
+			},
+			{
+				Config: random.Template(testAccConnectionLinkedinConfigUpdate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.linkedin", "options.0.client_id", "client_id_update"),
+					resource.TestCheckResourceAttr("auth0_connection.linkedin", "options.0.client_secret", "client_secret_update"),
+					resource.TestCheckResourceAttr("auth0_connection.linkedin", "options.0.scopes.370042894", "basic_profile"),
+					resource.TestCheckResourceAttr("auth0_connection.linkedin", "options.0.scopes.#", "2"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionLinkedinConfig = `
+
+resource "auth0_connection" "linkedin" {
+	name = "Acceptance-Test-Linkedin-{{.random}}"
+	is_domain_connection = false
+	strategy = "linkedin"
+	options {
+		client_id = "client_id"
+		client_secret = "client_secret"
+		strategy_version = 2
+		scopes = [ "basic_profile", "profile", "email" ]
+	}
+}
+`
+
+const testAccConnectionLinkedinConfigUpdate = `
+
+resource "auth0_connection" "linkedin" {
+	name = "Acceptance-Test-Linkedin-{{.random}}"
+	is_domain_connection = false
+	strategy = "linkedin"
+	options {
+		client_id = "client_id_update"
+		client_secret = "client_secret_update"
+		strategy_version = 2
+		scopes = [ "basic_profile", "profile" ]
 	}
 }
 `
