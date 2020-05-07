@@ -1,4 +1,8 @@
 ## 0.10.0 (Unreleased)
+
+* resource/auth0_connection: support for the `apple` connection strategy ([#216](https://github.com/alexkappa/terraform-provider-auth0/pull/216)).
+
+
 ## 0.9.3 (April 24, 2020)
 
 BUG FIXES: 
