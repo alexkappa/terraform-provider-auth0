@@ -386,11 +386,6 @@ func newConnection() *schema.Resource {
 							Optional:    true,
 							Description: "",
 						},
-						"scope": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "",
-						},
 						"issuer": {
 							Type:        schema.TypeString,
 							Optional:    true,

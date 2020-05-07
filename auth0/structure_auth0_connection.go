@@ -125,7 +125,7 @@ func flattenConnectionOptionsOIDC(d Data, o *management.ConnectionOptionsOIDC) i
 		"domain_aliases": o.DomainAliases,
 
 		"type":                   o.GetType(),
-		"scope":                  o.GetScope(),
+		"scopes":                 o.Scopes(),
 		"issuer":                 o.GetIssuer(),
 		"jwks_uri":               o.GetJWKSURI(),
 		"discovery_url":          o.GetDiscoveryURL(),
@@ -434,8 +434,9 @@ func expandConnectionOptionsOIDC(d Data) *management.ConnectionOptionsOIDC {
 		Type:                  String(d, "type"),
 		UserInfoEndpoint:      String(d, "userinfo_endpoint"),
 		TokenEndpoint:         String(d, "token_endpoint"),
-		Scope:                 String(d, "scope"),
 	}
+
+	expandConnectionOptionsScopes(d, o)
 
 	return o
 }
