@@ -33,7 +33,7 @@ func flattenConnectionOptions(d Data, options interface{}) []interface{} {
 	case *management.ConnectionOptionsSMS:
 		m = flattenConnectionOptionsSMS(o)
 	case *management.ConnectionOptionsOIDC:
-		m = flattenConnectionOptionsOIDC(d, o)
+		m = flattenConnectionOptionsOIDC(o)
 	case *management.ConnectionOptionsAD:
 		m = flattenConnectionOptionsAD(o)
 	case *management.ConnectionOptionsAzureAD:
@@ -116,7 +116,7 @@ func flattenConnectionOptionsSMS(o *management.ConnectionOptionsSMS) interface{}
 	}
 }
 
-func flattenConnectionOptionsOIDC(d Data, o *management.ConnectionOptionsOIDC) interface{} {
+func flattenConnectionOptionsOIDC(o *management.ConnectionOptionsOIDC) interface{} {
 	return map[string]interface{}{
 		"client_id":      o.GetClientID(),
 		"client_secret":  o.GetClientSecret(),
