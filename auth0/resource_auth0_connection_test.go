@@ -274,7 +274,6 @@ func TestAccConnectionOIDC(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.domain_aliases.#", "2"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.domain_aliases.3506632655", "example.com"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.domain_aliases.3154807651", "api.example.com"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scope", "openid profile email"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.type", "back_channel"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.issuer", "https://api.login.yahoo.com"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.jwks_uri", "https://api.login.yahoo.com/openid/v1/certs"),
@@ -283,9 +282,9 @@ func TestAccConnectionOIDC(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.userinfo_endpoint", "https://api.login.yahoo.com/openid/v1/userinfo"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.authorization_endpoint", "https://api.login.yahoo.com/oauth2/request_auth"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.#", "3"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.881205744", "email"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.2517049750", "openid"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.4080487570", "profile"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.862208977", "openid"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.881205744", "email"),
 				),
 			},
 			{
@@ -295,7 +294,6 @@ func TestAccConnectionOIDC(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.client_secret", "1234567"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.domain_aliases.#", "1"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.domain_aliases.3506632655", "example.com"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scope", "openid profile"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.type", "front_channel"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.issuer", "https://www.paypalobjects.com"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.jwks_uri", "https://api.paypal.com/v1/oauth2/certs"),
@@ -304,8 +302,8 @@ func TestAccConnectionOIDC(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.userinfo_endpoint", "https://api.paypal.com/v1/oauth2/token/userinfo"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.authorization_endpoint", "https://www.paypal.com/signin/authorize"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.#", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.2517049750", "openid"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.881205744", "email"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.4080487570", "profile"),
 				),
 			},
 		},
@@ -331,7 +329,7 @@ resource "auth0_connection" "oidc" {
 		token_endpoint         = "https://api.login.yahoo.com/oauth2/get_token"
 		userinfo_endpoint      = "https://api.login.yahoo.com/openid/v1/userinfo"
 		authorization_endpoint = "https://api.login.yahoo.com/oauth2/request_auth"
-		scopes = [ "email", "profile", "openid" ]
+		scopes = [ "openid", "email", "profile" ]
 	}
 }
 `
@@ -354,7 +352,7 @@ resource "auth0_connection" "oidc" {
 		token_endpoint         = "https://api.paypal.com/v1/oauth2/token"
 		userinfo_endpoint      = "https://api.paypal.com/v1/oauth2/token/userinfo"
 		authorization_endpoint = "https://www.paypal.com/signin/authorize"
-		scopes = [ "email", "profile" ]
+		scopes = [ "openid", "email" ]
 	}
 }
 `
