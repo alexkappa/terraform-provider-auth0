@@ -145,6 +145,19 @@ Arguments accepted by this resource include:
 
 * `community_base_url` - (Optional) String.
 
+**OIDC Options**
+
+* `client_id` - (Optional) String. Client ID given by your OIDC provider.
+* `client_secret` - (Optional) String, Case-sensitive. Client secret given by your OIDC provider.
+* `type` - (Optional) String. Value must be `back_channel` or `front_channel`
+* `scopes` - (Optional) List(String). Value must be a list of scopes. For example `["openid", "profile", "email"]`
+* `issuer` - (Optional) String. URL of the issuer.
+* `discovery_url` - (Optional) String. Usually an URL ending with `/.well-known/openid-configuration`
+* `jwks_uri` - (Optional) String.
+* `token_endpoint` - (Optional) String.
+* `userinfo_endpoint` - (Optional) String.
+* `authorization_endpoint` - (Optional) String.
+
 #### Password History
 
 `password_history` supports the following arguments:

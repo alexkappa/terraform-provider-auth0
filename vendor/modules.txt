@@ -362,7 +362,7 @@ google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
 google.golang.org/grpc/test/bufconn
-# gopkg.in/auth0.v4 v4.3.5
+# gopkg.in/auth0.v4 v4.3.6
 gopkg.in/auth0.v4
 gopkg.in/auth0.v4/internal/client
 gopkg.in/auth0.v4/internal/tag
