@@ -1,4 +1,4 @@
 package auth0
 
 // Version of this library.
-var Version = "4.3.5"
+var Version = "4.3.6"
