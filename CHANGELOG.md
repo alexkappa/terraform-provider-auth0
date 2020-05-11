@@ -3,6 +3,7 @@
 * resource/auth0_connection: support for the `apple` connection strategy ([#216](https://github.com/alexkappa/terraform-provider-auth0/pull/216)).
 * resource/auth0_connection: support for the `facebook` connection strategy ([#221](https://github.com/alexkappa/terraform-provider-auth0/pull/221)).
 * resource/auth0_connection: support for the `linkedin` connection strategy ([#222](https://github.com/alexkappa/terraform-provider-auth0/pull/222)).
+* resource/auth0_connection: support for the `oidc` connection strategy ([#215](https://github.com/alexkappa/terraform-provider-auth0/pull/215))
 
 ## 0.9.3 (April 24, 2020)
 
