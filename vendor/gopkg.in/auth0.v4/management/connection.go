@@ -2,6 +2,8 @@ package management
 
 import (
 	"encoding/json"
+	"sort"
+	"strings"
 
 	"gopkg.in/auth0.v4/internal/tag"
 )
@@ -495,6 +497,29 @@ type ConnectionOptionsOIDC struct {
 	TokenEndpoint         *string `json:"token_endpoint"`
 
 	Scope *string `json:"scope,omitempty"`
+}
+
+func (c *ConnectionOptionsOIDC) Scopes() []string {
+	return strings.Fields(c.GetScope())
+}
+
+func (c *ConnectionOptionsOIDC) SetScopes(enable bool, scopes ...string) {
+	scopeMap := make(map[string]bool)
+	for _, scope := range c.Scopes() {
+		scopeMap[scope] = true
+	}
+	for _, scope := range scopes {
+		scopeMap[scope] = enable
+	}
+	scopeSlice := make([]string, 0, len(scopeMap))
+	for scope, enabled := range scopeMap {
+		if enabled {
+			scopeSlice = append(scopeSlice, scope)
+		}
+	}
+	sort.Strings(scopeSlice)
+	scope := strings.Join(scopeSlice, " ")
+	c.Scope = &scope
 }
 
 type ConnectionOptionsAD struct {
