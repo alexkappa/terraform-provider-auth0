@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -460,21 +461,36 @@ func connectionSchemaV0() *schema.Resource {
 
 func connectionSchemaUpgradeV0(state map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
 
-	v, ok := state["strategy_version"]
+	o, ok := state["options"]
 	if !ok {
 		return state, nil
 	}
 
-	s, ok := v.(string)
-	if !ok {
-		return state, nil
-	}
+	l, ok := o.([]interface{})
+	if ok && len(l) > 0 {
 
-	i, err := strconv.Atoi(s)
-	if err == nil {
-		state["strategy_version"] = i
-	} else {
-		state["strategy_version"] = 0
+		m := l[0].(map[string]interface{})
+
+		v, ok := m["strategy_version"]
+		if !ok {
+			return state, nil
+		}
+
+		s, ok := v.(string)
+		if !ok {
+			return state, nil
+		}
+
+		i, err := strconv.Atoi(s)
+		if err == nil {
+			m["strategy_version"] = i
+		} else {
+			m["strategy_version"] = 0
+		}
+
+		state["options"] = []interface{}{m}
+
+		log.Printf("[DEBUG] Schema upgrade: options.strategy_version has been migrated to %d", i)
 	}
 
 	return state, nil
