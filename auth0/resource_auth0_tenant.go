@@ -280,9 +280,7 @@ func readTenant(d *schema.ResourceData, m interface{}) error {
 	d.Set("sandbox_version", t.SandboxVersion)
 	d.Set("idle_session_lifetime", t.IdleSessionLifetime)
 
-	// TODO: figure out why it is necessary to wrap what is aleady an
-	// []interface{} with another []interface{}.
-	d.Set("enabled_locales", []interface{}{t.EnabledLocales})
+	d.Set("enabled_locales", t.EnabledLocales)
 
 	d.Set("error_page", flattenTenantErrorPage(t.ErrorPage))
 	d.Set("flags", flattenTenantFlags(t.Flags))
