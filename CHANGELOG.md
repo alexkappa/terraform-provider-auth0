@@ -1,4 +1,9 @@
-## 0.11.0 (Unreleased)
+## 0.10.1 (Unreleased)
+
+BUG FIXES:
+
+* resource/auth0_connection: migrate state for `strategy_version` causing an `Error: a number is required` error.
+
 ## 0.10.0 (May 11, 2020)
 
 * resource/auth0_connection: support for the `apple` connection strategy ([#216](https://github.com/alexkappa/terraform-provider-auth0/pull/216)).
