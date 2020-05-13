@@ -2,6 +2,7 @@ package auth0
 
 import (
 	"log"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -946,3 +947,57 @@ resource "auth0_connection" "my_connection" {
 	}
 }
 `
+
+func TestConnectionInstanceStateUpgradeV0(t *testing.T) {
+
+	for _, tt := range []struct {
+		name            string
+		version         interface{}
+		versionExpected int
+	}{
+		{
+			name:            "Empty",
+			version:         "",
+			versionExpected: 0,
+		},
+		{
+			name:            "Zero",
+			version:         "0",
+			versionExpected: 0,
+		},
+		{
+			name:            "NonZero",
+			version:         "123",
+			versionExpected: 123,
+		},
+		{
+			name:            "Invalid",
+			version:         "foo",
+			versionExpected: 0,
+		},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+
+			state := map[string]interface{}{
+				"options": []interface{}{
+					map[string]interface{}{"strategy_version": tt.version},
+				},
+			}
+
+			actual, err := connectionSchemaUpgradeV0(state, nil)
+			if err != nil {
+				t.Fatalf("error migrating state: %s", err)
+			}
+
+			expected := map[string]interface{}{
+				"options": []interface{}{
+					map[string]interface{}{"strategy_version": tt.versionExpected},
+				},
+			}
+
+			if !reflect.DeepEqual(expected, actual) {
+				t.Fatalf("\n\nexpected:\n\n%#v\n\ngot:\n\n%#v\n\n", expected, actual)
+			}
+		})
+	}
+}
