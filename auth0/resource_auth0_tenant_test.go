@@ -46,15 +46,11 @@ func TestAccTenant(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "default_redirection_uri", "https://example.com/login"),
 				),
 			},
-			// This test case confirms issue #160 where boolean values from a
-			// Bool(Map()) don't get picked up as their value is considered zero
-			// (e.g. false, "").
-			//
-			// See: https://github.com/alexkappa/terraform-provider-auth0/issues/160
-			//
 			{
 				Config: testAccTenantConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "enabled_locales.4213735380", "en"),
+					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "enabled_locales.421448744", "de"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.disable_clickjack_protection_headers", "false"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.enable_public_signup_user_exists_error", "true"),
 					resource.TestCheckResourceAttr("auth0_tenant.my_tenant", "flags.0.use_scope_descriptions_for_consent", "false"),
@@ -136,6 +132,7 @@ resource "auth0_tenant" "my_tenant" {
 	session_lifetime = 1080
 	sandbox_version = "8"
 	idle_session_lifetime = 720
+	enabled_locales = ["en", "de"]
 	flags {
 		universal_login = true
 		enable_public_signup_user_exists_error = true
