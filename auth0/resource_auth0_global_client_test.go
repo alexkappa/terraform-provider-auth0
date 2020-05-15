@@ -15,7 +15,6 @@ func TestAccGlobalClient(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				/* Update the custom login page and its enabled flag */
 				Config: testAccGlobalClientConfigWithCustomLogin,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("auth0_global_client.global", "client_id"),
@@ -25,7 +24,6 @@ func TestAccGlobalClient(t *testing.T) {
 				),
 			},
 			{
-				/* Delete the resource which should cause no change in auth0 configuration as the delete operation is a no op */
 				Config: testAccGlobalClientConfigEmpty,
 				Check: resource.ComposeTestCheckFunc(
 					func(state *terraform.State) error {
@@ -41,7 +39,6 @@ func TestAccGlobalClient(t *testing.T) {
 				),
 			},
 			{
-				/* Create the resource again with no config settings and verify the values are set to what they were in step 2*/
 				Config:             testAccGlobalClientConfigDefault,
 				ExpectNonEmptyPlan: true,
 				Check: resource.ComposeTestCheckFunc(
@@ -51,7 +48,6 @@ func TestAccGlobalClient(t *testing.T) {
 			},
 
 			{
-				/* Disable custom login */
 				Config: testAccGlobalClientConfigNoCustomLogin,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_global_client.global", "custom_login_page_on", "false"),
