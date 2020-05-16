@@ -171,7 +171,7 @@ func buildEmail(d *schema.ResourceData) *management.Email {
 		DefaultFromAddress: String(d, "default_from_address"),
 	}
 
-	List(d, "credentials").Elem(func(d Data) {
+	List(d, "credentials").Elem(func(d ResourceData) {
 		// e.Credentials = buildEmailCredentials(v.(map[string]interface{}))
 		e.Credentials = &management.EmailCredentials{
 			APIUser:         String(d, "api_user"),
