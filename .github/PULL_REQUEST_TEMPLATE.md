@@ -5,6 +5,20 @@
 See what makes a good Pull Request at : https://github.com/alexkappa/terraform-provider-auth0/blob/master/.github/CONTRIBUTING.md#pull-requests 
 
 --->
+### Proposed Changes
+
+* Change 1
+* Change 2
+
+Fixes #0000
+
+#### Acceptance Test Output
+
+```
+$ make testacc TESTS=TestAccXXX
+
+...
+```
 
 <!--- Please keep this note for the community --->
 
@@ -14,18 +28,3 @@ See what makes a good Pull Request at : https://github.com/alexkappa/terraform-p
 * Please do not leave "+1" comments, they generate extra noise for pull request followers and do not help prioritize the request
 
 <!--- Thank you for keeping this note for the community --->
-
-Fixes #0000
-
-Changes proposed in this pull request:
-
-* Change 1
-* Change 2
-
-Output from acceptance testing:
-
-```
-$ make testacc TESTS=TestAccXXX
-
-...
-```
