@@ -116,14 +116,14 @@ resource auth0_user user {
 	picture = "https://www.example.com/picture.jpg"
 	user_metadata = <<EOF
 {
-  	"foo": "bar",
-  	"bar": { "baz": "qux" }
+  "foo": "bar",
+  "bar": { "baz": "qux" }
 }
 EOF
-  app_metadata = <<EOF
+	app_metadata = <<EOF
 {
-  	"foo": "bar",
-  	"bar": { "baz": "qux" }
+  "foo": "bar",
+  "bar": { "baz": "qux" }
 }
 EOF
 }
@@ -145,14 +145,14 @@ resource auth0_user user {
 	roles = [ auth0_role.owner.id, auth0_role.admin.id ]
 	user_metadata = <<EOF
 {
-  	"foo": "bar",
-  	"bar": { "baz": "qux" }
+  "foo": "bar",
+  "bar": { "baz": "qux" }
 }
 EOF
-  app_metadata = <<EOF
+app_metadata = <<EOF
 {
-  	"foo": "bar",
-  	"bar": { "baz": "qux" }
+  "foo": "bar",
+  "bar": { "baz": "qux" }
 }
 EOF
 }
@@ -199,5 +199,41 @@ EOF
 resource auth0_role admin {
 	name = "admin"
 	description = "Administrator"
+}
+`
+
+func TestAccUserIssue218(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccUserIssue218, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_user.auth0_user_issue_218", "user_id", "auth0|id_{{.random}}", rand),
+					random.TestCheckResourceAttr("auth0_user.auth0_user_issue_218", "username", "user_{{.random}}", rand),
+					random.TestCheckResourceAttr("auth0_user.auth0_user_issue_218", "email", "issue.218.{{.random}}@acceptance.test.com", rand),
+				),
+			},
+			{
+				Config: random.Template(testAccUserIssue218, rand),
+			},
+		},
+	})
+}
+
+const testAccUserIssue218 = `
+
+resource auth0_user auth0_user_issue_218 {
+  connection_name = "Username-Password-Authentication"
+  user_id = "id_{{.random}}"
+  username = "user_{{.random}}"
+  email = "issue.218.{{.random}}@acceptance.test.com"
+  email_verified = true
+  password = "MyPass123$"
 }
 `

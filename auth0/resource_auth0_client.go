@@ -582,7 +582,7 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		InitiateLoginURI:               String(d, "initiate_login_uri"),
 	}
 
-	List(d, "jwt_configuration").Elem(func(d Data) {
+	List(d, "jwt_configuration").Elem(func(d ResourceData) {
 		c.JWTConfiguration = &management.ClientJWTConfiguration{
 			LifetimeInSeconds: Int(d, "lifetime_in_seconds", IsNewResource(), HasChange()),
 			SecretEncoded:     Bool(d, "secret_encoded", IsNewResource()),

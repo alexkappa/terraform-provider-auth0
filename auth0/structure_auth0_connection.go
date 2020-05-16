@@ -7,7 +7,7 @@ import (
 	"gopkg.in/auth0.v4/management"
 )
 
-func flattenConnectionOptions(d Data, options interface{}) []interface{} {
+func flattenConnectionOptions(d ResourceData, options interface{}) []interface{} {
 
 	var m interface{}
 
@@ -52,7 +52,7 @@ func flattenConnectionOptionsGitHub(o *management.ConnectionOptionsGitHub) inter
 	}
 }
 
-func flattenConnectionOptionsAuth0(d Data, o *management.ConnectionOptions) interface{} {
+func flattenConnectionOptionsAuth0(d ResourceData, o *management.ConnectionOptions) interface{} {
 	return map[string]interface{}{
 		"validation":                     o.Validation,
 		"password_policy":                o.GetPasswordPolicy(),
@@ -200,7 +200,7 @@ func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) int
 	}
 }
 
-func expandConnection(d Data) *management.Connection {
+func expandConnection(d ResourceData) *management.Connection {
 
 	c := &management.Connection{
 		Name:               String(d, "name", IsNewResource()),
@@ -212,7 +212,7 @@ func expandConnection(d Data) *management.Connection {
 
 	s := d.Get("strategy").(string)
 
-	List(d, "options").Elem(func(d Data) {
+	List(d, "options").Elem(func(d ResourceData) {
 		switch s {
 		case management.ConnectionStrategyAuth0:
 			c.Options = expandConnectionOptionsAuth0(d)
@@ -251,7 +251,7 @@ func expandConnection(d Data) *management.Connection {
 	return c
 }
 
-func expandConnectionOptionsGitHub(d Data) *management.ConnectionOptionsGitHub {
+func expandConnectionOptionsGitHub(d ResourceData) *management.ConnectionOptionsGitHub {
 	o := &management.ConnectionOptionsGitHub{
 		ClientID:          String(d, "client_id"),
 		ClientSecret:      String(d, "client_secret"),
@@ -263,31 +263,31 @@ func expandConnectionOptionsGitHub(d Data) *management.ConnectionOptionsGitHub {
 	return o
 }
 
-func expandConnectionOptionsAuth0(d Data) *management.ConnectionOptions {
+func expandConnectionOptionsAuth0(d ResourceData) *management.ConnectionOptions {
 
 	o := &management.ConnectionOptions{
 		Validation:     Map(d, "validation"),
 		PasswordPolicy: String(d, "password_policy", IsNewResource(), HasChange()),
 	}
 
-	List(d, "password_history").Elem(func(d Data) {
+	List(d, "password_history").Elem(func(d ResourceData) {
 		o.PasswordHistory = make(map[string]interface{})
 		o.PasswordHistory["enable"] = Bool(d, "enable")
 		o.PasswordHistory["size"] = Int(d, "size")
 	})
 
-	List(d, "password_no_personal_info").Elem(func(d Data) {
+	List(d, "password_no_personal_info").Elem(func(d ResourceData) {
 		o.PasswordNoPersonalInfo = make(map[string]interface{})
 		o.PasswordNoPersonalInfo["enable"] = Bool(d, "enable")
 	})
 
-	List(d, "password_dictionary").Elem(func(d Data) {
+	List(d, "password_dictionary").Elem(func(d ResourceData) {
 		o.PasswordDictionary = make(map[string]interface{})
 		o.PasswordDictionary["enable"] = Bool(d, "enable")
 		o.PasswordDictionary["dictionary"] = Set(d, "dictionary").List()
 	})
 
-	List(d, "password_complexity_options").Elem(func(d Data) {
+	List(d, "password_complexity_options").Elem(func(d ResourceData) {
 		o.PasswordComplexityOptions = make(map[string]interface{})
 		o.PasswordComplexityOptions["min_length"] = Int(d, "min_length")
 	})
@@ -303,7 +303,7 @@ func expandConnectionOptionsAuth0(d Data) *management.ConnectionOptions {
 	return o
 }
 
-func expandConnectionOptionsGoogleOAuth2(d Data) *management.ConnectionOptionsGoogleOAuth2 {
+func expandConnectionOptionsGoogleOAuth2(d ResourceData) *management.ConnectionOptionsGoogleOAuth2 {
 
 	o := &management.ConnectionOptionsGoogleOAuth2{
 		ClientID:         String(d, "client_id"),
@@ -316,7 +316,7 @@ func expandConnectionOptionsGoogleOAuth2(d Data) *management.ConnectionOptionsGo
 	return o
 }
 
-func expandConnectionOptionsFacebook(d Data) *management.ConnectionOptionsFacebook {
+func expandConnectionOptionsFacebook(d ResourceData) *management.ConnectionOptionsFacebook {
 
 	o := &management.ConnectionOptionsFacebook{
 		ClientID:     String(d, "client_id"),
@@ -328,7 +328,7 @@ func expandConnectionOptionsFacebook(d Data) *management.ConnectionOptionsFacebo
 	return o
 }
 
-func expandConnectionOptionsApple(d Data) *management.ConnectionOptionsApple {
+func expandConnectionOptionsApple(d ResourceData) *management.ConnectionOptionsApple {
 
 	o := &management.ConnectionOptionsApple{
 		ClientID:     String(d, "client_id"),
@@ -342,7 +342,7 @@ func expandConnectionOptionsApple(d Data) *management.ConnectionOptionsApple {
 	return o
 }
 
-func expandConnectionOptionsLinkedin(d Data) *management.ConnectionOptionsLinkedin {
+func expandConnectionOptionsLinkedin(d ResourceData) *management.ConnectionOptionsLinkedin {
 
 	o := &management.ConnectionOptionsLinkedin{
 		ClientID:        String(d, "client_id"),
@@ -355,7 +355,7 @@ func expandConnectionOptionsLinkedin(d Data) *management.ConnectionOptionsLinked
 	return o
 }
 
-func expandConnectionOptionsSalesforce(d Data) *management.ConnectionOptionsSalesforce {
+func expandConnectionOptionsSalesforce(d ResourceData) *management.ConnectionOptionsSalesforce {
 
 	o := &management.ConnectionOptionsSalesforce{
 		ClientID:         String(d, "client_id"),
@@ -368,7 +368,7 @@ func expandConnectionOptionsSalesforce(d Data) *management.ConnectionOptionsSale
 	return o
 }
 
-func expandConnectionOptionsSMS(d Data) *management.ConnectionOptionsSMS {
+func expandConnectionOptionsSMS(d ResourceData) *management.ConnectionOptionsSMS {
 
 	o := &management.ConnectionOptionsSMS{
 		Name:                 String(d, "name"),
@@ -382,7 +382,7 @@ func expandConnectionOptionsSMS(d Data) *management.ConnectionOptionsSMS {
 		BruteForceProtection: Bool(d, "brute_force_protection"),
 	}
 
-	List(d, "totp").Elem(func(d Data) {
+	List(d, "totp").Elem(func(d ResourceData) {
 		o.OTP = &management.ConnectionOptionsOTP{
 			TimeStep: Int(d, "time_step"),
 			Length:   Int(d, "length"),
@@ -392,7 +392,7 @@ func expandConnectionOptionsSMS(d Data) *management.ConnectionOptionsSMS {
 	return o
 }
 
-func expandConnectionOptionsEmail(d Data) *management.ConnectionOptionsEmail {
+func expandConnectionOptionsEmail(d ResourceData) *management.ConnectionOptionsEmail {
 
 	o := &management.ConnectionOptionsEmail{
 		Name:          String(d, "name"),
@@ -406,7 +406,7 @@ func expandConnectionOptionsEmail(d Data) *management.ConnectionOptionsEmail {
 		BruteForceProtection: Bool(d, "brute_force_protection"),
 	}
 
-	List(d, "totp").Elem(func(d Data) {
+	List(d, "totp").Elem(func(d ResourceData) {
 		o.OTP = &management.ConnectionOptionsOTP{
 			TimeStep: Int(d, "time_step"),
 			Length:   Int(d, "length"),
@@ -416,7 +416,7 @@ func expandConnectionOptionsEmail(d Data) *management.ConnectionOptionsEmail {
 	return o
 }
 
-func expandConnectionOptionsAD(d Data) *management.ConnectionOptionsAD {
+func expandConnectionOptionsAD(d ResourceData) *management.ConnectionOptionsAD {
 
 	o := &management.ConnectionOptionsAD{
 		DomainAliases: Set(d, "domain_aliases").List(),
@@ -431,7 +431,7 @@ func expandConnectionOptionsAD(d Data) *management.ConnectionOptionsAD {
 	// `brute_force_protection` will default to true by the API if we don't
 	// specify it. Therefore if it's not specified we'll set it to false
 	// ourselves.
-	v, ok := d.GetOkExists("brute_force_protection")
+	v, ok := d.GetOk("brute_force_protection")
 	if !ok {
 		v = false
 	}
@@ -440,7 +440,7 @@ func expandConnectionOptionsAD(d Data) *management.ConnectionOptionsAD {
 	return o
 }
 
-func expandConnectionOptionsAzureAD(d Data) *management.ConnectionOptionsAzureAD {
+func expandConnectionOptionsAzureAD(d ResourceData) *management.ConnectionOptionsAzureAD {
 
 	o := &management.ConnectionOptionsAzureAD{
 		ClientID:            String(d, "client_id"),
@@ -463,7 +463,7 @@ func expandConnectionOptionsAzureAD(d Data) *management.ConnectionOptionsAzureAD
 	return o
 }
 
-func expandConnectionOptionsOIDC(d Data) *management.ConnectionOptionsOIDC {
+func expandConnectionOptionsOIDC(d ResourceData) *management.ConnectionOptionsOIDC {
 
 	o := &management.ConnectionOptionsOIDC{
 		ClientID:              String(d, "client_id"),
@@ -490,7 +490,7 @@ type scoper interface {
 	SetScopes(enable bool, scopes ...string)
 }
 
-func expandConnectionOptionsScopes(d Data, s scoper) {
+func expandConnectionOptionsScopes(d ResourceData, s scoper) {
 	add := Set(d, "scopes").List()
 	_, rm := Diff(d, "scopes")
 	for _, scope := range add {

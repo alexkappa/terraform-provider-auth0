@@ -8,16 +8,35 @@ func TestMapData(t *testing.T) {
 	d := MapData{
 		"one":  1,
 		"zero": 0,
+		"nil":  nil,
 	}
 
-	for key, shouldBeOk := range map[string]bool{
-		"one":  true,
-		"zero": false,
-	} {
-		if _, ok := d.GetOkExists(key); ok != shouldBeOk {
-			t.Errorf("d.GetOkExists(%s) should retport ok == %t", key, shouldBeOk)
+	t.Run("GetOk", func(t *testing.T) {
+		for key, shouldBeOk := range map[string]bool{
+			"one":       true,
+			"zero":      false,
+			"nil":       false,
+			"undefined": false,
+		} {
+			if _, ok := d.GetOk(key); ok != shouldBeOk {
+				t.Errorf("d.GetOk(%s) should report ok == %t", key, shouldBeOk)
+			}
 		}
-	}
+	})
+
+	t.Run("GetOkExists", func(t *testing.T) {
+		for key, shouldBeOk := range map[string]bool{
+			"one":       true,
+			"zero":      true,
+			"nil":       false,
+			"undefined": false,
+		} {
+			if _, ok := d.GetOkExists(key); ok != shouldBeOk {
+				t.Errorf("d.GetOkExists(%s) should report ok == %t", key, shouldBeOk)
+			}
+		}
+	})
+
 }
 
 func TestJSON(t *testing.T) {
