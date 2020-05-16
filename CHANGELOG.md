@@ -1,4 +1,9 @@
-## 0.11.0 (Unreleased)
+## 0.10.2 (Unreleased)
+
+BUG FIXES:
+
+* resource/auth0_user: fix issue causing an `Error: unexpected end of JSON input`.
+
 ## 0.10.1 (May 13, 2020)
 
 BUG FIXES:
