@@ -61,8 +61,8 @@ func flattenTenantUniversalLogin(universalLogin *management.TenantUniversalLogin
 	return []interface{}{m}
 }
 
-func expandTenantChangePassword(d Data) (changePassword *management.TenantChangePassword) {
-	List(d, "change_password").Elem(func(d Data) {
+func expandTenantChangePassword(d ResourceData) (changePassword *management.TenantChangePassword) {
+	List(d, "change_password").Elem(func(d ResourceData) {
 		changePassword = &management.TenantChangePassword{
 			Enabled: Bool(d, "enabled"),
 			HTML:    String(d, "html"),
@@ -71,8 +71,8 @@ func expandTenantChangePassword(d Data) (changePassword *management.TenantChange
 	return
 }
 
-func expandTenantGuardianMFAPage(d Data) (mfa *management.TenantGuardianMFAPage) {
-	List(d, "guardian_mfa_page").Elem(func(d Data) {
+func expandTenantGuardianMFAPage(d ResourceData) (mfa *management.TenantGuardianMFAPage) {
+	List(d, "guardian_mfa_page").Elem(func(d ResourceData) {
 		mfa = &management.TenantGuardianMFAPage{
 			Enabled: Bool(d, "enabled"),
 			HTML:    String(d, "html"),
@@ -81,8 +81,8 @@ func expandTenantGuardianMFAPage(d Data) (mfa *management.TenantGuardianMFAPage)
 	return
 }
 
-func expandTenantErrorPage(d Data) (errorPage *management.TenantErrorPage) {
-	List(d, "error_page").Elem(func(d Data) {
+func expandTenantErrorPage(d ResourceData) (errorPage *management.TenantErrorPage) {
+	List(d, "error_page").Elem(func(d ResourceData) {
 		errorPage = &management.TenantErrorPage{
 			HTML:        String(d, "html"),
 			ShowLogLink: Bool(d, "show_log_link"),
@@ -92,8 +92,8 @@ func expandTenantErrorPage(d Data) (errorPage *management.TenantErrorPage) {
 	return
 }
 
-func expandTenantFlags(d Data) (flags *management.TenantFlags) {
-	List(d, "flags").Elem(func(d Data) {
+func expandTenantFlags(d ResourceData) (flags *management.TenantFlags) {
+	List(d, "flags").Elem(func(d ResourceData) {
 		flags = &management.TenantFlags{
 			ChangePasswordFlowV1:              Bool(d, "change_pwd_flow_v1"),
 			EnableClientConnections:           Bool(d, "enable_client_connections"),
@@ -111,9 +111,9 @@ func expandTenantFlags(d Data) (flags *management.TenantFlags) {
 	return
 }
 
-func expandTenantUniversalLogin(d Data) (universalLogin *management.TenantUniversalLogin) {
-	List(d, "universal_login").Elem(func(d Data) {
-		List(d, "colors").Elem(func(d Data) {
+func expandTenantUniversalLogin(d ResourceData) (universalLogin *management.TenantUniversalLogin) {
+	List(d, "universal_login").Elem(func(d ResourceData) {
+		List(d, "colors").Elem(func(d ResourceData) {
 			universalLogin = &management.TenantUniversalLogin{
 				Colors: &management.TenantUniversalLoginColors{
 					Primary:        String(d, "primary"),

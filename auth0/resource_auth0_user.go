@@ -46,6 +46,7 @@ func newUser() *schema.Resource {
 			"name": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"family_name": {
 				Type:     schema.TypeString,
@@ -58,6 +59,7 @@ func newUser() *schema.Resource {
 			"nickname": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"password": {
 				Type:      schema.TypeString,
@@ -103,6 +105,7 @@ func newUser() *schema.Resource {
 			"picture": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 			},
 			"roles": {
 				Type:     schema.TypeSet,
@@ -225,27 +228,27 @@ func buildUser(d *schema.ResourceData) (u *management.User, err error) {
 
 	u = new(management.User)
 	u.ID = String(d, "user_id", IsNewResource())
-	u.Connection = String(d, "connection_name")
+	u.Connection = String(d, "connection_name", IsNewResource(), HasChange())
 	u.Username = String(d, "username", IsNewResource(), HasChange())
 	u.Name = String(d, "name", IsNewResource(), HasChange())
-	u.FamilyName = String(d, "family_name")
-	u.GivenName = String(d, "given_name")
-	u.Nickname = String(d, "nickname")
+	u.FamilyName = String(d, "family_name", IsNewResource(), HasChange())
+	u.GivenName = String(d, "given_name", IsNewResource(), HasChange())
+	u.Nickname = String(d, "nickname", IsNewResource(), HasChange())
 	u.PhoneNumber = String(d, "phone_number", IsNewResource(), HasChange())
 	u.EmailVerified = Bool(d, "email_verified", IsNewResource(), HasChange())
-	u.VerifyEmail = Bool(d, "verify_email")
+	u.VerifyEmail = Bool(d, "verify_email", IsNewResource(), HasChange())
 	u.PhoneVerified = Bool(d, "phone_verified", IsNewResource(), HasChange())
 	u.Email = String(d, "email", IsNewResource(), HasChange())
 	u.Password = String(d, "password", IsNewResource(), HasChange())
-	u.Blocked = Bool(d, "blocked")
-	u.Picture = String(d, "picture")
+	u.Blocked = Bool(d, "blocked", IsNewResource(), HasChange())
+	u.Picture = String(d, "picture", IsNewResource(), HasChange())
 
-	u.UserMetadata, err = JSON(d, "user_metadata")
+	u.UserMetadata, err = JSON(d, "user_metadata", IsNewResource(), HasChange())
 	if err != nil {
 		return nil, err
 	}
 
-	u.AppMetadata, err = JSON(d, "app_metadata")
+	u.AppMetadata, err = JSON(d, "app_metadata", IsNewResource(), HasChange())
 	if err != nil {
 		return nil, err
 	}

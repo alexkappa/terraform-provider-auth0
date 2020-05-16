@@ -205,7 +205,7 @@ func expandResourceServer(d *schema.ResourceData) *management.ResourceServer {
 		SkipConsentForVerifiableFirstPartyClients: Bool(d, "skip_consent_for_verifiable_first_party_clients"),
 	}
 
-	Set(d, "scopes").Elem(func(d Data) {
+	Set(d, "scopes").Elem(func(d ResourceData) {
 		s.Scopes = append(s.Scopes, &management.ResourceServerScope{
 			Value:       String(d, "value"),
 			Description: String(d, "description"),
