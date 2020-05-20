@@ -77,7 +77,7 @@ const testAccRoleAux = `
 
 resource auth0_resource_server matrix {
     name = "Role - Acceptance Test - {{.random}}"
-    identifier = "https://matrix.com/"
+    identifier = "https://{{.random}}.matrix.com/"
     scopes {
         value = "stop:bullets"
         description = "Stop bullets"
@@ -206,7 +206,7 @@ locals {
 
 resource auth0_resource_server server {
 	name = "Role - Acceptance Test - {{.random}}"
-	identifier = "https://matrix.com/"
+	identifier = "https://{{.random}}.matrix.com/"
 
 	dynamic scopes {
 		for_each = local.permissions

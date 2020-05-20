@@ -581,8 +581,8 @@ resource "auth0_connection" "salesforce_community" {
 	strategy = "salesforce-community"
 
 	options {
-		client_id = false
-		client_secret = "sms-connection"
+		client_id = "client-id"
+		client_secret = "client-secret"
 		community_base_url = "https://salesforce.example.com"
 	}
 }
