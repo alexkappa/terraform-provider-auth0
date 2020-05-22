@@ -131,8 +131,6 @@ func TestAccRolePermissions(t *testing.T) {
 					random.TestCheckResourceAttr("auth0_role.role", "name", "The One - Acceptance Test - {{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_role.role", "description", "The One - Acceptance Test"),
 					resource.TestCheckResourceAttr("auth0_role.role", "permissions.#", "58"),
-					resource.TestCheckResourceAttr("auth0_role.role", "permissions.3326401382.name", "permission:1"),
-					resource.TestCheckResourceAttr("auth0_role.role", "permissions.4075621829.name", "permission:58"),
 				),
 			},
 		},
