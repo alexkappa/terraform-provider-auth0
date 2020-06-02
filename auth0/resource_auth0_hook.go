@@ -43,6 +43,7 @@ func newHook() *schema.Resource {
 					"pre-user-registration",
 					"post-user-registration",
 					"post-change-password",
+					"send-phone-message",
 				}, false),
 				Description: "Execution stage of this rule. Can be " +
 					"credentials-exchange, pre-user-registration, " +
