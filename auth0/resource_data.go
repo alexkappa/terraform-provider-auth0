@@ -149,19 +149,17 @@ func HasChange() Condition {
 	}
 }
 
-// Any is a condition that evaluates to true if any of its child conditions
-// evaluate to true. If it has no child conditions it will evaluate to true.
+// Any is a condition that evaluates to true if any of its enclosed conditions
+// evaluate to true. If it is not passed any conditions it will be considered
+// unconditional, therefore it will evaluate to true.
 func Any(conditions ...Condition) Condition {
 	return func(d ResourceData, key string) bool {
-		if len(conditions) == 0 {
-			return true
-		}
 		for _, condition := range conditions {
 			if condition.Eval(d, key) {
 				return true
 			}
 		}
-		return false
+		return len(conditions) == 0
 	}
 }
 
@@ -181,7 +179,7 @@ func All(conditions ...Condition) Condition {
 // String accesses the value held by key and type asserts it to a pointer to a
 // string.
 func String(d ResourceData, key string, conditions ...Condition) (s *string) {
-	v, ok := d.GetOkExists(key)
+	v, ok := d.GetOk(key)
 	if ok && Any(conditions...).Eval(d, key) {
 		s = auth0.String(v.(string))
 	}
@@ -191,7 +189,7 @@ func String(d ResourceData, key string, conditions ...Condition) (s *string) {
 // Int accesses the value held by key and type asserts it to a pointer to a
 // int.
 func Int(d ResourceData, key string, conditions ...Condition) (i *int) {
-	v, ok := d.GetOkExists(key)
+	v, ok := d.GetOk(key)
 	if ok && Any(conditions...).Eval(d, key) {
 		i = auth0.Int(v.(int))
 	}
@@ -210,7 +208,7 @@ func Bool(d ResourceData, key string, conditions ...Condition) (b *bool) {
 
 // Slice accesses the value held by key and type asserts it to a slice.
 func Slice(d ResourceData, key string, conditions ...Condition) (s []interface{}) {
-	v, ok := d.GetOkExists(key)
+	v, ok := d.GetOk(key)
 	if ok && Any(conditions...).Eval(d, key) {
 		s = v.([]interface{})
 	}
@@ -219,7 +217,7 @@ func Slice(d ResourceData, key string, conditions ...Condition) (s []interface{}
 
 // Map accesses the value held by key and type asserts it to a map.
 func Map(d ResourceData, key string, conditions ...Condition) (m map[string]interface{}) {
-	v, ok := d.GetOkExists(key)
+	v, ok := d.GetOk(key)
 	if ok && Any(conditions...).Eval(d, key) {
 		m = v.(map[string]interface{})
 	}
@@ -229,7 +227,7 @@ func Map(d ResourceData, key string, conditions ...Condition) (m map[string]inte
 // List accesses the value held by key and returns an iterator able to go over
 // its elements.
 func List(d ResourceData, key string, conditions ...Condition) Iterator {
-	v, ok := d.GetOkExists(key)
+	v, ok := d.GetOk(key)
 	if ok && Any(conditions...).Eval(d, key) {
 		return &list{newResourceDataAtKey(key, d), v.([]interface{})}
 	}
@@ -239,7 +237,7 @@ func List(d ResourceData, key string, conditions ...Condition) Iterator {
 // Set accesses the value held by key, type asserts it to a set and returns an
 // iterator able to go over its elements.
 func Set(d ResourceData, key string, conditions ...Condition) Iterator {
-	v, ok := d.GetOkExists(key)
+	v, ok := d.GetOk(key)
 	if ok && Any(conditions...).Eval(d, key) {
 		if s, ok := v.(*schema.Set); ok {
 			return &set{newResourceDataAtKey(key, d), s}

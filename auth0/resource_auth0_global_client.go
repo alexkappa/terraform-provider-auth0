@@ -13,11 +13,32 @@ func newGlobalClient() *schema.Resource {
 	client.Create = createGlobalClient
 	client.Delete = deleteGlobalClient
 
-	name := client.Schema["name"]
-	name.Required = false
-	name.Computed = true
+	exclude := []string{"client_secret_rotation_trigger"}
+
+	// Mark all values computed and optional. This because the global client has
+	// already been created for all tenants.
+	for key := range client.Schema {
+
+		// Exclude certain fields from being marked as computed.
+		if in(key, exclude) {
+			continue
+		}
+
+		client.Schema[key].Required = false
+		client.Schema[key].Optional = true
+		client.Schema[key].Computed = true
+	}
 
 	return client
+}
+
+func in(needle string, haystack []string) bool {
+	for i := 0; i < len(haystack); i++ {
+		if needle == haystack[i] {
+			return true
+		}
+	}
+	return false
 }
 
 func createGlobalClient(d *schema.ResourceData, m interface{}) error {
