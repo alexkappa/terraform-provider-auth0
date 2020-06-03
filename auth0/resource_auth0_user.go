@@ -228,41 +228,35 @@ func buildUser(d *schema.ResourceData) (u *management.User, err error) {
 
 	u = new(management.User)
 	u.ID = String(d, "user_id", IsNewResource())
-	u.Connection = String(d, "connection_name", IsNewResource(), HasChange())
+	u.Connection = String(d, "connection_name")
+
+	u.Name = String(d, "name")
+	u.FamilyName = String(d, "family_name")
+	u.GivenName = String(d, "given_name")
+	u.Nickname = String(d, "nickname")
+
 	u.Username = String(d, "username", IsNewResource(), HasChange())
-	u.Name = String(d, "name", IsNewResource(), HasChange())
-	u.FamilyName = String(d, "family_name", IsNewResource(), HasChange())
-	u.GivenName = String(d, "given_name", IsNewResource(), HasChange())
-	u.Nickname = String(d, "nickname", IsNewResource(), HasChange())
-	u.PhoneNumber = String(d, "phone_number", IsNewResource(), HasChange())
+
+	u.Email = String(d, "email", IsNewResource(), HasChange())
 	u.EmailVerified = Bool(d, "email_verified", IsNewResource(), HasChange())
 	u.VerifyEmail = Bool(d, "verify_email", IsNewResource(), HasChange())
+
+	u.PhoneNumber = String(d, "phone_number", IsNewResource(), HasChange())
 	u.PhoneVerified = Bool(d, "phone_verified", IsNewResource(), HasChange())
-	u.Email = String(d, "email", IsNewResource(), HasChange())
+
 	u.Password = String(d, "password", IsNewResource(), HasChange())
-	u.Blocked = Bool(d, "blocked", IsNewResource(), HasChange())
-	u.Picture = String(d, "picture", IsNewResource(), HasChange())
 
-	u.UserMetadata, err = JSON(d, "user_metadata", IsNewResource(), HasChange())
+	u.Blocked = Bool(d, "blocked")
+	u.Picture = String(d, "picture")
+
+	u.UserMetadata, err = JSON(d, "user_metadata")
 	if err != nil {
 		return nil, err
 	}
 
-	u.AppMetadata, err = JSON(d, "app_metadata", IsNewResource(), HasChange())
+	u.AppMetadata, err = JSON(d, "app_metadata")
 	if err != nil {
 		return nil, err
-	}
-
-	if u.Username != nil || u.Password != nil || u.EmailVerified != nil || u.PhoneVerified != nil {
-		// When updating email_verified, phone_verified, username or password
-		// we need to specify the connection property too.
-		//
-		// https://auth0.com/docs/api/management/v2#!/Users/patch_users_by_id
-		//
-		// As the builtin String function internally checks if the key has been
-		// changed, we retrieve the value of "connection_name" regardless of
-		// change.
-		u.Connection = auth0.String(d.Get("connection_name").(string))
 	}
 
 	return u, nil
