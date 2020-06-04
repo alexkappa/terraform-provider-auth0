@@ -24,10 +24,12 @@ func newClientGrant() *schema.Resource {
 			"client_id": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"audience": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"scope": {
 				Type:     schema.TypeList,
