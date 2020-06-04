@@ -1,4 +1,10 @@
 ## 0.11.0 (Unreleased)
+
+BUG FIXES:
+
+* resource/auth0_connection: inconsistent state after applying changes to `options` ([#237](https://github.com/alexkappa/terraform-provider-auth0/pull/237)).
+* resource/auth0_client_grant: force a new resource if `audience` or `client_id` has changed ([#239](https://github.com/alexkappa/terraform-provider-auth0/pull/239), [#186](https://github.com/alexkappa/terraform-provider-auth0/pull/186)).
+
 ## 0.10.3 (June 02, 2020)
 
 BUG FIXES:
