@@ -39,8 +39,7 @@ func TestAccGlobalClient(t *testing.T) {
 				),
 			},
 			{
-				Config:             testAccGlobalClientConfigDefault,
-				ExpectNonEmptyPlan: true,
+				Config: testAccGlobalClientConfigDefault,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_global_client.global", "custom_login_page", "<html>TEST123</html>"),
 					resource.TestCheckResourceAttr("auth0_global_client.global", "custom_login_page_on", "true"),

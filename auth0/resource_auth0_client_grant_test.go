@@ -37,6 +37,12 @@ func TestAccClientGrant(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_client_grant.my_client_grant", "scope.#", "0"),
 				),
 			},
+			{
+				Config: random.Template(testAccClientGrantConfigUpdateChangeClient, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_client_grant.my_client_grant", "scope.#", "0"),
+				),
+			},
 		},
 	})
 }
@@ -85,6 +91,21 @@ const testAccClientGrantConfigUpdateAgain = testAccClientGrantAuxConfig + `
 
 resource "auth0_client_grant" "my_client_grant" {
 	client_id = "${auth0_client.my_client.id}"
+	audience = "${auth0_resource_server.my_resource_server.identifier}"
+	scope = [ ]
+}
+`
+
+const testAccClientGrantConfigUpdateChangeClient = testAccClientGrantAuxConfig + `
+
+resource "auth0_client" "my_client_alt" {
+	name = "Acceptance Test - Client Grant Alt - {{.random}}"
+	custom_login_page_on = true
+	is_first_party = true
+}
+
+resource "auth0_client_grant" "my_client_grant" {
+	client_id = "${auth0_client.my_client_alt.id}"
 	audience = "${auth0_resource_server.my_resource_server.identifier}"
 	scope = [ ]
 }
