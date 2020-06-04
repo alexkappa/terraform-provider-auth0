@@ -560,7 +560,7 @@ func expandClient(d *schema.ResourceData) *management.Client {
 	c := &management.Client{
 		Name:                           String(d, "name"),
 		Description:                    String(d, "description"),
-		AppType:                        String(d, "app_type", IsNewResource(), HasChange()),
+		AppType:                        String(d, "app_type"),
 		LogoURI:                        String(d, "logo_uri"),
 		IsFirstParty:                   Bool(d, "is_first_party"),
 		IsTokenEndpointIPHeaderTrusted: Bool(d, "is_token_endpoint_ip_header_trusted"),
@@ -573,20 +573,20 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		SSO:                            Bool(d, "sso"),
 		SSODisabled:                    Bool(d, "sso_disabled"),
 		CrossOriginAuth:                Bool(d, "cross_origin_auth"),
-		CrossOriginLocation:            String(d, "cross_origin_loc", IsNewResource(), HasChange()),
+		CrossOriginLocation:            String(d, "cross_origin_loc"),
 		CustomLoginPageOn:              Bool(d, "custom_login_page_on"),
 		CustomLoginPage:                String(d, "custom_login_page"),
 		CustomLoginPagePreview:         String(d, "custom_login_page_preview"),
 		FormTemplate:                   String(d, "form_template"),
-		TokenEndpointAuthMethod:        String(d, "token_endpoint_auth_method", IsNewResource(), HasChange()),
+		TokenEndpointAuthMethod:        String(d, "token_endpoint_auth_method"),
 		InitiateLoginURI:               String(d, "initiate_login_uri"),
 	}
 
 	List(d, "jwt_configuration").Elem(func(d ResourceData) {
 		c.JWTConfiguration = &management.ClientJWTConfiguration{
-			LifetimeInSeconds: Int(d, "lifetime_in_seconds", IsNewResource(), HasChange()),
+			LifetimeInSeconds: Int(d, "lifetime_in_seconds"),
 			SecretEncoded:     Bool(d, "secret_encoded", IsNewResource()),
-			Algorithm:         String(d, "alg", IsNewResource(), HasChange()),
+			Algorithm:         String(d, "alg"),
 			Scopes:            Map(d, "scopes"),
 		}
 	})

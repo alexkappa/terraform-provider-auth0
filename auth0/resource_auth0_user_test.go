@@ -237,3 +237,69 @@ resource auth0_user auth0_user_issue_218 {
   password = "MyPass123$"
 }
 `
+
+func TestAccUserChangeUsername(t *testing.T) {
+
+	rand := random.String(4)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccUserChangeUsernameCreate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_user.auth0_user_change_username", "username", "user_{{.random}}", rand),
+					random.TestCheckResourceAttr("auth0_user.auth0_user_change_username", "email", "change.username.{{.random}}@acceptance.test.com", rand),
+					resource.TestCheckResourceAttr("auth0_user.auth0_user_change_username", "password", "MyPass123$"),
+				),
+			},
+			{
+				Config: random.Template(testAccUserChangeUsernameUpdate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_user.auth0_user_change_username", "username", "user_x_{{.random}}", rand),
+					random.TestCheckResourceAttr("auth0_user.auth0_user_change_username", "email", "change.username.{{.random}}@acceptance.test.com", rand),
+					resource.TestCheckResourceAttr("auth0_user.auth0_user_change_username", "password", "MyPass123$"),
+				),
+			},
+			{
+				Config:      random.Template(testAccUserChangeUsernameAndPassword, rand),
+				ExpectError: regexp.MustCompile("Cannot update username and password simultaneously"),
+			},
+		},
+	})
+}
+
+const testAccUserChangeUsernameCreate = `
+
+resource auth0_user auth0_user_change_username {
+  connection_name = "Username-Password-Authentication"
+  username = "user_{{.random}}"
+  email = "change.username.{{.random}}@acceptance.test.com"
+  email_verified = true
+  password = "MyPass123$"
+}
+`
+
+const testAccUserChangeUsernameUpdate = `
+
+resource auth0_user auth0_user_change_username {
+  connection_name = "Username-Password-Authentication"
+  username = "user_x_{{.random}}"
+  email = "change.username.{{.random}}@acceptance.test.com"
+  email_verified = true
+  password = "MyPass123$"
+}
+`
+
+const testAccUserChangeUsernameAndPassword = `
+
+resource auth0_user auth0_user_change_username {
+  connection_name = "Username-Password-Authentication"
+  username = "user_{{.random}}"
+  email = "change.username.{{.random}}@acceptance.test.com"
+  email_verified = true
+  password = "MyPass123456$"
+}
+`
