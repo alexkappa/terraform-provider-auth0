@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/structure"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -195,6 +196,9 @@ func updateUser(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	if err = validateUser(u); err != nil {
+		return err
+	}
 	api := m.(*management.Management)
 	if userHasChange(u) {
 		if err := api.User.Update(d.Id(), u); err != nil {
@@ -260,6 +264,49 @@ func buildUser(d *schema.ResourceData) (u *management.User, err error) {
 	}
 
 	return u, nil
+}
+
+func validateUser(u *management.User) error {
+	var validation error
+	for _, fn := range []validateUserFunc{
+		validateNoUsernameAndPasswordSimultaneously(),
+		validateNoUsernameAndEmailVerifiedSimultaneously(),
+		validateNoPasswordAndEmailVerifiedSimultaneously(),
+	} {
+		if err := fn(u); err != nil {
+			validation = multierror.Append(validation, err)
+		}
+	}
+	return validation
+}
+
+type validateUserFunc func(*management.User) error
+
+func validateNoUsernameAndPasswordSimultaneously() validateUserFunc {
+	return func(u *management.User) (err error) {
+		if u.Username != nil && u.Password != nil {
+			err = fmt.Errorf("Cannot update username and password simultaneously")
+		}
+		return
+	}
+}
+
+func validateNoUsernameAndEmailVerifiedSimultaneously() validateUserFunc {
+	return func(u *management.User) (err error) {
+		if u.Username != nil && u.EmailVerified != nil {
+			err = fmt.Errorf("Cannot update username and email_verified simultaneously")
+		}
+		return
+	}
+}
+
+func validateNoPasswordAndEmailVerifiedSimultaneously() validateUserFunc {
+	return func(u *management.User) (err error) {
+		if u.Password != nil && u.EmailVerified != nil {
+			err = fmt.Errorf("Cannot update password and email_verified simultaneously")
+		}
+		return
+	}
 }
 
 func assignUserRoles(d *schema.ResourceData, m interface{}) error {
