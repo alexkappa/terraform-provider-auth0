@@ -351,3 +351,40 @@ resource "auth0_client" "my_client" {
   }
 }
 `
+
+func TestAccConfigRefreshToken(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccClientConfigRefreshToken, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_client.my_client", "name", "Acceptance Test - Refresh Token - {{.random}}", rand),
+				),
+			},
+			{
+				Config: random.Template(testAccClientConfigRefreshToken, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_client.my_client", "refresh_token.type", "rotating"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "refresh_token.leeway", "3600"),
+				),
+			},
+		},
+	})
+}
+
+const testAccClientConfigRefreshToken = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - JWT Refresh Token - {{.random}}"
+  refresh_token = {
+	type = "rotating"
+	leeway = 3600
+  }
+}
+`

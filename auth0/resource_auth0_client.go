@@ -132,6 +132,27 @@ func newClient() *schema.Resource {
 					},
 				},
 			},
+			"refresh_token": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				MaxItems: 1,
+				MinItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"type": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Computed: true,
+						},
+						"leeway": {
+							Type:     schema.TypeInt,
+							Optional: true,
+							Computed: true,
+						},
+					},
+				},
+			},
 			"encryption_key": {
 				Type:     schema.TypeMap,
 				Optional: true,
@@ -514,6 +535,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("form_template", c.FormTemplate)
 	d.Set("token_endpoint_auth_method", c.TokenEndpointAuthMethod)
 	d.Set("jwt_configuration", flattenClientJwtConfiguration(c.JWTConfiguration))
+	d.Set("refresh_token", flattenClientRefreshToken(c.RefreshToken))
 	d.Set("encryption_key", c.EncryptionKey)
 	d.Set("addons", c.Addons)
 	d.Set("client_metadata", c.ClientMetadata)
@@ -588,6 +610,13 @@ func expandClient(d *schema.ResourceData) *management.Client {
 			SecretEncoded:     Bool(d, "secret_encoded", IsNewResource()),
 			Algorithm:         String(d, "alg"),
 			Scopes:            Map(d, "scopes"),
+		}
+	})
+
+	List(d, "refresh_token").Elem(func(d ResourceData) {
+		c.RefreshToken = &management.ClientRefreshToken{
+			Type:   String(d, "type"),
+			Leeway: Int(d, "leeway"),
 		}
 	})
 
@@ -703,6 +732,15 @@ func flattenClientJwtConfiguration(jwt *management.ClientJWTConfiguration) []int
 		m["secret_encoded"] = jwt.SecretEncoded
 		m["scopes"] = jwt.Scopes
 		m["alg"] = jwt.Algorithm
+	}
+	return []interface{}{m}
+}
+
+func flattenClientRefreshToken(refreshToken *management.ClientRefreshToken) []interface{} {
+	m := make(map[string]interface{})
+	if refreshToken != nil {
+		m["type"] = refreshToken.Type
+		m["leeway"] = refreshToken.Leeway
 	}
 	return []interface{}{m}
 }
