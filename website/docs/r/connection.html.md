@@ -93,7 +93,7 @@ With the `auth0` connection strategy, `options` supports the following arguments
 `passsword_dictionary` supports the following arguments:
 
 * `enable` - (Optional) Indicates whether the password dictionary check is enabled for this connection.
-* `dictionary` - (Optional) Customized contents of the password dictionary. By default, the password dictionary contains a list of the [10,000 most common passwords](https://github.com/danielmiessler/SecLists/blob/master/Passwords/Common-Credentials/10k-most-common.txt); your customized content is used in addition to the default password dictionary. Matching is not case-sensitive. 
+* `dictionary` - (Optional) Customized contents of the password dictionary. By default, the password dictionary contains a list of the [10,000 most common passwords](https://github.com/danielmiessler/SecLists/blob/master/Passwords/Common-Credentials/10k-most-common.txt); your customized content is used in addition to the default password dictionary. Matching is not case-sensitive.
 
 #### Password Complexity Options
 
@@ -326,12 +326,72 @@ With the `adfs` connection strategy, `options` supports the following arguments:
 
 * `adfs_server` - (Optional) ADFS Metadata source.
 
+### SAML
+
+With the `samlp` connection strategy, `options` supports the following arguments:
+
+* `signing_cert` - The X.509 signing certificate (encoded in PEM or CER) you retrieved from the IdP, Base64-encoded
+* `binding_method` - (Optional) The SAML Response Binding - how the SAML token is received by Auth0 from IdP. Two possible values are `urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect` (default) and `urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST`
+* `tenant_domain` - (Optional)
+* `domain_aliases` - (Optional) List of the domains that can be authenticated using the Identity Provider. Only needed for Identifier First authentication flows.
+* `sign_in_endpoint` - SAML single login URL for the connection.
+* `sign_out_endpoint` - (Optional) SAML single logout URL for the connection.
+* `fields_map` - (Optional) SAML Attributes mapping. If you're configuring a SAML enterprise connection for a non-standard PingFederate Server, you must update the attribute mappings.
+* `sign_saml_request` - (Optional) (Boolean) When enabled, the SAML authentication request will be signed.
+* `signature_algorithm` - (Optional) Sign Request Algorithm
+* `digest_algorithm` - (Optional) Sign Request Algorithm Digest
+
+**Example**:
+```hcl
+resource "auth0_connection" "samlp" {
+	name = "SAML-Connection"
+	strategy = "samlp"
+	options {
+		signing_cert = <<EOF
+-----BEGIN CERTIFICATE-----
+MIIDujCCAqKgAwIBAgIIE31FZVaPXTUwDQYJKoZIhvcNAQEFBQAwSTELMAkGA1UE
+BhMCVVMxEzARBgNVBAoTCkdvb2dsZSBJbmMxJTAjBgNVBAMTHEdvb2dsZSBJbnRl
+cm5ldCBBdXRob3JpdHkgRzIwHhcNMTQwMTI5MTMyNzQzWhcNMTQwNTI5MDAwMDAw
+WjBpMQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTEWMBQGA1UEBwwN
+TW91bnRhaW4gVmlldzETMBEGA1UECgwKR29vZ2xlIEluYzEYMBYGA1UEAwwPbWFp
+bC5nb29nbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEfRrObuSW5T7q
+5CnSEqefEmtH4CCv6+5EckuriNr1CjfVvqzwfAhopXkLrq45EQm8vkmf7W96XJhC
+7ZM0dYi1/qOCAU8wggFLMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAa
+BgNVHREEEzARgg9tYWlsLmdvb2dsZS5jb20wCwYDVR0PBAQDAgeAMGgGCCsGAQUF
+BwEBBFwwWjArBggrBgEFBQcwAoYfaHR0cDovL3BraS5nb29nbGUuY29tL0dJQUcy
+LmNydDArBggrBgEFBQcwAYYfaHR0cDovL2NsaWVudHMxLmdvb2dsZS5jb20vb2Nz
+cDAdBgNVHQ4EFgQUiJxtimAuTfwb+aUtBn5UYKreKvMwDAYDVR0TAQH/BAIwADAf
+BgNVHSMEGDAWgBRK3QYWG7z2aLV29YG2u2IaulqBLzAXBgNVHSAEEDAOMAwGCisG
+AQQB1nkCBQEwMAYDVR0fBCkwJzAloCOgIYYfaHR0cDovL3BraS5nb29nbGUuY29t
+L0dJQUcyLmNybDANBgkqhkiG9w0BAQUFAAOCAQEAH6RYHxHdcGpMpFE3oxDoFnP+
+gtuBCHan2yE2GRbJ2Cw8Lw0MmuKqHlf9RSeYfd3BXeKkj1qO6TVKwCh+0HdZk283
+TZZyzmEOyclm3UGFYe82P/iDFt+CeQ3NpmBg+GoaVCuWAARJN/KfglbLyyYygcQq
+0SgeDh8dRKUiaW3HQSoYvTvdTuqzwK4CXsr3b5/dAOY8uMuG/IAR3FgwTbZ1dtoW
+RvOTa8hYiU6A475WuZKyEHcwnGYe57u2I2KbMgcKjPniocj4QzgYsVAVKW3IwaOh
+yE+vPxsiUkvQHdO2fojCkY8jg70jxM+gu59tPDNbw3Uh/2Ij310FgTHsnGQMyA==
+-----END CERTIFICATE-----
+EOF
+		sign_in_endpoint = "https://saml.provider/sign_in"
+		sign_out_endpoint = "https://saml.provider/sign_out"
+		tenant_domain = "example.con"
+		domain_aliases = ["example.con", "example.coz"]
+		binding_method = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Post"
+		signature_algorithm = "rsa-sha256"
+		digest_algorithm = "sha256"
+		fields_map = {
+			foo = "bar"
+			baz = "baa"
+		}
+	}
+}
+```
+
 ## Attribute Reference
 
 Attributes exported by this resource include:
 
 * `is_domain_connection` - Boolean. Indicates whether or not the connection is domain level.
-* `options` - List(Resource). Configuration settings for connection options. For details, see [Options Attributes](#options-attributes). 
+* `options` - List(Resource). Configuration settings for connection options. For details, see [Options Attributes](#options-attributes).
 * `realms` - List(String). Defines the realms for which the connection will be used (i.e., email domains). If the array is empty or the property is not specified, the connection name is added as the realm.
 
 ### Options Attributes

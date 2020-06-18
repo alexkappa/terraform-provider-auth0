@@ -515,7 +515,7 @@ resource "auth0_connection" "email" {
 		subject = "Sign in!"
 		syntax = "liquid"
 		template = "<html><body><h1>Here's your password!</h1></body></html>"
-		
+
 		brute_force_protection = true
 
 		totp {
@@ -541,7 +541,7 @@ resource "auth0_connection" "email" {
 		subject = "Sign in!"
 		syntax = "liquid"
 		template = "<html><body><h1>Here's your password!</h1></body></html>"
-		
+
 		brute_force_protection = true
 
 		totp {
@@ -879,7 +879,7 @@ resource "auth0_connection" "github" {
 	options {
 		client_id = "client-id"
 		client_secret = "client-secret"
-		scopes = [ "email", "profile", "read_user", "follow", "public_repo", "repo", "repo_deployment", "repo_status", 
+		scopes = [ "email", "profile", "read_user", "follow", "public_repo", "repo", "repo_deployment", "repo_status",
 				   "delete_repo", "notifications", "gist", "read_repo_hook", "write_repo_hook", "admin_repo_hook",
 				   "read_org", "admin_org", "read_public_key", "write_public_key", "admin_public_key", "write_org"
 		]
@@ -1001,3 +1001,67 @@ func TestConnectionInstanceStateUpgradeV0(t *testing.T) {
 		})
 	}
 }
+
+func TestAccConnectionSAML(t *testing.T) {
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testConnectionSAMLConfig, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-SAML-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "strategy", "samlp"),
+				),
+			},
+		},
+	})
+}
+
+const testConnectionSAMLConfig = `
+
+resource "auth0_connection" "my_connection" {
+	name = "Acceptance-Test-SAML-{{.random}}"
+	strategy = "samlp"
+	options {
+		signing_cert = <<EOF
+-----BEGIN CERTIFICATE-----
+MIIDujCCAqKgAwIBAgIIE31FZVaPXTUwDQYJKoZIhvcNAQEFBQAwSTELMAkGA1UE
+BhMCVVMxEzARBgNVBAoTCkdvb2dsZSBJbmMxJTAjBgNVBAMTHEdvb2dsZSBJbnRl
+cm5ldCBBdXRob3JpdHkgRzIwHhcNMTQwMTI5MTMyNzQzWhcNMTQwNTI5MDAwMDAw
+WjBpMQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTEWMBQGA1UEBwwN
+TW91bnRhaW4gVmlldzETMBEGA1UECgwKR29vZ2xlIEluYzEYMBYGA1UEAwwPbWFp
+bC5nb29nbGUuY29tMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEfRrObuSW5T7q
+5CnSEqefEmtH4CCv6+5EckuriNr1CjfVvqzwfAhopXkLrq45EQm8vkmf7W96XJhC
+7ZM0dYi1/qOCAU8wggFLMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAa
+BgNVHREEEzARgg9tYWlsLmdvb2dsZS5jb20wCwYDVR0PBAQDAgeAMGgGCCsGAQUF
+BwEBBFwwWjArBggrBgEFBQcwAoYfaHR0cDovL3BraS5nb29nbGUuY29tL0dJQUcy
+LmNydDArBggrBgEFBQcwAYYfaHR0cDovL2NsaWVudHMxLmdvb2dsZS5jb20vb2Nz
+cDAdBgNVHQ4EFgQUiJxtimAuTfwb+aUtBn5UYKreKvMwDAYDVR0TAQH/BAIwADAf
+BgNVHSMEGDAWgBRK3QYWG7z2aLV29YG2u2IaulqBLzAXBgNVHSAEEDAOMAwGCisG
+AQQB1nkCBQEwMAYDVR0fBCkwJzAloCOgIYYfaHR0cDovL3BraS5nb29nbGUuY29t
+L0dJQUcyLmNybDANBgkqhkiG9w0BAQUFAAOCAQEAH6RYHxHdcGpMpFE3oxDoFnP+
+gtuBCHan2yE2GRbJ2Cw8Lw0MmuKqHlf9RSeYfd3BXeKkj1qO6TVKwCh+0HdZk283
+TZZyzmEOyclm3UGFYe82P/iDFt+CeQ3NpmBg+GoaVCuWAARJN/KfglbLyyYygcQq
+0SgeDh8dRKUiaW3HQSoYvTvdTuqzwK4CXsr3b5/dAOY8uMuG/IAR3FgwTbZ1dtoW
+RvOTa8hYiU6A475WuZKyEHcwnGYe57u2I2KbMgcKjPniocj4QzgYsVAVKW3IwaOh
+yE+vPxsiUkvQHdO2fojCkY8jg70jxM+gu59tPDNbw3Uh/2Ij310FgTHsnGQMyA==
+-----END CERTIFICATE-----
+EOF
+		sign_in_endpoint = "https://saml.provider/sign_in"
+		sign_out_endpoint = "https://saml.provider/sign_out"
+		tenant_domain = "example.con"
+		domain_aliases = ["example.con", "example.coz"]
+		binding_method = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Post"
+		signature_algorithm = "rsa-sha256"
+		digest_algorithm = "sha256"
+		fields_map = {
+			foo = "bar"
+			baz = "baa"
+		}
+	}
+}
+`
