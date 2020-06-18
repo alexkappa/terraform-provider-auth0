@@ -429,6 +429,51 @@ var connectionSchema = map[string]*schema.Schema{
 					Optional:    true,
 					Description: "",
 				},
+				"signing_cert": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "X.509 signing certificate (encoded in PEM or CER) you retrieved from the IdP, Base64-encoded",
+				},
+				"binding_method": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "The SAML Response Binding: how the SAML token is received by Auth0 from IdP",
+					ValidateFunc: validation.StringInSlice([]string{
+						"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
+						"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+					}, false),
+				},
+				"sign_in_endpoint": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "SAML single login URL for the connection.",
+				},
+				"sign_out_endpoint": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "SAML single logout URL for the connection.",
+				},
+				"fields_map": {
+					Type:        schema.TypeMap,
+					Elem:        &schema.Schema{Type: schema.TypeString},
+					Optional:    true,
+					Description: "If you're configuring a SAML enterprise connection for a non-standard PingFederate Server, you must update the attribute mappings.",
+				},
+				"sign_saml_request": {
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Description: "When enabled, the SAML authentication request will be signed.",
+				},
+				"signature_algorithm": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "Sign Request Algorithm",
+				},
+				"digest_algorithm": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "Sign Request Algorithm Digest",
+				},
 			},
 		},
 		Description: "Configuration settings for connection options",
