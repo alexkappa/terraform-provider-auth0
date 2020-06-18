@@ -441,7 +441,7 @@ var connectionSchema = map[string]*schema.Schema{
 					ValidateFunc: validation.StringInSlice([]string{
 						"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
 						"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
-					}, false),
+					}, true),
 				},
 				"sign_in_endpoint": {
 					Type:        schema.TypeString,
