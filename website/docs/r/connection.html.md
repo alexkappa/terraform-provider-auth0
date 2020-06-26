@@ -331,7 +331,8 @@ With the `adfs` connection strategy, `options` supports the following arguments:
 With the `samlp` connection strategy, `options` supports the following arguments:
 
 * `signing_cert` - The X.509 signing certificate (encoded in PEM or CER) you retrieved from the IdP, Base64-encoded
-* `binding_method` - (Optional) The SAML Response Binding - how the SAML token is received by Auth0 from IdP. Two possible values are `urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect` (default) and `urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST`
+* `protocol_binding` - (Optional) The SAML Response Binding - how the SAML token is received by Auth0 from IdP. Two possible values are `urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect` (default) and `urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST`
+* `idpinitiated` - (Optional) Configuration Options for IDP Initiated Authentication.  This is an object with the properties: `client_id`, `client_protocol`, and `client_authorizequery`
 * `tenant_domain` - (Optional)
 * `domain_aliases` - (Optional) List of the domains that can be authenticated using the Identity Provider. Only needed for Identifier First authentication flows.
 * `sign_in_endpoint` - SAML single login URL for the connection.
