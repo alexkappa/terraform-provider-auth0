@@ -509,7 +509,12 @@ func expandConnectionOptionsOIDC(d ResourceData) *management.ConnectionOptionsOI
 func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSAML {
 	o := &management.ConnectionOptionsSAML{
 		SigningCert:        String(d, "signing_cert"),
-		BindingMethod:      String(d, "binding_method"),
+		ProtocolBinding:      String(d, "protocol_binding"),
+		IdpInitiated:              &management.ConnectionOptionsSAMLIdpinitiated{
+		     ClientId:                             String(d, "client_id"),
+		     ClientProtocol:                  String(d, "client_protocol"),
+		     ClientAuthorizequery:      String(d, "client_authorizequery"),
+		},
 		TenantDomain:       String(d, "tenant_domain"),
 		DomainAliases:      Set(d, "domain_aliases").List(),
 		SignInEndpoint:     String(d, "sign_in_endpoint"),
