@@ -21,6 +21,8 @@ github.com/agext/levenshtein v1.2.2/go.mod h1:JEDfjyjHDjOF/1e4FlBE/PkbqA9OfWu2ki
 github.com/agl/ed25519 v0.0.0-20170116200512-5312a6153412/go.mod h1:WPjqKcmVOxf0XSf3YxCJs6N6AOSrOx3obionmG7T0y0=
 github.com/agworld/auth0 v1.3.1-0.20200618020811-fbaf7268f84c h1:4aZXouAwtdqFpX0bYpdCqgaV+AeFGpv4CuqHuxEJ/bo=
 github.com/agworld/auth0 v1.3.1-0.20200618020811-fbaf7268f84c/go.mod h1:6ZOcoQequCmURgwJnGIX09/51deRWVRpUaUP8p1Jbpk=
+github.com/agworld/auth0 v1.3.1-0.20200626043222-e355d2633f6b h1:uXJlYbG7JZQg2f6evcb3qdiR3iO+UIYADyTwfyocolo=
+github.com/agworld/auth0 v1.3.1-0.20200626043222-e355d2633f6b/go.mod h1:6ZOcoQequCmURgwJnGIX09/51deRWVRpUaUP8p1Jbpk=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
 github.com/apparentlymart/go-cidr v1.0.1 h1:NmIwLZ/KdsjIUlhf+/Np40atNXm/+lZ5txfTJ/SpF+U=

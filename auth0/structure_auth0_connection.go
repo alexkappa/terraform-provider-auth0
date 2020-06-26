@@ -205,9 +205,9 @@ func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) int
 func flattenConnectionOptionsSAML(o *management.ConnectionOptionsSAML) interface{} {
 	return map[string]interface{}{
 		"signing_cert":        o.GetSigningCert(),
-		"protocol_binding":      o.GetProtocolBinding(),
-		"debug":                       o.GetDebug(),
-		"idpinitiated":               o.GetIdpInitiated(),
+		"protocol_binding":    o.GetProtocolBinding(),
+		"debug":               o.GetDebug(),
+		"idpinitiated":        o.GetIdpInitiated(),
 		"tenant_domain":       o.GetTenantDomain(),
 		"domain_aliases":      o.DomainAliases,
 		"sign_in_endpoint":    o.GetSignInEndpoint(),
@@ -508,12 +508,12 @@ func expandConnectionOptionsOIDC(d ResourceData) *management.ConnectionOptionsOI
 
 func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSAML {
 	o := &management.ConnectionOptionsSAML{
-		SigningCert:        String(d, "signing_cert"),
-		ProtocolBinding:      String(d, "protocol_binding"),
-		IdpInitiated:              &management.ConnectionOptionsSAMLIdpinitiated{
-		     ClientId:                             String(d, "client_id"),
-		     ClientProtocol:                  String(d, "client_protocol"),
-		     ClientAuthorizequery:      String(d, "client_authorizequery"),
+		SigningCert:     String(d, "signing_cert"),
+		ProtocolBinding: String(d, "protocol_binding"),
+		IdpInitiated: &management.ConnectionOptionsSAMLIdpinitiated{
+			ClientID:             String(d, "client_id"),
+			ClientProtocol:       String(d, "client_protocol"),
+			ClientAuthorizequery: String(d, "client_authorizequery"),
 		},
 		TenantDomain:       String(d, "tenant_domain"),
 		DomainAliases:      Set(d, "domain_aliases").List(),

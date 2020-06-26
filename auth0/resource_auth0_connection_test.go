@@ -1055,7 +1055,7 @@ EOF
 		sign_out_endpoint = "https://saml.provider/sign_out"
 		tenant_domain = "example.con"
 		domain_aliases = ["example.con", "example.coz"]
-		binding_method = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Post"
+		protocol_binding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Post"
 		signature_algorithm = "rsa-sha256"
 		digest_algorithm = "sha256"
 		fields_map = {

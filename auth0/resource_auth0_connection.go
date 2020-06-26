@@ -448,26 +448,27 @@ var connectionSchema = map[string]*schema.Schema{
 						"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
 					}, true),
 				},
-				"idpinititated":{
-				     Type:     schema.TypeList,
-				     MaxItems: 1,
-				     Required: false,
-				    Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"client_id": {
-							Type:     schema.TypeString,
-							Optional: true,
+				"idpinititated": {
+					Type:     schema.TypeList,
+					MaxItems: 1,
+					Required: false,
+					Optional: true,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"client_id": {
+								Type:     schema.TypeString,
+								Optional: true,
+							},
+							"client_protocol": {
+								Type:     schema.TypeString,
+								Optional: true,
+							},
+							"client_authorizequery": {
+								Type:     schema.TypeString,
+								Optional: true,
+							},
 						},
-						"client_protocol": {
-							Type:      schema.TypeString,
-							Optional:  true,
-                                                },
-                                                "client_authorizequery":{
-                                                        Type:      schema.TypeString,
-							Optional:  true,
-					      }
-                                                
-					}
+					},
 				},
 				"sign_in_endpoint": {
 					Type:        schema.TypeString,
