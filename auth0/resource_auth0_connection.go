@@ -429,6 +429,11 @@ var connectionSchema = map[string]*schema.Schema{
 					Optional:    true,
 					Description: "",
 				},
+				"debug": {
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Description: "When enabled, additional debug information will be generated.",
+				},
 				"signing_cert": {
 					Type:        schema.TypeString,
 					Optional:    true,
