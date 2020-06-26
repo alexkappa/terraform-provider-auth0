@@ -434,7 +434,7 @@ var connectionSchema = map[string]*schema.Schema{
 					Optional:    true,
 					Description: "X.509 signing certificate (encoded in PEM or CER) you retrieved from the IdP, Base64-encoded",
 				},
-				"binding_method": {
+				"protocol_binding": {
 					Type:        schema.TypeString,
 					Optional:    true,
 					Description: "The SAML Response Binding: how the SAML token is received by Auth0 from IdP",
