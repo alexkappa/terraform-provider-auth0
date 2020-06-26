@@ -205,7 +205,9 @@ func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) int
 func flattenConnectionOptionsSAML(o *management.ConnectionOptionsSAML) interface{} {
 	return map[string]interface{}{
 		"signing_cert":        o.GetSigningCert(),
-		"binding_method":      o.GetBindingMethod(),
+		"protocol_binding":      o.GetProtocolBinding(),
+		"debug":                       o.GetDebug(),
+		"idpinitiated":               o.GetIdpInitiated(),
 		"tenant_domain":       o.GetTenantDomain(),
 		"domain_aliases":      o.DomainAliases,
 		"sign_in_endpoint":    o.GetSignInEndpoint(),
