@@ -2,7 +2,7 @@ module github.com/terraform-providers/terraform-provider-auth0
 
 go 1.13
 
-replace gopkg.in/auth0.v4 => github.com/agworld/auth0 v1.3.1-0.20200618020811-fbaf7268f84c
+replace gopkg.in/auth0.v4 => github.com/agworld/auth0 v1.3.1-0.20200626043222-e355d2633f6b
 
 require (
 	github.com/cosiner/argv v0.1.0 // indirect
