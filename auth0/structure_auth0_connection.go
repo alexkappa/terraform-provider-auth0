@@ -204,10 +204,14 @@ func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) int
 
 func flattenConnectionOptionsSAML(o *management.ConnectionOptionsSAML) interface{} {
 	return map[string]interface{}{
-		"signing_cert":        o.GetSigningCert(),
-		"protocol_binding":    o.GetProtocolBinding(),
-		"debug":               o.GetDebug(),
-		"idpinitiated":        o.GetIdpInitiated(),
+		"signing_cert":     o.GetSigningCert(),
+		"protocol_binding": o.GetProtocolBinding(),
+		"debug":            o.GetDebug(),
+		"idp_initiated": map[string]interface{}{
+			"client_id":              o.IdpInitiated.GetClientID(),
+			"client_protocol":        o.IdpInitiated.GetClientProtocol(),
+			"client_authorize_query": o.IdpInitiated.GetClientAuthorizeQuery(),
+		},
 		"tenant_domain":       o.GetTenantDomain(),
 		"domain_aliases":      o.DomainAliases,
 		"sign_in_endpoint":    o.GetSignInEndpoint(),
@@ -508,13 +512,8 @@ func expandConnectionOptionsOIDC(d ResourceData) *management.ConnectionOptionsOI
 
 func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSAML {
 	o := &management.ConnectionOptionsSAML{
-		SigningCert:     String(d, "signing_cert"),
-		ProtocolBinding: String(d, "protocol_binding"),
-		IdpInitiated: &management.ConnectionOptionsSAMLIdpinitiated{
-			ClientID:             String(d, "client_id"),
-			ClientProtocol:       String(d, "client_protocol"),
-			ClientAuthorizequery: String(d, "client_authorizequery"),
-		},
+		SigningCert:        String(d, "signing_cert"),
+		ProtocolBinding:    String(d, "protocol_binding"),
 		TenantDomain:       String(d, "tenant_domain"),
 		DomainAliases:      Set(d, "domain_aliases").List(),
 		SignInEndpoint:     String(d, "sign_in_endpoint"),
@@ -524,6 +523,14 @@ func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSA
 		FieldsMap:          Map(d, "fields_map"),
 		SignSAMLRequest:    Bool(d, "sign_saml_request"),
 	}
+
+	Set(d, "idp_initiated").Elem(func(d ResourceData) {
+		o.IdpInitiated = &management.ConnectionOptionsSAMLIdpInitiated{
+			ClientID:             String(d, "client_id"),
+			ClientProtocol:       String(d, "client_protocol"),
+			ClientAuthorizeQuery: String(d, "client_authorize_query"),
+		}
+	})
 
 	return o
 }
