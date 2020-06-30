@@ -448,7 +448,7 @@ var connectionSchema = map[string]*schema.Schema{
 						"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
 					}, true),
 				},
-				"idpinititated": {
+				"idp_initiated": {
 					Type:     schema.TypeList,
 					MaxItems: 1,
 					Required: false,
@@ -463,7 +463,7 @@ var connectionSchema = map[string]*schema.Schema{
 								Type:     schema.TypeString,
 								Optional: true,
 							},
-							"client_authorizequery": {
+							"client_authorize_query": {
 								Type:     schema.TypeString,
 								Optional: true,
 							},
