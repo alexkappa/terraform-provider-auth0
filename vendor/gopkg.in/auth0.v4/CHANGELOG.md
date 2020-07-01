@@ -1,3 +1,7 @@
+## v4.3.6
+
+* `management.ConnectionOptionsOIDC`: add missing `Scopes()` and `SetScopes()` methods.
+
 ## v4.3.5
 
 * `management.ConnectionOptions*`: `SetScopes()` was ignoring the `enable` argument.
