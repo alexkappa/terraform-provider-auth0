@@ -429,6 +429,78 @@ var connectionSchema = map[string]*schema.Schema{
 					Optional:    true,
 					Description: "",
 				},
+				"debug": {
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Description: "When enabled, additional debug information will be generated.",
+				},
+				"signing_cert": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "X.509 signing certificate (encoded in PEM or CER) you retrieved from the IdP, Base64-encoded",
+				},
+				"protocol_binding": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "The SAML Response Binding: how the SAML token is received by Auth0 from IdP",
+					ValidateFunc: validation.StringInSlice([]string{
+						"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
+						"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+					}, true),
+				},
+				"idp_initiated": {
+					Type:     schema.TypeList,
+					MaxItems: 1,
+					Required: false,
+					Optional: true,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"client_id": {
+								Type:     schema.TypeString,
+								Optional: true,
+							},
+							"client_protocol": {
+								Type:     schema.TypeString,
+								Optional: true,
+							},
+							"client_authorize_query": {
+								Type:     schema.TypeString,
+								Optional: true,
+							},
+						},
+					},
+				},
+				"sign_in_endpoint": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "SAML single login URL for the connection.",
+				},
+				"sign_out_endpoint": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "SAML single logout URL for the connection.",
+				},
+				"fields_map": {
+					Type:        schema.TypeMap,
+					Elem:        &schema.Schema{Type: schema.TypeString},
+					Optional:    true,
+					Description: "If you're configuring a SAML enterprise connection for a non-standard PingFederate Server, you must update the attribute mappings.",
+				},
+				"sign_saml_request": {
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Description: "When enabled, the SAML authentication request will be signed.",
+				},
+				"signature_algorithm": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "Sign Request Algorithm",
+				},
+				"digest_algorithm": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "Sign Request Algorithm Digest",
+				},
 			},
 		},
 		Description: "Configuration settings for connection options",
