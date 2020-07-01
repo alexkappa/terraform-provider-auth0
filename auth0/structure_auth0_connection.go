@@ -38,6 +38,8 @@ func flattenConnectionOptions(d ResourceData, options interface{}) []interface{}
 		m = flattenConnectionOptionsAD(o)
 	case *management.ConnectionOptionsAzureAD:
 		m = flattenConnectionOptionsAzureAD(o)
+	case *management.ConnectionOptionsSAML:
+		m = flattenConnectionOptionsSAML(o)
 	}
 
 	return []interface{}{m}
@@ -200,6 +202,27 @@ func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) int
 	}
 }
 
+func flattenConnectionOptionsSAML(o *management.ConnectionOptionsSAML) interface{} {
+	return map[string]interface{}{
+		"signing_cert":     o.GetSigningCert(),
+		"protocol_binding": o.GetProtocolBinding(),
+		"debug":            o.GetDebug(),
+		"idp_initiated": map[string]interface{}{
+			"client_id":              o.IdpInitiated.GetClientID(),
+			"client_protocol":        o.IdpInitiated.GetClientProtocol(),
+			"client_authorize_query": o.IdpInitiated.GetClientAuthorizeQuery(),
+		},
+		"tenant_domain":       o.GetTenantDomain(),
+		"domain_aliases":      o.DomainAliases,
+		"sign_in_endpoint":    o.GetSignInEndpoint(),
+		"sign_out_endpoint":   o.GetSignOutEndpoint(),
+		"signature_algorithm": o.GetSignatureAlgorithm(),
+		"digest_algorithm":    o.GetDigestAglorithm(),
+		"fields_map":          o.FieldsMap,
+		"sign_saml_request":   o.GetSignSAMLRequest(),
+	}
+}
+
 func expandConnection(d ResourceData) *management.Connection {
 
 	c := &management.Connection{
@@ -241,6 +264,8 @@ func expandConnection(d ResourceData) *management.Connection {
 			c.Options = expandConnectionOptionsAzureAD(d)
 		case management.ConnectionStrategyEmail:
 			c.Options = expandConnectionOptionsEmail(d)
+		case management.ConnectionStrategySAML:
+			c.Options = expandConnectionOptionsSAML(d)
 		default:
 			log.Printf("[WARN]: Unsupported connection strategy %s", s)
 			log.Printf("[WARN]: Raise an issue with the auth0 provider in order to support it:")
@@ -481,6 +506,31 @@ func expandConnectionOptionsOIDC(d ResourceData) *management.ConnectionOptionsOI
 	}
 
 	expandConnectionOptionsScopes(d, o)
+
+	return o
+}
+
+func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSAML {
+	o := &management.ConnectionOptionsSAML{
+		SigningCert:        String(d, "signing_cert"),
+		ProtocolBinding:    String(d, "protocol_binding"),
+		TenantDomain:       String(d, "tenant_domain"),
+		DomainAliases:      Set(d, "domain_aliases").List(),
+		SignInEndpoint:     String(d, "sign_in_endpoint"),
+		SignOutEndpoint:    String(d, "sign_out_endpoint"),
+		SignatureAlgorithm: String(d, "signature_algorithm"),
+		DigestAglorithm:    String(d, "digest_algorithm"),
+		FieldsMap:          Map(d, "fields_map"),
+		SignSAMLRequest:    Bool(d, "sign_saml_request"),
+	}
+
+	Set(d, "idp_initiated").Elem(func(d ResourceData) {
+		o.IdpInitiated = &management.ConnectionOptionsSAMLIdpInitiated{
+			ClientID:             String(d, "client_id"),
+			ClientProtocol:       String(d, "client_protocol"),
+			ClientAuthorizeQuery: String(d, "client_authorize_query"),
+		}
+	})
 
 	return o
 }
