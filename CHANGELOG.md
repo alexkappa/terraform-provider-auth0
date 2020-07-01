@@ -1,4 +1,9 @@
 ## 0.12.0 (Unreleased)
+
+FEATURES:
+
+* resource/auth0_connection: support for the `saml` connection strategy ([#244](https://github.com/alexkappa/terraform-provider-auth0/pull/244)).
+
 ## 0.11.0 (June 04, 2020)
 
 BUG FIXES:
@@ -25,6 +30,8 @@ BUG FIXES:
 * resource/auth0_connection: migrate state for `strategy_version` causing an `Error: a number is required` error.
 
 ## 0.10.0 (May 11, 2020)
+
+FEATURES:
 
 * resource/auth0_connection: support for the `apple` connection strategy ([#216](https://github.com/alexkappa/terraform-provider-auth0/pull/216)).
 * resource/auth0_connection: support for the `facebook` connection strategy ([#221](https://github.com/alexkappa/terraform-provider-auth0/pull/221)).
