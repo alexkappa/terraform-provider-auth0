@@ -227,7 +227,7 @@ func (m *Management) request(method, uri string, v interface{}) error {
 		return newError(res.Body)
 	}
 
-	if res.StatusCode != http.StatusNoContent {
+	if res.StatusCode != http.StatusNoContent && res.StatusCode != http.StatusAccepted {
 		err := json.NewDecoder(res.Body).Decode(v)
 		if err != nil {
 			return err

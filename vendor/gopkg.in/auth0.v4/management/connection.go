@@ -24,6 +24,7 @@ const (
 	ConnectionStrategyOIDC                = "oidc"
 	ConnectionStrategyAD                  = "ad"
 	ConnectionStrategyAzureAD             = "waad"
+	ConnectionStrategySAML                = "samlp"
 )
 
 type Connection struct {
@@ -33,7 +34,8 @@ type Connection struct {
 	// The name of the connection. Must start and end with an alphanumeric
 	// character and can only contain alphanumeric characters and '-'. Max
 	// length 128.
-	Name *string `json:"name,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	DisplayName *string `json:"display_name,omitempty"`
 
 	// The identity provider identifier for the connection. Can be any of the
 	// following:
@@ -128,6 +130,8 @@ func (c *Connection) UnmarshalJSON(b []byte) error {
 			v = &ConnectionOptionsAD{}
 		case ConnectionStrategyAzureAD:
 			v = &ConnectionOptionsAzureAD{}
+		case ConnectionStrategySAML:
+			v = &ConnectionOptionsSAML{}
 		default:
 			v = make(map[string]interface{})
 		}
@@ -584,6 +588,33 @@ type ConnectionOptionsADFS struct {
 
 	// Set to on_first_login to avoid setting user attributes at each login.
 	SetUserAttributes *string `json:"set_user_root_attributes,omitempty"`
+}
+
+type ConnectionOptionsSAML struct {
+	Cert               *string                            `json:"cert,omitempty"`
+	Debug              *bool                              `json:"debug,omitempty"`
+	Expires            *string                            `json:"expires,omitempty"`
+	IdpInitiated       *ConnectionOptionsSAMLIdpInitiated `json:"idpinitiated,omitempty"`
+	SigningCert        *string                            `json:"signingCert,omitempty"`
+	Thumbprints        []interface{}                      `json:"thumbprints,omitempty"`
+	ProtocolBinding    *string                            `json:"protocolBinding,omitempty"`
+	TenantDomain       *string                            `json:"tenant_domain,omitempty"`
+	DomainAliases      []interface{}                      `json:"domain_aliases,omitempty"`
+	SignInEndpoint     *string                            `json:"signInEndpoint,omitempty"`
+	SignOutEndpoint    *string                            `json:"signOutEndpoint,omitempty"`
+	SignatureAlgorithm *string                            `json:"signatureAlgorithm,omitempty"`
+	DigestAglorithm    *string                            `json:"digestAlgorithm,omitempty"`
+	MetadataXML        *string                            `json:"metadataXml,omitempty"`
+	MetadataURL        *string                            `json:"metadataUrl,omitempty"`
+	FieldsMap          map[string]interface{}             `json:"fieldsMap,omitempty"`
+	Subject            map[string]interface{}             `json:"subject,omitempty"`
+	SignSAMLRequest    *bool                              `json:"signSAMLRequest,omitempty"`
+}
+
+type ConnectionOptionsSAMLIdpInitiated struct {
+	ClientID             *string `json:"client_id,omitempty"`
+	ClientProtocol       *string `json:"client_protocol,omitempty"`
+	ClientAuthorizeQuery *string `json:"client_authorizequery,omitempty"`
 }
 
 type ConnectionManager struct {
