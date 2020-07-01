@@ -402,6 +402,14 @@ func (c *ClientRefreshToken) String() string {
 	return Stringify(c)
 }
 
+// GetDisplayName returns the DisplayName field if it's non-nil, zero value otherwise.
+func (c *Connection) GetDisplayName() string {
+	if c == nil || c.DisplayName == nil {
+		return ""
+	}
+	return *c.DisplayName
+}
+
 // GetID returns the ID field if it's non-nil, zero value otherwise.
 func (c *Connection) GetID() string {
 	if c == nil || c.ID == nil {
@@ -1962,6 +1970,152 @@ func (c *ConnectionOptionsSalesforce) String() string {
 	return Stringify(c)
 }
 
+// GetCert returns the Cert field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAML) GetCert() string {
+	if c == nil || c.Cert == nil {
+		return ""
+	}
+	return *c.Cert
+}
+
+// GetDebug returns the Debug field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAML) GetDebug() bool {
+	if c == nil || c.Debug == nil {
+		return false
+	}
+	return *c.Debug
+}
+
+// GetDigestAglorithm returns the DigestAglorithm field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAML) GetDigestAglorithm() string {
+	if c == nil || c.DigestAglorithm == nil {
+		return ""
+	}
+	return *c.DigestAglorithm
+}
+
+// GetExpires returns the Expires field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAML) GetExpires() string {
+	if c == nil || c.Expires == nil {
+		return ""
+	}
+	return *c.Expires
+}
+
+// GetIdpInitiated returns the IdpInitiated field.
+func (c *ConnectionOptionsSAML) GetIdpInitiated() *ConnectionOptionsSAMLIdpInitiated {
+	if c == nil {
+		return nil
+	}
+	return c.IdpInitiated
+}
+
+// GetMetadataURL returns the MetadataURL field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAML) GetMetadataURL() string {
+	if c == nil || c.MetadataURL == nil {
+		return ""
+	}
+	return *c.MetadataURL
+}
+
+// GetMetadataXML returns the MetadataXML field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAML) GetMetadataXML() string {
+	if c == nil || c.MetadataXML == nil {
+		return ""
+	}
+	return *c.MetadataXML
+}
+
+// GetProtocolBinding returns the ProtocolBinding field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAML) GetProtocolBinding() string {
+	if c == nil || c.ProtocolBinding == nil {
+		return ""
+	}
+	return *c.ProtocolBinding
+}
+
+// GetSignatureAlgorithm returns the SignatureAlgorithm field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAML) GetSignatureAlgorithm() string {
+	if c == nil || c.SignatureAlgorithm == nil {
+		return ""
+	}
+	return *c.SignatureAlgorithm
+}
+
+// GetSignInEndpoint returns the SignInEndpoint field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAML) GetSignInEndpoint() string {
+	if c == nil || c.SignInEndpoint == nil {
+		return ""
+	}
+	return *c.SignInEndpoint
+}
+
+// GetSigningCert returns the SigningCert field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAML) GetSigningCert() string {
+	if c == nil || c.SigningCert == nil {
+		return ""
+	}
+	return *c.SigningCert
+}
+
+// GetSignOutEndpoint returns the SignOutEndpoint field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAML) GetSignOutEndpoint() string {
+	if c == nil || c.SignOutEndpoint == nil {
+		return ""
+	}
+	return *c.SignOutEndpoint
+}
+
+// GetSignSAMLRequest returns the SignSAMLRequest field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAML) GetSignSAMLRequest() bool {
+	if c == nil || c.SignSAMLRequest == nil {
+		return false
+	}
+	return *c.SignSAMLRequest
+}
+
+// GetTenantDomain returns the TenantDomain field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAML) GetTenantDomain() string {
+	if c == nil || c.TenantDomain == nil {
+		return ""
+	}
+	return *c.TenantDomain
+}
+
+// String returns a string representation of ConnectionOptionsSAML.
+func (c *ConnectionOptionsSAML) String() string {
+	return Stringify(c)
+}
+
+// GetClientAuthorizeQuery returns the ClientAuthorizeQuery field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAMLIdpInitiated) GetClientAuthorizeQuery() string {
+	if c == nil || c.ClientAuthorizeQuery == nil {
+		return ""
+	}
+	return *c.ClientAuthorizeQuery
+}
+
+// GetClientID returns the ClientID field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAMLIdpInitiated) GetClientID() string {
+	if c == nil || c.ClientID == nil {
+		return ""
+	}
+	return *c.ClientID
+}
+
+// GetClientProtocol returns the ClientProtocol field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAMLIdpInitiated) GetClientProtocol() string {
+	if c == nil || c.ClientProtocol == nil {
+		return ""
+	}
+	return *c.ClientProtocol
+}
+
+// String returns a string representation of ConnectionOptionsSAMLIdpInitiated.
+func (c *ConnectionOptionsSAMLIdpInitiated) String() string {
+	return Stringify(c)
+}
+
 // GetBruteForceProtection returns the BruteForceProtection field if it's non-nil, zero value otherwise.
 func (c *ConnectionOptionsSMS) GetBruteForceProtection() bool {
 	if c == nil || c.BruteForceProtection == nil {
@@ -3047,6 +3201,11 @@ func (p *Permission) GetResourceServerName() string {
 
 // String returns a string representation of Permission.
 func (p *Permission) String() string {
+	return Stringify(p)
+}
+
+// String returns a string representation of PermissionList.
+func (p *PermissionList) String() string {
 	return Stringify(p)
 }
 
