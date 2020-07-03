@@ -24,6 +24,7 @@ func newRuleConfig() *schema.Resource {
 			"key": {
 				Type:     schema.TypeString,
 				Required: true,
+				ForceNew: true,
 			},
 			"value": {
 				Type:      schema.TypeString,
