@@ -43,22 +43,54 @@ func TestAccRuleConfig(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			resource.TestStep{
-				Config: random.Template(testAccRuleConfig, rand),
+			{
+				Config: random.Template(testAccRuleConfigCreate, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_rule_config.foo", "id", "acc_test_{{.random}}", rand),
 					random.TestCheckResourceAttr("auth0_rule_config.foo", "key", "acc_test_{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_rule_config.foo", "value", "bar"),
 				),
 			},
+			{
+				Config: random.Template(testAccRuleConfigUpdateValue, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_rule_config.foo", "id", "acc_test_{{.random}}", rand),
+					random.TestCheckResourceAttr("auth0_rule_config.foo", "key", "acc_test_{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_rule_config.foo", "value", "foo"),
+				),
+			},
+			{
+				Config: random.Template(testAccRuleConfigUpdateKey, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_rule_config.foo", "id", "acc_test_key_{{.random}}", rand),
+					random.TestCheckResourceAttr("auth0_rule_config.foo", "key", "acc_test_key_{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_rule_config.foo", "value", "foo"),
+				),
+			},
 		},
 	})
 }
 
-const testAccRuleConfig = `
+const testAccRuleConfigCreate = `
 
 resource "auth0_rule_config" "foo" {
   key = "acc_test_{{.random}}"
   value = "bar"
+}
+`
+
+const testAccRuleConfigUpdateValue = `
+
+resource "auth0_rule_config" "foo" {
+  key = "acc_test_{{.random}}"
+  value = "foo"
+}
+`
+
+const testAccRuleConfigUpdateKey = `
+
+resource "auth0_rule_config" "foo" {
+  key = "acc_test_key_{{.random}}"
+  value = "foo"
 }
 `
