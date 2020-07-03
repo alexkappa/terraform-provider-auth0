@@ -9,8 +9,7 @@ description: |-
 
 With this resource, you can manage Auth0 tenants, including setting logos and support contact information, setting error pages, and configuring default tenant behaviors.
 
-#### Notes:
-Auth0 does not currently support creating or destryoying tenants through their API. This resource can only manage an existing tenant created through the Auth0 dashboard. 
+~> **Note**: Auth0 does not currently support creating tenants through the Management API. Therefore this resource can only manage an existing tenant created through the Auth0 dashboard. 
 
 Auth0 does not currently support adding/removing extensions on tenants through their API. The Auth0 dashboard must be used to add/remove extensions. 
 
