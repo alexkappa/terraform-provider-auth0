@@ -1,4 +1,9 @@
-## 0.13.0 (Unreleased)
+## 0.12.1 (Unreleased)
+
+BUG FIXES:
+
+* resource/auth0_rule_config: forces new resource when `key` has change ([#246](https://github.com/alexkappa/terraform-provider-auth0/pull/246)).
+
 ## 0.12.0 (July 01, 2020)
 
 FEATURES:
