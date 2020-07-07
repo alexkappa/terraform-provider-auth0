@@ -7,11 +7,12 @@ on:
     - cron: '0 11 * * 3'
 
 jobs:
-  CodeQL-Build:
-
+  build:
+    name: "CodeQL-Build"
     runs-on: ubuntu-latest
-
+    if: github.repository == 'alexkappa/terraform-provider-auth0'
     steps:
+
     - name: Checkout repository
       uses: actions/checkout@v2
       with:
