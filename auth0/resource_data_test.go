@@ -50,3 +50,22 @@ func TestJSON(t *testing.T) {
 		t.Errorf("Expected result to be a int, instead it was %T\n", j)
 	}
 }
+
+func TestIsNil(t *testing.T) {
+
+	for _, v := range []interface{}{
+		nil,
+		(*bool)(nil),
+		(*string)(nil),
+		(*int)(nil),
+		(*int64)(nil),
+		(*float32)(nil),
+		(*float64)(nil),
+		(*struct{})(nil),
+		(*interface{})(nil),
+	} {
+		if !isNil(v) {
+			t.Errorf("Expected isNil(%#v) to return true", v)
+		}
+	}
+}

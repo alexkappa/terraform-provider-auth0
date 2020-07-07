@@ -99,7 +99,7 @@ resource "auth0_client" "my_client" {
     secret_encoded = true
     alg = "RS256"
     scopes = {
-    	foo = "bar"
+      foo = "bar"
     }
   }
   client_metadata = {
@@ -126,6 +126,10 @@ resource "auth0_client" "my_client" {
       name_identifier_probes = [
         "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
       ]
+      logout = {
+        callback = "http://example.com/callback"
+        slo_enabled = true
+      }
     }
   }
   mobile {
@@ -304,9 +308,6 @@ func TestAccClientJwtScopes(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_client.my_client", "jwt_configuration.0.secret_encoded", "true"),
 				),
 			},
-			// {
-			// 	Config: random.Template(testAccClientConfigJwtScopesUpdateAgain, rand),
-			// },
 		},
 	})
 }
