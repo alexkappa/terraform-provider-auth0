@@ -1,4 +1,9 @@
-## 0.13.0 (Unreleased)
+## 0.12.2 (Unreleased)
+
+BUG FIXES:
+
+* resource/auth0_client: `samlp` addon is now correctly translated to camel case ([#226](https://github.com/alexkappa/terraform-provider-auth0/issues/226))
+
 ## 0.12.1 (July 03, 2020)
 
 BUG FIXES:
