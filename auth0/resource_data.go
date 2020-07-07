@@ -41,6 +41,12 @@ type ResourceData interface {
 	// Deprecated: usage is discouraged due to undefined behaviors and may be
 	// removed in a future version of the SDK
 	GetOkExists(key string) (interface{}, bool)
+
+	// Set sets the value for the given key.
+	//
+	// If the key is invalid or the value is not a correct type, an error
+	// will be returned.
+	Set(key string, value interface{}) error
 }
 
 type resourceData struct {
@@ -80,6 +86,10 @@ func (d *resourceData) GetOkExists(key string) (interface{}, bool) {
 	return d.ResourceData.GetOkExists(d.prefix + "." + key)
 }
 
+func (d *resourceData) Set(key string, value interface{}) error {
+	return d.ResourceData.Set(d.prefix+"."+key, value)
+}
+
 // MapData wraps a map satisfying the Data interface, so it can be used in the
 // accessor methods defined below.
 type MapData map[string]interface{}
@@ -111,8 +121,16 @@ func (md MapData) GetOkExists(key string) (interface{}, bool) {
 	return v, ok && !isNil(v)
 }
 
+func (md MapData) Set(key string, value interface{}) error {
+	if !isNil(value) {
+		md[key] = value
+	}
+	return nil
+}
+
 func isNil(v interface{}) bool {
-	return v == nil
+	return v == nil || (reflect.ValueOf(v).Kind() == reflect.Ptr && reflect.ValueOf(v).IsNil())
+
 }
 
 func isZero(v interface{}) bool {
@@ -252,24 +270,15 @@ func Set(d ResourceData, key string, conditions ...Condition) Iterator {
 // iteration. The callback takes a Data interface as argument which is prefixed
 // with its parents key, allowing for convenient nested data access.
 //
-// Range iterates over all elements of the list, calling fn in each iteration.
-//
 // List returns the underlying list as a Go slice.
 type Iterator interface {
 	Elem(func(d ResourceData))
-	Range(func(k int, v interface{}))
 	List() []interface{}
 }
 
 type list struct {
 	d ResourceData
 	v []interface{}
-}
-
-func (l *list) Range(fn func(key int, value interface{})) {
-	for key, value := range l.v {
-		fn(key, value)
-	}
 }
 
 func (l *list) Elem(fn func(ResourceData)) {
@@ -293,12 +302,6 @@ func (s *set) hash(item interface{}) string {
 		code = -code
 	}
 	return strconv.Itoa(code)
-}
-
-func (s *set) Range(fn func(key int, value interface{})) {
-	for key, value := range s.s.List() {
-		fn(key, value)
-	}
 }
 
 func (s *set) Elem(fn func(ResourceData)) {

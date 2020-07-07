@@ -266,6 +266,11 @@ func newClient() *schema.Resource {
 										Type:     schema.TypeString,
 										Optional: true,
 									},
+									"mappings": {
+										Type:     schema.TypeMap,
+										Optional: true,
+										Elem:     schema.TypeString,
+									},
 									"create_upn_claim": {
 										Type:     schema.TypeBool,
 										Optional: true,
@@ -309,6 +314,20 @@ func newClient() *schema.Resource {
 										Type:     schema.TypeBool,
 										Optional: true,
 									},
+									"name_identifier_format": {
+										Type:     schema.TypeString,
+										Optional: true,
+										Default:  "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
+									},
+									"name_identifier_probes": {
+										Type:     schema.TypeList,
+										Elem:     &schema.Schema{Type: schema.TypeString},
+										Optional: true,
+									},
+									"authn_context_class_ref": {
+										Type:     schema.TypeString,
+										Optional: true,
+									},
 									"typed_attributes": {
 										Type:     schema.TypeBool,
 										Optional: true,
@@ -318,24 +337,6 @@ func newClient() *schema.Resource {
 										Type:     schema.TypeBool,
 										Optional: true,
 										Default:  true,
-									},
-									"name_identifier_format": {
-										Type:     schema.TypeString,
-										Optional: true,
-										Default:  "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
-									},
-									"authn_context_class_ref": {
-										Type:     schema.TypeString,
-										Optional: true,
-									},
-									"binding": {
-										Type:     schema.TypeString,
-										Optional: true,
-									},
-									"mappings": {
-										Type:     schema.TypeMap,
-										Optional: true,
-										Elem:     schema.TypeString,
 									},
 									"logout": {
 										Type:     schema.TypeMap,
@@ -353,9 +354,8 @@ func newClient() *schema.Resource {
 											},
 										},
 									},
-									"name_identifier_probes": {
-										Type:     schema.TypeList,
-										Elem:     &schema.Schema{Type: schema.TypeString},
+									"binding": {
+										Type:     schema.TypeString,
 										Optional: true,
 									},
 								},
@@ -598,31 +598,49 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		}
 	}
 
-	List(d, "addons").Range(func(k int, v interface{}) {
+	List(d, "addons").Elem(func(d ResourceData) {
 
 		c.Addons = make(map[string]interface{})
 
-		for addonKey, addonValue := range v.(map[string]interface{}) {
-
-			switch addonKey {
-
-			case "samlp":
-				for _, v := range addonValue.([]interface{}) {
-
-					addon := v.(map[string]interface{})
-
-					if len(addon) > 0 {
-						c.Addons[addonKey] = buildClientAddon(addon)
-					}
-				}
-
-			default:
-				addon := addonValue.(map[string]interface{})
-				if len(addon) > 0 {
-					c.Addons[addonKey] = buildClientAddon(addon)
-				}
+		for _, name := range []string{
+			"aws", "azure_blob", "azure_sb", "rms", "mscrm", "slack", "sentry",
+			"box", "cloudbees", "concur", "dropbox", "echosign", "egnyte",
+			"firebase", "newrelic", "office365", "salesforce", "salesforce_api",
+			"salesforce_sandbox_api", "layer", "sap_api", "sharepoint",
+			"springcm", "wams", "wsfed", "zendesk", "zoom",
+		} {
+			_, ok := d.GetOk(name)
+			if ok {
+				c.Addons[name] = buildClientAddon(Map(d, name))
 			}
 		}
+
+		List(d, "samlp").Elem(func(d ResourceData) {
+
+			m := make(MapData)
+
+			m.Set("audience", String(d, "audience"))
+			m.Set("authnContextClassRef", String(d, "authn_context_class_ref"))
+			m.Set("binding", String(d, "binding"))
+			m.Set("createUpnClaim", Bool(d, "create_upn_claim"))
+			m.Set("destination", String(d, "destination"))
+			m.Set("digestAlgorithm", String(d, "digest_algorithm"))
+			m.Set("includeAttributeNameFormat", Bool(d, "include_attribute_name_format"))
+			m.Set("lifetimeInSeconds", Int(d, "lifetime_in_seconds"))
+			m.Set("logout", buildClientAddon(Map(d, "logout")))
+			m.Set("mapIdentities", Bool(d, "map_identities"))
+			m.Set("mappings", Map(d, "mappings"))
+			m.Set("mapUnknownClaimsAsIs", Bool(d, "map_unknown_claims_as_is"))
+			m.Set("nameIdentifierFormat", String(d, "name_identifier_format"))
+			m.Set("nameIdentifierProbes", Slice(d, "name_identifier_probes"))
+			m.Set("passthroughClaimsWithNoMapping", Bool(d, "passthrough_claims_with_no_mapping"))
+			m.Set("recipient", String(d, "recipient"))
+			m.Set("signatureAlgorithm", String(d, "signature_algorithm"))
+			m.Set("signResponse", Bool(d, "sign_response"))
+			m.Set("typedAttributes", Bool(d, "typed_attributes"))
+
+			c.Addons["samlp"] = m
+		})
 	})
 
 	if v, ok := d.GetOk("client_metadata"); ok {
@@ -632,16 +650,21 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		}
 	}
 
-	List(d, "mobile").Range(func(k int, v interface{}) {
+	List(d, "mobile").Elem(func(d ResourceData) {
 
 		c.Mobile = make(map[string]interface{})
 
-		for mobileKey, mobileValues := range v.(map[string]interface{}) {
+		List(d, "android").Elem(func(d ResourceData) {
+			m := make(map[string]interface{})
+			m["app_package_name"] = String(d, "app_package_name")
+			m["sha256_cert_fingerprints"] = String(d, "sha256_cert_fingerprints")
+		})
 
-			for _, mobile := range mobileValues.([]interface{}) {
-				c.Mobile[mobileKey] = mobile
-			}
-		}
+		List(d, "ios").Elem(func(d ResourceData) {
+			m := make(map[string]interface{})
+			m["team_id"] = String(d, "app_package_name")
+			m["app_bundle_identifier"] = String(d, "sha256_cert_fingerprints")
+		})
 	})
 
 	return c
