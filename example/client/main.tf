@@ -54,4 +54,10 @@ resource "auth0_client" "my_client" {
       app_bundle_identifier = "com.my.bundle.id"
     }
   }
+  refresh_token {
+    leeway = 0
+    token_lifetime = 2592000
+    rotation_type = "rotating"
+    expiration_type = "expiring"
+  }
 }
