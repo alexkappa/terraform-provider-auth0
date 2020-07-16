@@ -63,6 +63,11 @@ func TestAccClient(t *testing.T) {
 					random.TestCheckResourceAttr("auth0_client.my_client", "name", "Acceptance Test - {{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "is_token_endpoint_ip_header_trusted", "true"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "token_endpoint_auth_method", "client_secret_post"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "refresh_token.#", "1"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "refresh_token.0.leeway", "42"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "refresh_token.0.token_lifetime", "424242"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "refresh_token.0.rotation_type", "rotating"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "refresh_token.0.expiration_type", "expiring"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.#", "1"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.firebase.client_email", "john.doe@example.com"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.firebase.lifetime_in_seconds", "1"),
@@ -88,7 +93,7 @@ resource "auth0_client" "my_client" {
   is_first_party = true
   is_token_endpoint_ip_header_trusted = true
   token_endpoint_auth_method = "client_secret_post"
-  oidc_conformant = false
+  oidc_conformant = true
   callbacks = [ "https://example.com/callback" ]
   allowed_origins = [ "https://example.com" ]
   grant_types = [ "authorization_code", "http://auth0.com/oauth/grant-type/password-realm", "implicit", "password", "refresh_token" ]
@@ -131,6 +136,12 @@ resource "auth0_client" "my_client" {
         slo_enabled = true
       }
     }
+  }
+  refresh_token {
+    leeway = 42
+    token_lifetime = 424242
+    rotation_type = "rotating"
+    expiration_type = "expiring"
   }
   mobile {
     ios {
