@@ -463,6 +463,41 @@ func newClient() *schema.Resource {
 					v.IsURLWithNoFragment,
 				),
 			},
+			"refresh_token": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				MaxItems: 1,
+				MinItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"rotation_type": {
+							Type:     schema.TypeString,
+							Required: true,
+							ValidateFunc: validation.StringInSlice([]string{
+								"rotating",
+								"non-rotating",
+							}, false),
+						},
+						"expiration_type": {
+							Type:     schema.TypeString,
+							Required: true,
+							ValidateFunc: validation.StringInSlice([]string{
+								"expiring",
+								"non-expiring",
+							}, false),
+						},
+						"leeway": {
+							Type:     schema.TypeInt,
+							Optional: true,
+						},
+						"token_lifetime": {
+							Type:     schema.TypeInt,
+							Optional: true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -514,6 +549,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("form_template", c.FormTemplate)
 	d.Set("token_endpoint_auth_method", c.TokenEndpointAuthMethod)
 	d.Set("jwt_configuration", flattenClientJwtConfiguration(c.JWTConfiguration))
+	d.Set("refresh_token", flattenClientRefreshTokenConfiguration(c.RefreshToken))
 	d.Set("encryption_key", c.EncryptionKey)
 	d.Set("addons", c.Addons)
 	d.Set("client_metadata", c.ClientMetadata)
@@ -581,6 +617,15 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		TokenEndpointAuthMethod:        String(d, "token_endpoint_auth_method"),
 		InitiateLoginURI:               String(d, "initiate_login_uri"),
 	}
+
+	List(d, "refresh_token").Elem(func(d ResourceData) {
+		c.RefreshToken = &management.ClientRefreshToken{
+			RotationType:   String(d, "rotation_type"),
+			ExpirationType: String(d, "expiration_type"),
+			Leeway:         Int(d, "leeway"),
+			TokenLifetime:  Int(d, "token_lifetime"),
+		}
+	})
 
 	List(d, "jwt_configuration").Elem(func(d ResourceData) {
 		c.JWTConfiguration = &management.ClientJWTConfiguration{
@@ -726,6 +771,17 @@ func flattenClientJwtConfiguration(jwt *management.ClientJWTConfiguration) []int
 		m["secret_encoded"] = jwt.SecretEncoded
 		m["scopes"] = jwt.Scopes
 		m["alg"] = jwt.Algorithm
+	}
+	return []interface{}{m}
+}
+
+func flattenClientRefreshTokenConfiguration(refresh_token *management.ClientRefreshToken) []interface{} {
+	m := make(map[string]interface{})
+	if refresh_token != nil {
+		m["rotation_type"] = refresh_token.RotationType
+		m["expiration_type"] = refresh_token.ExpirationType
+		m["leeway"] = refresh_token.Leeway
+		m["token_lifetime"] = refresh_token.TokenLifetime
 	}
 	return []interface{}{m}
 }
