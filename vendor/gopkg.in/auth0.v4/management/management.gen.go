@@ -381,12 +381,36 @@ func (c *ClientNativeSocialLogin) String() string {
 	return Stringify(c)
 }
 
+// GetExpirationType returns the ExpirationType field if it's non-nil, zero value otherwise.
+func (c *ClientRefreshToken) GetExpirationType() string {
+	if c == nil || c.ExpirationType == nil {
+		return ""
+	}
+	return *c.ExpirationType
+}
+
 // GetLeeway returns the Leeway field if it's non-nil, zero value otherwise.
 func (c *ClientRefreshToken) GetLeeway() int {
 	if c == nil || c.Leeway == nil {
 		return 0
 	}
 	return *c.Leeway
+}
+
+// GetRotationType returns the RotationType field if it's non-nil, zero value otherwise.
+func (c *ClientRefreshToken) GetRotationType() string {
+	if c == nil || c.RotationType == nil {
+		return ""
+	}
+	return *c.RotationType
+}
+
+// GetTokenLifetime returns the TokenLifetime field if it's non-nil, zero value otherwise.
+func (c *ClientRefreshToken) GetTokenLifetime() int {
+	if c == nil || c.TokenLifetime == nil {
+		return 0
+	}
+	return *c.TokenLifetime
 }
 
 // GetType returns the Type field if it's non-nil, zero value otherwise.
