@@ -117,10 +117,10 @@ func (m *HookManager) RemoveSecrets(hookID string, keys ...string) (err error) {
 func (m *HookManager) RemoveAllSecrets(hookID string) (err error) {
 	r, err := m.Secrets(hookID)
 	if err == nil {
-        keys := r.Keys()
-        if len(keys) > 0 {
-            err = m.RemoveSecrets(hookID, keys...)
-        }
+		keys := r.Keys()
+		if len(keys) > 0 {
+			err = m.RemoveSecrets(hookID, keys...)
+		}
 	}
 	return err
 }
@@ -130,7 +130,7 @@ func (s *HookSecrets) Keys() []string {
 	keys := make([]string, len(*s))
 	i := 0
 	for k := range *s {
-        keys[i] = k
+		keys[i] = k
 		i++
 	}
 	return keys
