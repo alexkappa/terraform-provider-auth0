@@ -81,8 +81,33 @@ var connectionSchema = map[string]*schema.Schema{
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"validation": {
-					Type:     schema.TypeMap,
-					Elem:     &schema.Schema{Type: schema.TypeString},
+					Type: schema.TypeMap,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"requires_username": {
+								Type:     schema.TypeBool,
+								Optional: true,
+							},
+							"username": {
+								Optional: true,
+								Type:     schema.TypeMap,
+								Elem: &schema.Resource{
+									Schema: map[string]*schema.Schema{
+										"min": {
+											Type:         schema.TypeInt,
+											Optional:     true,
+											ValidateFunc: validation.IntAtLeast(1),
+										},
+										"max": {
+											Type:         schema.TypeInt,
+											Optional:     true,
+											ValidateFunc: validation.IntAtLeast(1),
+										},
+									},
+								},
+							},
+						},
+					},
 					Optional: true,
 				},
 				"password_policy": {
@@ -179,11 +204,6 @@ var connectionSchema = map[string]*schema.Schema{
 					Type:        schema.TypeBool,
 					Optional:    true,
 					Description: "Indicates whether or not to allow user sign-ups to your application",
-				},
-				"requires_username": {
-					Type:        schema.TypeBool,
-					Optional:    true,
-					Description: "Indicates whether or not the user is required to provide a username in addition to an email address",
 				},
 				"custom_scripts": {
 					Type:        schema.TypeMap,
