@@ -73,7 +73,9 @@ func TestAccConnection(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.brute_force_protection", "true"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.import_mode", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.disable_signup", "false"),
-					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.requires_username", "true"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.validation.requires_username", "true"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.validation.username.min", "10"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.validation.username.min", "40"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.custom_scripts.get_user", "myFunction"),
 					resource.TestCheckResourceAttrSet("auth0_connection.my_connection", "options.0.configuration.foo"),
 				),
@@ -110,11 +112,17 @@ resource "auth0_connection" "my_connection" {
 		password_complexity_options {
 			min_length = 6
 		}
+		validation {
+			requires_username = true
+			username = {
+				min = 10
+				max = 40
+			}
+		}
 		enabled_database_customization = false
 		brute_force_protection = true
 		import_mode = false
 		disable_signup = false
-		requires_username = true
 		custom_scripts = {
 			get_user = "myFunction"
 		}
