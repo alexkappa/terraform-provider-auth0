@@ -66,7 +66,6 @@ func flattenConnectionOptionsAuth0(d ResourceData, o *management.ConnectionOptio
 		"brute_force_protection":         o.GetBruteForceProtection(),
 		"import_mode":                    o.GetImportMode(),
 		"disable_signup":                 o.GetDisableSignup(),
-		"requires_username":              o.GetRequiresUsername(),
 		"custom_scripts":                 o.CustomScripts,
 		"configuration":                  Map(d, "configuration"), // does not get read back
 	}
@@ -291,9 +290,18 @@ func expandConnectionOptionsGitHub(d ResourceData) *management.ConnectionOptions
 func expandConnectionOptionsAuth0(d ResourceData) *management.ConnectionOptions {
 
 	o := &management.ConnectionOptions{
-		Validation:     Map(d, "validation"),
 		PasswordPolicy: String(d, "password_policy"),
 	}
+
+	List(d, "validation").Elem(func(d ResourceData) {
+		o.Validation = make(map[string]interface{})
+		List(d, "username").Elem(func(d ResourceData) {
+			usernameValidation := make(map[string]*int)
+			usernameValidation["min"] = Int(d, "min")
+			usernameValidation["max"] = Int(d, "max")
+			o.Validation["username"] = usernameValidation
+		})
+	})
 
 	List(d, "password_history").Elem(func(d ResourceData) {
 		o.PasswordHistory = make(map[string]interface{})
