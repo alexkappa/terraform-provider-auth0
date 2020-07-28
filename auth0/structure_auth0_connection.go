@@ -66,6 +66,7 @@ func flattenConnectionOptionsAuth0(d ResourceData, o *management.ConnectionOptio
 		"brute_force_protection":         o.GetBruteForceProtection(),
 		"import_mode":                    o.GetImportMode(),
 		"disable_signup":                 o.GetDisableSignup(),
+		"requires_username":              o.GetRequiresUsername(),
 		"custom_scripts":                 o.CustomScripts,
 		"configuration":                  Map(d, "configuration"), // does not get read back
 	}
