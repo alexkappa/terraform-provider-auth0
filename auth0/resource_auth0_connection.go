@@ -81,16 +81,14 @@ var connectionSchema = map[string]*schema.Schema{
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"validation": {
-					Type: schema.TypeMap,
+					Type:     schema.TypeList,
+					MaxItems: 1,
 					Elem: &schema.Resource{
 						Schema: map[string]*schema.Schema{
-							"requires_username": {
-								Type:     schema.TypeBool,
-								Optional: true,
-							},
 							"username": {
 								Optional: true,
-								Type:     schema.TypeMap,
+								Type:     schema.TypeList,
+								MaxItems: 1,
 								Elem: &schema.Resource{
 									Schema: map[string]*schema.Schema{
 										"min": {
@@ -204,6 +202,10 @@ var connectionSchema = map[string]*schema.Schema{
 					Type:        schema.TypeBool,
 					Optional:    true,
 					Description: "Indicates whether or not to allow user sign-ups to your application",
+				},
+				"requires_username": {
+					Type:     schema.TypeBool,
+					Optional: true,
 				},
 				"custom_scripts": {
 					Type:        schema.TypeMap,
