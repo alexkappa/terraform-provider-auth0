@@ -35,6 +35,11 @@ Please run `terraform -v` to show the **Auth0 provider version** as well as the 
 If you are not running the latest version of Terraform or the provider, please upgrade because your issue may have already been fixed. [Terraform documentation on provider versioning](https://www.terraform.io/docs/configuration/providers.html#provider-versions).
 --->
 
+```
+Terraform <TERRAFORM_VERSION>
++ provider.auth0 <TERRAFORM_PROVIDER_VERSION>
+```
+
 ### Affected Resource(s)
 
 <!--- Please list the affected resources and data sources. --->
