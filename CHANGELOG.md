@@ -1,4 +1,9 @@
 ## 0.13.0 (Unreleased)
+
+FEATURES:
+
+* resource/auth0_client: support for setting `refresh_token` ([#255](https://github.com/alexkappa/terraform-provider-auth0/pull/255))
+
 ## 0.12.2 (July 07, 2020)
 
 BUG FIXES:
