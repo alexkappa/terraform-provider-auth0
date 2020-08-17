@@ -68,4 +68,4 @@ Arguments accepted by this resource include:
 
 Attributes exported by this resource include:
 
-* `role_id` - String. ID for the role.
+* `id` - String. ID for the role.
