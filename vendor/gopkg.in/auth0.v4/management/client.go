@@ -110,11 +110,22 @@ type ClientNativeSocialLogin struct {
 
 type ClientRefreshToken struct {
 	// Refresh token types, one of: reusable, rotating
+	//
+	// Deprecated: use RotationType and ExpirationType instead
 	Type *string `json:"type,omitempty"`
+
+	// Refresh token rotation type. Can be "rotating" or "non-rotating"
+	RotationType *string `json:"rotation_type,omitempty"`
+
+	// Refresh token expiration type. Can be "expiring" or "non-expiring"
+	ExpirationType *string `json:"expiration_type,omitempty"`
 
 	// Period in seconds where the previous refresh token can be exchanged
 	// without triggering breach detection
 	Leeway *int `json:"leeway,omitempty"`
+
+	// Period in seconds for which refresh tokens will remain valid
+	TokenLifetime *int `json:"token_lifetime,omitempty"`
 }
 
 type ClientList struct {

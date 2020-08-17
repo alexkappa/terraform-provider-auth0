@@ -327,8 +327,8 @@ google.golang.org/grpc v1.23.0/go.mod h1:Y5yQAOtifL1yxbo5wqy6BxZv8vAUGQwXBOALyac
 google.golang.org/grpc v1.27.0/go.mod h1:qbnxyOmOxrQa7FizSgH+ReBfzJrCY1pSN7KXBS8abTk=
 google.golang.org/grpc v1.27.1 h1:zvIju4sqAGvwKspUQOhwnpcqSbzi7/H6QomNNjTL4sk=
 google.golang.org/grpc v1.27.1/go.mod h1:qbnxyOmOxrQa7FizSgH+ReBfzJrCY1pSN7KXBS8abTk=
-gopkg.in/auth0.v4 v4.4.0 h1:YvYzSRkf3xMpxBMYKRbUyTAJN0j2mtyE4/y/CAmmil4=
-gopkg.in/auth0.v4 v4.4.0/go.mod h1:6ZOcoQequCmURgwJnGIX09/51deRWVRpUaUP8p1Jbpk=
+gopkg.in/auth0.v4 v4.4.1 h1:AGOChEbsOaGn3KyIFAefsTkxcqX28JcM/mqslF+WRXA=
+gopkg.in/auth0.v4 v4.4.1/go.mod h1:6ZOcoQequCmURgwJnGIX09/51deRWVRpUaUP8p1Jbpk=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 h1:qIbj1fsPNlZgppZ+VLlY7N33q108Sa+fhmuc+sWQYwY=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/cheggaaa/pb.v1 v1.0.27/go.mod h1:V/YB90LKu/1FcN3WVnfiiE5oMCibMjukxqG/qStrOgw=
