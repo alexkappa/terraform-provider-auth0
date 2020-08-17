@@ -618,7 +618,7 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		InitiateLoginURI:               String(d, "initiate_login_uri"),
 	}
 
-	List(d, "refresh_token").Elem(func(d ResourceData) {
+	List(d, "refresh_token", IsNewResource(), HasChange()).Elem(func(d ResourceData) {
 		c.RefreshToken = &management.ClientRefreshToken{
 			RotationType:   String(d, "rotation_type"),
 			ExpirationType: String(d, "expiration_type"),
