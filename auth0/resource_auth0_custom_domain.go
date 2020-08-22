@@ -15,6 +15,7 @@ func newCustomDomain() *schema.Resource {
 
 		Create: createCustomDomain,
 		Read:   readCustomDomain,
+		Update: updateCustomDomain,
 		Delete: deleteCustomDomain,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -63,12 +64,16 @@ func newCustomDomain() *schema.Resource {
 					},
 				},
 			},
+			"verification_trigger": {
+				Type:     schema.TypeMap,
+				Optional: true,
+			},
 		},
 	}
 }
 
 func createCustomDomain(d *schema.ResourceData, m interface{}) error {
-	c := buildCustomDomain(d)
+	c := expandCustomDomain(d)
 	api := m.(*management.Management)
 	if err := api.CustomDomain.Create(c); err != nil {
 		return err
@@ -105,6 +110,17 @@ func readCustomDomain(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
+func updateCustomDomain(d *schema.ResourceData, m interface{}) error {
+	// If "verification_trigger" was updated, run a verification request. Since
+	// most fields either force a new resource or get computed server side, no
+	// other updates are needed.
+	err := verifyCustomDomain(d, m)
+	if err != nil {
+		return err
+	}
+	return readCustomDomain(d, m)
+}
+
 func deleteCustomDomain(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	err := api.CustomDomain.Delete(d.Id())
@@ -119,10 +135,22 @@ func deleteCustomDomain(d *schema.ResourceData, m interface{}) error {
 	return err
 }
 
-func buildCustomDomain(d *schema.ResourceData) *management.CustomDomain {
+func expandCustomDomain(d *schema.ResourceData) *management.CustomDomain {
 	return &management.CustomDomain{
 		Domain:             String(d, "domain"),
 		Type:               String(d, "type"),
 		VerificationMethod: String(d, "verification_method"),
 	}
+}
+
+func verifyCustomDomain(d *schema.ResourceData, m interface{}) error {
+	api := m.(*management.Management)
+	if d.HasChange("verification_trigger") {
+		v, err := api.CustomDomain.Verify(d.Id())
+		if err != nil {
+			return err
+		}
+		d.Set("status", v.Status)
+	}
+	return nil
 }
