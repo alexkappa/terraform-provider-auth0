@@ -54,8 +54,12 @@ func TestAccCustomDomain(t *testing.T) {
 			{
 				Config: random.Template(testAccCustomDomainVerification, rand),
 				Check: resource.ComposeTestCheckFunc(
-					random.TestCheckResourceAttr("auth0_custom_domain.my_custom_domain", "domain", "{{.random}}.auth.uat.alexkappa.com", rand),
-					resource.TestCheckResourceAttr("auth0_custom_domain.my_custom_domain", "type", "auth0_managed_certs"),
+					resource.TestCheckResourceAttr("auth0_custom_domain.my_custom_domain", "status", "pending_verification"),
+				),
+			},
+			{
+				Config: random.Template(testAccCustomDomainSecondVerification, rand),
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_custom_domain.my_custom_domain", "status", "pending_verification"),
 				),
 			},
@@ -81,6 +85,19 @@ resource "auth0_custom_domain" "my_custom_domain" {
   verification_trigger = {
     triggered_at = "2020-08-22T09:49:01Z"
     triggered_by = "@squarebracket"
+  }
+}
+`
+
+const testAccCustomDomainSecondVerification = `
+
+resource "auth0_custom_domain" "my_custom_domain" {
+  domain = "{{.random}}.auth.uat.alexkappa.com"
+  type = "auth0_managed_certs"
+  verification_method = "txt"
+  verification_trigger = {
+    triggered_at = "2020-08-22T10:42:34Z"
+    triggered_by = "@alexkappa"
   }
 }
 `
