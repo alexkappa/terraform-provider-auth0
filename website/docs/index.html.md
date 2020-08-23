@@ -50,4 +50,4 @@ $ terraform plan
 
 ## Importing resources
 
-To import Auth0 resources, you will need to know their id. You can use the Auth0 API Explorer](https://auth0.com/docs/api/management/v2) to easily find your resource id.
+To import Auth0 resources, you will need to know their id. You can use the [Auth0 API Explorer](https://auth0.com/docs/api/management/v2) to easily find your resource id.
