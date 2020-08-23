@@ -512,6 +512,7 @@ func expandConnectionOptionsOIDC(d ResourceData) *management.ConnectionOptionsOI
 
 func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSAML {
 	o := &management.ConnectionOptionsSAML{
+		Debug:              Bool(d, "debug"),
 		SigningCert:        String(d, "signing_cert"),
 		ProtocolBinding:    String(d, "protocol_binding"),
 		TenantDomain:       String(d, "tenant_domain"),
@@ -524,7 +525,7 @@ func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSA
 		SignSAMLRequest:    Bool(d, "sign_saml_request"),
 	}
 
-	Set(d, "idp_initiated").Elem(func(d ResourceData) {
+	List(d, "idp_initiated").Elem(func(d ResourceData) {
 		o.IdpInitiated = &management.ConnectionOptionsSAMLIdpInitiated{
 			ClientID:             String(d, "client_id"),
 			ClientProtocol:       String(d, "client_protocol"),
