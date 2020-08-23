@@ -30,8 +30,9 @@ func newClient() *schema.Resource {
 				Required: true,
 			},
 			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validation.StringLenBetween(0, 140),
 			},
 			"client_id": {
 				Type:     schema.TypeString,
