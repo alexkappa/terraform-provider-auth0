@@ -277,14 +277,9 @@ func readTenant(d *schema.ResourceData, m interface{}) error {
 	d.Set("support_email", t.SupportEmail)
 	d.Set("support_url", t.SupportURL)
 	d.Set("allowed_logout_urls", t.AllowedLogoutURLs)
-	if t.SessionLifetime != nil {
-		d.Set("session_lifetime", t.SessionLifetime)
-	}
+	d.Set("session_lifetime", t.SessionLifetime)
+	d.Set("idle_session_lifetime", t.IdleSessionLifetime)
 	d.Set("sandbox_version", t.SandboxVersion)
-	if t.IdleSessionLifetime != nil {
-		d.Set("idle_session_lifetime", t.IdleSessionLifetime)
-	}
-
 	d.Set("enabled_locales", t.EnabledLocales)
 
 	d.Set("error_page", flattenTenantErrorPage(t.ErrorPage))
