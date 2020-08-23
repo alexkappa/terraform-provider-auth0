@@ -1,4 +1,18 @@
 ## 0.14.0 (Unreleased)
+
+ENHANCEMENTS:
+
+* resource/auth0_client: Validate `description` length to be 140 characters ([#260](https://github.com/alexkappa/terraform-provider-auth0/pull/260))
+* resource/auth0_tenant: Validate `session_lifetime` to be > 1 ([#229](https://github.com/alexkappa/terraform-provider-auth0/pull/229))
+
+BUG FIXES:
+
+* resource/auth0_connection: Fix `debug` field in SAML connections and change iterating from a `Set` to a `List` ([#261](https://github.com/alexkappa/terraform-provider-auth0/pull/261))
+
+NOTES:
+
+Fixed typo in the documentation ([#263](https://github.com/alexkappa/terraform-provider-auth0/pull/263))
+
 ## 0.13.0 (August 17, 2020)
 
 FEATURES:
