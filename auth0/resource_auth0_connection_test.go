@@ -118,10 +118,10 @@ resource "auth0_connection" "my_connection" {
 				max = 40
 			}
 		}
-		requires_username = true
 		enabled_database_customization = false
 		brute_force_protection = true
 		import_mode = false
+		requires_username = true
 		disable_signup = false
 		custom_scripts = {
 			get_user = "myFunction"
@@ -148,11 +148,11 @@ resource "auth0_connection" "my_connection" {
 		password_no_personal_info {
 			enable = true
 		}
-		requires_username = true
 		enabled_database_customization = false
 		brute_force_protection = false
 		import_mode = false
 		disable_signup = false
+		requires_username = true
 		custom_scripts = {
 			get_user = "myFunction"
 		}

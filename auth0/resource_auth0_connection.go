@@ -206,6 +206,7 @@ var connectionSchema = map[string]*schema.Schema{
 				"requires_username": {
 					Type:     schema.TypeBool,
 					Optional: true,
+					Description: "Indicates whether or not the user is required to provide a username in addition to an email address",
 				},
 				"custom_scripts": {
 					Type:        schema.TypeMap,
