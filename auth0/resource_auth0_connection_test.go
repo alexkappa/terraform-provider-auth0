@@ -1015,17 +1015,19 @@ func TestConnectionInstanceStateUpgradeV1(t *testing.T) {
 	for _, tt := range []struct {
 		name               string
 		validation         map[string]string
-		validationExpected []map[string]interface{}
+		validationExpected []map[string][]interface{}
 	}{
 		{
 			name: "Only Min",
 			validation: map[string]string{
 				"min": "5",
 			},
-			validationExpected: []map[string]interface{}{
+			validationExpected: []map[string][]interface{}{
 				{
-					"username": map[string]string{
-						"min": "5",
+					"username": []interface{}{
+						map[string]string{
+							"min": "5",
+						},
 					},
 				},
 			},
@@ -1034,13 +1036,15 @@ func TestConnectionInstanceStateUpgradeV1(t *testing.T) {
 			name: "Min and Max",
 			validation: map[string]string{
 				"min": "5",
-				"max": "10",
+				"max": "5",
 			},
-			validationExpected: []map[string]interface{}{
+			validationExpected: []map[string][]interface{}{
 				{
-					"username": map[string]string{
-						"min": "5",
-						"max": "10",
+					"username": []interface{}{
+						map[string]string{
+							"min": "5",
+							"max": "10",
+						},
 					},
 				},
 			},
@@ -1050,7 +1054,7 @@ func TestConnectionInstanceStateUpgradeV1(t *testing.T) {
 
 			state := map[string]interface{}{
 				"options": []interface{}{
-					map[string]interface{}{"validation": tt.validation},
+					map[string][]interface{}{"validation": []interface{}{tt.validation}},
 				},
 			}
 

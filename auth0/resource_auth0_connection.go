@@ -610,9 +610,9 @@ func connectionSchemaUpgradeV1(state map[string]interface{}, meta interface{}) (
 
 		validation := v.(interface{})
 
-		m["validation"] = []map[string]interface{}{
+		m["validation"] = []map[string][]interface{}{
 			{
-				"username": validation,
+				"username": []interface{}{validation},
 			},
 		}
 
