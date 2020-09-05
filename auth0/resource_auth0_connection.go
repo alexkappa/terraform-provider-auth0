@@ -204,8 +204,8 @@ var connectionSchema = map[string]*schema.Schema{
 					Description: "Indicates whether or not to allow user sign-ups to your application",
 				},
 				"requires_username": {
-					Type:     schema.TypeBool,
-					Optional: true,
+					Type:        schema.TypeBool,
+					Optional:    true,
 					Description: "Indicates whether or not the user is required to provide a username in addition to an email address",
 				},
 				"custom_scripts": {
@@ -586,6 +586,39 @@ func connectionSchemaUpgradeV0(state map[string]interface{}, meta interface{}) (
 		state["options"] = []interface{}{m}
 
 		log.Printf("[DEBUG] Schema upgrade: options.strategy_version has been migrated to %d", i)
+	}
+
+	return state, nil
+}
+
+func connectionSchemaUpgradeV1(state map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
+
+	o, ok := state["options"]
+	if !ok {
+		return state, nil
+	}
+
+	l, ok := o.([]interface{})
+	if ok && len(l) > 0 {
+
+		m := l[0].(map[string]interface{})
+
+		v, ok := m["validation"]
+		if !ok {
+			return state, nil
+		}
+
+		validation := v.(interface{})
+
+		m["validation"] = []map[string]interface{}{
+			{
+				"username": validation,
+			},
+		}
+
+		state["options"] = []interface{}{m}
+
+		log.Print("[DEBUG] Schema upgrade: options.validation has been migrated to options.validation.user")
 	}
 
 	return state, nil
