@@ -1,4 +1,4 @@
-name: "Code scanning - action"
+name: "Scan"
 
 on:
   push:
@@ -12,7 +12,6 @@ jobs:
   build:
     name: "CodeQL-Build"
     runs-on: ubuntu-latest
-    if: github.repository == 'alexkappa/terraform-provider-auth0'
     steps:
 
     - name: Checkout repository
