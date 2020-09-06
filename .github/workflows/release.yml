@@ -7,7 +7,6 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: github.repository == 'alexkappa/terraform-provider-auth0'
     steps:
 
     - name: Check out source

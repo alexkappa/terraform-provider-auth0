@@ -1,17 +1,11 @@
 Auth0 Terraform Provider
 ========================
 
-[![Build Status](https://travis-ci.org/alexkappa/terraform-provider-auth0.svg?branch=master)](https://travis-ci.org/alexkappa/terraform-provider-auth0)
+![Build](https://github.com/alexkappa/terraform-provider-auth0/workflows/Build/badge.svg)
 [![Maintainability](https://api.codeclimate.com/v1/badges/9c49c10286123b716c79/maintainability)](https://codeclimate.com/github/alexkappa/terraform-provider-auth0/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/9c49c10286123b716c79/test_coverage)](https://codeclimate.com/github/alexkappa/terraform-provider-auth0/test_coverage)
 [![Gitter](https://badges.gitter.im/terraform-provider-auth0/community.svg)](https://gitter.im/terraform-provider-auth0/community)
 
-This provider has recently been accepted in the [Terraform Provider Developer Program](https://www.terraform.io/guides/terraform-provider-development-program.html). This means you can install this provider with the same ease as other officially supported providers!
-
-Issues & Pull Requests
-----------------------
-
-Please submit issues or pull requests to [alexkappa/terraform-provider-auth0](https://github.com/alexkappa/terraform-provider-auth0). This helps maintainers organize work more efficiently.
 
 Requirements
 ------------
@@ -87,9 +81,9 @@ $ make test
 In order to run the full suite of Acceptance tests, the following environment variables must be set:
 
 ```sh
-AUTH0_DOMAIN=your-tenant.auth0.com
-AUTH0_CLIENT_ID=xyz
-AUTH0_CLIENT_SECRET=xyz
+AUTH0_DOMAIN=<your-auth0-tenant-domain>
+AUTH0_CLIENT_ID=<your-auth0-client-id>
+AUTH0_CLIENT_SECRET=<your-auth0-client-secret>
 ```
 
 Then, run `make testacc`. 
