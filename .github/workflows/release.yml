@@ -21,6 +21,12 @@ jobs:
 
     - name: Determine version
       run: echo ::set-env name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+    
+    - name: Import GPG key
+      id: gpg
+      uses: crazy-max/ghaction-import-gpg@v2
+      env:
+        GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
     - name: Create release notes
       run: scripts/release-notes.sh ${{ env.VERSION }} > release-notes.md
@@ -31,4 +37,5 @@ jobs:
         version: latest
         args: --config=.github/release.yml --skip-validate --release-notes release-notes.md
       env:
+        GPG_FINGERPRINT: ${{ steps.gpg.outputs.fingerprint }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
