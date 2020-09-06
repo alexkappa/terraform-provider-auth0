@@ -39,7 +39,7 @@ EOF
 }
 ```
 
-~> **Note**: The Auth0 dashboard displays only one connection per social provider. Although the Auth0 Management API allowes the creation of multiple connections per strategy, the additional connections may not be visible in the Auth0 dashboard.
+~> The Auth0 dashboard displays only one connection per social provider. Although the Auth0 Management API allowes the creation of multiple connections per strategy, the additional connections may not be visible in the Auth0 dashboard.
 
 ## Argument Reference
 
@@ -103,7 +103,7 @@ With the `auth0` connection strategy, `options` supports the following arguments
 
 ### Google OAuth2
 
-~> **Note**: Your Auth0 account may be pre-configured with a `google-oauth2` connection. To manage that connection with terraform see the [import example](#import).
+~> Your Auth0 account may be pre-configured with a `google-oauth2` connection. To manage that connection with terraform see the [import example](#import).
 
 With the `google-oauth2` connection strategy, `options` supports the following arguments:
 

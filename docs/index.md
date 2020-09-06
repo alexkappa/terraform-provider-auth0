@@ -22,7 +22,7 @@ provider "auth0" {
 }
 ```
 
-~> **Note**: Hard-coding credentials into any Terraform configuration is not recommended, and risks secret leakage should this file ever be committed to a public version control system. See [Environment Variables](#environment-variables) for a better alternative.
+~> Hard-coding credentials into any Terraform configuration is not recommended, and risks secret leakage should this file ever be committed to a public version control system. See [Environment Variables](#environment-variables) for a better alternative.
 
 ## Argument Reference
 
