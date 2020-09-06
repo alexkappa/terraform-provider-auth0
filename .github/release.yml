@@ -2,7 +2,6 @@ builds:
   - binary: '{{ .ProjectName }}_v{{ .Version }}'
     env:
       - CGO_ENABLED=0
-      - GOFLAGS=-mod=vendor
     goos:
       - darwin
       - linux
