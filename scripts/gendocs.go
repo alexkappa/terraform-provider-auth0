@@ -10,8 +10,8 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/alexkappa/terraform-provider-auth0/auth0"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/terraform-providers/terraform-provider-auth0/auth0"
 )
 
 var args = struct {

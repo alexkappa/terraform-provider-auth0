@@ -204,6 +204,8 @@ github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+
 github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXfy6kDkUVs=
 github.com/stretchr/testify v1.3.0 h1:TivCn/peBQ7UY8ooIcPgZFpTNSz0Q2U6UrFlUfqbe0Q=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
+github.com/terraform-providers/terraform-provider-auth0 v0.14.0 h1:dHjuFCgdaDcP6xYVJEV7u68RMG0az65CzmpXyIUmucE=
+github.com/terraform-providers/terraform-provider-auth0 v0.14.0/go.mod h1:l9DiOicJEaG9w+GGXrBcEWIvvDVSuk7RgLfYVu1eFZ8=
 github.com/ulikunitz/xz v0.5.5 h1:pFrO0lVpTBXLpYw+pnLj6TbvHuyjXMfjGeCwSqCVwok=
 github.com/ulikunitz/xz v0.5.5/go.mod h1:2bypXElzHzzJZwzH67Y6wb67pO62Rzfn7BSiF4ABRW8=
 github.com/vmihailenco/msgpack v3.3.3+incompatible/go.mod h1:fy3FlTQTDXWkZ7Bh6AcGMlsjHatGryHQYUTf1ShIgkk=
@@ -329,6 +331,8 @@ google.golang.org/grpc v1.27.1 h1:zvIju4sqAGvwKspUQOhwnpcqSbzi7/H6QomNNjTL4sk=
 google.golang.org/grpc v1.27.1/go.mod h1:qbnxyOmOxrQa7FizSgH+ReBfzJrCY1pSN7KXBS8abTk=
 gopkg.in/auth0.v4 v4.4.1 h1:AGOChEbsOaGn3KyIFAefsTkxcqX28JcM/mqslF+WRXA=
 gopkg.in/auth0.v4 v4.4.1/go.mod h1:6ZOcoQequCmURgwJnGIX09/51deRWVRpUaUP8p1Jbpk=
+gopkg.in/auth0.v4 v4.5.0 h1:V3NH9rlj1RfFRSGgwk9jKZrIbOn84YTn4Bi2eZV76q4=
+gopkg.in/auth0.v4 v4.5.0/go.mod h1:6ZOcoQequCmURgwJnGIX09/51deRWVRpUaUP8p1Jbpk=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 h1:qIbj1fsPNlZgppZ+VLlY7N33q108Sa+fhmuc+sWQYwY=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/cheggaaa/pb.v1 v1.0.27/go.mod h1:V/YB90LKu/1FcN3WVnfiiE5oMCibMjukxqG/qStrOgw=
