@@ -10,7 +10,7 @@ import (
 	"gopkg.in/auth0.v4"
 	"gopkg.in/auth0.v4/management"
 
-	v "github.com/terraform-providers/terraform-provider-auth0/auth0/internal/validation"
+	v "github.com/alexkappa/terraform-provider-auth0/auth0/internal/validation"
 )
 
 func newClient() *schema.Resource {
