@@ -342,6 +342,8 @@ With the `samlp` connection strategy, `options` supports the following arguments
 * `sign_saml_request` - (Optional) (Boolean) When enabled, the SAML authentication request will be signed.
 * `signature_algorithm` - (Optional) Sign Request Algorithm
 * `digest_algorithm` - (Optional) Sign Request Algorithm Digest
+* `request_template` - (Optional) Template that formats the SAML request
+* `user_id_attribute` - (Optional) Attribute in the SAML token that will be mapped to the user_id property in Auth0.
 
 **Example**:
 ```hcl

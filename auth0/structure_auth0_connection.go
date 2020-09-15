@@ -220,6 +220,9 @@ func flattenConnectionOptionsSAML(o *management.ConnectionOptionsSAML) interface
 		"digest_algorithm":    o.GetDigestAglorithm(),
 		"fields_map":          o.FieldsMap,
 		"sign_saml_request":   o.GetSignSAMLRequest(),
+		"icon_url":            o.GetLogoURL(),
+		"request_template":    o.GetRequestTemplate(),
+		"user_id_attribute":   o.GetUserIDAttribute(),
 	}
 }
 
@@ -523,6 +526,9 @@ func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSA
 		DigestAglorithm:    String(d, "digest_algorithm"),
 		FieldsMap:          Map(d, "fields_map"),
 		SignSAMLRequest:    Bool(d, "sign_saml_request"),
+		RequestTemplate:    String(d, "request_template"),
+		UserIDAttribute:    String(d, "user_id_attribute"),
+		LogoURL:            String(d, "icon_url"),
 	}
 
 	List(d, "idp_initiated").Elem(func(d ResourceData) {
