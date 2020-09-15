@@ -1059,11 +1059,14 @@ yE+vPxsiUkvQHdO2fojCkY8jg70jxM+gu59tPDNbw3Uh/2Ij310FgTHsnGQMyA==
 EOF
 		sign_in_endpoint = "https://saml.provider/sign_in"
 		sign_out_endpoint = "https://saml.provider/sign_out"
+		user_id_attribute = "https://saml.provider/imi/ns/identity-200810",
 		tenant_domain = "example.com"
 		domain_aliases = ["example.com", "example.coz"]
 		protocol_binding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Post"
+		requestTemplate = "<samlp:AuthnRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\"\n@@AssertServiceURLAndDestination@@\n    ID=\"@@ID@@\"\n    IssueInstant=\"@@IssueInstant@@\"\n    ProtocolBinding=\"@@ProtocolBinding@@\" Version=\"2.0\">\n    <saml:Issuer xmlns:saml=\"urn:oasis:names:tc:SAML:2.0:assertion\">@@Issuer@@</saml:Issuer>\n</samlp:AuthnRequest>",
 		signature_algorithm = "rsa-sha256"
 		digest_algorithm = "sha256"
+		icon_url = "https://example.com/logo.svg"
 		fields_map = {
 			foo = "bar"
 			baz = "baa"
