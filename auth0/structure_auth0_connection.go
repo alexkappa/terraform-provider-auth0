@@ -16,6 +16,8 @@ func flattenConnectionOptions(d ResourceData, options interface{}) []interface{}
 		m = flattenConnectionOptionsAuth0(d, o)
 	case *management.ConnectionOptionsGoogleOAuth2:
 		m = flattenConnectionOptionsGoogleOAuth2(o)
+	case *management.ConnectionOptionsOAuth2:
+		m = flattenConnectionOptionsOAuth2(o)
 	case *management.ConnectionOptionsFacebook:
 		m = flattenConnectionOptionsFacebook(o)
 	case *management.ConnectionOptionsApple:
