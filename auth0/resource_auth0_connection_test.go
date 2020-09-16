@@ -374,26 +374,26 @@ func TestAccConnectionOauth2(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "strategy", "oauth2"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.client_id", "123456"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.client_secret", "123456"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.token_endpoint", "https://api.login.yahoo.com/oauth2/get_token"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.authorization_endpoint", "https://api.login.yahoo.com/oauth2/request_auth"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.#", "3"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.2517049750", "openid"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.4080487570", "profile"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.881205744", "email"),
-					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.custom_scripts.fetchUserProfile", "myFunction"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.token_endpoint", "https://api.login.yahoo.com/oauth2/get_token"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.authorization_endpoint", "https://api.login.yahoo.com/oauth2/request_auth"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.#", "3"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.2517049750", "openid"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.4080487570", "profile"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.881205744", "email"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.custom_scripts.fetchUserProfile", "myFunction"),
 				),
 			},
 			{
 				Config: random.Template(testAccConnectionOauth2ConfigUpdate, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.client_id", "1234567"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.client_secret", "1234567"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.token_endpoint", "https://api.paypal.com/v1/oauth2/token"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.authorization_endpoint", "https://www.paypal.com/signin/authorize"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.#", "2"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.2517049750", "openid"),
-					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.881205744", "email"),
-					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.custom_scripts.fetchUserProfile", "myFunction"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.client_id", "1234567"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.client_secret", "1234567"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.token_endpoint", "https://api.paypal.com/v1/oauth2/token"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.authorization_endpoint", "https://www.paypal.com/signin/authorize"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.#", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.2517049750", "openid"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.881205744", "email"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.custom_scripts.fetchUserProfile", "myNewFunction"),
 				),
 			},
 		},
@@ -432,7 +432,7 @@ resource "auth0_connection" "oauth2" {
 		scopes = [ "openid", "email" ]
 		
 		custom_scripts = {
-			fetchUserProfile = "myFunction"
+			fetchUserProfile = "myNewFunction"
 		}
 	}
 }
