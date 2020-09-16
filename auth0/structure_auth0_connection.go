@@ -81,6 +81,16 @@ func flattenConnectionOptionsGoogleOAuth2(o *management.ConnectionOptionsGoogleO
 	}
 }
 
+func flattenConnectionOptionsOAuth2(o *management.ConnectionOptionsOAuth2) interface{} {
+	return map[string]interface{}{
+		"client_id":              o.GetClientID(),
+		"client_secret":          o.GetClientSecret(),
+		"scopes":                 o.Scopes(),
+		"token_endpoint":         o.GetTokenEndpoint(),
+		"authorization_endpoint": o.GetAuthorizationEndpoint(),
+		"custom_scripts":         o.CustomScripts,
+	}
+}
 func flattenConnectionOptionsFacebook(o *management.ConnectionOptionsFacebook) interface{} {
 	return map[string]interface{}{
 		"client_id":     o.GetClientID(),
