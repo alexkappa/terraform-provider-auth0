@@ -191,6 +191,12 @@ var connectionSchema = map[string]*schema.Schema{
 					Optional:    true,
 					Description: "",
 				},
+				"scripts": {
+					Type:        schema.TypeMap,
+					Elem:        &schema.Schema{Type: schema.TypeString},
+					Optional:    true,
+					Description: "",
+				},
 				"configuration": {
 					Type:        schema.TypeMap,
 					Elem:        &schema.Schema{Type: schema.TypeString},

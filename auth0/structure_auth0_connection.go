@@ -90,7 +90,7 @@ func flattenConnectionOptionsOAuth2(o *management.ConnectionOptionsOAuth2) inter
 		"scopes":                 o.Scopes(),
 		"token_endpoint":         o.GetTokenEndpoint(),
 		"authorization_endpoint": o.GetAuthorizationEndpoint(),
-		"custom_scripts":         o.CustomScripts,
+		"scripts":                o.Scripts,
 	}
 }
 
@@ -363,7 +363,7 @@ func expandConnectionOptionsOAuth2(d ResourceData) *management.ConnectionOptions
 		AuthorizationEndpoint: String(d, "authorization_endpoint"),
 		TokenEndpoint:         String(d, "token_endpoint"),
 	}
-	o.CustomScripts = Map(d, "custom_scripts")
+	o.Scripts = Map(d, "scripts")
 
 	expandConnectionOptionsScopes(d, o)
 
