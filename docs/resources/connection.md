@@ -282,7 +282,7 @@ resource "auth0_connection" "oauth2" {
 		client_secret = "<client-secret>"
 		token_endpoint = "https://auth.example.com/oauth2/token"
     authorization_endpoint = "https://auth.example.com/oauth2/authorize"
-    custom_scripts = {
+    scripts = {
 			fetchUserProfile = <<EOF
 function function(accessToken, ctx, cb) {
   return callback(new Error("Whoops!"))
