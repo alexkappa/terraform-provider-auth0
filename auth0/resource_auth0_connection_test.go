@@ -380,7 +380,7 @@ func TestAccConnectionOAuth2(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.2517049750", "openid"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.4080487570", "profile"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.881205744", "email"),
-					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.custom_scripts.fetchUserProfile", "function( { return callback(null) }"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scripts.fetchUserProfile", "function( { return callback(null) }"),
 				),
 			},
 			{
@@ -393,7 +393,7 @@ func TestAccConnectionOAuth2(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.#", "2"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.2517049750", "openid"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.881205744", "email"),
-					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.custom_scripts.fetchUserProfile", "function( { return callback(null) }"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scripts.fetchUserProfile", "function( { return callback(null) }"),
 				),
 			},
 		},
@@ -412,7 +412,7 @@ resource "auth0_connection" "oauth2" {
 		token_endpoint         = "https://api.login.yahoo.com/oauth2/get_token"
 		authorization_endpoint = "https://api.login.yahoo.com/oauth2/request_auth"
 		scopes = [ "openid", "email", "profile" ]
-		custom_scripts = {
+		scripts = {
 			fetchUserProfile= "function( { return callback(null) }"
 		}
 	}
@@ -424,17 +424,16 @@ const testAccConnectionOAuth2ConfigUpdate = `
 resource "auth0_connection" "oauth2" {
 	name     = "Acceptance-Test-OAuth2-{{.random}}"
 	strategy = "oauth2"
+	is_domain_connection = false
 	options {
 		client_id     = "1234567"
 		client_secret = "1234567"
 		token_endpoint         = "https://api.paypal.com/v1/oauth2/token"
 		authorization_endpoint = "https://www.paypal.com/signin/authorize"
-		
-		custom_scripts = {
-			"fetchUserProfile": "function( { return callback(null) }"
-		}
 		scopes = [ "openid", "email" ]
-	
+		scripts = {
+			fetchUserProfile= "function( { return callback(null) }"
+		}
 	}
 }
 `
