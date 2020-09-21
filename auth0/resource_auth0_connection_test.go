@@ -358,7 +358,7 @@ resource "auth0_connection" "oidc" {
 }
 `
 
-func TestAccConnectionOauth2(t *testing.T) {
+func TestAccConnectionOAuth2(t *testing.T) {
 
 	rand := random.String(6)
 
@@ -368,9 +368,9 @@ func TestAccConnectionOauth2(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: random.Template(testAccConnectionOauth2Config, rand),
+				Config: random.Template(testAccConnectionOAuth2Config, rand),
 				Check: resource.ComposeTestCheckFunc(
-					random.TestCheckResourceAttr("auth0_connection.oauth2", "name", "Acceptance-Test-Oauth2-{{.random}}", rand),
+					random.TestCheckResourceAttr("auth0_connection.oauth2", "name", "Acceptance-Test-OAuth2-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "strategy", "oauth2"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.client_id", "123456"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.client_secret", "123456"),
@@ -380,11 +380,11 @@ func TestAccConnectionOauth2(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.2517049750", "openid"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.4080487570", "profile"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.881205744", "email"),
-					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.custom_scripts.fetchUserProfile", "myFunction"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.custom_scripts.fetchUserProfile", "function( { return callback(null) }"),
 				),
 			},
 			{
-				Config: random.Template(testAccConnectionOauth2ConfigUpdate, rand),
+				Config: random.Template(testAccConnectionOAuth2ConfigUpdate, rand),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.client_id", "1234567"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.client_secret", "1234567"),
@@ -393,47 +393,48 @@ func TestAccConnectionOauth2(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.#", "2"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.2517049750", "openid"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.881205744", "email"),
-					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.custom_scripts.fetchUserProfile", "myNewFunction"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.custom_scripts.fetchUserProfile", "function( { return callback(null) }"),
 				),
 			},
 		},
 	})
 }
 
-const testAccConnectionOauth2Config = `
+const testAccConnectionOAuth2Config = `
 
 resource "auth0_connection" "oauth2" {
-	name     = "Acceptance-Test-OIDC-{{.random}}"
+	name     = "Acceptance-Test-OAuth2-{{.random}}"
 	strategy = "oauth2"
+	is_domain_connection = false
 	options {
 		client_id     = "123456"
 		client_secret = "123456"
 		token_endpoint         = "https://api.login.yahoo.com/oauth2/get_token"
 		authorization_endpoint = "https://api.login.yahoo.com/oauth2/request_auth"
 		scopes = [ "openid", "email", "profile" ]
-
 		custom_scripts = {
-			fetchUserProfile = "myFunction"
+			fetchUserProfile= "function( { return callback(null) }"
 		}
 	}
 }
 `
 
-const testAccConnectionOauth2ConfigUpdate = `
+const testAccConnectionOAuth2ConfigUpdate = `
 
 resource "auth0_connection" "oauth2" {
-	name     = "Acceptance-Test-OIDC-{{.random}}"
+	name     = "Acceptance-Test-OAuth2-{{.random}}"
 	strategy = "oauth2"
 	options {
 		client_id     = "1234567"
 		client_secret = "1234567"
 		token_endpoint         = "https://api.paypal.com/v1/oauth2/token"
 		authorization_endpoint = "https://www.paypal.com/signin/authorize"
-		scopes = [ "openid", "email" ]
 		
 		custom_scripts = {
-			fetchUserProfile = "myNewFunction"
+			"fetchUserProfile": "function( { return callback(null) }"
 		}
+		scopes = [ "openid", "email" ]
+	
 	}
 }
 `

@@ -93,6 +93,7 @@ func flattenConnectionOptionsOAuth2(o *management.ConnectionOptionsOAuth2) inter
 		"custom_scripts":         o.CustomScripts,
 	}
 }
+
 func flattenConnectionOptionsFacebook(o *management.ConnectionOptionsFacebook) interface{} {
 	return map[string]interface{}{
 		"client_id":     o.GetClientID(),
@@ -253,6 +254,8 @@ func expandConnection(d ResourceData) *management.Connection {
 			c.Options = expandConnectionOptionsAuth0(d)
 		case management.ConnectionStrategyGoogleOAuth2:
 			c.Options = expandConnectionOptionsGoogleOAuth2(d)
+		case management.ConnectionStrategyOAuth2:
+			c.Options = expandConnectionOptionsOAuth2(d)
 		case management.ConnectionStrategyFacebook:
 			c.Options = expandConnectionOptionsFacebook(d)
 		case management.ConnectionStrategyApple:
@@ -347,6 +350,20 @@ func expandConnectionOptionsGoogleOAuth2(d ResourceData) *management.ConnectionO
 		ClientSecret:     String(d, "client_secret"),
 		AllowedAudiences: Set(d, "allowed_audiences").List(),
 	}
+
+	expandConnectionOptionsScopes(d, o)
+
+	return o
+}
+func expandConnectionOptionsOAuth2(d ResourceData) *management.ConnectionOptionsOAuth2 {
+
+	o := &management.ConnectionOptionsOAuth2{
+		ClientID:              String(d, "client_id"),
+		ClientSecret:          String(d, "client_secret"),
+		AuthorizationEndpoint: String(d, "authorization_endpoint"),
+		TokenEndpoint:         String(d, "token_endpoint"),
+	}
+	o.CustomScripts = Map(d, "custom_scripts")
 
 	expandConnectionOptionsScopes(d, o)
 
