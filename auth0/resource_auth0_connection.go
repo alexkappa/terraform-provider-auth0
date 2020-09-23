@@ -452,12 +452,12 @@ var connectionSchema = map[string]*schema.Schema{
 				"request_template": {
 					Type:        schema.TypeString,
 					Optional:    true,
-					Description: "Template that formats the SAML request."
+					Description: "Template that formats the SAML request.",
 				},
 				"user_id_attribute": {
 					Type:        schema.TypeString,
 					Optional:    true,
-					Description: "Attribute in the SAML token that will be mapped to the user_id property in Auth0."
+					Description: "Attribute in the SAML token that will be mapped to the user_id property in Auth0.",
 				},
 				"idp_initiated": {
 					Type:     schema.TypeList,
