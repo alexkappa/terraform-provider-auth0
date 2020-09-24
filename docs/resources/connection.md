@@ -261,6 +261,38 @@ With the `oidc` connection strategy, `options` supports the following arguments:
 * `userinfo_endpoint` - (Optional)
 * `authorization_endpoint` - (Optional)
 
+### OAuth2
+
+With the `oauth2` connection strategy, `options` supports the following arguments:
+
+* `client_id` - (Optional) OIDC provider client ID.
+* `client_secret` - (Optional) OIDC provider client secret.
+* `scopes` - (Optional) Scopes required by the connection. The value must be a list, for example `["openid", "profile", "email"]`.
+* `token_endpoint` - (Optional)
+* `authorization_endpoint` - (Optional)
+  
+**Example**:
+
+```hcl
+resource "auth0_connection" "oauth2" {
+	name = "OAuth2-Connection"
+	strategy = "oauth2"
+	options {
+		client_id = "<client-id>"
+		client_secret = "<client-secret>"
+		token_endpoint = "https://auth.example.com/oauth2/token"
+    authorization_endpoint = "https://auth.example.com/oauth2/authorize"
+    scripts = {
+			fetchUserProfile = <<EOF
+function function(accessToken, ctx, cb) {
+  return callback(new Error("Whoops!"))
+}
+EOF
+		}
+	}
+}
+```
+
 ### Azure AD
 
 With the `waad` connection strategy, `options` supports the following arguments:

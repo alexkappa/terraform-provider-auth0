@@ -358,6 +358,86 @@ resource "auth0_connection" "oidc" {
 }
 `
 
+func TestAccConnectionOAuth2(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccConnectionOAuth2Config, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.oauth2", "name", "Acceptance-Test-OAuth2-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "strategy", "oauth2"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.client_id", "123456"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.client_secret", "123456"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.token_endpoint", "https://api.login.yahoo.com/oauth2/get_token"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.authorization_endpoint", "https://api.login.yahoo.com/oauth2/request_auth"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.#", "3"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.2517049750", "openid"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.4080487570", "profile"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.881205744", "email"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scripts.fetchUserProfile", "function( { return callback(null) }"),
+				),
+			},
+			{
+				Config: random.Template(testAccConnectionOAuth2ConfigUpdate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.client_id", "1234567"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.client_secret", "1234567"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.token_endpoint", "https://api.paypal.com/v1/oauth2/token"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.authorization_endpoint", "https://www.paypal.com/signin/authorize"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.#", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.2517049750", "openid"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.881205744", "email"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scripts.fetchUserProfile", "function( { return callback(null) }"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionOAuth2Config = `
+
+resource "auth0_connection" "oauth2" {
+	name     = "Acceptance-Test-OAuth2-{{.random}}"
+	strategy = "oauth2"
+	is_domain_connection = false
+	options {
+		client_id     = "123456"
+		client_secret = "123456"
+		token_endpoint         = "https://api.login.yahoo.com/oauth2/get_token"
+		authorization_endpoint = "https://api.login.yahoo.com/oauth2/request_auth"
+		scopes = [ "openid", "email", "profile" ]
+		scripts = {
+			fetchUserProfile= "function( { return callback(null) }"
+		}
+	}
+}
+`
+
+const testAccConnectionOAuth2ConfigUpdate = `
+
+resource "auth0_connection" "oauth2" {
+	name     = "Acceptance-Test-OAuth2-{{.random}}"
+	strategy = "oauth2"
+	is_domain_connection = false
+	options {
+		client_id     = "1234567"
+		client_secret = "1234567"
+		token_endpoint         = "https://api.paypal.com/v1/oauth2/token"
+		authorization_endpoint = "https://www.paypal.com/signin/authorize"
+		scopes = [ "openid", "email" ]
+		scripts = {
+			fetchUserProfile= "function( { return callback(null) }"
+		}
+	}
+}
+`
+
 func TestAccConnectionWithEnbledClients(t *testing.T) {
 
 	rand := random.String(6)
