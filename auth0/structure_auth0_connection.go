@@ -16,6 +16,8 @@ func flattenConnectionOptions(d ResourceData, options interface{}) []interface{}
 		m = flattenConnectionOptionsAuth0(d, o)
 	case *management.ConnectionOptionsGoogleOAuth2:
 		m = flattenConnectionOptionsGoogleOAuth2(o)
+	case *management.ConnectionOptionsOAuth2:
+		m = flattenConnectionOptionsOAuth2(o)
 	case *management.ConnectionOptionsFacebook:
 		m = flattenConnectionOptionsFacebook(o)
 	case *management.ConnectionOptionsApple:
@@ -78,6 +80,17 @@ func flattenConnectionOptionsGoogleOAuth2(o *management.ConnectionOptionsGoogleO
 		"client_secret":     o.GetClientSecret(),
 		"allowed_audiences": o.AllowedAudiences,
 		"scopes":            o.Scopes(),
+	}
+}
+
+func flattenConnectionOptionsOAuth2(o *management.ConnectionOptionsOAuth2) interface{} {
+	return map[string]interface{}{
+		"client_id":              o.GetClientID(),
+		"client_secret":          o.GetClientSecret(),
+		"scopes":                 o.Scopes(),
+		"token_endpoint":         o.GetTokenEndpoint(),
+		"authorization_endpoint": o.GetAuthorizationEndpoint(),
+		"scripts":                o.Scripts,
 	}
 }
 
@@ -241,6 +254,8 @@ func expandConnection(d ResourceData) *management.Connection {
 			c.Options = expandConnectionOptionsAuth0(d)
 		case management.ConnectionStrategyGoogleOAuth2:
 			c.Options = expandConnectionOptionsGoogleOAuth2(d)
+		case management.ConnectionStrategyOAuth2:
+			c.Options = expandConnectionOptionsOAuth2(d)
 		case management.ConnectionStrategyFacebook:
 			c.Options = expandConnectionOptionsFacebook(d)
 		case management.ConnectionStrategyApple:
@@ -335,6 +350,20 @@ func expandConnectionOptionsGoogleOAuth2(d ResourceData) *management.ConnectionO
 		ClientSecret:     String(d, "client_secret"),
 		AllowedAudiences: Set(d, "allowed_audiences").List(),
 	}
+
+	expandConnectionOptionsScopes(d, o)
+
+	return o
+}
+func expandConnectionOptionsOAuth2(d ResourceData) *management.ConnectionOptionsOAuth2 {
+
+	o := &management.ConnectionOptionsOAuth2{
+		ClientID:              String(d, "client_id"),
+		ClientSecret:          String(d, "client_secret"),
+		AuthorizationEndpoint: String(d, "authorization_endpoint"),
+		TokenEndpoint:         String(d, "token_endpoint"),
+	}
+	o.Scripts = Map(d, "scripts")
 
 	expandConnectionOptionsScopes(d, o)
 

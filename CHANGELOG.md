@@ -1,4 +1,9 @@
-## 0.15.0 (Unreleased)
+## 0.15.0 (September 24, 2020)
+
+ENHANCEMENTS:
+
+* resource/auth0_connection: Support for `oauth2` connection options ([#267](https://github.com/alexkappa/terraform-provider-auth0/pull/267)).
+
 ## 0.14.0 (August 24, 2020)
 
 ENHANCEMENTS:
