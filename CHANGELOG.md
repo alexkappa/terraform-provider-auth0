@@ -1,3 +1,9 @@
+## 0.15.1
+
+ENHANCEMENTS:
+
+* resource/auth0_hook: Fix documentation rendering issue.
+
 ## 0.15.0 (September 24, 2020)
 
 ENHANCEMENTS:
