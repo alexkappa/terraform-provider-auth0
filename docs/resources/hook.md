@@ -15,7 +15,7 @@ Depending on the extensibility point, you can use Hooks with Database Connection
 
 ## Example Usage
 
-```
+```hcl
 resource "auth0_hook" "my_hook" {
   name = "My Pre User Registration Hook"
   script = <<EOF
