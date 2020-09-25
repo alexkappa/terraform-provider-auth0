@@ -374,6 +374,8 @@ With the `samlp` connection strategy, `options` supports the following arguments
 * `sign_saml_request` - (Optional) (Boolean) When enabled, the SAML authentication request will be signed.
 * `signature_algorithm` - (Optional) Sign Request Algorithm
 * `digest_algorithm` - (Optional) Sign Request Algorithm Digest
+* `request_template` - (Optional) Template that formats the SAML request
+* `user_id_attribute` - (Optional) Attribute in the SAML token that will be mapped to the user_id property in Auth0.
 
 **Example**:
 ```hcl
@@ -387,6 +389,8 @@ resource "auth0_connection" "samlp" {
 		tenant_domain = "example.com"
 		domain_aliases = ["example.com", "alias.example.com"]
 		binding_method = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Post"
+    request_template = "<samlp:AuthnRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\"\n@@AssertServiceURLAndDestination@@\n    ID=\"@@ID@@\"\n    IssueInstant=\"@@IssueInstant@@\"\n    ProtocolBinding=\"@@ProtocolBinding@@\" Version=\"2.0\">\n    <saml:Issuer xmlns:saml=\"urn:oasis:names:tc:SAML:2.0:assertion\">@@Issuer@@</saml:Issuer>\n</samlp:AuthnRequest>"
+    user_id_attribute = "https://saml.provider/imi/ns/identity-200810"
 		signature_algorithm = "rsa-sha256"
 		digest_algorithm = "sha256"
 		fields_map = {
