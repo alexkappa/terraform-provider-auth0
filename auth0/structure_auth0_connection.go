@@ -557,7 +557,7 @@ func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSA
 		SignSAMLRequest:    Bool(d, "sign_saml_request"),
 		RequestTemplate:    String(d, "request_template"),
 		UserIDAttribute:    String(d, "user_id_attribute"),
-		LogoURL:            String(d, "icon_url")
+		LogoURL:            String(d, "icon_url"),
 	}
 
 	List(d, "idp_initiated").Elem(func(d ResourceData) {
