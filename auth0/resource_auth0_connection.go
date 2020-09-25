@@ -435,6 +435,7 @@ var connectionSchema = map[string]*schema.Schema{
 					Optional:    true,
 					Description: "",
 				},
+				// SAML options
 				"debug": {
 					Type:        schema.TypeBool,
 					Optional:    true,
@@ -453,6 +454,16 @@ var connectionSchema = map[string]*schema.Schema{
 						"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect",
 						"urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
 					}, true),
+				},
+				"request_template": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "Template that formats the SAML request.",
+				},
+				"user_id_attribute": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "Attribute in the SAML token that will be mapped to the user_id property in Auth0.",
 				},
 				"idp_initiated": {
 					Type:     schema.TypeList,
