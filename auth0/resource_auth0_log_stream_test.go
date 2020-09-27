@@ -24,8 +24,8 @@ func init() {
 			}
 			for _, logstream := range l {
 				if strings.Contains(logstream.GetName(), "Test") {
-					log.Printf("[DEBUG] Deleting connection %v\n", logstream.GetName())
-					if e := api.Connection.Delete(logstream.GetID()); e != nil {
+					log.Printf("[DEBUG] Deleting logstream %v\n", logstream.GetName())
+					if e := api.LogStream.Delete(logstream.GetID()); e != nil {
 						multierror.Append(err, e)
 					}
 				}
