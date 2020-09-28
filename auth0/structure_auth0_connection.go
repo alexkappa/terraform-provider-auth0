@@ -85,12 +85,12 @@ func flattenConnectionOptionsGoogleOAuth2(o *management.ConnectionOptionsGoogleO
 
 func flattenConnectionOptionsOAuth2(o *management.ConnectionOptionsOAuth2) interface{} {
 	return map[string]interface{}{
-		"client_id":              o.GetClientID(),
-		"client_secret":          o.GetClientSecret(),
-		"scopes":                 o.Scopes(),
-		"token_endpoint":         o.GetTokenEndpoint(),
-		"authorization_endpoint": o.GetAuthorizationEndpoint(),
-		"scripts":                o.Scripts,
+		"client_id":         o.GetClientID(),
+		"client_secret":     o.GetClientSecret(),
+		"scopes":            o.Scopes(),
+		"token_url":         o.GetTokenURL(),
+		"authorization_url": o.GetAuthorizationURL(),
+		"scripts":           o.Scripts,
 	}
 }
 
@@ -361,10 +361,10 @@ func expandConnectionOptionsGoogleOAuth2(d ResourceData) *management.ConnectionO
 func expandConnectionOptionsOAuth2(d ResourceData) *management.ConnectionOptionsOAuth2 {
 
 	o := &management.ConnectionOptionsOAuth2{
-		ClientID:              String(d, "client_id"),
-		ClientSecret:          String(d, "client_secret"),
-		AuthorizationEndpoint: String(d, "authorization_endpoint"),
-		TokenEndpoint:         String(d, "token_endpoint"),
+		ClientID:         String(d, "client_id"),
+		ClientSecret:     String(d, "client_secret"),
+		AuthorizationURL: String(d, "authorization_url"),
+		TokenURL:         String(d, "token_url"),
 	}
 	o.Scripts = Map(d, "scripts")
 
