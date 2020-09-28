@@ -191,6 +191,15 @@ var connectionSchema = map[string]*schema.Schema{
 					Optional:    true,
 					Description: "",
 				},
+				"authorization_url": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "",
+				}, "token_url": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "",
+				},
 				"scripts": {
 					Type:        schema.TypeMap,
 					Elem:        &schema.Schema{Type: schema.TypeString},
