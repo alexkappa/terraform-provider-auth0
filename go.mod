@@ -10,3 +10,4 @@ require (
 	github.com/hashicorp/terraform-plugin-sdk v1.16.0
 	gopkg.in/auth0.v4 v4.6.0
 )
+replace gopkg.in/auth0.v4 => /Users/kagli/code/auth0
