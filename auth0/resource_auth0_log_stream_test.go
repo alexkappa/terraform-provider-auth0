@@ -1,11 +1,8 @@
 package auth0
 
 import (
-	"log"
-	"strings"
 	"testing"
 
-	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
@@ -13,28 +10,28 @@ import (
 func init() {
 	resource.AddTestSweepers("auth0_log_stream", &resource.Sweeper{
 		Name: "auth0_log_stream",
-		F: func(_ string) error {
-			api, err := Auth0()
-			if err != nil {
-				return err
-			}
-			l, err := api.LogStream.List()
-			if err != nil {
-				return err
-			}
-			for _, logstream := range l {
-				if strings.Contains(logstream.GetName(), "Test") {
-					log.Printf("[DEBUG] Deleting logstream %v\n", logstream.GetName())
-					if e := api.LogStream.Delete(logstream.GetID()); e != nil {
-						multierror.Append(err, e)
+		/*		F: func(_ string) error {
+				api, err := Auth0()
+				if err != nil {
+					return err
+				}
+				l, err := api.LogStream.List()
+				if err != nil {
+					return err
+				}
+				for _, logstream := range l {
+					if strings.Contains(logstream.GetName(), "Test") {
+						log.Printf("[DEBUG] Deleting logstream %v\n", logstream.GetName())
+						if e := api.LogStream.Delete(logstream.GetID()); e != nil {
+							multierror.Append(err, e)
+						}
 					}
 				}
-			}
-			if err != nil {
-				return err
-			}
-			return nil
-		},
+				if err != nil {
+					return err
+				}
+				return nil
+			},*/
 	})
 }
 
