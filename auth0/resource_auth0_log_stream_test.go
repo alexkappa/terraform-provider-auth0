@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -36,7 +37,6 @@ func init() {
 }
 
 func TestAccLogStreamHttp(t *testing.T) {
-
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
@@ -58,6 +58,7 @@ func TestAccLogStreamHttp(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-http"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "http"),
+					//resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "status", "active"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_endpoint", "https://example.com/webhook/logs"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_content_type", "application/json"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_content_format", "JSONLINES"),
@@ -154,7 +155,10 @@ func TestAccLogStreamDatadog(t *testing.T) {
 	})
 }
 func TestAccLogStreamSplunk(t *testing.T) {
-
+	os.Setenv("AUTH0_DOMAIN", "mcalster.eu.auth0.com")
+	os.Setenv("AUTH0_CLIENT_ID", "mTXtlC48RtZ4zxySxL6ps19uU5mYVS1X")
+	os.Setenv("AUTH0_CLIENT_SECRET", "1enhenoVV43HcYUImVst4d679DZLabmlP0bz5oVaNp6fh9eoIBW86sbMgZH1CGMt")
+	os.Setenv("AUTH0_DEBUG", "true")
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
@@ -163,13 +167,13 @@ func TestAccLogStreamSplunk(t *testing.T) {
 			{
 				Config: `
 				resource "auth0_log_stream" "my_log_stream" {
-					name = "eAcceptance-Test-LogStream-splunk"
+					name = "Acceptance-Test-LogStream-splunk"
 					type = "splunk"
 					sink {
 						splunk_domain = "demo.splunk.com"
 						splunk_token = "12a34ab5-c6d7-8901-23ef-456b7c89d0c1"
-						splunk_port = "8080"
-						splunk_secure = "true"
+						splunk_port = "8088"
+						splunk_secure = true
 					}
 				}
 				`,
@@ -178,7 +182,7 @@ func TestAccLogStreamSplunk(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "splunk"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.splunk_domain", "demo.splunk.com"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.splunk_token", "12a34ab5-c6d7-8901-23ef-456b7c89d0c1"),
-					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.splunk_port", "8080"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.splunk_port", "8088"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.splunk_secure", "true"),
 				),
 			},
