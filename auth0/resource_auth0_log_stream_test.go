@@ -1,9 +1,12 @@
 package auth0
 
 import (
+	"log"
 	"os"
+	"strings"
 	"testing"
 
+	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
@@ -11,28 +14,28 @@ import (
 func init() {
 	resource.AddTestSweepers("auth0_log_stream", &resource.Sweeper{
 		Name: "auth0_log_stream",
-		/*		F: func(_ string) error {
-				api, err := Auth0()
-				if err != nil {
-					return err
-				}
-				l, err := api.LogStream.List()
-				if err != nil {
-					return err
-				}
-				for _, logstream := range l {
-					if strings.Contains(logstream.GetName(), "Test") {
-						log.Printf("[DEBUG] Deleting logstream %v\n", logstream.GetName())
-						if e := api.LogStream.Delete(logstream.GetID()); e != nil {
-							multierror.Append(err, e)
-						}
+		F: func(_ string) error {
+			api, err := Auth0()
+			if err != nil {
+				return err
+			}
+			l, err := api.LogStream.List()
+			if err != nil {
+				return err
+			}
+			for _, logstream := range l {
+				if strings.Contains(logstream.GetName(), "Test") {
+					log.Printf("[DEBUG] Deleting logstream %v\n", logstream.GetName())
+					if e := api.LogStream.Delete(logstream.GetID()); e != nil {
+						multierror.Append(err, e)
 					}
 				}
-				if err != nil {
-					return err
-				}
-				return nil
-			},*/
+			}
+			if err != nil {
+				return err
+			}
+			return nil
+		},
 	})
 }
 
@@ -68,7 +71,7 @@ func TestAccLogStreamHttp(t *testing.T) {
 		},
 	})
 }
-func TestAccLogStreamAWS(t *testing.T) {
+func TestAccLogStreamEventBridge(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
@@ -96,7 +99,9 @@ func TestAccLogStreamAWS(t *testing.T) {
 		},
 	})
 }
-func TestAccLogStreamAzure(t *testing.T) {
+
+//This test fails it subscription key is not valid, or Eventgrid Resource Provider is not registered in the subscription
+/*func TestAccLogStreamEventGrid(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
@@ -126,6 +131,7 @@ func TestAccLogStreamAzure(t *testing.T) {
 		},
 	})
 }
+*/
 func TestAccLogStreamDatadog(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
@@ -173,7 +179,7 @@ func TestAccLogStreamSplunk(t *testing.T) {
 						splunk_domain = "demo.splunk.com"
 						splunk_token = "12a34ab5-c6d7-8901-23ef-456b7c89d0c1"
 						splunk_port = "8088"
-						splunk_secure = true
+						splunk_secure = "true"
 					}
 				}
 				`,
