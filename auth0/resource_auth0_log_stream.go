@@ -37,8 +37,9 @@ func newLogStream() *schema.Resource {
 			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
+				Computed: true,
 				ValidateFunc: validation.StringInSlice([]string{
-					"active", "paused", "suspended"}, true),
+					"active", "paused", "suspended"}, false),
 				Description: "Status of the LogStream",
 			},
 			"sink": {
@@ -94,6 +95,14 @@ func newLogStream() *schema.Resource {
 							Optional:  true,
 							Sensitive: true,
 						},
+						"http_custom_headers": {
+							Type:        schema.TypeSet,
+							Elem:        &schema.Schema{Type: schema.TypeString},
+							Optional:    true,
+							Computed:    true,
+							Description: "IDs of the clients for which the connection is enabled",
+						},
+
 						"datadog_region": {
 							Type:     schema.TypeString,
 							Optional: true,
@@ -188,10 +197,10 @@ func flattenLogStreamSink(d ResourceData, sink interface{}) []interface{} {
 	var m interface{}
 
 	switch o := sink.(type) {
-	case *management.AWSSink:
-		m = flattenLogStreamAWSSink(o)
-	case *management.AzureSink:
-		m = flattenLogStreamAzureSink(o)
+	case *management.EventBridgeSink:
+		m = flattenLogStreamEventBridgeSink(o)
+	case *management.EventGridSink:
+		m = flattenLogStreamEventGridSink(o)
 	case *management.HTTPSink:
 		m = flattenLogStreamHTTPSink(o)
 	case *management.DatadogSink:
@@ -202,7 +211,7 @@ func flattenLogStreamSink(d ResourceData, sink interface{}) []interface{} {
 	return []interface{}{m}
 }
 
-func flattenLogStreamAWSSink(o *management.AWSSink) interface{} {
+func flattenLogStreamEventBridgeSink(o *management.EventBridgeSink) interface{} {
 	return map[string]interface{}{
 		"aws_account_id":           o.GetAWSAccountID(),
 		"aws_region":               o.GetAWSRegion(),
@@ -210,7 +219,7 @@ func flattenLogStreamAWSSink(o *management.AWSSink) interface{} {
 	}
 }
 
-func flattenLogStreamAzureSink(o *management.AzureSink) interface{} {
+func flattenLogStreamEventGridSink(o *management.EventGridSink) interface{} {
 	return map[string]interface{}{
 		"azure_subscription_id": o.GetAzureSubscriptionID(),
 		"azure_resource_group":  o.GetAzureResourceGroup(),
@@ -221,12 +230,14 @@ func flattenLogStreamAzureSink(o *management.AzureSink) interface{} {
 
 func flattenLogStreamHTTPSink(o *management.HTTPSink) interface{} {
 	return map[string]interface{}{
-		"http_endpoint":      o.GetHTTPEndpoint(),
-		"http_contentFormat": o.GetHTTPContentFormat(),
-		"http_contentType":   o.GetHTTPContentType(),
-		"http_authorization": o.GetHTTPAuthorization(),
+		"http_endpoint":       o.GetHTTPEndpoint(),
+		"http_contentFormat":  o.GetHTTPContentFormat(),
+		"http_contentType":    o.GetHTTPContentType(),
+		"http_authorization":  o.GetHTTPAuthorization(),
+		"http_custom_headers": o.HTTPCustomHeaders,
 	}
 }
+
 func flattenLogStreamDatadogSink(o *management.DatadogSink) interface{} {
 	return map[string]interface{}{
 		"datadog_region":  o.GetDatadogRegion(),
@@ -245,9 +256,9 @@ func flattenLogStreamSplunkSink(o *management.SplunkSink) interface{} {
 func expandLogStream(d ResourceData) *management.LogStream {
 
 	c := &management.LogStream{
-		Name:   String(d, "name", IsNewResource()),
-		Type:   String(d, "type", IsNewResource()),
-		Status: String(d, "status"),
+		Name: String(d, "name", IsNewResource()),
+		Type: String(d, "type", IsNewResource()),
+		//Status: String(d, "status", IsNewResource()),
 	}
 
 	s := d.Get("type").(string)
@@ -255,9 +266,9 @@ func expandLogStream(d ResourceData) *management.LogStream {
 	List(d, "sink").Elem(func(d ResourceData) {
 		switch s {
 		case management.LogStreamSinkEventBridge:
-			c.Sink = expandLogStreamAWSSink(d)
+			c.Sink = expandLogStreamEventBridgeSink(d)
 		case management.LogStreamSinkEventGrid:
-			c.Sink = expandLogStreamAzureSink(d)
+			c.Sink = expandLogStreamEventGridSink(d)
 		case management.LogStreamSinkHTTP:
 			c.Sink = expandLogStreamHTTPSink(d)
 		case management.LogStreamSinkDatadog:
@@ -273,8 +284,8 @@ func expandLogStream(d ResourceData) *management.LogStream {
 	return c
 }
 
-func expandLogStreamAWSSink(d ResourceData) *management.AWSSink {
-	o := &management.AWSSink{
+func expandLogStreamEventBridgeSink(d ResourceData) *management.EventBridgeSink {
+	o := &management.EventBridgeSink{
 		AWSAccountID:          String(d, "aws_account_id"),
 		AWSRegion:             String(d, "aws_region"),
 		AWSPartnerEventSource: String(d, "aws_partner-event_source"),
@@ -282,8 +293,8 @@ func expandLogStreamAWSSink(d ResourceData) *management.AWSSink {
 	return o
 }
 
-func expandLogStreamAzureSink(d ResourceData) *management.AzureSink {
-	o := &management.AzureSink{
+func expandLogStreamEventGridSink(d ResourceData) *management.EventGridSink {
+	o := &management.EventGridSink{
 		AzureSubscriptionID: String(d, "azure_subscription_id"),
 		AzureResourceGroup:  String(d, "azure_resource_group"),
 		AzureRegion:         String(d, "azure_region"),
@@ -297,6 +308,7 @@ func expandLogStreamHTTPSink(d ResourceData) *management.HTTPSink {
 		HTTPContentType:   String(d, "http_content_type"),
 		HTTPEndpoint:      String(d, "http_endpoint"),
 		HTTPAuthorization: String(d, "http_authorization"),
+		HTTPCustomHeaders: Set(d, "http_custom_headers").List(),
 	}
 	return o
 }
