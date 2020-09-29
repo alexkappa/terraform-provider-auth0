@@ -99,7 +99,6 @@ func newLogStream() *schema.Resource {
 							Type:        schema.TypeSet,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Optional:    true,
-							Computed:    true,
 							Description: "IDs of the clients for which the connection is enabled",
 						},
 
@@ -256,9 +255,9 @@ func flattenLogStreamSplunkSink(o *management.SplunkSink) interface{} {
 func expandLogStream(d ResourceData) *management.LogStream {
 
 	c := &management.LogStream{
-		Name: String(d, "name", IsNewResource()),
-		Type: String(d, "type", IsNewResource()),
-		//Status: String(d, "status", IsNewResource()),
+		Name:   String(d, "name", IsNewResource()),
+		Type:   String(d, "type", IsNewResource()),
+		Status: String(d, "status"),
 	}
 
 	s := d.Get("type").(string)
@@ -274,7 +273,7 @@ func expandLogStream(d ResourceData) *management.LogStream {
 		case management.LogStreamSinkDatadog:
 			c.Sink = expandLogStreamDatadogSink(d)
 		case management.LogStreamSinkSplunk:
-			c.Sink = expandLogStreamDatadogSink(d)
+			c.Sink = expandLogStreamSplunkSink(d)
 		default:
 			log.Printf("[WARN]: Raise an issue with the auth0 provider in order to support it:")
 			log.Printf("[WARN]: 	https://github.com/alexkappa/terraform-provider-auth0/issues/new")
@@ -302,6 +301,7 @@ func expandLogStreamEventGridSink(d ResourceData) *management.EventGridSink {
 	}
 	return o
 }
+
 func expandLogStreamHTTPSink(d ResourceData) *management.HTTPSink {
 	o := &management.HTTPSink{
 		HTTPContentFormat: String(d, "http_content_format"),
@@ -319,12 +319,12 @@ func expandLogStreamDatadogSink(d ResourceData) *management.DatadogSink {
 	}
 	return o
 }
-func expandLogStreamSplunlSink(d ResourceData) *management.SplunkSink {
+func expandLogStreamSplunkSink(d ResourceData) *management.SplunkSink {
 	o := &management.SplunkSink{
-		SplunkDomain: String(d, "splunkDomain"),
-		SplunkToken:  String(d, "splunkToken"),
-		SplunkPort:   String(d, "splunkPort"),
-		SplunkSecure: Bool(d, "splunkSecure"),
+		SplunkDomain: String(d, "splunk_domain"),
+		SplunkToken:  String(d, "splunk_token"),
+		SplunkPort:   String(d, "splunk_port"),
+		SplunkSecure: Bool(d, "splunk_secure"),
 	}
 	return o
 }
