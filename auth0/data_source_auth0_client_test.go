@@ -2,6 +2,7 @@ package auth0
 
 import (
 	"fmt"
+	"regexp"
 	"testing"
 
 	"github.com/alexkappa/terraform-provider-auth0/auth0/internal/random"
@@ -23,6 +24,10 @@ func TestAccClientDataSource(t *testing.T) {
 				Check: testAccDataSourceAuth0Client("auth0_client.my_client", "data.auth0_client.foo",
 					[]string{"id", "name", "client_id", "client_secret", "description"}),
 			},
+			{
+				Config:      random.Template(testAccDataSourceClientConfigCreateDuplicates, rand),
+				ExpectError: regexp.MustCompile("Multiple Auth0 Clients with name Acceptance Test - Duplicate Name Check"),
+			},
 		},
 	})
 }
@@ -36,6 +41,25 @@ resource "auth0_client" "my_client" {
 
 data "auth0_client" "foo" {
 	name = "${auth0_client.my_client.name}"
+  }
+`
+const testAccDataSourceClientConfigCreateDuplicates = `
+
+resource "auth0_client" "my_client_1" {
+  name = "Acceptance Test - Duplicate Name Check"
+  description = "Terraform acceptance tests"
+}
+
+resource "auth0_client" "my_client_2" {
+	name = "Acceptance Test - Duplicate Name Check"
+	description = "Terraform acceptance tests"
+}
+data "auth0_client" "foo" {
+	name = "${auth0_client.my_client_1.name}"
+	depends_on = [
+		auth0_client.my_client_1,
+		auth0_client.my_client_2,
+  ]
   }
 `
 

@@ -45,6 +45,7 @@ func dataSourceAuth0ClientRead(d *schema.ResourceData, m interface{}) error {
 
 	log.Printf("[INFO] Reading Auth0 Clients")
 	var page int
+	var tmpKeys map[string]string = make(map[string]string)
 	for {
 		l, err := api.Client.List(management.WithFields("name", "description", "client_id", "client_secret"), management.Page(page))
 		if err != nil {
@@ -52,15 +53,18 @@ func dataSourceAuth0ClientRead(d *schema.ResourceData, m interface{}) error {
 		}
 		log.Printf("[DEBUG] Reading Auth0 Clients for page %d", page)
 		log.Printf("[DEBUG] Searching Auth0 Clients for Name %q", d.Get("name"))
+
 		for _, c := range l.Clients {
-			if strings.Contains(c.GetName(), fmt.Sprintf("%v", d.Get("name"))) {
-				d.SetId(*c.ClientID)
-				d.Set("client_id", c.ClientID)
-				d.Set("client_secret", c.ClientSecret)
-				d.Set("name", c.Name)
-				d.Set("description", c.Description)
-				log.Printf("[DEBUG] Found Auth0 Client with Name %v. SetID to %q", c.Name, d.Id())
-				return nil
+			if strings.Compare(c.GetName(), fmt.Sprintf("%v", d.Get("name"))) == 0 {
+				if len(tmpKeys) > 0 {
+					log.Printf("[DEBUG] Found Multiple Auth0 Clients with name %v", c.GetName())
+					return fmt.Errorf("Found Multiple Auth0 Clients with name %v", c.GetName())
+				}
+				tmpKeys["client_id"] = c.GetClientID()
+				tmpKeys["client_secret"] = c.GetClientSecret()
+				tmpKeys["name"] = c.GetName()
+				tmpKeys["description"] = c.GetDescription()
+				log.Printf("[DEBUG] Found Auth0 Client with Name %v", c.GetName())
 			}
 		}
 		if err != nil {
@@ -71,5 +75,14 @@ func dataSourceAuth0ClientRead(d *schema.ResourceData, m interface{}) error {
 		}
 		page++
 	}
+	if len(tmpKeys) > 0 {
+		d.SetId(tmpKeys["client_id"])
+		d.Set("client_id", tmpKeys["client_id"])
+		d.Set("client_secret", tmpKeys["client_secret"])
+		d.Set("name", tmpKeys["name"])
+		d.Set("description", tmpKeys["description"])
+		return nil
+	}
+
 	return errors.New("No client found matching " + fmt.Sprintf("%v", d.Get("name")))
 }
