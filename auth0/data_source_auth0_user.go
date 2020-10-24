@@ -2,9 +2,12 @@ package auth0
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/structure"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"gopkg.in/auth0.v4/management"
 )
 
@@ -18,6 +21,10 @@ func datasourceUser() *schema.Resource {
 				Optional: true,
 			},
 			"email": {
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"connection_name": {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
@@ -71,19 +78,17 @@ func datasourceUser() *schema.Resource {
 				Optional: true,
 			},
 
-			"app_metadata": {
-				Type: schema.TypeMap,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Optional: true,
-			},
 			"user_metadata": {
-				Type: schema.TypeMap,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Optional: true,
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateFunc:     validation.ValidateJsonString,
+				DiffSuppressFunc: structure.SuppressJsonDiff,
+			},
+			"app_metadata": {
+				Type:             schema.TypeString,
+				Optional:         true,
+				ValidateFunc:     validation.ValidateJsonString,
+				DiffSuppressFunc: structure.SuppressJsonDiff,
 			},
 			"picture": {
 				Type:     schema.TypeString,
@@ -118,30 +123,59 @@ func datasourceUser() *schema.Resource {
 func datasourceUserRead(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 
-	if d.Get("user_id") == nil && d.Get("email") == nil {
-		return errors.New("user_id or email should be configured")
+	email := d.Get("email").(string)
+
+	userID := d.Get("user_id").(string)
+
+	connection := d.Get("connection_name").(string)
+
+	if email == "" && userID == "" {
+		return errors.New(`The argument "user_id" or "email" should be configured`)
 	}
 
-	var u *management.User
+	var user *management.User
 
 	var err error
 
-	if d.Get("email").(string) != "" {
+	if email != "" {
 
-		users, listByEmailError := api.User.ListByEmail(d.Get("email").(string))
+		log.Printf("[DEBUG] Searching User by email %s", email)
+		usersList, listByEmailError := api.User.ListByEmail(email)
 
 		if listByEmailError != nil {
 			return listByEmailError
 		}
 
-		if len(users) == 0 {
-			return errors.New("User not found")
+		if len(usersList) == 0 {
+			return errors.New("No user found matching email " + email)
 		}
 
-		u = users[0]
+		log.Printf("[DEBUG Found %d users with this email %s", len(usersList), email)
+
+		if len(usersList) > 1 && connection != "" {
+
+			log.Printf("[DEBUG] Selecting user by connection %s", connection)
+			for _, u := range usersList {
+				var found bool
+				for _, i := range u.Identities {
+					if found = i.GetConnection() == connection; found {
+						break
+					}
+				}
+
+				if found {
+					user = u
+					break
+				}
+			}
+
+		} else {
+			user = usersList[0]
+		}
 
 	} else {
-		u, err = api.User.Read(d.Get("user_id").(string))
+		log.Printf("[DEBUG] Getting User by id %s", userID)
+		user, err = api.User.Read(userID)
 	}
 
 	if err != nil {
@@ -154,21 +188,25 @@ func datasourceUserRead(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	d.SetId(*u.ID)
+	d.SetId(*user.ID)
 
-	d.Set("user_id", *u.ID)
-	d.Set("email", u.Email)
-	d.Set("email_verified", u.EmailVerified)
+	d.Set("user_id", *user.ID)
+	d.Set("email", user.Email)
 
-	d.Set("username", u.Username)
-	d.Set("phone_number", u.PhoneNumber)
-	d.Set("phone_verified", u.PhoneVerified)
-	d.Set("created_at", u.CreatedAt.String())
-	d.Set("updated_at", u.UpdatedAt.String())
+	if connection == "" {
+		d.Set("connection_name", user.Identities[0].Connection)
+	}
+	d.Set("email_verified", user.EmailVerified)
 
-	identities := make([]map[string]interface{}, len(u.Identities))
+	d.Set("username", user.Username)
+	d.Set("phone_number", user.PhoneNumber)
+	d.Set("phone_verified", user.PhoneVerified)
+	d.Set("created_at", user.CreatedAt.String())
+	d.Set("updated_at", user.UpdatedAt.String())
 
-	for index, i := range u.Identities {
+	identities := make([]map[string]interface{}, len(user.Identities))
+
+	for index, i := range user.Identities {
 		newIdentity := make(map[string]interface{})
 		newIdentity["connection"] = i.Connection
 		newIdentity["user_id"] = i.UserID
@@ -178,14 +216,23 @@ func datasourceUserRead(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.Set("identities", identities)
-	d.Set("app_metadata", u.AppMetadata)
-	d.Set("user_metadata", u.UserMetadata)
-	d.Set("picture", u.Picture)
-	d.Set("name", u.Name)
-	d.Set("nickname", u.Nickname)
-	d.Set("blocked", u.Blocked)
-	d.Set("family_name", u.FamilyName)
-	d.Set("give_name", u.GivenName)
+	userMeta, err := structure.FlattenJsonToString(user.UserMetadata)
+	if err != nil {
+		return err
+	}
+	d.Set("user_metadata", userMeta)
+
+	appMeta, err := structure.FlattenJsonToString(user.AppMetadata)
+	if err != nil {
+		return err
+	}
+	d.Set("app_metadata", appMeta)
+	d.Set("picture", user.Picture)
+	d.Set("name", user.Name)
+	d.Set("nickname", user.Nickname)
+	d.Set("blocked", user.Blocked)
+	d.Set("family_name", user.FamilyName)
+	d.Set("given_name", user.GivenName)
 
 	return nil
 }
