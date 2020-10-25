@@ -61,3 +61,7 @@ resource "auth0_client" "my_client" {
     expiration_type = "expiring"
   }
 }
+
+data "auth0_client" "foo" {
+	name = "Application - Acceptance Test" # If the name is not unique this will trigger an error
+}
