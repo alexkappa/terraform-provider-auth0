@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccClientDataSource(t *testing.T) {
+func TestAccClientDataSourceByName(t *testing.T) {
 
 	rand := random.String(6)
 
@@ -24,9 +24,74 @@ func TestAccClientDataSource(t *testing.T) {
 				Check: testAccDataSourceAuth0Client("auth0_client.my_client", "data.auth0_client.foo",
 					[]string{"id", "name", "client_id", "client_secret", "description"}),
 			},
+		},
+	})
+}
+
+func TestAccClientDataSourceMultipleWithSameName(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
 			{
 				Config:      random.Template(testAccDataSourceClientConfigCreateDuplicates, rand),
 				ExpectError: regexp.MustCompile("Multiple Auth0 Clients with name Acceptance Test - Duplicate Name Check"),
+			},
+		},
+	})
+}
+func TestAccClientDataSourceById(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccDataSourceClientConfigCreateUseClientID, rand),
+				Check: testAccDataSourceAuth0Client("auth0_client.my_client", "data.auth0_client.foo",
+					[]string{"id", "name", "client_id", "client_secret", "description"}),
+			},
+		},
+	})
+}
+
+func TestAccClientDataSourceMultipleParameters(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccDataSourceClientConfigMultipleParameters, rand),
+				Check: testAccDataSourceAuth0Client("auth0_client.my_client", "data.auth0_client.foo",
+					[]string{"id", "name", "client_id", "client_secret", "description"}),
+			},
+		},
+	})
+}
+
+func TestAccClientDataSourceMissingParameters(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config:      random.Template(testAccDataSourceClientConfigMissingParameters, rand),
+				ExpectError: regexp.MustCompile("The argument \"name\" or \"client_id\" should be configured"),
 			},
 		},
 	})
@@ -60,6 +125,40 @@ data "auth0_client" "foo" {
 		auth0_client.my_client_1,
 		auth0_client.my_client_2,
   ]
+  }
+`
+const testAccDataSourceClientConfigCreateUseClientID = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - Zero Value Check - {{.random}}"
+  description = "Terraform acceptance tests"
+}
+
+data "auth0_client" "foo" {
+	client_id = "${auth0_client.my_client.client_id}"
+  }
+`
+const testAccDataSourceClientConfigMultipleParameters = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - Zero Value Check - {{.random}}"
+  description = "Terraform acceptance tests"
+}
+
+data "auth0_client" "foo" {
+	name = "${auth0_client.my_client.name}"
+	client_id = "${auth0_client.my_client.client_id}"
+  }
+`
+
+const testAccDataSourceClientConfigMissingParameters = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - Zero Value Check - {{.random}}"
+  description = "Terraform acceptance tests"
+}
+
+data "auth0_client" "foo" {
   }
 `
 
