@@ -104,8 +104,6 @@ successfully run.
 Supporting the provider
 -----------------------
 
-This project is maintained by myself ([@alexkappa](https://github.com/alexkappa)) with contributions from [great people](https://github.com/alexkappa/terraform-provider-auth0/graphs/contributors) across the community. 
-
-I am not affiliated with [Auth0](https://auth0.com/) and all work that goes into this provider is done during my spare time. Please be patient with issues and pull requests.
+This project is maintained by ([@alexkappa](https://github.com/alexkappa)) with contributions from [great people](https://github.com/alexkappa/terraform-provider-auth0/graphs/contributors) across the community. 
 
 If you or your company relies on this plugin or the [Go SDK](https://github.com/go-auth0/auth0) and would like to ensure its continuing support please consider [donating](https://github.com/sponsors/alexkappa).
