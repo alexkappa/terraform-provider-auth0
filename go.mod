@@ -8,5 +8,5 @@ require (
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.0
 	github.com/hashicorp/terraform-plugin-sdk v1.16.0
-	gopkg.in/auth0.v4 v4.6.0
+	gopkg.in/auth0.v4 v4.7.0
 )

@@ -614,6 +614,8 @@ google.golang.org/protobuf v1.25.0 h1:Ejskq+SyPohKW+1uil0JJMtmHCgJPJ/qWTxr8qp+R4
 google.golang.org/protobuf v1.25.0/go.mod h1:9JNX74DMeImyA3h4bdi1ymwjUzf21/xIlbajtzgsN7c=
 gopkg.in/auth0.v4 v4.6.0 h1:Wuc8tgAW2l+vcQ1JnwFlK5KwbJtoABA8osug8eNS3xU=
 gopkg.in/auth0.v4 v4.6.0/go.mod h1:6ZOcoQequCmURgwJnGIX09/51deRWVRpUaUP8p1Jbpk=
+gopkg.in/auth0.v4 v4.7.0 h1:RrFItkglPN6xPtWXe8cAo5J8fX+drTK35A1eCw8Td+c=
+gopkg.in/auth0.v4 v4.7.0/go.mod h1:6ZOcoQequCmURgwJnGIX09/51deRWVRpUaUP8p1Jbpk=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 h1:qIbj1fsPNlZgppZ+VLlY7N33q108Sa+fhmuc+sWQYwY=
 gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
