@@ -92,12 +92,14 @@ func newLogStream() *schema.Resource {
 								"JSONLINES", "JSONARRAY"}, false),
 						},
 						"http_content_type": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "HTTP Content Type",
 						},
 						"http_endpoint": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "HTTP endpoint",
 						},
 						"http_authorization": {
 							Type:      schema.TypeString,
@@ -108,7 +110,7 @@ func newLogStream() *schema.Resource {
 							Type:        schema.TypeSet,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Optional:    true,
-							Description: "IDs of the clients for which the connection is enabled",
+							Description: "custom HTTP headers",
 						},
 
 						"datadog_region": {
