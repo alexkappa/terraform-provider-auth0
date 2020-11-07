@@ -55,10 +55,14 @@ func newLogStream() *schema.Resource {
 							ForceNew:  true,
 						},
 						"aws_region": {
-							Type:      schema.TypeString,
-							Optional:  true,
-							Sensitive: true,
-							ForceNew:  true,
+							Type:     schema.TypeString,
+							Optional: true,
+							ForceNew: true,
+						},
+						"aws_partner_event_source": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of the Partner Event Source to be used with AWS, if the type is 'eventbridge'",
 						},
 						"azure_subscription_id": {
 							Type:      schema.TypeString,
@@ -75,6 +79,11 @@ func newLogStream() *schema.Resource {
 							Type:     schema.TypeString,
 							Optional: true,
 							ForceNew: true,
+						},
+						"azure_partner_topic": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of the Partner Topic to be used with Azure, if the type is 'eventgrid'",
 						},
 						"http_content_format": {
 							Type:     schema.TypeString,
