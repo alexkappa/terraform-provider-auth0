@@ -296,7 +296,7 @@ func expandLogStreamEventBridgeSink(d ResourceData) *management.EventBridgeSink 
 	o := &management.EventBridgeSink{
 		AWSAccountID:          String(d, "aws_account_id"),
 		AWSRegion:             String(d, "aws_region"),
-		AWSPartnerEventSource: String(d, "aws_partner-event_source"),
+		AWSPartnerEventSource: String(d, "aws_partner_event_source"),
 	}
 	return o
 }
