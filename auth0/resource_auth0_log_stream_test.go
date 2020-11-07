@@ -2,7 +2,6 @@ package auth0
 
 import (
 	"log"
-	"os"
 	"strings"
 	"testing"
 
@@ -161,10 +160,6 @@ func TestAccLogStreamDatadog(t *testing.T) {
 	})
 }
 func TestAccLogStreamSplunk(t *testing.T) {
-	os.Setenv("AUTH0_DOMAIN", "mcalster.eu.auth0.com")
-	os.Setenv("AUTH0_CLIENT_ID", "mTXtlC48RtZ4zxySxL6ps19uU5mYVS1X")
-	os.Setenv("AUTH0_CLIENT_SECRET", "1enhenoVV43HcYUImVst4d679DZLabmlP0bz5oVaNp6fh9eoIBW86sbMgZH1CGMt")
-	os.Setenv("AUTH0_DEBUG", "true")
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
