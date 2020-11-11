@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/structure"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
-	"gopkg.in/auth0.v4"
-	"gopkg.in/auth0.v4/management"
+	"gopkg.in/auth0.v5"
+	"gopkg.in/auth0.v5/management"
 )
 
 func newUser() *schema.Resource {
@@ -330,7 +330,7 @@ func assignUserRoles(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 
 	if len(rmRoles) > 0 {
-		err := api.User.RemoveRoles(d.Id(), rmRoles...)
+		err := api.User.RemoveRoles(d.Id(), rmRoles)
 		if err != nil {
 			// Ignore 404 errors as the role may have been deleted prior to
 			// unassigning them from the user.
@@ -345,7 +345,7 @@ func assignUserRoles(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if len(addRoles) > 0 {
-		err := api.User.AssignRoles(d.Id(), addRoles...)
+		err := api.User.AssignRoles(d.Id(), addRoles)
 		if err != nil {
 			return err
 		}
