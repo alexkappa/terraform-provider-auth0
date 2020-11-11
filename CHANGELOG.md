@@ -1,3 +1,9 @@
+## 0.15.2
+
+ENHANCEMENTS:
+
+* resource/auth0_connection: Support for additional fields for `samlp` connection ([#268](https://github.com/alexkappa/terraform-provider-auth0/pull/268)).
+
 ## 0.15.1
 
 ENHANCEMENTS:
