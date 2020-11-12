@@ -122,7 +122,7 @@ func newTenant() *schema.Resource {
 				Type:         schema.TypeFloat,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: validation.FloatAtLeast(1.0),
+				ValidateFunc: validation.FloatAtLeast(0.01),
 			},
 			"sandbox_version": {
 				Type:     schema.TypeString,
@@ -133,7 +133,7 @@ func newTenant() *schema.Resource {
 				Type:         schema.TypeFloat,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: validation.FloatAtLeast(1.0),
+				ValidateFunc: validation.FloatAtLeast(0.01),
 			},
 			"enabled_locales": {
 				Type:     schema.TypeSet,
