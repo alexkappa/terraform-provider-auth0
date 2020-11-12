@@ -81,6 +81,19 @@ func newBranding() *schema.Resource {
 					},
 				},
 			},
+			"universal_login_templates": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"body": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -104,18 +117,34 @@ func readBranding(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
+	btul, err := api.Branding.ReadTemplateUniversalLogin()
+	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			if mErr.Status() == http.StatusNotFound {
+				d.SetId("")
+				return nil
+			}
+		}
+		return err
+	}
+
 	d.Set("colors", flattenBrandingColors(b.Colors))
 	d.Set("favicon_url", b.FaviconURL)
 	d.Set("logo_url", b.LogoURL)
 	d.Set("font", flattenBrandingFont(b.Font))
+	d.Set("universal_login_templates", btul.Body)
 
 	return nil
 }
 
 func updateBranding(d *schema.ResourceData, m interface{}) error {
-	b := buildBranding(d)
+	b, btul := buildBranding(d)
 	api := m.(*management.Management)
 	err := api.Branding.Update(b)
+	if err != nil {
+		return err
+	}
+	err = api.Branding.UpdateTemplateUniversalLogin(btul)
 	if err != nil {
 		return err
 	}
@@ -127,13 +156,16 @@ func deleteBranding(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func buildBranding(d *schema.ResourceData) *management.Branding {
+func buildBranding(d *schema.ResourceData) (*management.Branding, *management.BrandingTemplateUniversalLogin) {
 	b := &management.Branding{
 		Colors:     expandBrandingColors(d),
 		FaviconURL: String(d, "favicon_url"),
 		LogoURL:    String(d, "logo_url"),
 		Font:       expandBrandingFont(d),
 	}
+	btul := &management.BrandingTemplateUniversalLogin{
+		Body: String(d, "universal_login_templates.body"),
+	}
 
-	return b
+	return b, btul
 }
