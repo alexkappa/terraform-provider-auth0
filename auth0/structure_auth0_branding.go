@@ -1,7 +1,7 @@
 package auth0
 
 import (
-	"gopkg.in/auth0.v4/management"
+	"gopkg.in/auth0.v5/management"
 )
 
 func flattenBrandingColors(colors *management.BrandingColors) []interface{} {
@@ -36,14 +36,14 @@ func flattenBrandingFont(font *management.BrandingFont) []interface{} {
 	return []interface{}{m}
 }
 
-func expandBrandingColors(d Data) (colors *management.BrandingColors) {
-	List(d, "colors").Elem(func(d Data) {
+func expandBrandingColors(d ResourceData) (colors *management.BrandingColors) {
+	List(d, "colors").Elem(func(d ResourceData) {
 		colors = &management.BrandingColors{
 			Primary:        String(d, "primary"),
 			PageBackground: String(d, "page_background"),
 		}
 
-		List(d, "page_background_gradient").Elem(func(d Data) {
+		List(d, "page_background_gradient").Elem(func(d ResourceData) {
 			colors.PageBackground = nil
 			colors.PageBackgroundGradient = &management.BrandingPageBackgroundGradient{
 				Type:        String(d, "type"),
@@ -56,8 +56,8 @@ func expandBrandingColors(d Data) (colors *management.BrandingColors) {
 	return
 }
 
-func expandBrandingFont(d Data) (font *management.BrandingFont) {
-	List(d, "font").Elem(func(d Data) {
+func expandBrandingFont(d ResourceData) (font *management.BrandingFont) {
+	List(d, "font").Elem(func(d ResourceData) {
 		url := String(d, "url")
 
 		// Avoid 400 Bad Request if we send the font object with an empty URL
