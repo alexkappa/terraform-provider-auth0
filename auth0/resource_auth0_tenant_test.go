@@ -86,7 +86,7 @@ resource "auth0_tenant" "my_tenant" {
 	]
 	session_lifetime = 1080
 	sandbox_version = "8"
-	// idle_session_lifetime = 720
+	idle_session_lifetime = 720
 	enabled_locales = ["en", "de", "fr"]
 	flags {
 		universal_login = true
