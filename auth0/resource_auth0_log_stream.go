@@ -279,7 +279,9 @@ func expandLogStream(d ResourceData) *management.LogStream {
 	List(d, "sink").Elem(func(d ResourceData) {
 		switch s {
 		case management.LogStreamTypeAmazonEventBridge:
-			ls.Sink = expandLogStreamSinkAmazonEventBridge(d)
+			if d.IsNewResource() {
+				ls.Sink = expandLogStreamSinkAmazonEventBridge(d)
+			}
 		case management.LogStreamTypeAzureEventGrid:
 			ls.Sink = expandLogStreamSinkAzureEventGrid(d)
 		case management.LogStreamTypeHTTP:
