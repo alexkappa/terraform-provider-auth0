@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/structure"
 
-	"gopkg.in/auth0.v4"
+	"gopkg.in/auth0.v5"
 )
 
 // ResourceData generalises schema.ResourceData so that we can reuse the
@@ -210,6 +210,16 @@ func Int(d ResourceData, key string, conditions ...Condition) (i *int) {
 	v, ok := d.GetOk(key)
 	if ok && Any(conditions...).Eval(d, key) {
 		i = auth0.Int(v.(int))
+	}
+	return
+}
+
+// Float64 accesses the value held by key and type asserts it to a pointer to a
+// float64.
+func Float64(d ResourceData, key string, conditions ...Condition) (f *float64) {
+	v, ok := d.GetOk(key)
+	if ok && Any(conditions...).Eval(d, key) {
+		f = auth0.Float64(v.(float64))
 	}
 	return
 }

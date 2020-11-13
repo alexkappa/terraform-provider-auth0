@@ -5,8 +5,8 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
-	"gopkg.in/auth0.v4"
-	"gopkg.in/auth0.v4/management"
+	"gopkg.in/auth0.v5"
+	"gopkg.in/auth0.v5/management"
 )
 
 func newRole() *schema.Resource {
@@ -181,14 +181,14 @@ func assignRolePermissions(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 
 	if len(rmPermissions) > 0 {
-		err := api.Role.RemovePermissions(d.Id(), rmPermissions...)
+		err := api.Role.RemovePermissions(d.Id(), rmPermissions)
 		if err != nil {
 			return err
 		}
 	}
 
 	if len(addPermissions) > 0 {
-		err := api.Role.AssociatePermissions(d.Id(), addPermissions...)
+		err := api.Role.AssociatePermissions(d.Id(), addPermissions)
 		if err != nil {
 			return err
 		}

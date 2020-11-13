@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
-	"gopkg.in/auth0.v4"
-	"gopkg.in/auth0.v4/management"
+	"gopkg.in/auth0.v5"
+	"gopkg.in/auth0.v5/management"
 )
 
 func newCustomDomain() *schema.Resource {
