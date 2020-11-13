@@ -144,10 +144,14 @@ func updateBranding(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	err = api.Branding.UpdateTemplateUniversalLogin(btul)
-	if err != nil {
-		return err
+
+	if btul.Body != nil {
+		err = api.Branding.UpdateTemplateUniversalLogin(btul)
+		if err != nil {
+			return err
+		}
 	}
+
 	return readBranding(d, m)
 }
 
@@ -164,7 +168,7 @@ func buildBranding(d *schema.ResourceData) (*management.Branding, *management.Br
 		Font:       expandBrandingFont(d),
 	}
 	btul := &management.BrandingTemplateUniversalLogin{
-		Body: String(d, "universal_login_templates.body"),
+		Body: String(newResourceDataAtKey("universal_login_templates", d), "body"),
 	}
 
 	return b, btul
