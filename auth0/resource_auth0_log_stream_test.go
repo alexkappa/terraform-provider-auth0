@@ -109,7 +109,18 @@ resource "auth0_log_stream" "my_log_stream" {
 	}
 }
 `
-
+const testAccLogStreamHttpConfigUpdate = `
+resource "auth0_log_stream" "my_log_stream" {
+	name = "Acceptance-Test-LogStream-http-{{.random}}"
+	type = "http"
+	sink {
+	  http_endpoint = "https://example.com/webhook/logs"
+	  http_content_type = "application/json; charset=utf-8"
+	  http_content_format = "JSONARRAY"
+	  http_authorization = "AKIAXXXXXXXXXXXXXXXX"
+	}
+}
+`
 func TestAccLogStreamEventBridge(t *testing.T) {
 	rand := random.String(6)
 	resource.Test(t, resource.TestCase{
