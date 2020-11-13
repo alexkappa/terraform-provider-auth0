@@ -173,7 +173,7 @@ func readLogStream(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	d.SetId(auth0.StringValue(c.ID))
+	d.SetId(c.GetID())
 	d.Set("name", c.Name)
 	d.Set("status", c.Status)
 	d.Set("type", c.Type)
