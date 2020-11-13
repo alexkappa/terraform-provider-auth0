@@ -156,7 +156,18 @@ func createLogStream(d *schema.ResourceData, m interface{}) error {
 	if err := api.LogStream.Create(c); err != nil {
 		return err
 	}
-	d.SetId(auth0.StringValue(c.ID))
+	d.SetId(c.GetID())
+
+	// The Management API only allows updating a log stream's status. Therefore
+	// if the status field was present in the configuration, we perform an
+	// additional operation to modify it.
+	s := String(d, "status")
+	if s != nil && s != c.Status {
+		err := api.LogStream.Update(c.GetID(), &management.LogStream{Status: s})
+		if err != nil {
+			return err
+		}
+	}
 	return readLogStream(d, m)
 }
 
