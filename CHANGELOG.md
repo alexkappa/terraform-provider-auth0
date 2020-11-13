@@ -1,3 +1,9 @@
+## 0.16.0
+
+NOTES:
+
+* Upgrade to `gopkg.in/auth0.v5` (`v5.2.2`)
+
 ## 0.15.2
 
 ENHANCEMENTS:
