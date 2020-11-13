@@ -74,7 +74,7 @@ func TestAccLogStreamHttp(t *testing.T) {
 	})
 }
 
-const logStreamHTTPConfig = `
+const testAccLogStreamHttpConfig = `
 resource "auth0_log_stream" "my_log_stream" {
 	name = "Acceptance-Test-LogStream-http-{{.random}}"
 	type = "http"
