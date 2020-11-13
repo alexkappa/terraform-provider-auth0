@@ -60,6 +60,17 @@ func TestAccLogStreamHttp(t *testing.T) {
 				),
 			},
 			{
+				Config: random.Template(testAccLogStreamHttpConfigUpdate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-http-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "http"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_endpoint", "https://example.com/webhook/logs"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_content_type", "application/json; charset=utf-8"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_content_format", "JSONARRAY"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_authorization", "AKIAXXXXXXXXXXXXXXXX"),
+				),
+			},
+			{
 				Config: random.Template(logStreamHTTPConfigUpdate, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-http-new-{{.random}}", rand),
