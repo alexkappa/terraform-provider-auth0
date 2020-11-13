@@ -52,7 +52,6 @@ func TestAccLogStreamHttp(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-http-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "http"),
-					//resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "status", "active"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_endpoint", "https://example.com/webhook/logs"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_content_type", "application/json"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_content_format", "JSONLINES"),
