@@ -142,6 +142,7 @@ func newLogStream() *schema.Resource {
 						"splunk_secure": {
 							Type:     schema.TypeBool,
 							Optional: true,
+							Default:  false,
 						},
 					},
 				},
