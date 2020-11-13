@@ -48,7 +48,7 @@ func TestAccLogStreamHttp(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: random.Template(logStreamHTTPConfig, rand),
+				Config: random.Template(testAccLogStreamHttpConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-http-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "http"),
