@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/alexkappa/terraform-provider-auth0/auth0/internal/random"
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -39,26 +40,17 @@ func init() {
 }
 
 func TestAccLogStreamHttp(t *testing.T) {
+	rand := random.String(6)
+
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: `
-				resource "auth0_log_stream" "my_log_stream" {
-					name = "Acceptance-Test-LogStream-http"
-					type = "http"
-					sink {
-						http_endpoint = "https://example.com/webhook/logs"
-						http_content_type = "application/json"
-						http_content_format = "JSONLINES"
-						http_authorization = "AKIAXXXXXXXXXXXXXXXX"
-					}
-				}
-				`,
+				Config: random.Template(logStreamHTTPConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-http"),
+					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-http-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "http"),
 					//resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "status", "active"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_endpoint", "https://example.com/webhook/logs"),
@@ -70,26 +62,31 @@ func TestAccLogStreamHttp(t *testing.T) {
 		},
 	})
 }
-func TestAccLogStreamEventBridge(t *testing.T) {
 
+const logStreamHTTPConfig = `
+resource "auth0_log_stream" "my_log_stream" {
+	name = "Acceptance-Test-LogStream-http-{{.random}}"
+	type = "http"
+	sink {
+	  http_endpoint = "https://example.com/webhook/logs"
+	  http_content_type = "application/json"
+	  http_content_format = "JSONLINES"
+	  http_authorization = "AKIAXXXXXXXXXXXXXXXX"
+	}
+}
+`
+
+func TestAccLogStreamEventBridge(t *testing.T) {
+	rand := random.String(6)
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: `
-				resource "auth0_log_stream" "my_log_stream" {
-					name = "Acceptance-Test-LogStream-aws"
-					type = "eventbridge"
-					sink {
-						aws_account_id = "999999999999"
-						aws_region = "us-west-2"
-					}
-				}
-				`,
+				Config: random.Template(logStreamAwsEventBridgeConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-aws"),
+					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-aws-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "eventbridge"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.aws_account_id", "999999999999"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.aws_region", "us-west-2"),
@@ -99,8 +96,22 @@ func TestAccLogStreamEventBridge(t *testing.T) {
 	})
 }
 
+const logStreamAwsEventBridgeConfig = `
+resource "auth0_log_stream" "my_log_stream" {
+	name = "Acceptance-Test-LogStream-aws-{{.random}}"
+	type = "eventbridge"
+	sink {
+	  aws_account_id = "999999999999"
+	  aws_region = "us-west-2"
+	}
+}
+`
+
 //This test fails it subscription key is not valid, or Eventgrid Resource Provider is not registered in the subscription
-/*func TestAccLogStreamEventGrid(t *testing.T) {
+func TestAccLogStreamEventGrid(t *testing.T) {
+	rand := random.String(6)
+
+	t.Skip("this test requires an active subscription")
 
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
@@ -108,19 +119,9 @@ func TestAccLogStreamEventBridge(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: `
-				resource "auth0_log_stream" "my_log_stream" {
-					name = "Acceptance-Test-LogStream-azure"
-					type = "eventgrid"
-					sink {
-						azure_subscription_id = "b69a6835-57c7-4d53-b0d5-1c6ae580b6d5"
-						azure_region = "northeurope"
-						azure_resource_group = "azure-logs-rg"
-					}
-				}
-				`,
+				Config: random.Template(logStreamAzureEventGridConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-azure"),
+					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-azure-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "eventgrid"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.azure_subscription_id", "b69a6835-57c7-4d53-b0d5-1c6ae580b6d5"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.azure_region", "northeurope"),
@@ -130,8 +131,21 @@ func TestAccLogStreamEventBridge(t *testing.T) {
 		},
 	})
 }
-*/
+
+const logStreamAzureEventGridConfig = `
+resource "auth0_log_stream" "my_log_stream-{{.random}}" {
+	name = "Acceptance-Test-LogStream-azure"
+	type = "eventgrid"
+	sink {
+  	  azure_subscription_id = "b69a6835-57c7-4d53-b0d5-1c6ae580b6d5"
+	  azure_region = "northeurope"
+	  azure_resource_group = "azure-logs-rg"
+	}
+}
+`
+
 func TestAccLogStreamDatadog(t *testing.T) {
+	rand := random.String(6)
 
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
@@ -139,18 +153,9 @@ func TestAccLogStreamDatadog(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: `
-				resource "auth0_log_stream" "my_log_stream" {
-					name = "Acceptance-Test-LogStream-datadog"
-					type = "datadog"
-					sink {
-						datadog_region = "us"
-						datadog_api_key = "121233123455"
-					}
-				}
-				`,
+				Config: random.Template(logStreamDatadogConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-datadog"),
+					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-datadog-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "datadog"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.datadog_region", "us"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.datadog_api_key", "121233123455"),
@@ -159,27 +164,30 @@ func TestAccLogStreamDatadog(t *testing.T) {
 		},
 	})
 }
+
+const logStreamDatadogConfig = `
+resource "auth0_log_stream" "my_log_stream" {
+	name = "Acceptance-Test-LogStream-datadog-{{.random}}"
+	type = "datadog"
+	sink {
+	  datadog_region = "us"
+	  datadog_api_key = "121233123455"
+	}
+}
+`
+
 func TestAccLogStreamSplunk(t *testing.T) {
+	rand := random.String(6)
+
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: `
-				resource "auth0_log_stream" "my_log_stream" {
-					name = "Acceptance-Test-LogStream-splunk"
-					type = "splunk"
-					sink {
-						splunk_domain = "demo.splunk.com"
-						splunk_token = "12a34ab5-c6d7-8901-23ef-456b7c89d0c1"
-						splunk_port = "8088"
-						splunk_secure = "true"
-					}
-				}
-				`,
+				Config: random.Template(logStreamSplunkConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-splunk"),
+					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-splunk-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "splunk"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.splunk_domain", "demo.splunk.com"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.splunk_token", "12a34ab5-c6d7-8901-23ef-456b7c89d0c1"),
@@ -190,3 +198,16 @@ func TestAccLogStreamSplunk(t *testing.T) {
 		},
 	})
 }
+
+const logStreamSplunkConfig = `
+resource "auth0_log_stream" "my_log_stream" {
+	name = "Acceptance-Test-LogStream-splunk-{{.random}}"
+	type = "splunk"
+	sink {
+	  splunk_domain = "demo.splunk.com"
+	  splunk_token = "12a34ab5-c6d7-8901-23ef-456b7c89d0c1"
+	  splunk_port = "8088"
+	  splunk_secure = "true"
+	}
+}
+`

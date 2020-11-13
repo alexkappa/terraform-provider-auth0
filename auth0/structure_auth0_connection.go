@@ -3,8 +3,8 @@ package auth0
 import (
 	"log"
 
-	"gopkg.in/auth0.v4"
-	"gopkg.in/auth0.v4/management"
+	"gopkg.in/auth0.v5"
+	"gopkg.in/auth0.v5/management"
 )
 
 func flattenConnectionOptions(d ResourceData, options interface{}) []interface{} {
@@ -88,8 +88,8 @@ func flattenConnectionOptionsOAuth2(o *management.ConnectionOptionsOAuth2) inter
 		"client_id":              o.GetClientID(),
 		"client_secret":          o.GetClientSecret(),
 		"scopes":                 o.Scopes(),
-		"token_endpoint":         o.GetTokenEndpoint(),
-		"authorization_endpoint": o.GetAuthorizationEndpoint(),
+		"token_endpoint":         o.GetTokenURL(),
+		"authorization_endpoint": o.GetAuthorizationURL(),
 		"scripts":                o.Scripts,
 	}
 }
@@ -361,10 +361,10 @@ func expandConnectionOptionsGoogleOAuth2(d ResourceData) *management.ConnectionO
 func expandConnectionOptionsOAuth2(d ResourceData) *management.ConnectionOptionsOAuth2 {
 
 	o := &management.ConnectionOptionsOAuth2{
-		ClientID:              String(d, "client_id"),
-		ClientSecret:          String(d, "client_secret"),
-		AuthorizationEndpoint: String(d, "authorization_endpoint"),
-		TokenEndpoint:         String(d, "token_endpoint"),
+		ClientID:         String(d, "client_id"),
+		ClientSecret:     String(d, "client_secret"),
+		AuthorizationURL: String(d, "authorization_endpoint"),
+		TokenURL:         String(d, "token_endpoint"),
 	}
 	o.Scripts = Map(d, "scripts")
 
