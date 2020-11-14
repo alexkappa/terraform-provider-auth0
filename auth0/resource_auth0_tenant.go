@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
-	"gopkg.in/auth0.v4/management"
+	"gopkg.in/auth0.v5/management"
 
 	v "github.com/alexkappa/terraform-provider-auth0/auth0/internal/validation"
 )
@@ -119,10 +119,10 @@ func newTenant() *schema.Resource {
 				Computed: true,
 			},
 			"session_lifetime": {
-				Type:         schema.TypeInt,
+				Type:         schema.TypeFloat,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: validation.IntAtLeast(1),
+				ValidateFunc: validation.FloatAtLeast(0.01),
 			},
 			"sandbox_version": {
 				Type:     schema.TypeString,
@@ -130,10 +130,10 @@ func newTenant() *schema.Resource {
 				Computed: true,
 			},
 			"idle_session_lifetime": {
-				Type:         schema.TypeInt,
+				Type:         schema.TypeFloat,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: validation.IntAtLeast(1),
+				ValidateFunc: validation.FloatAtLeast(0.01),
 			},
 			"enabled_locales": {
 				Type:     schema.TypeSet,
@@ -313,9 +313,9 @@ func buildTenant(d *schema.ResourceData) *management.Tenant {
 		SupportEmail:        String(d, "support_email"),
 		SupportURL:          String(d, "support_url"),
 		AllowedLogoutURLs:   Slice(d, "allowed_logout_urls"),
-		SessionLifetime:     Int(d, "session_lifetime"),
+		SessionLifetime:     Float64(d, "session_lifetime"),
 		SandboxVersion:      String(d, "sandbox_version"),
-		IdleSessionLifetime: Int(d, "idle_session_lifetime", IsNewResource(), HasChange()),
+		IdleSessionLifetime: Float64(d, "idle_session_lifetime", IsNewResource(), HasChange()),
 		EnabledLocales:      Set(d, "enabled_locales").List(),
 		ChangePassword:      expandTenantChangePassword(d),
 		GuardianMFAPage:     expandTenantGuardianMFAPage(d),

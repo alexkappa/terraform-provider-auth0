@@ -8,8 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/meta"
 
-	"gopkg.in/auth0.v4"
-	"gopkg.in/auth0.v4/management"
+	"gopkg.in/auth0.v5"
+	"gopkg.in/auth0.v5/management"
 )
 
 var provider *schema.Provider
@@ -82,7 +82,8 @@ func Configure(data *schema.ResourceData) (interface{}, error) {
 		TerraformSDKVersion(),
 		TerraformVersion())
 
-	return management.New(domain, id, secret,
+	return management.New(domain,
+		management.WithClientCredentials(id, secret),
 		management.WithDebug(debug),
 		management.WithUserAgent(userAgent))
 }

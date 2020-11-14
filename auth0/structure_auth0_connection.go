@@ -3,8 +3,8 @@ package auth0
 import (
 	"log"
 
-	"gopkg.in/auth0.v4"
-	"gopkg.in/auth0.v4/management"
+	"gopkg.in/auth0.v5"
+	"gopkg.in/auth0.v5/management"
 )
 
 func flattenConnectionOptions(d ResourceData, options interface{}) []interface{} {
