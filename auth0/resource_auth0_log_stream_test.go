@@ -39,7 +39,7 @@ func init() {
 	})
 }
 
-func TestAccLogStreamHttp(t *testing.T) {
+func TestAccLogStreamHTTP(t *testing.T) {
 	rand := random.String(6)
 
 	resource.Test(t, resource.TestCase{
@@ -48,10 +48,11 @@ func TestAccLogStreamHttp(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: random.Template(testAccLogStreamHttpConfig, rand),
+				Config: random.Template(testAccLogStreamHTTPConfig, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-http-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "http"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "status", "paused"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_endpoint", "https://example.com/webhook/logs"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_content_type", "application/json"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_content_format", "JSONLINES"),
@@ -59,7 +60,7 @@ func TestAccLogStreamHttp(t *testing.T) {
 				),
 			},
 			{
-				Config: random.Template(testAccLogStreamHttpConfigUpdate, rand),
+				Config: random.Template(testAccLogStreamHTTPConfigUpdateFormat, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-http-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "http"),
@@ -70,7 +71,7 @@ func TestAccLogStreamHttp(t *testing.T) {
 				),
 			},
 			{
-				Config: random.Template(logStreamHTTPConfigUpdate, rand),
+				Config: random.Template(testAccLogStreamHTTPConfigUpdate, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-http-new-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "http"),
@@ -84,10 +85,11 @@ func TestAccLogStreamHttp(t *testing.T) {
 	})
 }
 
-const testAccLogStreamHttpConfig = `
+const testAccLogStreamHTTPConfig = `
 resource "auth0_log_stream" "my_log_stream" {
 	name = "Acceptance-Test-LogStream-http-{{.random}}"
 	type = "http"
+	status = "paused"
 	sink {
 	  http_endpoint = "https://example.com/webhook/logs"
 	  http_content_type = "application/json"
@@ -96,7 +98,7 @@ resource "auth0_log_stream" "my_log_stream" {
 	}
 }
 `
-const logStreamHTTPConfigUpdate = `
+const testAccLogStreamHTTPConfigUpdate = `
 resource "auth0_log_stream" "my_log_stream" {
 	name = "Acceptance-Test-LogStream-http-new-{{.random}}"
 	type = "http"
@@ -108,7 +110,7 @@ resource "auth0_log_stream" "my_log_stream" {
 	}
 }
 `
-const testAccLogStreamHttpConfigUpdate = `
+const testAccLogStreamHTTPConfigUpdateFormat = `
 resource "auth0_log_stream" "my_log_stream" {
 	name = "Acceptance-Test-LogStream-http-{{.random}}"
 	type = "http"

@@ -151,6 +151,14 @@ func (c Condition) Eval(d ResourceData, key string) bool {
 	return c(d, key)
 }
 
+// Not is a condition that evaluates to true if its child condition evaluates to
+// false. False otherwise.
+func Not(condition Condition) Condition {
+	return func(d ResourceData, key string) bool {
+		return !condition.Eval(d, key)
+	}
+}
+
 // IsNewResource is a condition that evaluates to true if the resource access is
 // new.
 func IsNewResource() Condition {
