@@ -120,6 +120,7 @@ resource "auth0_log_stream" "my_log_stream" {
 	}
 }
 `
+
 func TestAccLogStreamEventBridge(t *testing.T) {
 	rand := random.String(6)
 	resource.Test(t, resource.TestCase{
@@ -274,6 +275,15 @@ func TestAccLogStreamDatadog(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.datadog_api_key", "121233123455"),
 				),
 			},
+			{
+				Config: random.Template(logStreamDatadogConfigRemoveAndCreate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-datadog-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "datadog"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.datadog_region", "eu"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.datadog_api_key", "1212331234556667"),
+				),
+			},
 		},
 	})
 }
@@ -295,6 +305,16 @@ resource "auth0_log_stream" "my_log_stream" {
 	sink {
 	  datadog_region = "eu"
 	  datadog_api_key = "121233123455"
+	}
+}
+`
+const logStreamDatadogConfigRemoveAndCreate = `
+resource "auth0_log_stream" "my_log_stream" {
+	name = "Acceptance-Test-LogStream-datadog-{{.random}}"
+	type = "datadog"
+	sink {
+	  datadog_region = "eu"
+	  datadog_api_key = "1212331234556667"
 	}
 }
 `
@@ -324,7 +344,7 @@ func TestAccLogStreamSplunk(t *testing.T) {
 					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-splunk-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "splunk"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.splunk_domain", "prod.splunk.com"),
-					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.splunk_token", "12a34ab5-c6d7-8901-23ef-456b7c89d0c1"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.splunk_token", "12a34ab5-c6d7-8901-23ef-456b7c89d0d1"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.splunk_port", "8088"),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.splunk_secure", "true"),
 				),
@@ -351,7 +371,7 @@ resource "auth0_log_stream" "my_log_stream" {
 	type = "splunk"
 	sink {
 	  splunk_domain = "prod.splunk.com"
-	  splunk_token = "12a34ab5-c6d7-8901-23ef-456b7c89d0c1"
+	  splunk_token = "12a34ab5-c6d7-8901-23ef-456b7c89d0d1"
 	  splunk_port = "8088"
 	  splunk_secure = "true"
 	}
