@@ -7,7 +7,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
-	"gopkg.in/auth0.v5"
 	"gopkg.in/auth0.v5/management"
 )
 
@@ -85,6 +84,7 @@ func newLogStream() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Sensitive:   true,
+							ForceNew:    true,
 							Description: "Name of the Partner Topic to be used with Azure, if the type is 'eventgrid'",
 						},
 						"http_content_format": {
@@ -124,7 +124,6 @@ func newLogStream() *schema.Resource {
 							Type:      schema.TypeString,
 							Optional:  true,
 							Sensitive: true,
-							ForceNew:  true,
 						},
 						"splunk_domain": {
 							Type:     schema.TypeString,
@@ -152,19 +151,19 @@ func newLogStream() *schema.Resource {
 }
 
 func createLogStream(d *schema.ResourceData, m interface{}) error {
-	c := expandLogStream(d)
+	ls := expandLogStream(d)
 	api := m.(*management.Management)
-	if err := api.LogStream.Create(c); err != nil {
+	if err := api.LogStream.Create(ls); err != nil {
 		return err
 	}
-	d.SetId(c.GetID())
+	d.SetId(ls.GetID())
 
 	// The Management API only allows updating a log stream's status. Therefore
 	// if the status field was present in the configuration, we perform an
 	// additional operation to modify it.
 	s := String(d, "status")
-	if s != nil && s != c.Status {
-		err := api.LogStream.Update(c.GetID(), &management.LogStream{Status: s})
+	if s != nil && s != ls.Status {
+		err := api.LogStream.Update(ls.GetID(), &management.LogStream{Status: s})
 		if err != nil {
 			return err
 		}
@@ -174,7 +173,7 @@ func createLogStream(d *schema.ResourceData, m interface{}) error {
 
 func readLogStream(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
-	c, err := api.LogStream.Read(d.Id())
+	ls, err := api.LogStream.Read(d.Id())
 	if err != nil {
 		if mErr, ok := err.(management.Error); ok {
 			if mErr.Status() == http.StatusNotFound {
@@ -185,18 +184,19 @@ func readLogStream(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	d.SetId(c.GetID())
-	d.Set("name", c.Name)
-	d.Set("status", c.Status)
-	d.Set("type", c.Type)
-	d.Set("sink", flattenLogStreamSink(d, c.Sink))
+	d.SetId(ls.GetID())
+	d.Set("name", ls.Name)
+	d.Set("status", ls.Status)
+	d.Set("type", ls.Type)
+	d.Set("sink", flattenLogStreamSink(d, ls.Sink))
 	return nil
 }
 
 func updateLogStream(d *schema.ResourceData, m interface{}) error {
-	c := expandLogStream(d)
+	ls := expandLogStream(d)
+
 	api := m.(*management.Management)
-	err := api.LogStream.Update(d.Id(), c)
+	err := api.LogStream.Update(d.Id(), ls)
 	if err != nil {
 		return err
 	}
@@ -281,9 +281,9 @@ func flattenLogStreamSinkSplunk(o *management.LogStreamSinkSplunk) interface{} {
 func expandLogStream(d ResourceData) *management.LogStream {
 
 	ls := &management.LogStream{
-		Name:   String(d, "name", IsNewResource()),
-		Type:   String(d, "type", IsNewResource()),
-		Status: String(d, "status"),
+		Name:   String(d, "name", HasChange()),
+		Type:   String(d, "type", HasChange()),
+		Status: String(d, "status", HasChange()),
 	}
 
 	s := d.Get("type").(string)
@@ -291,11 +291,15 @@ func expandLogStream(d ResourceData) *management.LogStream {
 	List(d, "sink").Elem(func(d ResourceData) {
 		switch s {
 		case management.LogStreamTypeAmazonEventBridge:
+			// LogStreamTypeAmazonEventBridge cannot be updated
 			if d.IsNewResource() {
 				ls.Sink = expandLogStreamSinkAmazonEventBridge(d)
 			}
 		case management.LogStreamTypeAzureEventGrid:
-			ls.Sink = expandLogStreamSinkAzureEventGrid(d)
+			// LogStreamTypeAzureEventGrid cannot be updated
+			if d.IsNewResource() {
+				ls.Sink = expandLogStreamSinkAzureEventGrid(d)
+			}
 		case management.LogStreamTypeHTTP:
 			ls.Sink = expandLogStreamSinkHTTP(d)
 		case management.LogStreamTypeDatadog:
