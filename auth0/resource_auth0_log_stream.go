@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -152,6 +153,8 @@ func newLogStream() *schema.Resource {
 
 func createLogStream(d *schema.ResourceData, m interface{}) error {
 	ls := expandLogStream(d)
+	fmt.Printf("CREATE: ---------------> %+v\n", ls)
+
 	api := m.(*management.Management)
 	if err := api.LogStream.Create(ls); err != nil {
 		return err
@@ -194,7 +197,7 @@ func readLogStream(d *schema.ResourceData, m interface{}) error {
 
 func updateLogStream(d *schema.ResourceData, m interface{}) error {
 	ls := expandLogStream(d)
-
+	fmt.Printf("UPDATE: ---------------> %+v\n", ls)
 	api := m.(*management.Management)
 	err := api.LogStream.Update(d.Id(), ls)
 	if err != nil {
@@ -283,7 +286,7 @@ func expandLogStream(d ResourceData) *management.LogStream {
 	ls := &management.LogStream{
 		Name:   String(d, "name", HasChange()),
 		Type:   String(d, "type", HasChange()),
-		Status: String(d, "status", HasChange()),
+		Status: String(d, "status", Not(IsNewResource())),
 	}
 
 	s := d.Get("type").(string)
