@@ -1,7 +1,6 @@
 package auth0
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -49,15 +48,17 @@ func newLogStream() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"aws_account_id": {
-							Type:      schema.TypeString,
-							Optional:  true,
-							Sensitive: true,
-							ForceNew:  true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							Sensitive:    true,
+							ForceNew:     true,
+							RequiredWith: []string{"sink.0.aws_region"},
 						},
 						"aws_region": {
-							Type:     schema.TypeString,
-							Optional: true,
-							ForceNew: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							ForceNew:     true,
+							RequiredWith: []string{"sink.0.aws_account_id"},
 						},
 						"aws_partner_event_source": {
 							Type:        schema.TypeString,
@@ -67,20 +68,23 @@ func newLogStream() *schema.Resource {
 							Description: "Name of the Partner Event Source to be used with AWS, if the type is 'eventbridge'",
 						},
 						"azure_subscription_id": {
-							Type:      schema.TypeString,
-							Optional:  true,
-							Sensitive: true,
-							ForceNew:  true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							Sensitive:    true,
+							ForceNew:     true,
+							RequiredWith: []string{"sink.0.azure_resource_group", "sink.0.azure_region"},
 						},
 						"azure_resource_group": {
-							Type:     schema.TypeString,
-							Optional: true,
-							ForceNew: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							ForceNew:     true,
+							RequiredWith: []string{"sink.0.azure_subscription_id", "sink.0.azure_region"},
 						},
 						"azure_region": {
-							Type:     schema.TypeString,
-							Optional: true,
-							ForceNew: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							ForceNew:     true,
+							RequiredWith: []string{"sink.0.azure_subscription_id", "sink.0.azure_resource_group"},
 						},
 						"azure_partner_topic": {
 							Type:        schema.TypeString,
@@ -90,26 +94,30 @@ func newLogStream() *schema.Resource {
 							Description: "Name of the Partner Topic to be used with Azure, if the type is 'eventgrid'",
 						},
 						"http_content_format": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "HTTP Content Format can be JSONLINES or JSONARRAY",
+							Type:         schema.TypeString,
+							Optional:     true,
+							RequiredWith: []string{"sink.0.http_endpoint", "sink.0.http_authorization", "sink.0.http_content_type"},
+							Description:  "HTTP Content Format can be JSONLINES or JSONARRAY",
 							ValidateFunc: validation.StringInSlice([]string{
 								"JSONLINES", "JSONARRAY"}, false),
 						},
 						"http_content_type": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "HTTP Content Type",
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "HTTP Content Type",
+							RequiredWith: []string{"sink.0.http_endpoint", "sink.0.http_authorization", "sink.0.http_content_format"},
 						},
 						"http_endpoint": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "HTTP endpoint",
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "HTTP endpoint",
+							RequiredWith: []string{"sink.0.http_content_format", "sink.0.http_authorization", "sink.0.http_content_type"},
 						},
 						"http_authorization": {
-							Type:      schema.TypeString,
-							Optional:  true,
-							Sensitive: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							Sensitive:    true,
+							RequiredWith: []string{"sink.0.http_content_format", "sink.0.http_endpoint", "sink.0.http_content_type"},
 						},
 						"http_custom_headers": {
 							Type:        schema.TypeSet,
@@ -120,32 +128,38 @@ func newLogStream() *schema.Resource {
 						},
 
 						"datadog_region": {
-							Type:      schema.TypeString,
-							Sensitive: true,
-							Optional:  true,
+							Type:         schema.TypeString,
+							Sensitive:    true,
+							Optional:     true,
+							RequiredWith: []string{"sink.0.datadog_api_key"},
 						},
 						"datadog_api_key": {
-							Type:      schema.TypeString,
-							Optional:  true,
-							Sensitive: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							Sensitive:    true,
+							RequiredWith: []string{"sink.0.datadog_region"},
 						},
 						"splunk_domain": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							RequiredWith: []string{"sink.0.splunk_token", "sink.0.splunk_port", "sink.0.splunk_secure"},
 						},
 						"splunk_token": {
-							Type:      schema.TypeString,
-							Optional:  true,
-							Sensitive: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							Sensitive:    true,
+							RequiredWith: []string{"sink.0.splunk_domain", "sink.0.splunk_port", "sink.0.splunk_secure"},
 						},
 						"splunk_port": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:         schema.TypeString,
+							Optional:     true,
+							RequiredWith: []string{"sink.0.splunk_domain", "sink.0.splunk_token", "sink.0.splunk_secure"},
 						},
 						"splunk_secure": {
 							Type:         schema.TypeBool,
 							Optional:     true,
-							RequiredWith: []string{"sink.splunk_domain"},
+							Default:      nil,
+							RequiredWith: []string{"sink.0.splunk_domain", "sink.0.splunk_port", "sink.0.splunk_token"},
 						},
 					},
 				},
@@ -156,7 +170,6 @@ func newLogStream() *schema.Resource {
 
 func createLogStream(d *schema.ResourceData, m interface{}) error {
 	ls := expandLogStream(d)
-	fmt.Printf("CREATE: ---------------> %+v\n", ls)
 
 	api := m.(*management.Management)
 	if err := api.LogStream.Create(ls); err != nil {
@@ -200,7 +213,7 @@ func readLogStream(d *schema.ResourceData, m interface{}) error {
 
 func updateLogStream(d *schema.ResourceData, m interface{}) error {
 	ls := expandLogStream(d)
-	fmt.Printf("UPDATE: ---------------> %+v\n", ls)
+
 	api := m.(*management.Management)
 	err := api.LogStream.Update(d.Id(), ls)
 	if err != nil {
