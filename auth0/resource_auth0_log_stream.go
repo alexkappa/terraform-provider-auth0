@@ -63,6 +63,7 @@ func newLogStream() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Sensitive:   true,
+							Optional:    true,
 							Description: "Name of the Partner Event Source to be used with AWS, if the type is 'eventbridge'",
 						},
 						"azure_subscription_id": {
@@ -85,12 +86,13 @@ func newLogStream() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Sensitive:   true,
-							ForceNew:    true,
+							Optional:    true,
 							Description: "Name of the Partner Topic to be used with Azure, if the type is 'eventgrid'",
 						},
 						"http_content_format": {
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "HTTP Content Format can be JSONLINES or JSONARRAY",
 							ValidateFunc: validation.StringInSlice([]string{
 								"JSONLINES", "JSONARRAY"}, false),
 						},
@@ -113,6 +115,7 @@ func newLogStream() *schema.Resource {
 							Type:        schema.TypeSet,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Optional:    true,
+							Default:     nil,
 							Description: "custom HTTP headers",
 						},
 
@@ -140,9 +143,9 @@ func newLogStream() *schema.Resource {
 							Optional: true,
 						},
 						"splunk_secure": {
-							Type:     schema.TypeBool,
-							Optional: true,
-							Default:  false,
+							Type:         schema.TypeBool,
+							Optional:     true,
+							RequiredWith: []string{"sink.splunk_domain"},
 						},
 					},
 				},
