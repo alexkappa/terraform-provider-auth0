@@ -300,8 +300,8 @@ func flattenLogStreamSinkSplunk(o *management.LogStreamSinkSplunk) interface{} {
 func expandLogStream(d ResourceData) *management.LogStream {
 
 	ls := &management.LogStream{
-		Name:   String(d, "name", HasChange()),
-		Type:   String(d, "type", HasChange()),
+		Name:   String(d, "name"),
+		Type:   String(d, "type", IsNewResource()),
 		Status: String(d, "status", Not(IsNewResource())),
 	}
 
