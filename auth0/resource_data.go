@@ -194,6 +194,14 @@ func All(conditions ...Condition) Condition {
 	}
 }
 
+// Not is a condition that evaluates to true if its child condition evaluates to
+// false. False otherwise.
+func Not(condition Condition) Condition {
+	return func(d ResourceData, key string) bool {
+		return !condition.Eval(d, key)
+	}
+}
+
 // String accesses the value held by key and type asserts it to a pointer to a
 // string.
 func String(d ResourceData, key string, conditions ...Condition) (s *string) {
