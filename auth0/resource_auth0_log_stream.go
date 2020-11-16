@@ -29,16 +29,24 @@ func newLogStream() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 				ValidateFunc: validation.StringInSlice([]string{
-					"eventbridge", "eventgrid", "http", "datadog", "splunk"}, true),
+					"eventbridge",
+					"eventgrid",
+					"http",
+					"datadog",
+					"splunk",
+				}, true),
 				ForceNew:    true,
-				Description: "Type of the LogStream, which indicates the Sink provider",
+				Description: "Type of the log stream, which indicates the sink provider",
 			},
 			"status": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
 				ValidateFunc: validation.StringInSlice([]string{
-					"active", "paused", "suspended"}, false),
+					"active",
+					"paused",
+					"suspended",
+				}, false),
 				Description: "Status of the LogStream",
 			},
 			"sink": {
@@ -50,7 +58,6 @@ func newLogStream() *schema.Resource {
 						"aws_account_id": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Sensitive:    true,
 							ForceNew:     true,
 							RequiredWith: []string{"sink.0.aws_region"},
 						},
@@ -63,14 +70,12 @@ func newLogStream() *schema.Resource {
 						"aws_partner_event_source": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Sensitive:   true,
 							Optional:    true,
 							Description: "Name of the Partner Event Source to be used with AWS, if the type is 'eventbridge'",
 						},
 						"azure_subscription_id": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							Sensitive:    true,
 							ForceNew:     true,
 							RequiredWith: []string{"sink.0.azure_resource_group", "sink.0.azure_region"},
 						},
@@ -89,7 +94,6 @@ func newLogStream() *schema.Resource {
 						"azure_partner_topic": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Sensitive:   true,
 							Optional:    true,
 							Description: "Name of the Partner Topic to be used with Azure, if the type is 'eventgrid'",
 						},
@@ -99,7 +103,9 @@ func newLogStream() *schema.Resource {
 							RequiredWith: []string{"sink.0.http_endpoint", "sink.0.http_authorization", "sink.0.http_content_type"},
 							Description:  "HTTP Content Format can be JSONLINES or JSONARRAY",
 							ValidateFunc: validation.StringInSlice([]string{
-								"JSONLINES", "JSONARRAY"}, false),
+								"JSONLINES",
+								"JSONARRAY",
+							}, false),
 						},
 						"http_content_type": {
 							Type:         schema.TypeString,
@@ -124,7 +130,7 @@ func newLogStream() *schema.Resource {
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Optional:    true,
 							Default:     nil,
-							Description: "custom HTTP headers",
+							Description: "Custom HTTP headers",
 						},
 
 						"datadog_region": {
@@ -187,6 +193,7 @@ func createLogStream(d *schema.ResourceData, m interface{}) error {
 			return err
 		}
 	}
+
 	return readLogStream(d, m)
 }
 
@@ -337,9 +344,8 @@ func expandLogStream(d ResourceData) *management.LogStream {
 
 func expandLogStreamSinkAmazonEventBridge(d ResourceData) *management.LogStreamSinkAmazonEventBridge {
 	o := &management.LogStreamSinkAmazonEventBridge{
-		AccountID:          String(d, "aws_account_id"),
-		Region:             String(d, "aws_region"),
-		PartnerEventSource: String(d, "aws_partner_event_source"),
+		AccountID: String(d, "aws_account_id"),
+		Region:    String(d, "aws_region"),
 	}
 	return o
 }
