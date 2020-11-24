@@ -81,8 +81,31 @@ var connectionSchema = map[string]*schema.Schema{
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"validation": {
-					Type:     schema.TypeMap,
-					Elem:     &schema.Schema{Type: schema.TypeString},
+					Type:     schema.TypeList,
+					MaxItems: 1,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"username": {
+								Optional: true,
+								Type:     schema.TypeList,
+								MaxItems: 1,
+								Elem: &schema.Resource{
+									Schema: map[string]*schema.Schema{
+										"min": {
+											Type:         schema.TypeInt,
+											Optional:     true,
+											ValidateFunc: validation.IntAtLeast(1),
+										},
+										"max": {
+											Type:         schema.TypeInt,
+											Optional:     true,
+											ValidateFunc: validation.IntAtLeast(1),
+										},
+									},
+								},
+							},
+						},
+					},
 					Optional: true,
 				},
 				"password_policy": {
@@ -580,6 +603,39 @@ func connectionSchemaUpgradeV0(state map[string]interface{}, meta interface{}) (
 		state["options"] = []interface{}{m}
 
 		log.Printf("[DEBUG] Schema upgrade: options.strategy_version has been migrated to %d", i)
+	}
+
+	return state, nil
+}
+
+func connectionSchemaUpgradeV1(state map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
+
+	o, ok := state["options"]
+	if !ok {
+		return state, nil
+	}
+
+	l, ok := o.([]interface{})
+	if ok && len(l) > 0 {
+
+		m := l[0].(map[string]interface{})
+
+		v, ok := m["validation"]
+		if !ok {
+			return state, nil
+		}
+
+		validation := v.(interface{})
+
+		m["validation"] = []map[string][]interface{}{
+			{
+				"username": []interface{}{validation},
+			},
+		}
+
+		state["options"] = []interface{}{m}
+
+		log.Print("[DEBUG] Schema upgrade: options.validation has been migrated to options.validation.user")
 	}
 
 	return state, nil
