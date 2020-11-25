@@ -24,7 +24,7 @@ func init() {
 			var page int
 			for {
 				l, err := api.Connection.List(
-					management.WithFields("id", "name"),
+					management.IncludeFields("id", "name"),
 					management.Page(page))
 				if err != nil {
 					return err
@@ -1116,7 +1116,7 @@ func TestConnectionInstanceStateUpgradeV1(t *testing.T) {
 			name: "Min and Max",
 			validation: map[string]string{
 				"min": "5",
-				"max": "5",
+				"max": "10",
 			},
 			validationExpected: []map[string][]interface{}{
 				{
@@ -1134,7 +1134,7 @@ func TestConnectionInstanceStateUpgradeV1(t *testing.T) {
 
 			state := map[string]interface{}{
 				"options": []interface{}{
-					map[string][]interface{}{"validation": {tt.validation}},
+					map[string]interface{}{"validation": tt.validation},
 				},
 			}
 
