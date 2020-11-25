@@ -328,6 +328,8 @@ github.com/sortlist/auth0-1 v0.0.0-20201113095627-ec3568e62375 h1:+uzBBb8lQvw0UH
 github.com/sortlist/auth0-1 v0.0.0-20201113095627-ec3568e62375/go.mod h1:jVm6ZyPgF3Y1XpY4SPMPQM9NtRl8o3o/e2OuezsX97E=
 github.com/sortlist/auth0-1 v0.0.0-20201113102532-e2b37d918c35 h1:FN9DFG9g14lCF5rY/xtsr1SpxVK8dfnfuhIGubTB1xE=
 github.com/sortlist/auth0-1 v0.0.0-20201113102532-e2b37d918c35/go.mod h1:jVm6ZyPgF3Y1XpY4SPMPQM9NtRl8o3o/e2OuezsX97E=
+github.com/sortlist/auth0-1 v0.0.0-20201125100601-156820b66f1b h1:aptcD8ZNEk13re18+r7GRSuegkPVMXtPgmHaKaxx//o=
+github.com/sortlist/auth0-1 v0.0.0-20201125100601-156820b66f1b/go.mod h1:jVm6ZyPgF3Y1XpY4SPMPQM9NtRl8o3o/e2OuezsX97E=
 github.com/spf13/afero v1.2.2 h1:5jhuqJyZCZf2JRofRvN/nIFgIWNzPa3/Vz8mYylgbWc=
 github.com/spf13/afero v1.2.2/go.mod h1:9ZxEEn6pIJ8Rxe320qSDBk6AsU0r9pR7Q4OcevTdifk=
 github.com/spf13/pflag v1.0.2/go.mod h1:DYY7MBk1bdzusC3SYhjObp+wFpr4gzcvqqNjLnInEg4=

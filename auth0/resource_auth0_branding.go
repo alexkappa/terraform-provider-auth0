@@ -116,23 +116,22 @@ func readBranding(d *schema.ResourceData, m interface{}) error {
 		}
 		return err
 	}
-
-	btul, err := api.Branding.ReadTemplateUniversalLogin()
-	if err != nil {
-		if mErr, ok := err.(management.Error); ok {
-			if mErr.Status() == http.StatusNotFound {
-				d.SetId("")
-				return nil
-			}
-		}
-		return err
-	}
-
 	d.Set("colors", flattenBrandingColors(b.Colors))
 	d.Set("favicon_url", b.FaviconURL)
 	d.Set("logo_url", b.LogoURL)
 	d.Set("font", flattenBrandingFont(b.Font))
-	d.Set("universal_login_templates", btul.Body)
+
+	btul, err := api.Branding.ReadTemplateUniversalLogin()
+	if err != nil {
+		mErr, ok := err.(management.Error)
+		if ok && mErr.Status() == http.StatusNotFound {
+			d.Set("universal_login_templates", nil)
+		} else {
+			return err
+		}
+	} else {
+		d.Set("universal_login_templates", btul.Body)
+	}
 
 	return nil
 }
