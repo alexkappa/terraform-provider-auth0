@@ -1,5 +1,9 @@
 ## 0.16.0
 
+FEATURES:
+
+* resource/auth0_log_stream: Support for LogStreams ([#270](https://github.com/alexkappa/terraform-provider-auth0/pull/270)).
+
 NOTES:
 
 * Upgrade to `gopkg.in/auth0.v5` (`v5.2.2`)
