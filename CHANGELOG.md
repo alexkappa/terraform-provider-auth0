@@ -1,3 +1,9 @@
+## 0.16.1
+
+BUG FIXES:
+
+* resource/auth0_connection: Fix `validation` field to correctly define a `min` and `max` `username` lengths ([#258](https://github.com/alexkappa/terraform-provider-auth0/pull/258)).
+
 ## 0.16.0
 
 FEATURES:
