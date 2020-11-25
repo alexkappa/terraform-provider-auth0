@@ -9,6 +9,12 @@ resource "auth0_connection" "my_connection" {
       enable = true
       size = 3
     }
+    validation = {
+      username = {
+        min = 5
+        max = 20
+      }
+    }
     brute_force_protection = true
     enabled_database_customization = true
     custom_scripts = {

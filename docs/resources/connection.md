@@ -60,7 +60,7 @@ Arguments accepted by this resource include:
 
 With the `auth0` connection strategy, `options` supports the following arguments:
 
-* `validation` - (Optional) A map defining the validation options.
+* `validation` - (Optional) Validation of the minimum and maximum values allowed for a user to have as username. For details, see [Validation](#validation).
 * `password_policy` - (Optional) Indicates level of password strength to enforce during authentication. A strong password policy will make it difficult, if not improbable, for someone to guess a password through either manual or automated means. Options include `none`, `low`, `fair`, `good`, `excellent`.
 * `password_history` - (Optional) Configuration settings for the password history that is maintained for each user to prevent the reuse of passwords. For details, see [Password History](#password-history).
 * `password_no_personal_info` - (Optional) Configuration settings for the password personal info check, which does not allow passwords that contain any part of the user's personal data, including user's name, username, nickname, user_metadata.name, user_metadata.first, user_metadata.last, user's email, or first part of the user's email. For details, see [Password No Personal Info](#password-no-personal-info).
@@ -74,6 +74,12 @@ With the `auth0` connection strategy, `options` supports the following arguments
 * `requires_username` - (Optional) Indicates whether or not the user is required to provide a username in addition to an email address.
 * `custom_scripts` - (Optional) Custom database action scripts. For more information, read [Custom Database Action Script Templates](https://auth0.com/docs/connections/database/custom-db/templates).
 * `configuration` - (Optional) A case-sensitive map of key value pairs used as configuration variables for the `custom_script`.
+
+#### Validation
+
+`validation` supports the following arguments:
+
+* `username` (Required) Specifies the `min` and `max` values of username length. `min` and `max` are integers.
 
 #### Password History
 
