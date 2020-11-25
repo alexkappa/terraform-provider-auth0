@@ -23,12 +23,17 @@ func newConnection() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema:        connectionSchema,
-		SchemaVersion: 1,
+		SchemaVersion: 2,
 		StateUpgraders: []schema.StateUpgrader{
 			{
 				Type:    connectionSchemaV0().CoreConfigSchema().ImpliedType(),
 				Upgrade: connectionSchemaUpgradeV0,
 				Version: 0,
+			},
+			{
+				Type:    connectionSchemaV1().CoreConfigSchema().ImpliedType(),
+				Upgrade: connectionSchemaUpgradeV1,
+				Version: 1,
 			},
 		},
 	}
@@ -567,6 +572,16 @@ func connectionSchemaV0() *schema.Resource {
 		Type:     schema.TypeString,
 		Optional: true,
 		Computed: true,
+	}
+	return &schema.Resource{Schema: s}
+}
+
+func connectionSchemaV1() *schema.Resource {
+	s := connectionSchema
+	s["validation"] = &schema.Schema{
+		Type:     schema.TypeMap,
+		Elem:     &schema.Schema{Type: schema.TypeString},
+		Optional: true,
 	}
 	return &schema.Resource{Schema: s}
 }

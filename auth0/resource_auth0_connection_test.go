@@ -1134,7 +1134,7 @@ func TestConnectionInstanceStateUpgradeV1(t *testing.T) {
 
 			state := map[string]interface{}{
 				"options": []interface{}{
-					map[string][]interface{}{"validation": []interface{}{tt.validation}},
+					map[string][]interface{}{"validation": {tt.validation}},
 				},
 			}
 
