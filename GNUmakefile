@@ -10,6 +10,7 @@ build: fmtcheck
 	@go install
 
 install: build
+	@mkdir -p ~/.terraform.d/plugins
 	@cp $(GOPATH)/bin/terraform-provider-auth0 ~/.terraform.d/plugins
 
 sweep:
