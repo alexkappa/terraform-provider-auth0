@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"log"
 	"strings"
 	"testing"
 
@@ -23,10 +24,12 @@ func init() {
 				return
 			}
 			for _, domain := range domains {
+				log.Printf("[DEBUG] ➝ %s", domain.GetDomain())
 				if strings.Contains(domain.GetDomain(), "auth.uat.alexkappa.com") {
 					if e := api.CustomDomain.Delete(domain.GetID()); e != nil {
 						multierror.Append(err, e)
 					}
+					log.Printf("[DEBUG] ✗ %s", domain.GetDomain())
 				}
 			}
 			return

@@ -24,11 +24,12 @@ func init() {
 				return err
 			}
 			for _, logstream := range l {
+				log.Printf("[DEBUG] ➝ %s", logstream.GetName())
 				if strings.Contains(logstream.GetName(), "Test") {
-					log.Printf("[DEBUG] Deleting logstream %v\n", logstream.GetName())
 					if e := api.LogStream.Delete(logstream.GetID()); e != nil {
 						multierror.Append(err, e)
 					}
+					log.Printf("[DEBUG] ✗ %v\n", logstream.GetName())
 				}
 			}
 			if err != nil {
