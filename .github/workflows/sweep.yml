@@ -1,0 +1,12 @@
+name: Sweep
+
+on:
+  schedule:
+  - cron: "0 0 * * *"
+
+jobs:
+  sweep:
+    name: Sweep
+    runs-on: ubuntu-latest
+    steps:
+    - run: make sweep
