@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"log"
 	"strings"
 	"testing"
 
@@ -19,28 +20,16 @@ func init() {
 			if err != nil {
 				return err
 			}
-			var page int
-			for {
-				l, err := api.ResourceServer.List(management.Page(page))
-				if err != nil {
-					return err
-				}
-				for _, rs := range l.ResourceServers {
-					if strings.Contains(rs.GetName(), "Acceptance Test") {
-						if e := api.ResourceServer.Delete(rs.GetID()); e != nil {
-							multierror.Append(err, e)
-						}
+			fn := func(rs *management.ResourceServer) {
+				if strings.Contains(rs.GetName(), "Test") {
+					if e := api.ResourceServer.Delete(rs.GetID()); e != nil {
+						multierror.Append(err, e)
 					}
+					log.Printf("[DEBUG] ✗ %s", rs.GetName())
 				}
-				if err != nil {
-					return err
-				}
-				if !l.HasNext() {
-					break
-				}
-				page++
+				log.Printf("[DEBUG] ✓ %s", rs.GetName())
 			}
-			return nil
+			return api.ResourceServer.Stream(fn, management.IncludeFields("id", "name"))
 		},
 	})
 }
