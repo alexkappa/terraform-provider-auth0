@@ -1272,6 +1272,7 @@ func TestAccConnectionSAML(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-SAML-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "strategy", "samlp"),
+					random.TestCheckResourceAttr("auth0_connection.my_connection", "display_name", "Acceptance-Test-SAML-{{.random}}", rand),
 				),
 			},
 			{
@@ -1288,6 +1289,7 @@ func TestAccConnectionSAML(t *testing.T) {
 const testConnectionSAMLConfigCreate = `
 resource "auth0_connection" "my_connection" {
 	name = "Acceptance-Test-SAML-{{.random}}"
+	display_name = "Acceptance-Test-SAML-{{.random}}"
 	strategy = "samlp"
 	options {
 		signing_cert = <<EOF
@@ -1341,6 +1343,7 @@ EOF
 const testConnectionSAMLConfigUpdate = `
 resource "auth0_connection" "my_connection" {
 	name = "Acceptance-Test-SAML-{{.random}}"
+	display_name = "Acceptance-Test-SAML-{{.random}}"
 	strategy = "samlp"
 	options {
 		signing_cert = <<EOF

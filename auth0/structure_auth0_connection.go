@@ -265,6 +265,7 @@ func expandConnection(d ResourceData) *management.Connection {
 
 	c := &management.Connection{
 		Name:               String(d, "name", IsNewResource()),
+		DisplayName:        String(d, "display_name"),
 		Strategy:           String(d, "strategy", IsNewResource()),
 		IsDomainConnection: Bool(d, "is_domain_connection"),
 		EnabledClients:     Set(d, "enabled_clients").List(),
