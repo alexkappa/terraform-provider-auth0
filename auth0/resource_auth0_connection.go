@@ -708,7 +708,7 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 
 	d.SetId(auth0.StringValue(c.ID))
 	d.Set("name", c.Name)
-	d.Set("display_name", c.Name)
+	d.Set("display_name", c.DisplayName)
 	d.Set("is_domain_connection", c.IsDomainConnection)
 	d.Set("strategy", c.Strategy)
 	d.Set("options", flattenConnectionOptions(d, c.Options))
