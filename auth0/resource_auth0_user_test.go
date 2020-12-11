@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"log"
 	"regexp"
 	"testing"
 
@@ -29,6 +30,7 @@ func init() {
 					return err
 				}
 				for _, user := range l.Users {
+					log.Printf("[DEBUG] ✗ %s", user.GetName())
 					if e := api.User.Delete(user.GetID()); e != nil {
 						multierror.Append(err, e)
 					}

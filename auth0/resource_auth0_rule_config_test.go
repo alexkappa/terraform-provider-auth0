@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"log"
 	"strings"
 	"testing"
 
@@ -23,10 +24,12 @@ func init() {
 				return err
 			}
 			for _, c := range configurations {
-				if strings.Contains(c.GetKey(), "acc_test") {
+				log.Printf("[DEBUG] ➝ %s", c.GetKey())
+				if strings.Contains(c.GetKey(), "test") {
 					if e := api.RuleConfig.Delete(c.GetKey()); e != nil {
 						multierror.Append(err, e)
 					}
+					log.Printf("[DEBUG] ✗ %s", c.GetKey())
 				}
 			}
 			return err

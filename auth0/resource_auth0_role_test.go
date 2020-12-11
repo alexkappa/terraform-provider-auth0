@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"log"
 	"strings"
 	"testing"
 
@@ -26,10 +27,12 @@ func init() {
 					return err
 				}
 				for _, role := range l.Roles {
-					if strings.Contains(role.GetName(), "Acceptance Test") {
+					log.Printf("[DEBUG] ➝ %s", role.GetName())
+					if strings.Contains(role.GetName(), "Test") {
 						if e := api.Role.Delete(role.GetID()); e != nil {
 							multierror.Append(err, e)
 						}
+						log.Printf("[DEBUG] ✗ %s", role.GetName())
 					}
 				}
 				if err != nil {

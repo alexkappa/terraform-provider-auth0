@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"log"
 	"regexp"
 	"strings"
 	"testing"
@@ -28,11 +29,12 @@ func init() {
 					return err
 				}
 				for _, client := range l.Clients {
-					if strings.Contains(client.GetName(), "Acceptance Test") ||
-						strings.Contains(client.GetName(), "Test Client") {
+					log.Printf("[DEBUG] ➝ %s", client.GetName())
+					if strings.Contains(client.GetName(), "Test") {
 						if e := api.Client.Delete(client.GetClientID()); e != nil {
 							multierror.Append(err, e)
 						}
+						log.Printf("[DEBUG] ✗ %s", client.GetName())
 					}
 				}
 				if err != nil {
