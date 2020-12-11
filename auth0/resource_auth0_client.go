@@ -703,13 +703,13 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		List(d, "android").Elem(func(d ResourceData) {
 			m := make(map[string]interface{})
 			m["app_package_name"] = String(d, "app_package_name")
-			m["sha256_cert_fingerprints"] = String(d, "sha256_cert_fingerprints")
+			m["sha256_cert_fingerprints"] = Slice(d, "sha256_cert_fingerprints")
 		})
 
 		List(d, "ios").Elem(func(d ResourceData) {
 			m := make(map[string]interface{})
-			m["team_id"] = String(d, "app_package_name")
-			m["app_bundle_identifier"] = String(d, "sha256_cert_fingerprints")
+			m["team_id"] = String(d, "team_id")
+			m["app_bundle_identifier"] = String(d, "app_bundle_identifier")
 		})
 	})
 
