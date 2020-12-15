@@ -15,34 +15,12 @@ Sponsor
 Requirements
 ------------
 
--	[Terraform](https://www.terraform.io/downloads.html) `0.11.x` || `0.12.x`
--	[Go](https://golang.org/doc/install) 1.10 (to build the provider plugin)
+-	[Terraform](https://www.terraform.io/downloads.html) 0.12+
 
 Using the provider
 ------------------
 
-To install this provider, copy and paste this code into your Terraform configuration. Then, run `terraform init`.
-
-```
-provider "auth0" {
-  version = "> 0.8"
-}
-```
-
-To configure the provider with your personal client credentials, define the `domain`, `client_id` and `client_secret`.
-
-```
-provider "auth0" {
-  version = "> 0.8"
-  domain = "<domain>"
-  client_id = "<client-id>"
-  client_secret = "<client-secret>"
-}
-```
-
-These variables can also be accessed via the `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID` and `AUTH0_CLIENT_SECRET` environment variables respectively.
-
-Examples of resources can be found in the [examples directory](example/).
+See the [Auth0 Provider documentation](https://registry.terraform.io/providers/alexkappa/auth0/latest/docs) to get started using the provider.
 
 Building The Provider
 ---------------------
