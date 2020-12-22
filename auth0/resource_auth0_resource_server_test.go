@@ -21,13 +21,13 @@ func init() {
 				return err
 			}
 			fn := func(rs *management.ResourceServer) {
+				log.Printf("[DEBUG] ➝ %s", rs.GetName())
 				if strings.Contains(rs.GetName(), "Test") {
 					if e := api.ResourceServer.Delete(rs.GetID()); e != nil {
 						multierror.Append(err, e)
 					}
 					log.Printf("[DEBUG] ✗ %s", rs.GetName())
 				}
-				log.Printf("[DEBUG] ✓ %s", rs.GetName())
 			}
 			return api.ResourceServer.Stream(fn, management.IncludeFields("id", "name"))
 		},

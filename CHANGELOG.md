@@ -1,3 +1,9 @@
+## 0.17.0
+
+BUG FIXES:
+
+* resource/auth0_client: Fix handling of `mobile` attributes ([#305](https://github.com/alexkappa/terraform-provider-auth0/pull/305)).
+
 ## 0.16.1
 
 BUG FIXES:
