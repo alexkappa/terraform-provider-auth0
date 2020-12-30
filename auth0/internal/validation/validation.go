@@ -32,7 +32,7 @@ func IsURLWithNoFragment(i interface{}, k string) (warnings []string, errors []e
 	}
 
 	if u.Fragment != "" {
-		errors = append(errors, fmt.Errorf("expected %q to have a url with an emtpy fragment. %s", k, v))
+		errors = append(errors, fmt.Errorf("expected %q to have a url with an empty fragment. %s", k, v))
 	}
 
 	return
