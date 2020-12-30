@@ -63,6 +63,8 @@ func TestIsNil(t *testing.T) {
 		(*float64)(nil),
 		(*struct{})(nil),
 		(*interface{})(nil),
+		(interface{})(nil),
+		([]interface{})(nil),
 	} {
 		if !isNil(v) {
 			t.Errorf("Expected isNil(%#v) to return true", v)

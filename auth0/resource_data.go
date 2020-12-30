@@ -129,8 +129,12 @@ func (md MapData) Set(key string, value interface{}) error {
 }
 
 func isNil(v interface{}) bool {
-	return v == nil || (reflect.ValueOf(v).Kind() == reflect.Ptr && reflect.ValueOf(v).IsNil())
-
+	rv := reflect.ValueOf(v)
+	switch rv.Kind() {
+	case reflect.Ptr, reflect.Slice, reflect.Map:
+		return rv.IsNil()
+	}
+	return v == nil
 }
 
 func isZero(v interface{}) bool {
