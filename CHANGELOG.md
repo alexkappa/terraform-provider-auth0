@@ -1,3 +1,15 @@
+## 0.17.2
+
+BUG FIXES:
+
+* resource/auth0_client: Improve handling of `mobile` attributes and introduce validation.
+
+NOTES:
+
+* Fixed a typo in `validation.IsURLWithNoFragment()` error message.
+
+## 0.17.1
+
 ## 0.17.0
 
 BUG FIXES:
