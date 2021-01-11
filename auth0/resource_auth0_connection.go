@@ -390,6 +390,23 @@ var connectionSchema = map[string]*schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
 				},
+				"mfa": {
+					Type:     schema.TypeList,
+					MaxItems: 1,
+					Optional: true,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"active": {
+								Type:     schema.TypeBool,
+								Optional: true,
+							},
+							"return_enroll_settings": {
+								Type:     schema.TypeBool,
+								Optional: true,
+							},
+						},
+					},
+				},
 
 				// apple options
 				"team_id": {
