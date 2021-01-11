@@ -32,6 +32,7 @@ func newHook() *schema.Resource {
 			"dependencies": {
 				Type:        schema.TypeMap,
 				Elem:        &schema.Schema{Type: schema.TypeString},
+				Required:    false,
 				Optional:    true,
 				Description: "Dependencies of this hook used by webtask server",
 			},
