@@ -19,8 +19,8 @@ Depending on the extensibility point, you can use Hooks with Database Connection
 resource "auth0_hook" "my_hook" {
   name = "My Pre User Registration Hook"
   script = <<EOF
-function (user, context, callback) { 
-  callback(null, { user }); 
+function (user, context, callback) {
+  callback(null, { user });
 }
 EOF
   trigger_id = "pre-user-registration"
@@ -39,4 +39,5 @@ The following arguments are supported:
 * `enabled` - (Optional) Whether the hook is enabled, or disabled
 * `name` - (Required) Name of this hook
 * `script` - (Required) Code to be executed when this hook runs
-* `trigger_id` - (Required) Execution stage of this rule. Can be credentials-exchange, pre-user-registration, post-user-registration, post-change-password, or send-phone-message* `dependencies` - (Optional) Dependencies of this hook used by webtask server
+* `trigger_id` - (Required) Execution stage of this rule. Can be credentials-exchange, pre-user-registration, post-user-registration, post-change-password, or send-phone-message
+* `dependencies` - (Optional) Dependencies of this hook used by webtask server
