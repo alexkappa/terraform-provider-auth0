@@ -32,7 +32,6 @@ func newHook() *schema.Resource {
 			"dependencies": {
 				Type:        schema.TypeMap,
 				Elem:        schema.TypeString,
-				Required:    false,
 				Optional:    true,
 				Description: "Dependencies of this hook used by webtask server",
 			},
@@ -123,14 +122,19 @@ func deleteHook(d *schema.ResourceData, m interface{}) error {
 }
 
 func buildHook(d *schema.ResourceData) *management.Hook {
-	deps := Map(d, "dependencies")
-	return &management.Hook{
-		Name:         String(d, "name"),
-		Script:       String(d, "script"),
-		TriggerID:    String(d, "trigger_id", IsNewResource()),
-		Enabled:      Bool(d, "enabled"),
-		Dependencies: &deps,
+	h := &management.Hook{
+		Name:      String(d, "name"),
+		Script:    String(d, "script"),
+		TriggerID: String(d, "trigger_id", IsNewResource()),
+		Enabled:   Bool(d, "enabled"),
 	}
+
+	deps := Map(d, "dependencies")
+	if deps != nil {
+		h.Dependencies = &deps
+	}
+
+	return h
 }
 
 func validateHookNameFunc() schema.SchemaValidateFunc {
