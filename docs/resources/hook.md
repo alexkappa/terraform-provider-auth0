@@ -25,6 +25,10 @@ function (user, context, callback) {
 EOF
   trigger_id = "pre-user-registration"
   enabled = true
+
+  dependencies = {
+    auth0 = "2.30.0"
+  }
 }
 ```
 
@@ -35,4 +39,4 @@ The following arguments are supported:
 * `enabled` - (Optional) Whether the hook is enabled, or disabled
 * `name` - (Required) Name of this hook
 * `script` - (Required) Code to be executed when this hook runs
-* `trigger_id` - (Required) Execution stage of this rule. Can be credentials-exchange, pre-user-registration, post-user-registration, post-change-password, or send-phone-message
+* `trigger_id` - (Required) Execution stage of this rule. Can be credentials-exchange, pre-user-registration, post-user-registration, post-change-password, or send-phone-message* `dependencies` - (Optional) Dependencies of this hook used by webtask server
