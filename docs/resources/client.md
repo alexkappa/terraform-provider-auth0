@@ -34,6 +34,15 @@ resource "auth0_client" "my_client" {
       foo = "bar"
     }
   }
+  refresh_token {
+    rotation_type = "rotating"
+    expiration_type = "expiring"
+    leeway = 15
+    token_lifetime = 84600
+    infinite_idle_token_lifetime = true
+    infinite_token_lifetime      = false
+    idle_token_lifetime          = 1296000
+  }
   client_metadata = {
     foo = "zoo"
   }
@@ -87,10 +96,11 @@ Arguments accepted by this resource include:
 * `allowed_origins` - (Optional) List(String). URLs that represent valid origins for cross-origin resource sharing. By default, all your callback URLs will be allowed.
 * `web_origins` - (Optional) List(String). URLs that represent valid web origins for use with web message response mode.
 * `jwt_configuration` - (Optional) List(Resource). Configuration settings for the JWTs issued for this client. For details, see [JWT Configuration](#jwt-configuration).
+* `refresh_token` - (Optional) List(Resource). Configuration settings for the refresh tokens issued for this client.  For details, see [Refresh Token Configuration](#refresh-token-configuration).
 * `encryption_key` - (Optional) Map(String).
 * `sso` - (Optional) Boolean. Indicates whether or not the client should use Auth0 rather than the IdP to perform Single Sign-On (SSO). True = Use Auth0.
 * `sso_disabled` - (Optional) Boolean. Indicates whether or not SSO is disabled.
-* `cross_origin_auth` - (Optional) Boolean. Indicates whether or not the client can be used to make cross-origin authentication requests. 
+* `cross_origin_auth` - (Optional) Boolean. Indicates whether or not the client can be used to make cross-origin authentication requests.
 * `cross_origin_loc` - (Optional) String. URL for the location on your site where the cross-origin verification takes place for the cross-origin auth flow. Used when performing auth in your own domain instead of through the Auth0-hosted login page.
 * `custom_login_page_on` - (Optional) Boolean. Indicates whether or not a custom login page is to be used.
 * `custom_login_page` - (Optional) String. Content of the custom login page.
@@ -109,6 +119,18 @@ Arguments accepted by this resource include:
 * `secret_encoded` - (Optional) Boolean. Indicates whether or not the client secret is base64 encoded.
 * `scopes` - (Optional) Map(String). Permissions (scopes) included in JWTs.
 * `alg` - (Optional) String. Algorithm used to sign JWTs.
+
+### Refresh Token Configuration
+
+`refresh_token` configuration supports the following arguments:
+
+* `rotation_type` - (Optional) String. Options include `rotating`, `non-rotating`. When `rotating`, exchanging a refresh token will cause a new refresh token to be issued and the existing token will be invalidated. This allows for automatic detection of token reuse if the token is leaked.
+* `leeway` - (Optional) Integer. The amount of time in seconds in which a refresh token may be reused without trigging reuse detection.
+* `expiration_type` - (Optional unless `rotation_type` is `rotating`) String. Options include `expiring`, `non-expiring`. Whether a refresh token will expire based on an absolute lifetime, after which the token can no longer be used. If rotation is `rotating`, this must be set to `expiring`.
+* `token_lifetime` - (Optional) Integer. The absolute lifetime of a refresh token in seconds.
+* `infinite_idle_token_lifetime` - (Optional) Boolean, (Default=false) Whether or not inactive refresh tokens should be remain valid indefinitely.
+* `infinite_token_lifetime` - (Optional) Boolean, (Default=false) Whether or not refresh tokens should remain valid indefinitely. If false, `token_lifetime` should also be set
+* `idle_token_lifetime` - (Optional) Integer. The time in seconds after which inactive refresh tokens will expire.
 
 ### Add-ons
 
