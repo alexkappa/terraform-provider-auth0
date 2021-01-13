@@ -20,6 +20,7 @@ func newClient() *schema.Resource {
 		Read:   readClient,
 		Update: updateClient,
 		Delete: deleteClient,
+
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
