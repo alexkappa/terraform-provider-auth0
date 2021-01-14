@@ -427,6 +427,19 @@ var connectionSchema = map[string]*schema.Schema{
 					Elem:     &schema.Schema{Type: schema.TypeString},
 				},
 
+				// Line options
+				"channel_id": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "",
+				},
+				"channel_secret": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Sensitive:   true,
+					Description: "",
+				},
+
 				// OIDC options
 				"type": {
 					Type:        schema.TypeString,
