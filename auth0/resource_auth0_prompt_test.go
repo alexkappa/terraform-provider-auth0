@@ -17,13 +17,15 @@ func TestAccPrompt(t *testing.T) {
 			{
 				Config: testAccPromptCreate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_prompt.prompt", "universal_login_experience", "new"),
+					resource.TestCheckResourceAttr("auth0_prompt.prompt", "universal_login_experience", "classic"),
+					resource.TestCheckResourceAttr("auth0_prompt.prompt", "identifier_first", "false"),
 				),
 			},
 			{
 				Config: testAccPromptUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_prompt.prompt", "universal_login_experience", "classic"),
+					resource.TestCheckResourceAttr("auth0_prompt.prompt", "universal_login_experience", "new"),
+					resource.TestCheckResourceAttr("auth0_prompt.prompt", "identifier_first", "true"),
 				),
 			},
 		},
@@ -33,13 +35,14 @@ func TestAccPrompt(t *testing.T) {
 const testAccPromptCreate = `
 
 resource "auth0_prompt" "prompt" {
-  universal_login_experience = "new"
+  universal_login_experience = "classic"
 }
 `
 
 const testAccPromptUpdate = `
 
 resource "auth0_prompt" "prompt" {
-  universal_login_experience = "classic"
+  universal_login_experience = "new"
+  identifier_first = true
 }
 `
