@@ -22,6 +22,22 @@ resource/auth0_email_template:
   - '**/*email_template.go'
   - '**/*email_template_test.go'
 
+resource/auth0_global_client:
+  - '**/*global_client.go'
+  - '**/*global_client_test.go'
+
+resource/auth0_hook:
+  - '**/*hook.go'
+  - '**/*hook_test.go'
+
+resource/auth0_log_stream:
+  - '**/*log_stream.go'
+  - '**/*log_stream_test.go'
+
+resource/auth0_prompt:
+  - '**/*prompt.go'
+  - '**/*prompt_test.go'
+
 resource/auth0_resource_server:
   - '**/*resource_server.go'
   - '**/*resource_server_test.go'
@@ -41,6 +57,10 @@ resource/auth0_rule_config:
 resource/auth0_tenant:
   - '**/*tenant.go'
   - '**/*tenant_test.go'
+
+resource/auth0_user:
+  - '**/*user.go'
+  - '**/*user_test.go'
 
 resource_data:
   - '**/resource_data.go'
