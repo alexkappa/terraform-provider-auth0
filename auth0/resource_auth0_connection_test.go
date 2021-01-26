@@ -88,6 +88,7 @@ func TestAccConnection(t *testing.T) {
 				Config: random.Template(testAccConnectionConfigUpdate, rand),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.brute_force_protection", "false"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.mfa.0.return_enroll_settings", "false"),
 				),
 			},
 		},
@@ -133,10 +134,10 @@ resource "auth0_connection" "my_connection" {
 		configuration = {
 			foo = "bar"
 		}
-	  mfa {
-      active                 = true
-      return_enroll_settings = true
-    }
+		mfa {
+			active                 = true
+			return_enroll_settings = true
+		}
 	}
 }
 `
@@ -169,7 +170,7 @@ resource "auth0_connection" "my_connection" {
 		}
 		mfa {
 			active                 = true
-			return_enroll_settings = true
+			return_enroll_settings = false
 		}
 	}
 }
