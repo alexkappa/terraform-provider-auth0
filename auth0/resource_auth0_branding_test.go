@@ -21,7 +21,7 @@ func TestAccBranding(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_branding.my_branding", "font.0.url", "https://mycompany.org/font.ttf"),
 					resource.TestCheckResourceAttr("auth0_branding.my_branding", "colors.0.primary", "#ffffff"),
 					resource.TestCheckResourceAttr("auth0_branding.my_branding", "colors.0.page_background", "#000000"),
-					resource.TestCheckResourceAttr("auth0_branding.my_branding", "universal_login_templates.body", "<!DOCTYPE html><html><head>{%- auth0:head -%}</head><body>{%- auth0:widget -%}</body></html>"),
+					resource.TestCheckResourceAttr("auth0_branding.my_branding", "universal_login.0.body", "<!DOCTYPE html><html><head>{%- auth0:head -%}</head><body>{%- auth0:widget -%}</body></html>"),
 				),
 			},
 			{
@@ -52,7 +52,7 @@ resource "auth0_branding" "my_branding" {
 		page_background = "#000000"
 	}
 
-	universal_login_templates {
+	universal_login {
 		body = "<!DOCTYPE html><html><head>{%- auth0:head -%}</head><body>{%- auth0:widget -%}</body></html>"
 	}
 }

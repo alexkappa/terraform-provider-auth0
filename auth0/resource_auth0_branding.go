@@ -81,7 +81,7 @@ func newBranding() *schema.Resource {
 					},
 				},
 			},
-			"universal_login_templates": {
+			"universal_login": {
 				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 1,
@@ -125,12 +125,12 @@ func readBranding(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		mErr, ok := err.(management.Error)
 		if ok && mErr.Status() == http.StatusNotFound {
-			d.Set("universal_login_templates", nil)
+			d.Set("universal_login", nil)
 		} else {
 			return err
 		}
 	} else {
-		d.Set("universal_login_templates", btul.Body)
+		d.Set("universal_login", btul.Body)
 	}
 
 	return nil
@@ -173,7 +173,7 @@ func buildBranding(d *schema.ResourceData) (*management.Branding, *management.Br
 		Font:       expandBrandingFont(d),
 	}
 	btul := &management.BrandingUniversalLogin{
-		Body: String(newResourceDataAtKey("universal_login_templates", d), "body"),
+		Body: String(newResourceDataAtKey("universal_login", d), "body"),
 	}
 
 	return b, btul
