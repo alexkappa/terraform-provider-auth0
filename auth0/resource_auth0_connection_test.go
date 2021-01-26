@@ -79,6 +79,8 @@ func TestAccConnection(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.validation.0.username.0.min", "10"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.validation.0.username.0.max", "40"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.custom_scripts.get_user", "myFunction"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.mfa.0.active", "true"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.mfa.0.return_enroll_settings", "true"),
 					resource.TestCheckResourceAttrSet("auth0_connection.my_connection", "options.0.configuration.foo"),
 				),
 			},
@@ -86,6 +88,7 @@ func TestAccConnection(t *testing.T) {
 				Config: random.Template(testAccConnectionConfigUpdate, rand),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.brute_force_protection", "false"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.mfa.0.return_enroll_settings", "false"),
 				),
 			},
 		},
@@ -131,6 +134,10 @@ resource "auth0_connection" "my_connection" {
 		configuration = {
 			foo = "bar"
 		}
+		mfa {
+			active                 = true
+			return_enroll_settings = true
+		}
 	}
 }
 `
@@ -160,6 +167,10 @@ resource "auth0_connection" "my_connection" {
 		}
 		configuration = {
 			foo = "bar"
+		}
+		mfa {
+			active                 = true
+			return_enroll_settings = false
 		}
 	}
 }

@@ -74,6 +74,8 @@ With the `auth0` connection strategy, `options` supports the following arguments
 * `requires_username` - (Optional) Indicates whether or not the user is required to provide a username in addition to an email address.
 * `custom_scripts` - (Optional) Custom database action scripts. For more information, read [Custom Database Action Script Templates](https://auth0.com/docs/connections/database/custom-db/templates).
 * `configuration` - (Optional) A case-sensitive map of key value pairs used as configuration variables for the `custom_script`.
+* `mfa` - (Optional) Configuration settings Options for multifactor authentication. For details, see [MFA Options](#mfa-options).
+
 
 #### Validation
 
@@ -105,7 +107,14 @@ With the `auth0` connection strategy, `options` supports the following arguments
 
 `password_complexity_options` supports the following arguments:
 
-* `min_length`- (Optional) Minimum number of characters allowed in passwords.
+* `min_length` - (Optional) Minimum number of characters allowed in passwords.
+
+#### MFA Options
+
+`mfa` supports the following arguments:
+
+* `active` - (Optional) Indicates whether multifactor authentication is enabled for this connection.
+* `return_enroll_settings` - (Optional) Indicates whether multifactor authentication enrollment settings will be returned.
 
 ### Google OAuth2
 

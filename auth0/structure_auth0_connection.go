@@ -70,6 +70,7 @@ func flattenConnectionOptionsAuth0(d ResourceData, o *management.ConnectionOptio
 		"disable_signup":                 o.GetDisableSignup(),
 		"requires_username":              o.GetRequiresUsername(),
 		"custom_scripts":                 o.CustomScripts,
+		"mfa":                            o.MFA,
 		"configuration":                  Map(d, "configuration"), // does not get read back
 	}
 }
@@ -343,6 +344,12 @@ func expandConnectionOptionsAuth0(d ResourceData) *management.ConnectionOptions 
 	List(d, "password_complexity_options").Elem(func(d ResourceData) {
 		o.PasswordComplexityOptions = make(map[string]interface{})
 		o.PasswordComplexityOptions["min_length"] = Int(d, "min_length")
+	})
+
+	List(d, "mfa").Elem(func(d ResourceData) {
+		o.MFA = make(map[string]interface{})
+		o.MFA["active"] = Bool(d, "active")
+		o.MFA["return_enroll_settings"] = Bool(d, "return_enroll_settings")
 	})
 
 	o.EnabledDatabaseCustomization = Bool(d, "enabled_database_customization")
