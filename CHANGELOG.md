@@ -1,3 +1,27 @@
+## 0.17.2
+
+BUG FIXES:
+
+* resource/auth0_client: Improve handling of `mobile` attributes and introduce validation.
+
+NOTES:
+
+* Fixed a typo in `validation.IsURLWithNoFragment()` error message.
+
+## 0.17.1
+
+## 0.17.0
+
+BUG FIXES:
+
+* resource/auth0_client: Fix handling of `mobile` attributes ([#305](https://github.com/alexkappa/terraform-provider-auth0/pull/305)).
+
+## 0.16.1
+
+BUG FIXES:
+
+* resource/auth0_connection: Fix `validation` field to correctly define a `min` and `max` `username` lengths ([#258](https://github.com/alexkappa/terraform-provider-auth0/pull/258)).
+
 ## 0.16.0
 
 FEATURES:

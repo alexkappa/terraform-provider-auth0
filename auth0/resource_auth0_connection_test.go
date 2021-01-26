@@ -24,19 +24,21 @@ func init() {
 			var page int
 			for {
 				l, err := api.Connection.List(
-					management.WithFields("id", "name"),
+					management.IncludeFields("id", "name"),
 					management.Page(page))
 				if err != nil {
 					return err
 				}
 				for _, connection := range l.Connections {
+					log.Printf("[DEBUG] ➝ %s", connection.GetName())
 					if strings.Contains(connection.GetName(), "Test") {
-						log.Printf("[DEBUG] Deleting connection %v\n", connection.GetName())
 						if e := api.Connection.Delete(connection.GetID()); e != nil {
 							multierror.Append(err, e)
 						}
+						log.Printf("[DEBUG] ✗ %s", connection.GetName())
 					}
 				}
+
 				if err != nil {
 					return err
 				}
@@ -74,6 +76,8 @@ func TestAccConnection(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.import_mode", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.disable_signup", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.requires_username", "true"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.validation.0.username.0.min", "10"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.validation.0.username.0.max", "40"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.custom_scripts.get_user", "myFunction"),
 					resource.TestCheckResourceAttrSet("auth0_connection.my_connection", "options.0.configuration.foo"),
 				),
@@ -110,11 +114,17 @@ resource "auth0_connection" "my_connection" {
 		password_complexity_options {
 			min_length = 6
 		}
+		validation {
+			username {
+				min = 10
+				max = 40
+			}
+		}
 		enabled_database_customization = false
 		brute_force_protection = true
 		import_mode = false
-		disable_signup = false
 		requires_username = true
+		disable_signup = false
 		custom_scripts = {
 			get_user = "myFunction"
 		}
@@ -1072,6 +1082,72 @@ func TestConnectionInstanceStateUpgradeV0(t *testing.T) {
 			expected := map[string]interface{}{
 				"options": []interface{}{
 					map[string]interface{}{"strategy_version": tt.versionExpected},
+				},
+			}
+
+			if !reflect.DeepEqual(expected, actual) {
+				t.Fatalf("\n\nexpected:\n\n%#v\n\ngot:\n\n%#v\n\n", expected, actual)
+			}
+		})
+	}
+}
+
+func TestConnectionInstanceStateUpgradeV1(t *testing.T) {
+
+	for _, tt := range []struct {
+		name               string
+		validation         map[string]string
+		validationExpected []map[string][]interface{}
+	}{
+		{
+			name: "Only Min",
+			validation: map[string]string{
+				"min": "5",
+			},
+			validationExpected: []map[string][]interface{}{
+				{
+					"username": []interface{}{
+						map[string]string{
+							"min": "5",
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "Min and Max",
+			validation: map[string]string{
+				"min": "5",
+				"max": "10",
+			},
+			validationExpected: []map[string][]interface{}{
+				{
+					"username": []interface{}{
+						map[string]string{
+							"min": "5",
+							"max": "10",
+						},
+					},
+				},
+			},
+		},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+
+			state := map[string]interface{}{
+				"options": []interface{}{
+					map[string]interface{}{"validation": tt.validation},
+				},
+			}
+
+			actual, err := connectionSchemaUpgradeV1(state, nil)
+			if err != nil {
+				t.Fatalf("error migrating state: %s", err)
+			}
+
+			expected := map[string]interface{}{
+				"options": []interface{}{
+					map[string]interface{}{"validation": tt.validationExpected},
 				},
 			}
 

@@ -20,6 +20,7 @@ func newClient() *schema.Resource {
 		Read:   readClient,
 		Update: updateClient,
 		Delete: deleteClient,
+
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -427,11 +428,19 @@ func newClient() *schema.Resource {
 									"app_package_name": {
 										Type:     schema.TypeString,
 										Optional: true,
+										AtLeastOneOf: []string{
+											"mobile.0.android.0.app_package_name",
+											"mobile.0.android.0.sha256_cert_fingerprints",
+										},
 									},
 									"sha256_cert_fingerprints": {
 										Type:     schema.TypeList,
 										Optional: true,
 										Elem:     &schema.Schema{Type: schema.TypeString},
+										AtLeastOneOf: []string{
+											"mobile.0.android.0.app_package_name",
+											"mobile.0.android.0.sha256_cert_fingerprints",
+										},
 									},
 								},
 							},
@@ -445,10 +454,18 @@ func newClient() *schema.Resource {
 									"team_id": {
 										Type:     schema.TypeString,
 										Optional: true,
+										AtLeastOneOf: []string{
+											"mobile.0.ios.0.team_id",
+											"mobile.0.ios.0.app_bundle_identifier",
+										},
 									},
 									"app_bundle_identifier": {
 										Type:     schema.TypeString,
 										Optional: true,
+										AtLeastOneOf: []string{
+											"mobile.0.ios.0.team_id",
+											"mobile.0.ios.0.app_bundle_identifier",
+										},
 									},
 								},
 							},
@@ -701,15 +718,19 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		c.Mobile = make(map[string]interface{})
 
 		List(d, "android").Elem(func(d ResourceData) {
-			m := make(map[string]interface{})
-			m["app_package_name"] = String(d, "app_package_name")
-			m["sha256_cert_fingerprints"] = String(d, "sha256_cert_fingerprints")
+			m := make(MapData)
+			m.Set("app_package_name", String(d, "app_package_name"))
+			m.Set("sha256_cert_fingerprints", Slice(d, "sha256_cert_fingerprints"))
+
+			c.Mobile["android"] = m
 		})
 
 		List(d, "ios").Elem(func(d ResourceData) {
-			m := make(map[string]interface{})
-			m["team_id"] = String(d, "app_package_name")
-			m["app_bundle_identifier"] = String(d, "sha256_cert_fingerprints")
+			m := make(MapData)
+			m.Set("team_id", String(d, "team_id"))
+			m.Set("app_bundle_identifier", String(d, "app_bundle_identifier"))
+
+			c.Mobile["ios"] = m
 		})
 	})
 

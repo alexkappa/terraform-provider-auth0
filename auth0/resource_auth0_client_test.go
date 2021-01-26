@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"log"
 	"regexp"
 	"strings"
 	"testing"
@@ -28,11 +29,12 @@ func init() {
 					return err
 				}
 				for _, client := range l.Clients {
-					if strings.Contains(client.GetName(), "Acceptance Test") ||
-						strings.Contains(client.GetName(), "Test Client") {
+					log.Printf("[DEBUG] ➝ %s", client.GetName())
+					if strings.Contains(client.GetName(), "Test") {
 						if e := api.Client.Delete(client.GetClientID()); e != nil {
 							multierror.Append(err, e)
 						}
+						log.Printf("[DEBUG] ✗ %s", client.GetName())
 					}
 				}
 				if err != nil {
@@ -268,7 +270,7 @@ func TestAccClientInitiateLoginUri(t *testing.T) {
 			},
 			{
 				Config:      random.Template(testAccClientConfigInitiateLoginUriFragment, rand),
-				ExpectError: regexp.MustCompile("to have a url with an emtpy fragment"),
+				ExpectError: regexp.MustCompile("to have a url with an empty fragment"),
 			},
 		},
 	})
@@ -351,15 +353,87 @@ resource "auth0_client" "my_client" {
 }
 `
 
-const testAccClientConfigJwtScopesUpdateAgain = `
+func TestAccClientMobile(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccClientConfigMobile, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_client.my_client", "mobile.0.android.#", "1"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "mobile.0.android.0.app_package_name", "com.example"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "mobile.0.android.0.sha256_cert_fingerprints.#", "1"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "mobile.0.android.0.sha256_cert_fingerprints.0", "DE:AD:BE:EF"),
+				),
+			},
+			{
+				Config: random.Template(testAccClientConfigMobileUpdate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_client.my_client", "mobile.0.android.#", "1"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "mobile.0.android.0.app_package_name", "com.example"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "mobile.0.android.0.sha256_cert_fingerprints.#", "0"),
+				),
+			},
+		},
+	})
+}
+
+const testAccClientConfigMobile = `
 
 resource "auth0_client" "my_client" {
-  name = "Acceptance Test - JWT Scopes - {{.random}}"
-  jwt_configuration {
-    lifetime_in_seconds = 300
-    secret_encoded = true
-    alg = "RS256"
-    scopes = {} # leaving scopes empty will not update, known json behavior which triggers this bug
+  name = "Acceptance Test - Mobile - {{.random}}"
+  mobile {
+    android {
+      app_package_name = "com.example"
+      sha256_cert_fingerprints = ["DE:AD:BE:EF"]
+    }
+  }
+}
+`
+
+const testAccClientConfigMobileUpdate = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - Mobile - {{.random}}"
+  mobile {
+    android {
+      app_package_name = "com.example"
+      sha256_cert_fingerprints = []
+    }
+  }
+}
+`
+
+func TestAccClientMobileValidationError(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config:      random.Template(testAccClientConfigMobileUpdateError, rand),
+				ExpectError: regexp.MustCompile("config is invalid"),
+			},
+		},
+	})
+}
+
+const testAccClientConfigMobileUpdateError = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - Mobile - {{.random}}"
+  mobile {
+    android {
+      # nothing specified, should throw validation error
+    }
   }
 }
 `
