@@ -1,6 +1,6 @@
 name: Label
 
-on: [pull_request]
+on: [pull_request_target]
 
 jobs:
   label:
@@ -10,4 +10,4 @@ jobs:
     
     - uses: actions/labeler@v3
       with:
-        repo-token: "${{ secrets.LABELER_TOKEN }}"
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
