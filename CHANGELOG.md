@@ -1,3 +1,10 @@
+## 0.18.0
+
+FEATURES:
+
+* resource/auth0_connection: Add support for `mfa` options ([#313](https://github.com/alexkappa/terraform-provider-auth0/pull/313)).
+* resource/auth0_client: Add support for `idle_token_lifetime`, `infinite_idle_token_lifetime` and `infinite_token_lifetime` to `refresh_token` options ([#314](https://github.com/alexkappa/terraform-provider-auth0/pull/314)).
+
 ## 0.17.2
 
 BUG FIXES:
