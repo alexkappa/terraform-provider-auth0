@@ -121,7 +121,7 @@ func readBranding(d *schema.ResourceData, m interface{}) error {
 	d.Set("logo_url", b.LogoURL)
 	d.Set("font", flattenBrandingFont(b.Font))
 
-	btul, err := api.Branding.ReadTemplateUniversalLogin()
+	btul, err := api.Branding.UniversalLogin()
 	if err != nil {
 		mErr, ok := err.(management.Error)
 		if ok && mErr.Status() == http.StatusNotFound {
@@ -145,7 +145,7 @@ func updateBranding(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if btul.Body != nil {
-		err = api.Branding.UpdateTemplateUniversalLogin(btul)
+		err = api.Branding.SetUniversalLogin(btul)
 		if err != nil {
 			return err
 		}
@@ -155,18 +155,24 @@ func updateBranding(d *schema.ResourceData, m interface{}) error {
 }
 
 func deleteBranding(d *schema.ResourceData, m interface{}) error {
+	api := m.(*management.Management)
+	err := api.Branding.DeleteUniversalLogin()
+	if err != nil {
+		return err
+	}
+
 	d.SetId("")
 	return nil
 }
 
-func buildBranding(d *schema.ResourceData) (*management.Branding, *management.BrandingTemplateUniversalLogin) {
+func buildBranding(d *schema.ResourceData) (*management.Branding, *management.BrandingUniversalLogin) {
 	b := &management.Branding{
 		Colors:     expandBrandingColors(d),
 		FaviconURL: String(d, "favicon_url"),
 		LogoURL:    String(d, "logo_url"),
 		Font:       expandBrandingFont(d),
 	}
-	btul := &management.BrandingTemplateUniversalLogin{
+	btul := &management.BrandingUniversalLogin{
 		Body: String(newResourceDataAtKey("universal_login_templates", d), "body"),
 	}
 
