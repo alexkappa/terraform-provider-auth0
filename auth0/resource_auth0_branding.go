@@ -125,12 +125,12 @@ func readBranding(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		mErr, ok := err.(management.Error)
 		if ok && mErr.Status() == http.StatusNotFound {
-			d.Set("universal_login", nil)
+			d.Set("universal_login.0.body", nil)
 		} else {
 			return err
 		}
 	} else {
-		d.Set("universal_login", btul.Body)
+		d.Set("universal_login.0.body", btul.Body)
 	}
 
 	return nil
