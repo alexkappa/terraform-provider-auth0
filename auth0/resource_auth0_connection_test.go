@@ -76,6 +76,7 @@ func TestAccConnection(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.import_mode", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.disable_signup", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.requires_username", "true"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.set_user_root_attributes", "on_each_login"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.validation.0.username.0.min", "10"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.validation.0.username.0.max", "40"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.custom_scripts.get_user", "myFunction"),
@@ -89,6 +90,7 @@ func TestAccConnection(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.brute_force_protection", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.mfa.0.return_enroll_settings", "false"),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.set_user_root_attributes", "on_first_login"),
 				),
 			},
 		},
@@ -138,6 +140,7 @@ resource "auth0_connection" "my_connection" {
 			active                 = true
 			return_enroll_settings = true
 		}
+		set_user_root_attributes = "on_each_login"
 	}
 }
 `
@@ -172,6 +175,7 @@ resource "auth0_connection" "my_connection" {
 			active                 = true
 			return_enroll_settings = false
 		}
+		set_user_root_attributes = "on_first_login"
 	}
 }
 `
@@ -197,6 +201,7 @@ func TestAccConnectionAD(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.ips.2555711295", "192.168.1.1"),
 					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.domain_aliases.3506632655", "example.com"),
 					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.domain_aliases.3154807651", "api.example.com"),
+					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.set_user_root_attributes", "on_each_login"),
 				),
 			},
 		},
@@ -215,6 +220,7 @@ resource "auth0_connection" "ad" {
 			"api.example.com"
 		]
 		ips = [ "192.168.1.1", "192.168.1.2" ]
+		set_user_root_attributes = "on_each_login"
 	}
 }
 `
@@ -244,6 +250,7 @@ func TestAccConnectionAzureAD(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.scopes.370042894", "basic_profile"),
 					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.scopes.1268340351", "ext_profile"),
 					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.scopes.541325467", "ext_groups"),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.set_user_root_attributes", "on_each_login"),
 				),
 			},
 		},
@@ -273,6 +280,7 @@ resource "auth0_connection" "azure_ad" {
 			"ext_groups",
 			"ext_profile"
 		]
+		set_user_root_attributes = "on_each_login"
 	}
 }
 `
@@ -307,6 +315,7 @@ func TestAccConnectionOIDC(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.2517049750", "openid"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.4080487570", "profile"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.881205744", "email"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.set_user_root_attributes", "on_each_login"),
 				),
 			},
 			{
@@ -326,6 +335,7 @@ func TestAccConnectionOIDC(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.#", "2"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.2517049750", "openid"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.881205744", "email"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.set_user_root_attributes", "on_first_login"),
 				),
 			},
 		},
@@ -352,6 +362,7 @@ resource "auth0_connection" "oidc" {
 		userinfo_endpoint      = "https://api.login.yahoo.com/openid/v1/userinfo"
 		authorization_endpoint = "https://api.login.yahoo.com/oauth2/request_auth"
 		scopes = [ "openid", "email", "profile" ]
+		set_user_root_attributes = "on_each_login"
 	}
 }
 `
@@ -375,6 +386,7 @@ resource "auth0_connection" "oidc" {
 		userinfo_endpoint      = "https://api.paypal.com/v1/oauth2/token/userinfo"
 		authorization_endpoint = "https://www.paypal.com/signin/authorize"
 		scopes = [ "openid", "email" ]
+		set_user_root_attributes = "on_first_login"
 	}
 }
 `
@@ -402,6 +414,7 @@ func TestAccConnectionOAuth2(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.4080487570", "profile"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.881205744", "email"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scripts.fetchUserProfile", "function( { return callback(null) }"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.set_user_root_attributes", "on_each_login"),
 				),
 			},
 			{
@@ -415,6 +428,7 @@ func TestAccConnectionOAuth2(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.2517049750", "openid"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scopes.881205744", "email"),
 					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.scripts.fetchUserProfile", "function( { return callback(null) }"),
+					resource.TestCheckResourceAttr("auth0_connection.oauth2", "options.0.set_user_root_attributes", "on_first_login"),
 				),
 			},
 		},
@@ -433,6 +447,7 @@ resource "auth0_connection" "oauth2" {
 		token_endpoint         = "https://api.login.yahoo.com/oauth2/get_token"
 		authorization_endpoint = "https://api.login.yahoo.com/oauth2/request_auth"
 		scopes = [ "openid", "email", "profile" ]
+		set_user_root_attributes = "on_each_login"
 		scripts = {
 			fetchUserProfile= "function( { return callback(null) }"
 		}
@@ -452,6 +467,7 @@ resource "auth0_connection" "oauth2" {
 		token_endpoint         = "https://api.paypal.com/v1/oauth2/token"
 		authorization_endpoint = "https://www.paypal.com/signin/authorize"
 		scopes = [ "openid", "email" ]
+		set_user_root_attributes = "on_first_login"
 		scripts = {
 			fetchUserProfile= "function( { return callback(null) }"
 		}
@@ -711,6 +727,7 @@ func TestAccConnectionGoogleOAuth2(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.scopes.#", "4"),
 					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.scopes.881205744", "email"),
 					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.scopes.4080487570", "profile"),
+					resource.TestCheckResourceAttr("auth0_connection.google_oauth2", "options.0.set_user_root_attributes", "on_each_login"),
 				),
 			},
 		},
@@ -728,6 +745,7 @@ resource "auth0_connection" "google_oauth2" {
 		client_secret = ""
 		allowed_audiences = [ "example.com", "api.example.com" ]
 		scopes = [ "email", "profile", "gmail", "youtube" ]
+		set_user_root_attributes = "on_each_login"
 	}
 }
 `
@@ -817,6 +835,7 @@ func TestAccConnectionApple(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.#", "2"),
 					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.2318696674", "name"),
 					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.881205744", "email"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.set_user_root_attributes", "on_each_login"),
 				),
 			},
 			{
@@ -826,6 +845,7 @@ func TestAccConnectionApple(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.key_id", "key_id_update"),
 					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.#", "1"),
 					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.scopes.881205744", "email"),
+					resource.TestCheckResourceAttr("auth0_connection.apple", "options.0.set_user_root_attributes", "on_first_login"),
 				),
 			},
 		},
@@ -844,6 +864,7 @@ resource "auth0_connection" "apple" {
 		team_id = "team_id"
 		key_id = "key_id"
 		scopes = ["email", "name"]
+		set_user_root_attributes = "on_each_login"
 	}
 }
 `
@@ -860,6 +881,7 @@ resource "auth0_connection" "apple" {
 		team_id = "team_id_update"
 		key_id = "key_id_update"
 		scopes = ["email"]
+		set_user_root_attributes = "on_first_login"
 	}
 }
 `
