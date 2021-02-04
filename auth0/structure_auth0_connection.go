@@ -72,7 +72,6 @@ func flattenConnectionOptionsAuth0(d ResourceData, o *management.ConnectionOptio
 		"custom_scripts":                 o.CustomScripts,
 		"mfa":                            o.MFA,
 		"configuration":                  Map(d, "configuration"), // does not get read back
-		"set_user_root_attributes":       o.GetSetUserAttributes(),
 	}
 }
 
@@ -164,14 +163,15 @@ func flattenConnectionOptionsOIDC(o *management.ConnectionOptionsOIDC) interface
 		"tenant_domain":  o.GetTenantDomain(),
 		"domain_aliases": o.DomainAliases,
 
-		"type":                   o.GetType(),
-		"scopes":                 o.Scopes(),
-		"issuer":                 o.GetIssuer(),
-		"jwks_uri":               o.GetJWKSURI(),
-		"discovery_url":          o.GetDiscoveryURL(),
-		"token_endpoint":         o.GetTokenEndpoint(),
-		"userinfo_endpoint":      o.GetUserInfoEndpoint(),
-		"authorization_endpoint": o.GetAuthorizationEndpoint(),
+		"type":                     o.GetType(),
+		"scopes":                   o.Scopes(),
+		"issuer":                   o.GetIssuer(),
+		"jwks_uri":                 o.GetJWKSURI(),
+		"discovery_url":            o.GetDiscoveryURL(),
+		"token_endpoint":           o.GetTokenEndpoint(),
+		"userinfo_endpoint":        o.GetUserInfoEndpoint(),
+		"authorization_endpoint":   o.GetAuthorizationEndpoint(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
 	}
 }
 
@@ -321,8 +321,7 @@ func expandConnectionOptionsGitHub(d ResourceData) *management.ConnectionOptions
 func expandConnectionOptionsAuth0(d ResourceData) *management.ConnectionOptions {
 
 	o := &management.ConnectionOptions{
-		PasswordPolicy:    String(d, "password_policy"),
-		SetUserAttributes: String(d, "set_user_root_attributes"),
+		PasswordPolicy: String(d, "password_policy"),
 	}
 
 	List(d, "validation").Elem(func(d ResourceData) {
@@ -572,6 +571,7 @@ func expandConnectionOptionsOIDC(d ResourceData) *management.ConnectionOptionsOI
 		Type:                  String(d, "type"),
 		UserInfoEndpoint:      String(d, "userinfo_endpoint"),
 		TokenEndpoint:         String(d, "token_endpoint"),
+		SetUserAttributes:     String(d, "set_user_root_attributes"),
 	}
 
 	expandConnectionOptionsScopes(d, o)

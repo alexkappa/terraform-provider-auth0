@@ -361,7 +361,7 @@ resource "auth0_connection" "oidc" {
 		token_endpoint         = "https://api.login.yahoo.com/oauth2/get_token"
 		userinfo_endpoint      = "https://api.login.yahoo.com/openid/v1/userinfo"
 		authorization_endpoint = "https://api.login.yahoo.com/oauth2/request_auth"
-		scopes = [ "openid", "email", "profile" ]
+		scopes                 = [ "openid", "email", "profile" ]
 		set_user_root_attributes = "on_each_login"
 	}
 }
@@ -385,7 +385,7 @@ resource "auth0_connection" "oidc" {
 		token_endpoint         = "https://api.paypal.com/v1/oauth2/token"
 		userinfo_endpoint      = "https://api.paypal.com/v1/oauth2/token/userinfo"
 		authorization_endpoint = "https://www.paypal.com/signin/authorize"
-		scopes = [ "openid", "email" ]
+		scopes                 = [ "openid", "email" ]
 		set_user_root_attributes = "on_first_login"
 	}
 }
