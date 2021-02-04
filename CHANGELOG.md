@@ -1,3 +1,9 @@
+## 0.19.0
+
+ENHANCEMENTS:
+
+* resource/auth0_connection: Add `set_user_root_attributes` to more connections [#324](https://github.com/alexkappa/terraform-provider-auth0/pull/324)
+
 ## 0.18.0
 
 FEATURES:
