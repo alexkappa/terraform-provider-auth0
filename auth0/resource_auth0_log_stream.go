@@ -169,9 +169,9 @@ func newLogStream() *schema.Resource {
 							RequiredWith: []string{"sink.0.splunk_domain", "sink.0.splunk_port", "sink.0.splunk_token"},
 						},
 						"sumo_source_address": {
-							Type:         schema.TypeString,
-							Optional:     true,
-							Default:      nil,
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  nil,
 						},
 					},
 				},
