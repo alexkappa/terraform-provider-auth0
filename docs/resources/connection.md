@@ -123,8 +123,8 @@ With the `auth0` connection strategy, `options` supports the following arguments
 
 With the `google-oauth2` connection strategy, `options` supports the following arguments:
 
-* `client_id` - (Optional) Facebook client ID.
-* `client_secret` - (Optional) Facebook client secret.
+* `client_id` - (Optional) Google client ID.
+* `client_secret` - (Optional) Google client secret.
 * `allowed_audiences` - (Optional) List of allowed audiences.
 * `scopes` - (Optional) Scopes.
 * `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
