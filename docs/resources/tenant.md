@@ -66,6 +66,7 @@ Arguments accepted by this resource include:
 * `session_lifetime` - (Optional) Integer. Number of hours during which a session will stay valid.
 * `sandbox_version` - (Optional) String. Selected sandbox version for the extensibility environment, which allows you to use custom scripts to extend parts of Auth0's functionality.
 * `idle_session_lifetime` - (Optional) Integer. Number of hours during which a session can be inactive before the user must log in again.
+* `enabled_locales`- (Optional) List(String). Supported locales for the user interface. The first locale in the list will be used to set the default locale.
 * `flags` - (Optional) List(Resource). Configuration settings for tenant flags. For details, see [Flags](#flags).
 * `universal_login` - (Optional) List(Resource). Configuration settings for Universal Login. For details, see [Universal Login](#universal-login).
 
