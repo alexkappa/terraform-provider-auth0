@@ -92,20 +92,20 @@ func expandTenantErrorPage(d ResourceData) (errorPage *management.TenantErrorPag
 	return
 }
 
-func expandTenantFlags(d ResourceData) (flags *management.TenantFlags) {
+func expandTenantFlags(d ResourceData, conditions ...Condition) (flags *management.TenantFlags) {
 	List(d, "flags").Elem(func(d ResourceData) {
 		flags = &management.TenantFlags{
-			ChangePasswordFlowV1:              Bool(d, "change_pwd_flow_v1"),
-			EnableClientConnections:           Bool(d, "enable_client_connections"),
-			EnableAPIsSection:                 Bool(d, "enable_apis_section"),
-			EnablePipeline2:                   Bool(d, "enable_pipeline2"),
-			EnableDynamicClientRegistration:   Bool(d, "enable_dynamic_client_registration"),
-			EnableCustomDomainInEmails:        Bool(d, "enable_custom_domain_in_emails"),
-			UniversalLogin:                    Bool(d, "universal_login"),
-			EnableLegacyLogsSearchV2:          Bool(d, "enable_legacy_logs_search_v2"),
-			DisableClickjackProtectionHeaders: Bool(d, "disable_clickjack_protection_headers"),
-			EnablePublicSignupUserExistsError: Bool(d, "enable_public_signup_user_exists_error"),
-			UseScopeDescriptionsForConsent:    Bool(d, "use_scope_descriptions_for_consent"),
+			ChangePasswordFlowV1:              Bool(d, "change_pwd_flow_v1", conditions...),
+			EnableClientConnections:           Bool(d, "enable_client_connections", conditions...),
+			EnableAPIsSection:                 Bool(d, "enable_apis_section", conditions...),
+			EnablePipeline2:                   Bool(d, "enable_pipeline2", conditions...),
+			EnableDynamicClientRegistration:   Bool(d, "enable_dynamic_client_registration", conditions...),
+			EnableCustomDomainInEmails:        Bool(d, "enable_custom_domain_in_emails", conditions...),
+			UniversalLogin:                    Bool(d, "universal_login", conditions...),
+			EnableLegacyLogsSearchV2:          Bool(d, "enable_legacy_logs_search_v2", conditions...),
+			DisableClickjackProtectionHeaders: Bool(d, "disable_clickjack_protection_headers", conditions...),
+			EnablePublicSignupUserExistsError: Bool(d, "enable_public_signup_user_exists_error", conditions...),
+			UseScopeDescriptionsForConsent:    Bool(d, "use_scope_descriptions_for_consent", conditions...),
 		}
 	})
 	return
