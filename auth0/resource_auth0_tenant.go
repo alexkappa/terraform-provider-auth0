@@ -136,7 +136,7 @@ func newTenant() *schema.Resource {
 				ValidateFunc: validation.FloatAtLeast(0.01),
 			},
 			"enabled_locales": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
 				Computed: true,
