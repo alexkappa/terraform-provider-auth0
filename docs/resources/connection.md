@@ -426,6 +426,31 @@ resource "auth0_connection" "samlp" {
 }
 ```
 
+### Windowslive
+
+With the `windowslive` connection strategy, `options` supports the following arguments:
+
+* `client_id` - (Optional) API key.
+* `client_secret` - (Optional) secret key.
+* `strategy_version` - (Optional) Version 1 is deprecated, use version 2.
+* `scopes` - (Optional) Scopes.
+* `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
+
+**Example**:
+
+```hcl
+resource "auth0_connection" "windowslive" {
+  name = "Windowslive-Connection"
+  strategy = "windowslive"
+  options {
+    client_id = "<client-id>"
+    client_secret = "<client-secret>"
+    strategy_version = 2
+    scopes = [ "signin", "graph_user" ]
+  }
+}
+```
+
 ## Attribute Reference
 
 Attributes exported by this resource include:

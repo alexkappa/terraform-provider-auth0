@@ -1010,6 +1010,74 @@ resource "auth0_connection" "github" {
 }
 `
 
+func TestAccConnectionWindowslive(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccConnectionWindowsliveConfig, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.windowslive", "name", "Acceptance-Test-Windowslive-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "strategy", "windowslive"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.client_id", "client_id"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.client_secret", "client_secret"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.strategy_version", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.scopes.#", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.scopes.2458861461", "signin"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.scopes.3904585843", "graph_user"),
+				),
+			},
+			{
+				Config: random.Template(testAccConnectionWindowsliveConfigUpdate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.windowslive", "name", "Acceptance-Test-Windowslive-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "strategy", "windowslive"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.client_id", "client_id_update"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.client_secret", "client_secret_update"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.strategy_version", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.scopes.#", "1"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.scopes.2458861461", "signin"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionWindowsliveConfig = `
+
+resource "auth0_connection" "windowslive" {
+	name = "Acceptance-Test-Windowslive-{{.random}}"
+	is_domain_connection = false
+	strategy = "windowslive"
+	options {
+		client_id = "client_id"
+		client_secret = "client_secret"
+		strategy_version = 2
+		scopes = ["signin", "graph_user"]
+	}
+}
+`
+
+const testAccConnectionWindowsliveConfigUpdate = `
+
+resource "auth0_connection" "windowslive" {
+	name = "Acceptance-Test-Windowslive-{{.random}}"
+	is_domain_connection = false
+	strategy = "windowslive"
+	options {
+		client_id = "client_id_update"
+		client_secret = "client_secret_update"
+		strategy_version = 2
+		scopes = ["signin"]
+	}
+}
+`
+
 func TestAccConnectionConfiguration(t *testing.T) {
 
 	rand := random.String(6)
