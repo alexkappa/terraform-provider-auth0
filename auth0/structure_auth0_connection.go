@@ -26,8 +26,8 @@ func flattenConnectionOptions(d ResourceData, options interface{}) []interface{}
 		m = flattenConnectionOptionsLinkedin(o)
 	case *management.ConnectionOptionsGitHub:
 		m = flattenConnectionOptionsGitHub(o)
-	// case *management.ConnectionOptionsWindowsLive:
-	// 	m = flattenConnectionOptionsWindowsLive(o)
+	case *management.ConnectionOptionsWindowsLive:
+		m = flattenConnectionOptionsWindowsLive(o)
 	case *management.ConnectionOptionsSalesforce:
 		m = flattenConnectionOptionsSalesforce(o)
 	case *management.ConnectionOptionsEmail:
@@ -53,6 +53,16 @@ func flattenConnectionOptionsGitHub(o *management.ConnectionOptionsGitHub) inter
 		"client_secret":            o.GetClientSecret(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
 		"scopes":                   o.Scopes(),
+	}
+}
+
+func flattenConnectionOptionsWindowsLive(o *management.ConnectionOptionsWindowsLive) interface{} {
+	return map[string]interface{}{
+		"client_id":                o.GetClientID(),
+		"client_secret":            o.GetClientSecret(),
+		"scopes":                   o.Scopes(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"strategy_version":         o.GetStrategyVersion(),
 	}
 }
 
@@ -279,7 +289,8 @@ func expandConnection(d ResourceData) *management.Connection {
 			c.Options = expandConnectionOptionsLinkedin(d)
 		case management.ConnectionStrategyGitHub:
 			c.Options = expandConnectionOptionsGitHub(d)
-		// 	management.ConnectionStrategyWindowsLive:
+		case management.ConnectionStrategyWindowsLive:
+			c.Options = expandConnectionOptionsWindowsLive(d)
 		case management.ConnectionStrategySalesforce,
 			management.ConnectionStrategySalesforceCommunity,
 			management.ConnectionStrategySalesforceSandbox:
@@ -450,6 +461,20 @@ func expandConnectionOptionsSalesforce(d ResourceData) *management.ConnectionOpt
 		ClientID:          String(d, "client_id"),
 		ClientSecret:      String(d, "client_secret"),
 		CommunityBaseURL:  String(d, "community_base_url"),
+		SetUserAttributes: String(d, "set_user_root_attributes"),
+	}
+
+	expandConnectionOptionsScopes(d, o)
+
+	return o
+}
+
+func expandConnectionOptionsWindowsLive(d ResourceData) *management.ConnectionOptionsWindowsLive {
+
+	o := &management.ConnectionOptionsWindowsLive{
+		ClientID:          String(d, "client_id"),
+		ClientSecret:      String(d, "client_secret"),
+		StrategyVersion:   Int(d, "strategy_version"),
 		SetUserAttributes: String(d, "set_user_root_attributes"),
 	}
 
