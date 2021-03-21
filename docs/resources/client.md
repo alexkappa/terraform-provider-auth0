@@ -222,7 +222,7 @@ Arguments accepted by this resource include:
 Attributes exported by this resource include:
 
 * `client_id` - String. ID of the client.
-* `client_secret`<sup[1]>(#client-keys)</sup> - String. Secret for the client; keep this private.
+* `client_secret`<sup>[1](#client-keys)</sup> - String. Secret for the client; keep this private.
 * `is_first_party` - Boolean. Indicates whether or not this client is a first-party client.
 * `is_token_endpoint_ip_header_trusted` - Boolean
 * `oidc_conformant` - Boolean. Indicates whether or not this client will conform to strict OIDC specifications.
