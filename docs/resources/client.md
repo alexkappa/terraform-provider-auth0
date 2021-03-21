@@ -222,10 +222,14 @@ Arguments accepted by this resource include:
 Attributes exported by this resource include:
 
 * `client_id` - String. ID of the client.
-* `client_secret` - String. Secret for the client; keep this private.
+* `client_secret`<sup>[1](#client-keys)</sup> - String. Secret for the client; keep this private.
 * `is_first_party` - Boolean. Indicates whether or not this client is a first-party client.
 * `is_token_endpoint_ip_header_trusted` - Boolean
 * `oidc_conformant` - Boolean. Indicates whether or not this client will conform to strict OIDC specifications.
 * `grant_types` - List(String). Types of grants that this client is authorized to use.
 * `custom_login_page_on` - Boolean. Indicates whether or not a custom login page is to be used.
 * `token_endpoint_auth_method` - String. Defines the requested authentication method for the token endpoint. Options include `none` (public client without a client secret), `client_secret_post` (client uses HTTP POST parameters), `client_secret_basic` (client uses HTTP Basic).
+
+### Client keys
+
+To access the `client_secret` attribute you need to add the `read:client_keys` scope to the Terraform client. Otherwise, the attribute will contain an empty string.
