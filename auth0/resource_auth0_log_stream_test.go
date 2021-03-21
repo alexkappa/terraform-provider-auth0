@@ -380,3 +380,50 @@ resource "auth0_log_stream" "my_log_stream" {
 	}
 }
 `
+
+func TestAccLogStreamSumo(t *testing.T) {
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(logStreamSumoConfig, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-sumo-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "sumo"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.sumo_source_address", "demo.sumo.com"),
+				),
+			},
+			{
+				Config: random.Template(logStreamSumoConfigUpdate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-sumo-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "sumo"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.sumo_source_address", "prod.sumo.com"),
+				),
+			},
+		},
+	})
+}
+
+const logStreamSumoConfig = `
+resource "auth0_log_stream" "my_log_stream" {
+	name = "Acceptance-Test-LogStream-sumo-{{.random}}"
+	type = "sumo"
+	sink {
+	  sumo_source_address = "demo.sumo.com"
+	}
+}
+`
+const logStreamSumoConfigUpdate = `
+resource "auth0_log_stream" "my_log_stream" {
+	name = "Acceptance-Test-LogStream-sumo-{{.random}}"
+	type = "sumo"
+	sink {
+	  sumo_source_address = "prod.sumo.com"
+	}
+}
+`
