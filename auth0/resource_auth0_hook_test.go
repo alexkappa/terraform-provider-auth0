@@ -103,9 +103,9 @@ resource "auth0_hook" "my_hook" {
   name = "pre-user-reg-hook"
   script = "function (user, context, callback) { callback(null, { user }); }"
   trigger_id = "pre-user-registration"
-	dependencies = {
-		auth0 = "2.30.0"
-	}
+  dependencies = {
+    auth0 = "2.30.0"
+  }
   enabled = true
   secrets = {
     foo = "%s"
