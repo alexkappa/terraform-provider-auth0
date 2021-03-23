@@ -74,6 +74,9 @@ With the `auth0` connection strategy, `options` supports the following arguments
 * `requires_username` - (Optional) Indicates whether or not the user is required to provide a username in addition to an email address.
 * `custom_scripts` - (Optional) Custom database action scripts. For more information, read [Custom Database Action Script Templates](https://auth0.com/docs/connections/database/custom-db/templates).
 * `configuration` - (Optional) A case-sensitive map of key value pairs used as configuration variables for the `custom_script`.
+* `mfa` - (Optional) Configuration settings Options for multifactor authentication. For details, see [MFA Options](#mfa-options).
+* `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
+
 
 #### Validation
 
@@ -105,7 +108,14 @@ With the `auth0` connection strategy, `options` supports the following arguments
 
 `password_complexity_options` supports the following arguments:
 
-* `min_length`- (Optional) Minimum number of characters allowed in passwords.
+* `min_length` - (Optional) Minimum number of characters allowed in passwords.
+
+#### MFA Options
+
+`mfa` supports the following arguments:
+
+* `active` - (Optional) Indicates whether multifactor authentication is enabled for this connection.
+* `return_enroll_settings` - (Optional) Indicates whether multifactor authentication enrollment settings will be returned.
 
 ### Google OAuth2
 
@@ -113,10 +123,11 @@ With the `auth0` connection strategy, `options` supports the following arguments
 
 With the `google-oauth2` connection strategy, `options` supports the following arguments:
 
-* `client_id` - (Optional) Facebook client ID.
-* `client_secret` - (Optional) Facebook client secret.
+* `client_id` - (Optional) Google client ID.
+* `client_secret` - (Optional) Google client secret.
 * `allowed_audiences` - (Optional) List of allowed audiences.
 * `scopes` - (Optional) Scopes.
+* `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
 
 
 
@@ -131,6 +142,7 @@ resource "auth0_connection" "google_oauth2" {
     client_secret = "<client-secret>"
     allowed_audiences = [ "example.com", "api.example.com" ]
     scopes = [ "email", "profile", "gmail", "youtube" ]
+    set_user_root_attributes = "on_each_login"
   }
 }
 ```
@@ -142,6 +154,7 @@ With the `facebook` connection strategy, `options` supports the following argume
 * `client_id` - (Optional) Facebook client ID.
 * `client_secret` - (Optional) Facebook client secret.
 * `scopes` - (Optional) Scopes.
+* `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
 
 **Example**:
 
@@ -166,6 +179,7 @@ With the `apple` connection strategy, `options` supports the following arguments
 * `team_id` - (Optional) Team ID.
 * `key_id` - (Optional) Key ID.
 * `scopes` - (Optional) Scopes.
+* `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
 
 **Example**:
 
@@ -191,6 +205,7 @@ With the `linkedin` connection strategy, `options` supports the following argume
 * `client_secret` - (Optional) Linkedin secret key.
 * `strategy_version` - (Optional) Version 1 is deprecated, use version 2.
 * `scopes` - (Optional) Scopes.
+* `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
 
 **Example**:
 
@@ -213,7 +228,7 @@ With the `github` connection strategy, `options` supports the following argument
 
 * `client_id` - (Optional) GitHub client ID.
 * `client_secret` - (Optional) GitHub client secret.
-* `set_user_root_attributes` - (Optional)
+* `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
 
 **Example**:
 
@@ -237,6 +252,7 @@ With the `salesforce`, `salesforce-community` and `salesforce-sandbox` connectio
 * `client_secret` - (Optional) The Salesforce client secret.
 * `community_base_url` - (Optional) String.
 * `scopes` - (Optional) Scopes.
+* `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
 
 **Example**:
 
@@ -276,6 +292,7 @@ With the `oauth2` connection strategy, `options` supports the following argument
 * `scopes` - (Optional) Scopes required by the connection. The value must be a list, for example `["openid", "profile", "email"]`.
 * `token_endpoint` - (Optional)
 * `authorization_endpoint` - (Optional)
+* `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
   
 **Example**:
 
@@ -313,6 +330,7 @@ With the `waad` connection strategy, `options` supports the following arguments:
 * `use_wsfed` - (Optional)
 * `waad_protocol` - (Optional)
 * `waad_common_endpoint` - (Optional) Indicates whether or not to use the common endpoint rather than the default endpoint. Typically enabled if you're using this for a multi-tenant application in Azure AD.
+* `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
 
 ### Twilio / SMS
 
@@ -382,6 +400,7 @@ With the `samlp` connection strategy, `options` supports the following arguments
 * `digest_algorithm` - (Optional) Sign Request Algorithm Digest
 * `request_template` - (Optional) Template that formats the SAML request
 * `user_id_attribute` - (Optional) Attribute in the SAML token that will be mapped to the user_id property in Auth0.
+* `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
 
 **Example**:
 ```hcl
@@ -404,6 +423,31 @@ resource "auth0_connection" "samlp" {
 			baz = "baa"
 		}
 	}
+}
+```
+
+### Windowslive
+
+With the `windowslive` connection strategy, `options` supports the following arguments:
+
+* `client_id` - (Optional) API key.
+* `client_secret` - (Optional) secret key.
+* `strategy_version` - (Optional) Version 1 is deprecated, use version 2.
+* `scopes` - (Optional) Scopes.
+* `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
+
+**Example**:
+
+```hcl
+resource "auth0_connection" "windowslive" {
+  name = "Windowslive-Connection"
+  strategy = "windowslive"
+  options {
+    client_id = "<client-id>"
+    client_secret = "<client-secret>"
+    strategy_version = 2
+    scopes = [ "signin", "graph_user" ]
+  }
 }
 ```
 

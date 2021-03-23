@@ -20,6 +20,7 @@ func newClient() *schema.Resource {
 		Read:   readClient,
 		Update: updateClient,
 		Delete: deleteClient,
+
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -512,6 +513,18 @@ func newClient() *schema.Resource {
 							Type:     schema.TypeInt,
 							Optional: true,
 						},
+						"infinite_token_lifetime": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
+						"infinite_idle_token_lifetime": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
+						"idle_token_lifetime": {
+							Type:     schema.TypeInt,
+							Optional: true,
+						},
 					},
 				},
 			},
@@ -637,10 +650,13 @@ func expandClient(d *schema.ResourceData) *management.Client {
 
 	List(d, "refresh_token", IsNewResource(), HasChange()).Elem(func(d ResourceData) {
 		c.RefreshToken = &management.ClientRefreshToken{
-			RotationType:   String(d, "rotation_type"),
-			ExpirationType: String(d, "expiration_type"),
-			Leeway:         Int(d, "leeway"),
-			TokenLifetime:  Int(d, "token_lifetime"),
+			RotationType:              String(d, "rotation_type"),
+			ExpirationType:            String(d, "expiration_type"),
+			Leeway:                    Int(d, "leeway"),
+			TokenLifetime:             Int(d, "token_lifetime"),
+			InfiniteTokenLifetime:     Bool(d, "infinite_token_lifetime"),
+			InfiniteIdleTokenLifetime: Bool(d, "infinite_idle_token_lifetime"),
+			IdleTokenLifetime:         Int(d, "idle_token_lifetime"),
 		}
 	})
 
@@ -803,6 +819,9 @@ func flattenClientRefreshTokenConfiguration(refresh_token *management.ClientRefr
 		m["expiration_type"] = refresh_token.ExpirationType
 		m["leeway"] = refresh_token.Leeway
 		m["token_lifetime"] = refresh_token.TokenLifetime
+		m["infinite_token_lifetime"] = refresh_token.InfiniteTokenLifetime
+		m["infinite_idle_token_lifetime"] = refresh_token.InfiniteIdleTokenLifetime
+		m["idle_token_lifetime"] = refresh_token.IdleTokenLifetime
 	}
 	return []interface{}{m}
 }
