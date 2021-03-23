@@ -28,6 +28,7 @@ func newEmailTemplate() *schema.Resource {
 				Required: true,
 				ValidateFunc: validation.StringInSlice([]string{
 					"verify_email",
+					"verify_email_by_code",
 					"reset_email",
 					"welcome_email",
 					"blocked_account",

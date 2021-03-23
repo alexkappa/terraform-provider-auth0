@@ -26,8 +26,8 @@ func flattenConnectionOptions(d ResourceData, options interface{}) []interface{}
 		m = flattenConnectionOptionsLinkedin(o)
 	case *management.ConnectionOptionsGitHub:
 		m = flattenConnectionOptionsGitHub(o)
-	// case *management.ConnectionOptionsWindowsLive:
-	// 	m = flattenConnectionOptionsWindowsLive(o)
+	case *management.ConnectionOptionsWindowsLive:
+		m = flattenConnectionOptionsWindowsLive(o)
 	case *management.ConnectionOptionsSalesforce:
 		m = flattenConnectionOptionsSalesforce(o)
 	case *management.ConnectionOptionsEmail:
@@ -56,6 +56,16 @@ func flattenConnectionOptionsGitHub(o *management.ConnectionOptionsGitHub) inter
 	}
 }
 
+func flattenConnectionOptionsWindowsLive(o *management.ConnectionOptionsWindowsLive) interface{} {
+	return map[string]interface{}{
+		"client_id":                o.GetClientID(),
+		"client_secret":            o.GetClientSecret(),
+		"scopes":                   o.Scopes(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"strategy_version":         o.GetStrategyVersion(),
+	}
+}
+
 func flattenConnectionOptionsAuth0(d ResourceData, o *management.ConnectionOptions) interface{} {
 	return map[string]interface{}{
 		"validation":                     o.Validation,
@@ -70,63 +80,70 @@ func flattenConnectionOptionsAuth0(d ResourceData, o *management.ConnectionOptio
 		"disable_signup":                 o.GetDisableSignup(),
 		"requires_username":              o.GetRequiresUsername(),
 		"custom_scripts":                 o.CustomScripts,
+		"mfa":                            o.MFA,
 		"configuration":                  Map(d, "configuration"), // does not get read back
 	}
 }
 
 func flattenConnectionOptionsGoogleOAuth2(o *management.ConnectionOptionsGoogleOAuth2) interface{} {
 	return map[string]interface{}{
-		"client_id":         o.GetClientID(),
-		"client_secret":     o.GetClientSecret(),
-		"allowed_audiences": o.AllowedAudiences,
-		"scopes":            o.Scopes(),
+		"client_id":                o.GetClientID(),
+		"client_secret":            o.GetClientSecret(),
+		"allowed_audiences":        o.AllowedAudiences,
+		"scopes":                   o.Scopes(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
 	}
 }
 
 func flattenConnectionOptionsOAuth2(o *management.ConnectionOptionsOAuth2) interface{} {
 	return map[string]interface{}{
-		"client_id":              o.GetClientID(),
-		"client_secret":          o.GetClientSecret(),
-		"scopes":                 o.Scopes(),
-		"token_endpoint":         o.GetTokenURL(),
-		"authorization_endpoint": o.GetAuthorizationURL(),
-		"scripts":                o.Scripts,
+		"client_id":                o.GetClientID(),
+		"client_secret":            o.GetClientSecret(),
+		"scopes":                   o.Scopes(),
+		"token_endpoint":           o.GetTokenURL(),
+		"authorization_endpoint":   o.GetAuthorizationURL(),
+		"scripts":                  o.Scripts,
+		"set_user_root_attributes": o.GetSetUserAttributes(),
 	}
 }
 
 func flattenConnectionOptionsFacebook(o *management.ConnectionOptionsFacebook) interface{} {
 	return map[string]interface{}{
-		"client_id":     o.GetClientID(),
-		"client_secret": o.GetClientSecret(),
-		"scopes":        o.Scopes(),
+		"client_id":                o.GetClientID(),
+		"client_secret":            o.GetClientSecret(),
+		"scopes":                   o.Scopes(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
 	}
 }
 
 func flattenConnectionOptionsApple(o *management.ConnectionOptionsApple) interface{} {
 	return map[string]interface{}{
-		"client_id":     o.GetClientID(),
-		"client_secret": o.GetClientSecret(),
-		"team_id":       o.GetTeamID(),
-		"key_id":        o.GetKeyID(),
-		"scopes":        o.Scopes(),
+		"client_id":                o.GetClientID(),
+		"client_secret":            o.GetClientSecret(),
+		"team_id":                  o.GetTeamID(),
+		"key_id":                   o.GetKeyID(),
+		"scopes":                   o.Scopes(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
 	}
 }
 
 func flattenConnectionOptionsLinkedin(o *management.ConnectionOptionsLinkedin) interface{} {
 	return map[string]interface{}{
-		"client_id":        o.GetClientID(),
-		"client_secret":    o.GetClientSecret(),
-		"strategy_version": o.GetStrategyVersion(),
-		"scopes":           o.Scopes(),
+		"client_id":                o.GetClientID(),
+		"client_secret":            o.GetClientSecret(),
+		"strategy_version":         o.GetStrategyVersion(),
+		"scopes":                   o.Scopes(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
 	}
 }
 
 func flattenConnectionOptionsSalesforce(o *management.ConnectionOptionsSalesforce) interface{} {
 	return map[string]interface{}{
-		"client_id":          o.GetClientID(),
-		"client_secret":      o.GetClientSecret(),
-		"community_base_url": o.GetCommunityBaseURL(),
-		"scopes":             o.Scopes(),
+		"client_id":                o.GetClientID(),
+		"client_secret":            o.GetClientSecret(),
+		"community_base_url":       o.GetCommunityBaseURL(),
+		"scopes":                   o.Scopes(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
 	}
 }
 
@@ -156,14 +173,15 @@ func flattenConnectionOptionsOIDC(o *management.ConnectionOptionsOIDC) interface
 		"tenant_domain":  o.GetTenantDomain(),
 		"domain_aliases": o.DomainAliases,
 
-		"type":                   o.GetType(),
-		"scopes":                 o.Scopes(),
-		"issuer":                 o.GetIssuer(),
-		"jwks_uri":               o.GetJWKSURI(),
-		"discovery_url":          o.GetDiscoveryURL(),
-		"token_endpoint":         o.GetTokenEndpoint(),
-		"userinfo_endpoint":      o.GetUserInfoEndpoint(),
-		"authorization_endpoint": o.GetAuthorizationEndpoint(),
+		"type":                     o.GetType(),
+		"scopes":                   o.Scopes(),
+		"issuer":                   o.GetIssuer(),
+		"jwks_uri":                 o.GetJWKSURI(),
+		"discovery_url":            o.GetDiscoveryURL(),
+		"token_endpoint":           o.GetTokenEndpoint(),
+		"userinfo_endpoint":        o.GetUserInfoEndpoint(),
+		"authorization_endpoint":   o.GetAuthorizationEndpoint(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
 	}
 }
 
@@ -180,38 +198,41 @@ func flattenConnectionOptionsEmail(o *management.ConnectionOptionsEmail) interfa
 			"time_step": o.OTP.GetTimeStep(),
 			"length":    o.OTP.GetLength(),
 		},
+		"set_user_root_attributes": o.GetSetUserAttributes(),
 	}
 }
 
 func flattenConnectionOptionsAD(o *management.ConnectionOptionsAD) interface{} {
 	return map[string]interface{}{
-		"tenant_domain":          o.GetTenantDomain(),
-		"domain_aliases":         o.DomainAliases,
-		"icon_url":               o.GetLogoURL(),
-		"ips":                    o.IPs,
-		"use_cert_auth":          o.GetCertAuth(),
-		"use_kerberos":           o.GetKerberos(),
-		"disable_cache":          o.GetDisableCache(),
-		"brute_force_protection": o.GetBruteForceProtection(),
+		"tenant_domain":            o.GetTenantDomain(),
+		"domain_aliases":           o.DomainAliases,
+		"icon_url":                 o.GetLogoURL(),
+		"ips":                      o.IPs,
+		"use_cert_auth":            o.GetCertAuth(),
+		"use_kerberos":             o.GetKerberos(),
+		"disable_cache":            o.GetDisableCache(),
+		"brute_force_protection":   o.GetBruteForceProtection(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
 	}
 }
 
 func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) interface{} {
 	return map[string]interface{}{
-		"client_id":              o.GetClientID(),
-		"client_secret":          o.GetClientSecret(),
-		"app_id":                 o.GetAppID(),
-		"tenant_domain":          o.GetTenantDomain(),
-		"domain":                 o.GetDomain(),
-		"domain_aliases":         o.DomainAliases,
-		"icon_url":               o.GetLogoURL(),
-		"identity_api":           o.GetIdentityAPI(),
-		"waad_protocol":          o.GetWAADProtocol(),
-		"waad_common_endpoint":   o.GetUseCommonEndpoint(),
-		"use_wsfed":              o.GetUseWSFederation(),
-		"api_enable_users":       o.GetEnableUsersAPI(),
-		"max_groups_to_retrieve": o.GetMaxGroupsToRetrieve(),
-		"scopes":                 o.Scopes(),
+		"client_id":                o.GetClientID(),
+		"client_secret":            o.GetClientSecret(),
+		"app_id":                   o.GetAppID(),
+		"tenant_domain":            o.GetTenantDomain(),
+		"domain":                   o.GetDomain(),
+		"domain_aliases":           o.DomainAliases,
+		"icon_url":                 o.GetLogoURL(),
+		"identity_api":             o.GetIdentityAPI(),
+		"waad_protocol":            o.GetWAADProtocol(),
+		"waad_common_endpoint":     o.GetUseCommonEndpoint(),
+		"use_wsfed":                o.GetUseWSFederation(),
+		"api_enable_users":         o.GetEnableUsersAPI(),
+		"max_groups_to_retrieve":   o.GetMaxGroupsToRetrieve(),
+		"scopes":                   o.Scopes(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
 	}
 }
 
@@ -268,7 +289,8 @@ func expandConnection(d ResourceData) *management.Connection {
 			c.Options = expandConnectionOptionsLinkedin(d)
 		case management.ConnectionStrategyGitHub:
 			c.Options = expandConnectionOptionsGitHub(d)
-		// 	management.ConnectionStrategyWindowsLive:
+		case management.ConnectionStrategyWindowsLive:
+			c.Options = expandConnectionOptionsWindowsLive(d)
 		case management.ConnectionStrategySalesforce,
 			management.ConnectionStrategySalesforceCommunity,
 			management.ConnectionStrategySalesforceSandbox:
@@ -345,6 +367,12 @@ func expandConnectionOptionsAuth0(d ResourceData) *management.ConnectionOptions 
 		o.PasswordComplexityOptions["min_length"] = Int(d, "min_length")
 	})
 
+	List(d, "mfa").Elem(func(d ResourceData) {
+		o.MFA = make(map[string]interface{})
+		o.MFA["active"] = Bool(d, "active")
+		o.MFA["return_enroll_settings"] = Bool(d, "return_enroll_settings")
+	})
+
 	o.EnabledDatabaseCustomization = Bool(d, "enabled_database_customization")
 	o.BruteForceProtection = Bool(d, "brute_force_protection")
 	o.ImportMode = Bool(d, "import_mode")
@@ -359,9 +387,10 @@ func expandConnectionOptionsAuth0(d ResourceData) *management.ConnectionOptions 
 func expandConnectionOptionsGoogleOAuth2(d ResourceData) *management.ConnectionOptionsGoogleOAuth2 {
 
 	o := &management.ConnectionOptionsGoogleOAuth2{
-		ClientID:         String(d, "client_id"),
-		ClientSecret:     String(d, "client_secret"),
-		AllowedAudiences: Set(d, "allowed_audiences").List(),
+		ClientID:          String(d, "client_id"),
+		ClientSecret:      String(d, "client_secret"),
+		AllowedAudiences:  Set(d, "allowed_audiences").List(),
+		SetUserAttributes: String(d, "set_user_root_attributes"),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -371,10 +400,11 @@ func expandConnectionOptionsGoogleOAuth2(d ResourceData) *management.ConnectionO
 func expandConnectionOptionsOAuth2(d ResourceData) *management.ConnectionOptionsOAuth2 {
 
 	o := &management.ConnectionOptionsOAuth2{
-		ClientID:         String(d, "client_id"),
-		ClientSecret:     String(d, "client_secret"),
-		AuthorizationURL: String(d, "authorization_endpoint"),
-		TokenURL:         String(d, "token_endpoint"),
+		ClientID:          String(d, "client_id"),
+		ClientSecret:      String(d, "client_secret"),
+		AuthorizationURL:  String(d, "authorization_endpoint"),
+		TokenURL:          String(d, "token_endpoint"),
+		SetUserAttributes: String(d, "set_user_root_attributes"),
 	}
 	o.Scripts = Map(d, "scripts")
 
@@ -386,8 +416,9 @@ func expandConnectionOptionsOAuth2(d ResourceData) *management.ConnectionOptions
 func expandConnectionOptionsFacebook(d ResourceData) *management.ConnectionOptionsFacebook {
 
 	o := &management.ConnectionOptionsFacebook{
-		ClientID:     String(d, "client_id"),
-		ClientSecret: String(d, "client_secret"),
+		ClientID:          String(d, "client_id"),
+		ClientSecret:      String(d, "client_secret"),
+		SetUserAttributes: String(d, "set_user_root_attributes"),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -398,10 +429,11 @@ func expandConnectionOptionsFacebook(d ResourceData) *management.ConnectionOptio
 func expandConnectionOptionsApple(d ResourceData) *management.ConnectionOptionsApple {
 
 	o := &management.ConnectionOptionsApple{
-		ClientID:     String(d, "client_id"),
-		ClientSecret: String(d, "client_secret"),
-		TeamID:       String(d, "team_id"),
-		KeyID:        String(d, "key_id"),
+		ClientID:          String(d, "client_id"),
+		ClientSecret:      String(d, "client_secret"),
+		TeamID:            String(d, "team_id"),
+		KeyID:             String(d, "key_id"),
+		SetUserAttributes: String(d, "set_user_root_attributes"),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -412,9 +444,10 @@ func expandConnectionOptionsApple(d ResourceData) *management.ConnectionOptionsA
 func expandConnectionOptionsLinkedin(d ResourceData) *management.ConnectionOptionsLinkedin {
 
 	o := &management.ConnectionOptionsLinkedin{
-		ClientID:        String(d, "client_id"),
-		ClientSecret:    String(d, "client_secret"),
-		StrategyVersion: Int(d, "strategy_version"),
+		ClientID:          String(d, "client_id"),
+		ClientSecret:      String(d, "client_secret"),
+		StrategyVersion:   Int(d, "strategy_version"),
+		SetUserAttributes: String(d, "set_user_root_attributes"),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -425,9 +458,24 @@ func expandConnectionOptionsLinkedin(d ResourceData) *management.ConnectionOptio
 func expandConnectionOptionsSalesforce(d ResourceData) *management.ConnectionOptionsSalesforce {
 
 	o := &management.ConnectionOptionsSalesforce{
-		ClientID:         String(d, "client_id"),
-		ClientSecret:     String(d, "client_secret"),
-		CommunityBaseURL: String(d, "community_base_url"),
+		ClientID:          String(d, "client_id"),
+		ClientSecret:      String(d, "client_secret"),
+		CommunityBaseURL:  String(d, "community_base_url"),
+		SetUserAttributes: String(d, "set_user_root_attributes"),
+	}
+
+	expandConnectionOptionsScopes(d, o)
+
+	return o
+}
+
+func expandConnectionOptionsWindowsLive(d ResourceData) *management.ConnectionOptionsWindowsLive {
+
+	o := &management.ConnectionOptionsWindowsLive{
+		ClientID:          String(d, "client_id"),
+		ClientSecret:      String(d, "client_secret"),
+		StrategyVersion:   Int(d, "strategy_version"),
+		SetUserAttributes: String(d, "set_user_root_attributes"),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -471,6 +519,7 @@ func expandConnectionOptionsEmail(d ResourceData) *management.ConnectionOptionsE
 			Body:    String(d, "template"),
 		},
 		BruteForceProtection: Bool(d, "brute_force_protection"),
+		SetUserAttributes:    String(d, "set_user_root_attributes"),
 	}
 
 	List(d, "totp").Elem(func(d ResourceData) {
@@ -486,13 +535,14 @@ func expandConnectionOptionsEmail(d ResourceData) *management.ConnectionOptionsE
 func expandConnectionOptionsAD(d ResourceData) *management.ConnectionOptionsAD {
 
 	o := &management.ConnectionOptionsAD{
-		DomainAliases: Set(d, "domain_aliases").List(),
-		TenantDomain:  String(d, "tenant_domain"),
-		LogoURL:       String(d, "icon_url"),
-		IPs:           Set(d, "ips").List(),
-		CertAuth:      Bool(d, "use_cert_auth"),
-		Kerberos:      Bool(d, "use_kerberos"),
-		DisableCache:  Bool(d, "disable_cache"),
+		DomainAliases:     Set(d, "domain_aliases").List(),
+		TenantDomain:      String(d, "tenant_domain"),
+		LogoURL:           String(d, "icon_url"),
+		IPs:               Set(d, "ips").List(),
+		CertAuth:          Bool(d, "use_cert_auth"),
+		Kerberos:          Bool(d, "use_kerberos"),
+		DisableCache:      Bool(d, "disable_cache"),
+		SetUserAttributes: String(d, "set_user_root_attributes"),
 	}
 
 	// `brute_force_protection` will default to true by the API if we don't
@@ -523,6 +573,7 @@ func expandConnectionOptionsAzureAD(d ResourceData) *management.ConnectionOption
 		EnableUsersAPI:      Bool(d, "api_enable_users"),
 		LogoURL:             String(d, "icon_url"),
 		IdentityAPI:         String(d, "identity_api"),
+		SetUserAttributes:   String(d, "set_user_root_attributes"),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -545,6 +596,7 @@ func expandConnectionOptionsOIDC(d ResourceData) *management.ConnectionOptionsOI
 		Type:                  String(d, "type"),
 		UserInfoEndpoint:      String(d, "userinfo_endpoint"),
 		TokenEndpoint:         String(d, "token_endpoint"),
+		SetUserAttributes:     String(d, "set_user_root_attributes"),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -568,6 +620,7 @@ func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSA
 		RequestTemplate:    String(d, "request_template"),
 		UserIDAttribute:    String(d, "user_id_attribute"),
 		LogoURL:            String(d, "icon_url"),
+		SetUserAttributes:  String(d, "set_user_root_attributes"),
 	}
 
 	List(d, "idp_initiated").Elem(func(d ResourceData) {

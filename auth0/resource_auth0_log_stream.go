@@ -34,6 +34,7 @@ func newLogStream() *schema.Resource {
 					"http",
 					"datadog",
 					"splunk",
+					"sumo",
 				}, true),
 				ForceNew:    true,
 				Description: "Type of the log stream, which indicates the sink provider",
@@ -167,6 +168,11 @@ func newLogStream() *schema.Resource {
 							Default:      nil,
 							RequiredWith: []string{"sink.0.splunk_domain", "sink.0.splunk_port", "sink.0.splunk_token"},
 						},
+						"sumo_source_address": {
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  nil,
+						},
 					},
 				},
 			},
@@ -258,6 +264,8 @@ func flattenLogStreamSink(d ResourceData, sink interface{}) []interface{} {
 		m = flattenLogStreamSinkDatadog(o)
 	case *management.LogStreamSinkSplunk:
 		m = flattenLogStreamSinkSplunk(o)
+	case *management.LogStreamSinkSumo:
+		m = flattenLogStreamSinkSumo(o)
 	}
 	return []interface{}{m}
 }
@@ -304,6 +312,13 @@ func flattenLogStreamSinkSplunk(o *management.LogStreamSinkSplunk) interface{} {
 		"splunk_secure": o.GetSecure(),
 	}
 }
+
+func flattenLogStreamSinkSumo(o *management.LogStreamSinkSumo) interface{} {
+	return map[string]interface{}{
+		"sumo_source_address": o.GetSourceAddress(),
+	}
+}
+
 func expandLogStream(d ResourceData) *management.LogStream {
 
 	ls := &management.LogStream{
@@ -332,6 +347,8 @@ func expandLogStream(d ResourceData) *management.LogStream {
 			ls.Sink = expandLogStreamSinkDatadog(d)
 		case management.LogStreamTypeSplunk:
 			ls.Sink = expandLogStreamSinkSplunk(d)
+		case management.LogStreamTypeSumo:
+			ls.Sink = expandLogStreamSinkSumo(d)
 		default:
 			log.Printf("[WARN]: Unsupported log stream sink %s", s)
 			log.Printf("[WARN]: Raise an issue with the auth0 provider in order to support it:")
@@ -383,6 +400,12 @@ func expandLogStreamSinkSplunk(d ResourceData) *management.LogStreamSinkSplunk {
 		Token:  String(d, "splunk_token"),
 		Port:   String(d, "splunk_port"),
 		Secure: Bool(d, "splunk_secure"),
+	}
+	return o
+}
+func expandLogStreamSinkSumo(d ResourceData) *management.LogStreamSinkSumo {
+	o := &management.LogStreamSinkSumo{
+		SourceAddress: String(d, "sumo_source_address"),
 	}
 	return o
 }
