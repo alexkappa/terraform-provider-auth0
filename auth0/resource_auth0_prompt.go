@@ -31,6 +31,10 @@ func newPrompt() *schema.Resource {
 					"new", "classic",
 				}, false),
 			},
+			"identifier_first": {
+				Type:     schema.TypeBool,
+				Optional: true,
+			},
 		},
 	}
 }
@@ -53,6 +57,7 @@ func readPrompt(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.Set("universal_login_experience", p.UniversalLoginExperience)
+	d.Set("identifier_first", p.IdentifierFirst)
 	return nil
 }
 
@@ -74,5 +79,6 @@ func deletePrompt(d *schema.ResourceData, m interface{}) error {
 func buildPrompt(d *schema.ResourceData) *management.Prompt {
 	return &management.Prompt{
 		UniversalLoginExperience: auth0.StringValue(String(d, "universal_login_experience")),
+		IdentifierFirst:          Bool(d, "identifier_first"),
 	}
 }
