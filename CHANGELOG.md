@@ -1,3 +1,21 @@
+## 0.20.0
+
+ENHANCEMENTS:
+
+* resource:auth0_connection: Add support for `WindowsLive` (aka Microsoft Account) strategy ([#335](https://github.com/alexkappa/terraform-provider-auth0/pull/335))
+* resource:auth0_email_template: Add `verify_email_by_code` template to available email templates ([#350](https://github.com/alexkappa/terraform-provider-auth0/pull/350))
+* resource:auth0_hook: Add support for `HookSecrets` within Hooks ([#262](https://github.com/alexkappa/terraform-provider-auth0/pull/262))
+* resource:auth0_hook: Add `dependencies` array to support dependencies within hooks ([#312](https://github.com/alexkappa/terraform-provider-auth0/pull/312))
+* resource:auth0_log_stream: Add support for `Sumologic` Log Stream type ([#331](https://github.com/alexkappa/terraform-provider-auth0/pull/331))
+* resource:auth0_prompt: Add `identifier_first` field to prompt in order to utilize the new identifier first flow with New Universal Login ([#321](https://github.com/alexkappa/terraform-provider-auth0/pull/321))
+
+NOTES:
+
+* Clarified the required scope needed to get `client_secret` from client endpoint ([#333](https://github.com/alexkappa/terraform-provider-auth0/pull/333)) 
+* Fixed typo in Connection Docs ([#341](https://github.com/alexkappa/terraform-provider-auth0/pull/341))
+* Add `Enabled_Locales` to Documentation ([#345](https://github.com/alexkappa/terraform-provider-auth0/pull/345))
+* Moved `defauilt_redirection_url` to bottom to match upstream source ([#345](https://github.com/alexkappa/terraform-provider-auth0/pull/345))
+
 ## 0.19.0
 
 ENHANCEMENTS:
