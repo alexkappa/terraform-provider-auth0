@@ -61,7 +61,7 @@ func init() {
 			"auth0_tenant":          newTenant(),
 			"auth0_role":            newRole(),
 			"auth0_log_stream":      newLogStream(),
-			"auth0_brand":           newBrand(),
+			"auth0_branding":        newBranding(),
 		},
 		ConfigureFunc: Configure,
 	}
