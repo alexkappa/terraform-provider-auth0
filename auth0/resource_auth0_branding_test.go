@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccBrand(t *testing.T) {
+func TestAccBranding(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
@@ -15,7 +15,7 @@ func TestAccBrand(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: testAccBrandConfigCreate,
+				Config: TestAccBrandingConfigCreate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "logo_url", "https://mycompany.org/v1/logo.png"),
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "colors.0.primary", "#0059d6"),
@@ -23,7 +23,7 @@ func TestAccBrand(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccBrandConfigUpdate,
+				Config: TestAccBrandingConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "logo_url", "https://mycompany.org/v2/logo.png"),
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "colors.0.primary", "#ffa629"),
@@ -34,7 +34,7 @@ func TestAccBrand(t *testing.T) {
 	})
 }
 
-const testAccBrandConfigCreate = `
+const TestAccBrandingConfigCreate = `
 resource "auth0_branding" "my_brand" {
 	logo_url = "https://mycompany.org/v1/logo.png"
 	colors {
@@ -44,7 +44,7 @@ resource "auth0_branding" "my_brand" {
 }
 `
 
-const testAccBrandConfigUpdate = `
+const TestAccBrandingConfigUpdate = `
 resource "auth0_branding" "my_brand" {
 	logo_url = "https://mycompany.org/v2/logo.png"
 	colors {
