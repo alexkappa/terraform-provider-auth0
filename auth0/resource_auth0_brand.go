@@ -40,29 +40,10 @@ func newBrand() *schema.Resource {
 					},
 				},
 			},
-			"favicon_url": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
 			"logo_url": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Computed: true,
-			},
-			"font": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"url": {
-							Type:     schema.TypeString,
-							Optional: true,
-							Computed: true,
-						},
-					},
-				},
 			},
 		},
 	}
@@ -87,10 +68,8 @@ func readBrand(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	d.Set("favicon_url", b.FaviconURL)
 	d.Set("logo_url", b.LogoURL)
 	d.Set("colors", flattenBrandColors(b.Colors))
-	d.Set("font", flattenBrandFont(b.Font))
 
 	return nil
 }
@@ -112,20 +91,13 @@ func deleteBrand(d *schema.ResourceData, m interface{}) error {
 
 func buildBrand(d *schema.ResourceData) *management.Branding {
 	b := &management.Branding{
-		FaviconURL: String(d, "favicon_url"),
-		LogoURL:    String(d, "logo_url"),
+		LogoURL: String(d, "logo_url"),
 	}
 
 	List(d, "colors").Elem(func(d ResourceData) {
 		b.Colors = &management.BrandingColors{
 			PageBackground: String(d, "page_background"),
 			Primary:        String(d, "primary"),
-		}
-	})
-
-	List(d, "font").Elem(func(d ResourceData) {
-		b.Font = &management.BrandingFont{
-			URL: String(d, "url"),
 		}
 	})
 
@@ -137,14 +109,6 @@ func flattenBrandColors(brandingColors *management.BrandingColors) []interface{}
 	if brandingColors != nil {
 		m["page_background"] = brandingColors.PageBackground
 		m["primary"] = brandingColors.Primary
-	}
-	return []interface{}{m}
-}
-
-func flattenBrandFont(brandingFont *management.BrandingFont) []interface{} {
-	m := make(map[string]interface{})
-	if brandingFont != nil {
-		m["url"] = brandingFont.URL
 	}
 	return []interface{}{m}
 }
