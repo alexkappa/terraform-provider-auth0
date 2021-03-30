@@ -17,17 +17,17 @@ func TestAccBrand(t *testing.T) {
 			{
 				Config: testAccBrandConfigCreate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_brand.my_brand", "logo_url", "https://mycompany.org/v1/logo.png"),
-					resource.TestCheckResourceAttr("auth0_brand.my_brand", "colors.0.primary", "#0059d6"),
-					resource.TestCheckResourceAttr("auth0_brand.my_brand", "colors.0.page_background", "#000000"),
+					resource.TestCheckResourceAttr("auth0_branding.my_brand", "logo_url", "https://mycompany.org/v1/logo.png"),
+					resource.TestCheckResourceAttr("auth0_branding.my_brand", "colors.0.primary", "#0059d6"),
+					resource.TestCheckResourceAttr("auth0_branding.my_brand", "colors.0.page_background", "#000000"),
 				),
 			},
 			{
 				Config: testAccBrandConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("auth0_brand.my_brand", "logo_url", "https://mycompany.org/v2/logo.png"),
-					resource.TestCheckResourceAttr("auth0_brand.my_brand", "colors.0.primary", "#ffa629"),
-					resource.TestCheckResourceAttr("auth0_brand.my_brand", "colors.0.page_background", "#ffffff"),
+					resource.TestCheckResourceAttr("auth0_branding.my_brand", "logo_url", "https://mycompany.org/v2/logo.png"),
+					resource.TestCheckResourceAttr("auth0_branding.my_brand", "colors.0.primary", "#ffa629"),
+					resource.TestCheckResourceAttr("auth0_branding.my_brand", "colors.0.page_background", "#ffffff"),
 				),
 			},
 		},
@@ -35,7 +35,7 @@ func TestAccBrand(t *testing.T) {
 }
 
 const testAccBrandConfigCreate = `
-resource "auth0_brand" "my_brand" {
+resource "auth0_branding" "my_brand" {
 	logo_url = "https://mycompany.org/v1/logo.png"
 	colors {
 		primary = "#0059d6"
@@ -45,7 +45,7 @@ resource "auth0_brand" "my_brand" {
 `
 
 const testAccBrandConfigUpdate = `
-resource "auth0_brand" "my_brand" {
+resource "auth0_branding" "my_brand" {
 	logo_url = "https://mycompany.org/v2/logo.png"
 	colors {
 		primary = "#ffa629"

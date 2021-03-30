@@ -9,13 +9,13 @@ import (
 	"gopkg.in/auth0.v5/management"
 )
 
-func newBrand() *schema.Resource {
+func newBranding() *schema.Resource {
 	return &schema.Resource{
 
-		Create: createBrand,
-		Read:   readBrand,
-		Update: updateBrand,
-		Delete: deleteBrand,
+		Create: createBranding,
+		Read:   readBranding,
+		Update: updateBranding,
+		Delete: deleteBranding,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -49,12 +49,12 @@ func newBrand() *schema.Resource {
 	}
 }
 
-func createBrand(d *schema.ResourceData, m interface{}) error {
+func createBranding(d *schema.ResourceData, m interface{}) error {
 	d.SetId(resource.UniqueId())
-	return updateBrand(d, m)
+	return updateBranding(d, m)
 }
 
-func readBrand(d *schema.ResourceData, m interface{}) error {
+func readBranding(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	b, err := api.Branding.Read()
 
@@ -74,22 +74,22 @@ func readBrand(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func updateBrand(d *schema.ResourceData, m interface{}) error {
-	b := buildBrand(d)
+func updateBranding(d *schema.ResourceData, m interface{}) error {
+	b := buildBranding(d)
 	api := m.(*management.Management)
 	err := api.Branding.Update(b)
 	if err != nil {
 		return err
 	}
-	return readBrand(d, m)
+	return readBranding(d, m)
 }
 
-func deleteBrand(d *schema.ResourceData, m interface{}) error {
+func deleteBranding(d *schema.ResourceData, m interface{}) error {
 	d.SetId("")
 	return nil
 }
 
-func buildBrand(d *schema.ResourceData) *management.Branding {
+func buildBranding(d *schema.ResourceData) *management.Branding {
 	b := &management.Branding{
 		LogoURL: String(d, "logo_url"),
 	}
