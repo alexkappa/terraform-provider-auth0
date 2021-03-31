@@ -18,6 +18,9 @@ resource "auth0_branding" "my_brand" {
 		primary = "#0059d6"
 		page_background = "#000000"
 	}
+	universal_login {
+		body = "<!DOCTYPE html><html><head>{%- auth0:head -%}</head><body>{%- auth0:widget -%}</body></html>"
+	}
 }
 ```
 
@@ -25,12 +28,19 @@ resource "auth0_branding" "my_brand" {
 
 The following arguments are supported:
 
-* `colors` - (Optional) List(Resource). Configuration settings for Universal Login colors. See [Colors](#colors).
-* `logo_url` - (Optional) String. Configuration settings for Universal Login logo URL.
+* `colors` - (Optional) List(Resource). Configuration settings for colors for branding. See [Colors](#colors).
+* `logo_url` - (Optional) String. URL of logo for branding.
+* `universal_login` - (Optional) List(Resource). Configuration settings for Universal Login. See [Universal Login](#universal_login). This capability can only be used if the tenant has [Custom Domains](https://auth0.com/docs/custom-domains) enabled.
 
-### `colors`
+### `Colors`
 
 `colors` supports the following arguments:
 
 * `page_background` - (Optional) String, Hexadecimal. Background color of login pages.
 * `primary` - (Optional) String, Hexadecimal. Primary button background color.
+
+### `Universal Login`
+
+`universal_login` supports the following arguments:
+
+* `body` - (Optional) String, body of login pages.
