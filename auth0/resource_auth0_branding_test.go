@@ -20,6 +20,7 @@ func TestAccBranding(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "logo_url", "https://mycompany.org/v1/logo.png"),
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "colors.0.primary", "#0059d6"),
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "colors.0.page_background", "#000000"),
+					resource.TestCheckResourceAttr("auth0_branding.my_brand", "universal_login.0.body", "<!DOCTYPE html><html><head>{%- auth0:head -%}</head><body>{%- auth0:widget -%}</body></html>"),
 				),
 			},
 			{
@@ -28,6 +29,7 @@ func TestAccBranding(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "logo_url", "https://mycompany.org/v2/logo.png"),
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "colors.0.primary", "#ffa629"),
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "colors.0.page_background", "#ffffff"),
+					resource.TestCheckResourceAttr("auth0_branding.my_brand", "universal_login.0.body", "<!DOCTYPE html><html><head>{%- auth0:head -%}</head><body>{%- auth0:widget -%}</body></html>"),
 				),
 			},
 		},
@@ -41,6 +43,9 @@ resource "auth0_branding" "my_brand" {
 		primary = "#0059d6"
 		page_background = "#000000"
 	}
+	universal_login {
+		body = "<!DOCTYPE html><html><head>{%- auth0:head -%}</head><body>{%- auth0:widget -%}</body></html>"
+	}
 }
 `
 
@@ -50,6 +55,9 @@ resource "auth0_branding" "my_brand" {
 	colors {
 		primary = "#ffa629"
 		page_background = "#ffffff"
+	}
+	universal_login {
+		body = "<!DOCTYPE html><html><head>{%- auth0:head -%}</head><body>{%- auth0:widget -%}</body></html>"
 	}
 }
 `
