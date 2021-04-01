@@ -93,7 +93,7 @@ func expandTenantErrorPage(d ResourceData) (errorPage *management.TenantErrorPag
 }
 
 func expandTenantFlags(d ResourceData, conditions ...Condition) (flags *management.TenantFlags) {
-	List(d, "flags").Elem(func(d ResourceData) {
+	List(d, "flags", conditions...).Elem(func(d ResourceData) {
 		flags = &management.TenantFlags{
 			ChangePasswordFlowV1:              Bool(d, "change_pwd_flow_v1", conditions...),
 			EnableClientConnections:           Bool(d, "enable_client_connections", conditions...),
