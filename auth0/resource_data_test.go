@@ -1,7 +1,11 @@
 package auth0
 
 import (
+	"errors"
+	"fmt"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
 func TestMapData(t *testing.T) {
@@ -69,5 +73,43 @@ func TestIsNil(t *testing.T) {
 		if !isNil(v) {
 			t.Errorf("Expected isNil(%#v) to return true", v)
 		}
+	}
+}
+
+func checkDataSourceStateMatchesResourceState(dataSourceName, resourceName string, includeFields []string) func(*terraform.State) error {
+	return func(s *terraform.State) error {
+		ds, ok := s.RootModule().Resources[dataSourceName]
+		if !ok {
+			return fmt.Errorf("can't find %s in state", dataSourceName)
+		}
+
+		rs, ok := s.RootModule().Resources[resourceName]
+		if !ok {
+			return fmt.Errorf("can't find %s in state", resourceName)
+		}
+
+		dsAttr := ds.Primary.Attributes
+		rsAttr := rs.Primary.Attributes
+
+		errMsg := ""
+
+		for _, k := range includeFields {
+			if k == "%" {
+				continue
+			}
+			if dsAttr[k] != rsAttr[k] {
+				// ignore data sources where an empty list is being compared against a null list.
+				if k[len(k)-1:] == "#" && (dsAttr[k] == "" || dsAttr[k] == "0") && (rsAttr[k] == "" || rsAttr[k] == "0") {
+					continue
+				}
+				errMsg += fmt.Sprintf("%s is %s; want %s\n", k, dsAttr[k], rsAttr[k])
+			}
+		}
+
+		if errMsg != "" {
+			return errors.New(errMsg)
+		}
+
+		return nil
 	}
 }
