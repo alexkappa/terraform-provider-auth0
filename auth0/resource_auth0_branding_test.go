@@ -18,18 +18,20 @@ func TestAccBranding(t *testing.T) {
 				Config: TestAccBrandingConfigCreate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "logo_url", "https://mycompany.org/v1/logo.png"),
+					resource.TestCheckResourceAttr("auth0_branding.my_brand", "favicon_url", "https://mycompany.org/favicon.ico"),
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "colors.0.primary", "#0059d6"),
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "colors.0.page_background", "#000000"),
-					resource.TestCheckResourceAttr("auth0_branding.my_brand", "universal_login.0.body", "<!DOCTYPE html><html><head>{%- auth0:head -%}</head><body>{%- auth0:widget -%}</body></html>"),
+					resource.TestCheckResourceAttr("auth0_branding.my_brand", "font.0.url", "https://mycompany.org/font/myfont.ttf"),
 				),
 			},
 			{
 				Config: TestAccBrandingConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "logo_url", "https://mycompany.org/v2/logo.png"),
+					resource.TestCheckResourceAttr("auth0_branding.my_brand", "favicon_url", "https://mycompany.org/favicon.ico"),
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "colors.0.primary", "#ffa629"),
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "colors.0.page_background", "#ffffff"),
-					resource.TestCheckResourceAttr("auth0_branding.my_brand", "universal_login.0.body", "<!DOCTYPE html><html><head>{%- auth0:head -%}</head><body>{%- auth0:widget -%}</body></html>"),
+					resource.TestCheckResourceAttr("auth0_branding.my_brand", "font.0.url", "https://mycompany.org/font/myfont.ttf"),
 				),
 			},
 		},
@@ -39,12 +41,13 @@ func TestAccBranding(t *testing.T) {
 const TestAccBrandingConfigCreate = `
 resource "auth0_branding" "my_brand" {
 	logo_url = "https://mycompany.org/v1/logo.png"
+	favicon_url = "https://mycompany.org/favicon.ico"
 	colors {
 		primary = "#0059d6"
 		page_background = "#000000"
 	}
-	universal_login {
-		body = "<!DOCTYPE html><html><head>{%- auth0:head -%}</head><body>{%- auth0:widget -%}</body></html>"
+	font {
+		url = "https://mycompany.org/font/myfont.ttf"
 	}
 }
 `
@@ -52,12 +55,13 @@ resource "auth0_branding" "my_brand" {
 const TestAccBrandingConfigUpdate = `
 resource "auth0_branding" "my_brand" {
 	logo_url = "https://mycompany.org/v2/logo.png"
+	favicon_url = "https://mycompany.org/favicon.ico"
 	colors {
 		primary = "#ffa629"
 		page_background = "#ffffff"
 	}
-	universal_login {
-		body = "<!DOCTYPE html><html><head>{%- auth0:head -%}</head><body>{%- auth0:widget -%}</body></html>"
+	font {
+		url = "https://mycompany.org/font/myfont.ttf"
 	}
 }
 `
