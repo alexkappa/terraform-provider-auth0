@@ -346,6 +346,7 @@ const testAccConnectionOIDCConfig = `
 
 resource "auth0_connection" "oidc" {
 	name     = "Acceptance-Test-OIDC-{{.random}}"
+	display_name     = "Acceptance-Test-OIDC-{{.random}}"
 	strategy = "oidc"
 	options {
 		client_id     = "123456"
@@ -371,6 +372,7 @@ const testAccConnectionOIDCConfigUpdate = `
 
 resource "auth0_connection" "oidc" {
 	name     = "Acceptance-Test-OIDC-{{.random}}"
+	display_name     = "Acceptance-Test-OIDC-{{.random}}"
 	strategy = "oidc"
 	options {
 		client_id     = "1234567"
