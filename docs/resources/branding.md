@@ -29,7 +29,9 @@ resource "auth0_branding" "my_brand" {
 The following arguments are supported:
 
 * `colors` - (Optional) List(Resource). Configuration settings for colors for branding. See [Colors](#colors).
+* `favicon_url` - (Optional) String. URL for the favicon.
 * `logo_url` - (Optional) String. URL of logo for branding.
+* `font` - (Optional) List(Resource). Configuration settings to customize the font. See [Font](#font).
 * `universal_login` - (Optional) List(Resource). Configuration settings for Universal Login. See [Universal Login](#universal_login). This capability can only be used if the tenant has [Custom Domains](https://auth0.com/docs/custom-domains) enabled.
 
 ### `Colors`
@@ -38,6 +40,12 @@ The following arguments are supported:
 
 * `page_background` - (Optional) String, Hexadecimal. Background color of login pages.
 * `primary` - (Optional) String, Hexadecimal. Primary button background color.
+
+### `font`
+
+`font` supports the following arguments:
+
+* `url` - (Required) String. URL for the custom font.
 
 ### `Universal Login`
 
