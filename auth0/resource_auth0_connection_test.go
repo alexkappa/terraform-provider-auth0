@@ -202,6 +202,8 @@ func TestAccConnectionAD(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.domain_aliases.3506632655", "example.com"),
 					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.domain_aliases.3154807651", "api.example.com"),
 					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.set_user_root_attributes", "on_each_login"),
+					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.non_persistent_attrs.180730300", "ethnicity"),
+					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.non_persistent_attrs.4212941087", "gender"),
 				),
 			},
 		},
@@ -221,6 +223,7 @@ resource "auth0_connection" "ad" {
 		]
 		ips = [ "192.168.1.1", "192.168.1.2" ]
 		set_user_root_attributes = "on_each_login"
+		non_persistent_attrs = ["ethnicity","gender"]
 	}
 }
 `
@@ -316,6 +319,8 @@ func TestAccConnectionOIDC(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.4080487570", "profile"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.881205744", "email"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.set_user_root_attributes", "on_each_login"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.non_persistent_attrs.4212941087", "gender"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.non_persistent_attrs.2145794573", "hair_color"),
 				),
 			},
 			{
@@ -364,6 +369,7 @@ resource "auth0_connection" "oidc" {
 		authorization_endpoint = "https://api.login.yahoo.com/oauth2/request_auth"
 		scopes                 = [ "openid", "email", "profile" ]
 		set_user_root_attributes = "on_each_login"
+		non_persistent_attrs = ["gender","hair_color"]
 	}
 }
 `
