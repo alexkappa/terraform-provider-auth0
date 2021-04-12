@@ -10,8 +10,8 @@ import (
 
 func newDataClient() *schema.Resource {
 	clientSchema := newComputedClientSchema()
-	clientSchema["name"].Optional = true
-	clientSchema["client_id"].Optional = true
+	addOptionalFieldsToSchema(clientSchema, "name", "client_id")
+
 	return &schema.Resource{
 		Read:   readDataClient,
 		Schema: clientSchema,
@@ -19,8 +19,7 @@ func newDataClient() *schema.Resource {
 }
 
 func newComputedClientSchema() map[string]*schema.Schema {
-	clientSchema := newClient().Schema
-	makeComputed(clientSchema)
+	clientSchema := datasourceSchemaFromResourceSchema(newClient().Schema)
 	delete(clientSchema, "client_secret_rotation_trigger")
 	return clientSchema
 }

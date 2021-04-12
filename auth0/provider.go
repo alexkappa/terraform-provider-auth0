@@ -108,20 +108,3 @@ func TerraformVersion() string {
 func TerraformSDKVersion() string {
 	return meta.SDKVersionString()
 }
-
-func makeComputed(s map[string]*schema.Schema) {
-	for _, p := range s {
-		p.Optional = false
-		p.Required = false
-		p.Computed = true
-		p.MaxItems = 0
-		p.MinItems = 0
-		p.ValidateFunc = nil
-		p.DefaultFunc = nil
-		p.Default = nil
-		p.AtLeastOneOf = nil
-		if resource, ok := p.Elem.(*schema.Resource); ok {
-			makeComputed(resource.Schema)
-		}
-	}
-}
