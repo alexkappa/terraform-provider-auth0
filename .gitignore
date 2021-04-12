@@ -1,19 +1,40 @@
-*.out
-*.log
-*.bak
-*~
-.*.swp
-.idea
-*.test
-*.iml
-*.tfplan
-*.tfstate
-*.tfstate.backup
-.*/
-!.github/
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
 terraform-provider-auth0
-website/vendor
-website/.bundle
-website/build
-website/node_modules
-.env
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Dependency directories (remove the comment below to include it)
+vendor/
+
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# VSCode ###
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+*.code-workspace

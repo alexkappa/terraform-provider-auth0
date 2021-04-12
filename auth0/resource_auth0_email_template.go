@@ -7,8 +7,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
-	"gopkg.in/auth0.v4"
-	"gopkg.in/auth0.v4/management"
+	"gopkg.in/auth0.v5"
+	"gopkg.in/auth0.v5/management"
 )
 
 func newEmailTemplate() *schema.Resource {
@@ -28,6 +28,7 @@ func newEmailTemplate() *schema.Resource {
 				Required: true,
 				ValidateFunc: validation.StringInSlice([]string{
 					"verify_email",
+					"verify_email_by_code",
 					"reset_email",
 					"welcome_email",
 					"blocked_account",

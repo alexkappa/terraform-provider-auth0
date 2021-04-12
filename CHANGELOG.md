@@ -1,3 +1,74 @@
+## 0.20.0
+
+ENHANCEMENTS:
+
+* resource:auth0_connection: Add support for `WindowsLive` (aka Microsoft Account) strategy ([#335](https://github.com/alexkappa/terraform-provider-auth0/pull/335))
+* resource:auth0_email_template: Add `verify_email_by_code` template to available email templates ([#350](https://github.com/alexkappa/terraform-provider-auth0/pull/350))
+* resource:auth0_hook: Add support for `HookSecrets` within Hooks ([#262](https://github.com/alexkappa/terraform-provider-auth0/pull/262))
+* resource:auth0_hook: Add `dependencies` array to support dependencies within hooks ([#312](https://github.com/alexkappa/terraform-provider-auth0/pull/312))
+* resource:auth0_log_stream: Add support for `Sumologic` Log Stream type ([#331](https://github.com/alexkappa/terraform-provider-auth0/pull/331))
+* resource:auth0_prompt: Add `identifier_first` field to prompt in order to utilize the new identifier first flow with New Universal Login ([#321](https://github.com/alexkappa/terraform-provider-auth0/pull/321))
+
+NOTES:
+
+* Clarified the required scope needed to get `client_secret` from client endpoint ([#333](https://github.com/alexkappa/terraform-provider-auth0/pull/333)) 
+* Fixed typo in Connection Docs ([#341](https://github.com/alexkappa/terraform-provider-auth0/pull/341))
+* Add `Enabled_Locales` to Documentation ([#345](https://github.com/alexkappa/terraform-provider-auth0/pull/345))
+* Moved `defauilt_redirection_url` to bottom to match upstream source ([#345](https://github.com/alexkappa/terraform-provider-auth0/pull/345))
+
+## 0.19.0
+
+ENHANCEMENTS:
+
+* resource/auth0_connection: Add `set_user_root_attributes` to more connections [#324](https://github.com/alexkappa/terraform-provider-auth0/pull/324)
+
+## 0.18.0
+
+FEATURES:
+
+* resource/auth0_connection: Add support for `mfa` options ([#313](https://github.com/alexkappa/terraform-provider-auth0/pull/313)).
+* resource/auth0_client: Add support for `idle_token_lifetime`, `infinite_idle_token_lifetime` and `infinite_token_lifetime` to `refresh_token` options ([#314](https://github.com/alexkappa/terraform-provider-auth0/pull/314)).
+
+## 0.17.2
+
+BUG FIXES:
+
+* resource/auth0_client: Improve handling of `mobile` attributes and introduce validation.
+
+NOTES:
+
+* Fixed a typo in `validation.IsURLWithNoFragment()` error message.
+
+## 0.17.1
+
+## 0.17.0
+
+BUG FIXES:
+
+* resource/auth0_client: Fix handling of `mobile` attributes ([#305](https://github.com/alexkappa/terraform-provider-auth0/pull/305)).
+
+## 0.16.1
+
+BUG FIXES:
+
+* resource/auth0_connection: Fix `validation` field to correctly define a `min` and `max` `username` lengths ([#258](https://github.com/alexkappa/terraform-provider-auth0/pull/258)).
+
+## 0.16.0
+
+FEATURES:
+
+* resource/auth0_log_stream: Support for LogStreams ([#270](https://github.com/alexkappa/terraform-provider-auth0/pull/270)).
+
+NOTES:
+
+* Upgrade to `gopkg.in/auth0.v5` (`v5.2.2`)
+
+## 0.15.2
+
+ENHANCEMENTS:
+
+* resource/auth0_connection: Support for additional fields for `samlp` connection ([#268](https://github.com/alexkappa/terraform-provider-auth0/pull/268)).
+
 ## 0.15.1
 
 ENHANCEMENTS:

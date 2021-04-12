@@ -1,13 +1,14 @@
 package auth0
 
 import (
+	"log"
 	"regexp"
 	"testing"
 
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"gopkg.in/auth0.v4/management"
+	"gopkg.in/auth0.v5/management"
 
 	"github.com/alexkappa/terraform-provider-auth0/auth0/internal/random"
 )
@@ -29,6 +30,7 @@ func init() {
 					return err
 				}
 				for _, user := range l.Users {
+					log.Printf("[DEBUG] ✗ %s", user.GetName())
 					if e := api.User.Delete(user.GetID()); e != nil {
 						multierror.Append(err, e)
 					}

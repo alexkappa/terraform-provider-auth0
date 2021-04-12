@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/structure"
 
-	"gopkg.in/auth0.v4"
+	"gopkg.in/auth0.v5"
 )
 
 // ResourceData generalises schema.ResourceData so that we can reuse the
@@ -129,8 +129,12 @@ func (md MapData) Set(key string, value interface{}) error {
 }
 
 func isNil(v interface{}) bool {
-	return v == nil || (reflect.ValueOf(v).Kind() == reflect.Ptr && reflect.ValueOf(v).IsNil())
-
+	rv := reflect.ValueOf(v)
+	switch rv.Kind() {
+	case reflect.Ptr, reflect.Slice, reflect.Map:
+		return rv.IsNil()
+	}
+	return v == nil
 }
 
 func isZero(v interface{}) bool {
@@ -194,6 +198,14 @@ func All(conditions ...Condition) Condition {
 	}
 }
 
+// Not is a condition that evaluates to true if its child condition evaluates to
+// false. False otherwise.
+func Not(condition Condition) Condition {
+	return func(d ResourceData, key string) bool {
+		return !condition.Eval(d, key)
+	}
+}
+
 // String accesses the value held by key and type asserts it to a pointer to a
 // string.
 func String(d ResourceData, key string, conditions ...Condition) (s *string) {
@@ -210,6 +222,16 @@ func Int(d ResourceData, key string, conditions ...Condition) (i *int) {
 	v, ok := d.GetOk(key)
 	if ok && Any(conditions...).Eval(d, key) {
 		i = auth0.Int(v.(int))
+	}
+	return
+}
+
+// Float64 accesses the value held by key and type asserts it to a pointer to a
+// float64.
+func Float64(d ResourceData, key string, conditions ...Condition) (f *float64) {
+	v, ok := d.GetOk(key)
+	if ok && Any(conditions...).Eval(d, key) {
+		f = auth0.Float64(v.(float64))
 	}
 	return
 }

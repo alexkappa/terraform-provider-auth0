@@ -19,7 +19,7 @@ jobs:
       id: go
 
     - name: Determine version
-      run: echo ::set-env name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
+      run: echo VERSION=$(echo $GITHUB_REF | cut -d / -f 3 | sed -e "s/^v//") >> $GITHUB_ENV
     
     - name: Import GPG key
       id: gpg

@@ -8,8 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
-	"gopkg.in/auth0.v4"
-	"gopkg.in/auth0.v4/management"
+	"gopkg.in/auth0.v5"
+	"gopkg.in/auth0.v5/management"
 )
 
 func newConnection() *schema.Resource {
@@ -23,12 +23,17 @@ func newConnection() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema:        connectionSchema,
-		SchemaVersion: 1,
+		SchemaVersion: 2,
 		StateUpgraders: []schema.StateUpgrader{
 			{
 				Type:    connectionSchemaV0().CoreConfigSchema().ImpliedType(),
 				Upgrade: connectionSchemaUpgradeV0,
 				Version: 0,
+			},
+			{
+				Type:    connectionSchemaV1().CoreConfigSchema().ImpliedType(),
+				Upgrade: connectionSchemaUpgradeV1,
+				Version: 1,
 			},
 		},
 	}
@@ -81,8 +86,31 @@ var connectionSchema = map[string]*schema.Schema{
 		Elem: &schema.Resource{
 			Schema: map[string]*schema.Schema{
 				"validation": {
-					Type:     schema.TypeMap,
-					Elem:     &schema.Schema{Type: schema.TypeString},
+					Type:     schema.TypeList,
+					MaxItems: 1,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"username": {
+								Optional: true,
+								Type:     schema.TypeList,
+								MaxItems: 1,
+								Elem: &schema.Resource{
+									Schema: map[string]*schema.Schema{
+										"min": {
+											Type:         schema.TypeInt,
+											Optional:     true,
+											ValidateFunc: validation.IntAtLeast(1),
+										},
+										"max": {
+											Type:         schema.TypeInt,
+											Optional:     true,
+											ValidateFunc: validation.IntAtLeast(1),
+										},
+									},
+								},
+							},
+						},
+					},
 					Optional: true,
 				},
 				"password_policy": {
@@ -362,6 +390,33 @@ var connectionSchema = map[string]*schema.Schema{
 					Type:     schema.TypeString,
 					Optional: true,
 				},
+				"mfa": {
+					Type:     schema.TypeList,
+					MaxItems: 1,
+					Optional: true,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"active": {
+								Type:     schema.TypeBool,
+								Optional: true,
+							},
+							"return_enroll_settings": {
+								Type:     schema.TypeBool,
+								Optional: true,
+							},
+						},
+					},
+				},
+
+				"set_user_root_attributes": {
+					Type:     schema.TypeString,
+					Optional: true,
+					Computed: true,
+					ValidateFunc: validation.StringInSlice([]string{
+						"on_each_login", "on_first_login",
+					}, false),
+					Description: "Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using an external IdP. Possible values are 'on_each_login' (default value, it configures the connection to automatically update the root attributes from the external IdP with each user login. When this setting is used, root attributes cannot be independently updated), 'on_first_login' (configures the connection to only set the root attributes on first login, allowing them to be independently updated thereafter)",
+				},
 
 				// apple options
 				"team_id": {
@@ -548,6 +603,16 @@ func connectionSchemaV0() *schema.Resource {
 	return &schema.Resource{Schema: s}
 }
 
+func connectionSchemaV1() *schema.Resource {
+	s := connectionSchema
+	s["validation"] = &schema.Schema{
+		Type:     schema.TypeMap,
+		Elem:     &schema.Schema{Type: schema.TypeString},
+		Optional: true,
+	}
+	return &schema.Resource{Schema: s}
+}
+
 func connectionSchemaUpgradeV0(state map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
 
 	o, ok := state["options"]
@@ -585,6 +650,39 @@ func connectionSchemaUpgradeV0(state map[string]interface{}, meta interface{}) (
 	return state, nil
 }
 
+func connectionSchemaUpgradeV1(state map[string]interface{}, meta interface{}) (map[string]interface{}, error) {
+
+	o, ok := state["options"]
+	if !ok {
+		return state, nil
+	}
+
+	l, ok := o.([]interface{})
+	if ok && len(l) > 0 {
+
+		m := l[0].(map[string]interface{})
+
+		v, ok := m["validation"]
+		if !ok {
+			return state, nil
+		}
+
+		validation := v.(interface{})
+
+		m["validation"] = []map[string][]interface{}{
+			{
+				"username": []interface{}{validation},
+			},
+		}
+
+		state["options"] = []interface{}{m}
+
+		log.Print("[DEBUG] Schema upgrade: options.validation has been migrated to options.validation.user")
+	}
+
+	return state, nil
+}
+
 func createConnection(d *schema.ResourceData, m interface{}) error {
 	c := expandConnection(d)
 	api := m.(*management.Management)
@@ -610,6 +708,7 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 
 	d.SetId(auth0.StringValue(c.ID))
 	d.Set("name", c.Name)
+	d.Set("display_name", c.DisplayName)
 	d.Set("is_domain_connection", c.IsDomainConnection)
 	d.Set("strategy", c.Strategy)
 	d.Set("options", flattenConnectionOptions(d, c.Options))

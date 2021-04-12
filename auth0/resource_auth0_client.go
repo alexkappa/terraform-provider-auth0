@@ -7,8 +7,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
-	"gopkg.in/auth0.v4"
-	"gopkg.in/auth0.v4/management"
+	"gopkg.in/auth0.v5"
+	"gopkg.in/auth0.v5/management"
 
 	v "github.com/alexkappa/terraform-provider-auth0/auth0/internal/validation"
 )
@@ -20,6 +20,7 @@ func newClient() *schema.Resource {
 		Read:   readClient,
 		Update: updateClient,
 		Delete: deleteClient,
+
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -427,11 +428,19 @@ func newClient() *schema.Resource {
 									"app_package_name": {
 										Type:     schema.TypeString,
 										Optional: true,
+										AtLeastOneOf: []string{
+											"mobile.0.android.0.app_package_name",
+											"mobile.0.android.0.sha256_cert_fingerprints",
+										},
 									},
 									"sha256_cert_fingerprints": {
 										Type:     schema.TypeList,
 										Optional: true,
 										Elem:     &schema.Schema{Type: schema.TypeString},
+										AtLeastOneOf: []string{
+											"mobile.0.android.0.app_package_name",
+											"mobile.0.android.0.sha256_cert_fingerprints",
+										},
 									},
 								},
 							},
@@ -445,10 +454,18 @@ func newClient() *schema.Resource {
 									"team_id": {
 										Type:     schema.TypeString,
 										Optional: true,
+										AtLeastOneOf: []string{
+											"mobile.0.ios.0.team_id",
+											"mobile.0.ios.0.app_bundle_identifier",
+										},
 									},
 									"app_bundle_identifier": {
 										Type:     schema.TypeString,
 										Optional: true,
+										AtLeastOneOf: []string{
+											"mobile.0.ios.0.team_id",
+											"mobile.0.ios.0.app_bundle_identifier",
+										},
 									},
 								},
 							},
@@ -493,6 +510,18 @@ func newClient() *schema.Resource {
 							Optional: true,
 						},
 						"token_lifetime": {
+							Type:     schema.TypeInt,
+							Optional: true,
+						},
+						"infinite_token_lifetime": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
+						"infinite_idle_token_lifetime": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
+						"idle_token_lifetime": {
 							Type:     schema.TypeInt,
 							Optional: true,
 						},
@@ -621,10 +650,13 @@ func expandClient(d *schema.ResourceData) *management.Client {
 
 	List(d, "refresh_token", IsNewResource(), HasChange()).Elem(func(d ResourceData) {
 		c.RefreshToken = &management.ClientRefreshToken{
-			RotationType:   String(d, "rotation_type"),
-			ExpirationType: String(d, "expiration_type"),
-			Leeway:         Int(d, "leeway"),
-			TokenLifetime:  Int(d, "token_lifetime"),
+			RotationType:              String(d, "rotation_type"),
+			ExpirationType:            String(d, "expiration_type"),
+			Leeway:                    Int(d, "leeway"),
+			TokenLifetime:             Int(d, "token_lifetime"),
+			InfiniteTokenLifetime:     Bool(d, "infinite_token_lifetime"),
+			InfiniteIdleTokenLifetime: Bool(d, "infinite_idle_token_lifetime"),
+			IdleTokenLifetime:         Int(d, "idle_token_lifetime"),
 		}
 	})
 
@@ -701,15 +733,19 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		c.Mobile = make(map[string]interface{})
 
 		List(d, "android").Elem(func(d ResourceData) {
-			m := make(map[string]interface{})
-			m["app_package_name"] = String(d, "app_package_name")
-			m["sha256_cert_fingerprints"] = String(d, "sha256_cert_fingerprints")
+			m := make(MapData)
+			m.Set("app_package_name", String(d, "app_package_name"))
+			m.Set("sha256_cert_fingerprints", Slice(d, "sha256_cert_fingerprints"))
+
+			c.Mobile["android"] = m
 		})
 
 		List(d, "ios").Elem(func(d ResourceData) {
-			m := make(map[string]interface{})
-			m["team_id"] = String(d, "app_package_name")
-			m["app_bundle_identifier"] = String(d, "sha256_cert_fingerprints")
+			m := make(MapData)
+			m.Set("team_id", String(d, "team_id"))
+			m.Set("app_bundle_identifier", String(d, "app_bundle_identifier"))
+
+			c.Mobile["ios"] = m
 		})
 	})
 
@@ -783,6 +819,9 @@ func flattenClientRefreshTokenConfiguration(refresh_token *management.ClientRefr
 		m["expiration_type"] = refresh_token.ExpirationType
 		m["leeway"] = refresh_token.Leeway
 		m["token_lifetime"] = refresh_token.TokenLifetime
+		m["infinite_token_lifetime"] = refresh_token.InfiniteTokenLifetime
+		m["infinite_idle_token_lifetime"] = refresh_token.InfiniteIdleTokenLifetime
+		m["idle_token_lifetime"] = refresh_token.IdleTokenLifetime
 	}
 	return []interface{}{m}
 }

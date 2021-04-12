@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"log"
 	"strings"
 	"testing"
 
@@ -8,7 +9,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"gopkg.in/auth0.v4/management"
+	"gopkg.in/auth0.v5/management"
 )
 
 func init() {
@@ -26,10 +27,12 @@ func init() {
 					return err
 				}
 				for _, role := range l.Roles {
-					if strings.Contains(role.GetName(), "Acceptance Test") {
+					log.Printf("[DEBUG] ➝ %s", role.GetName())
+					if strings.Contains(role.GetName(), "Test") {
 						if e := api.Role.Delete(role.GetID()); e != nil {
 							multierror.Append(err, e)
 						}
+						log.Printf("[DEBUG] ✗ %s", role.GetName())
 					}
 				}
 				if err != nil {
