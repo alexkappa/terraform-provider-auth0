@@ -254,6 +254,7 @@ func TestAccConnectionAzureAD(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.scopes.1268340351", "ext_profile"),
 					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.scopes.541325467", "ext_groups"),
 					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.set_user_root_attributes", "on_each_login"),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.should_trust_email_verified_connection", "never_set_emails_as_verified"),
 				),
 			},
 		},
@@ -284,6 +285,7 @@ resource "auth0_connection" "azure_ad" {
 			"ext_profile"
 		]
 		set_user_root_attributes = "on_each_login"
+		should_trust_email_verified_connection = "never_set_emails_as_verified"
 	}
 }
 `

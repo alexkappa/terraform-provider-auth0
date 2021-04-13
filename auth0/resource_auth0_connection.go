@@ -425,6 +425,15 @@ var connectionSchema = map[string]*schema.Schema{
 					Description: "If there are user fields that should not be stored in Auth0 databases due to privacy reasons, you can add them to the DenyList here",
 				},
 
+				"should_trust_email_verified_connection": {
+					Type:     schema.TypeString,
+					Optional: true,
+					ValidateFunc: validation.StringInSlice([]string{
+						"never_set_emails_as_verified", "always_set_emails_as_verified",
+					}, false),
+					Description: "Choose how Auth0 sets the email_verified field in the user profile.",
+				},
+
 				// apple options
 				"team_id": {
 					Type:        schema.TypeString,
