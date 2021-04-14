@@ -25,10 +25,6 @@ function (user, context, callback) {
 EOF
   trigger_id = "pre-user-registration"
   enabled = true
-    
-  secrets = {
-    foo = "bar"    
-  }
 
   dependencies = {
     auth0 = "2.30.0"
@@ -45,4 +41,3 @@ The following arguments are supported:
 * `script` - (Required) Code to be executed when this hook runs
 * `trigger_id` - (Required) Execution stage of this rule. Can be credentials-exchange, pre-user-registration, post-user-registration, post-change-password, or send-phone-message
 * `dependencies` - (Optional) Dependencies of this hook used by webtask server
-* `secrets` - (Optional) Map(String), sets the hook secrets associated with this hook. If specified, any secrets not listed here will be removed from the hook.
