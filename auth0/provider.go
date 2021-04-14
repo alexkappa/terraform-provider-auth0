@@ -63,6 +63,10 @@ func init() {
 			"auth0_log_stream":      newLogStream(),
 			"auth0_branding":        newBranding(),
 		},
+		DataSourcesMap: map[string]*schema.Resource{
+			"auth0_client":        newDataClient(),
+			"auth0_global_client": newDataGlobalClient(),
+		},
 		ConfigureFunc: Configure,
 	}
 }
