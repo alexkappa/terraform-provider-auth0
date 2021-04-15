@@ -118,7 +118,7 @@ func updateGuardian(d *schema.ResourceData, m interface{}) (err error) {
 		}
 	}
 	//TODO: Extend for other MFA types
-	if _, ok := d.GetOk("phone"); ok || hasPhoneBlockPresentInNewState(d)  {
+	if _, ok := d.GetOk("phone"); ok || hasPhoneBlockPresentInNewState(d) {
 		api.Guardian.MultiFactor.Phone.Enable(true)
 		if err := configurePhone(d, api); err != nil {
 			return err
@@ -151,7 +151,7 @@ func configurePhone(d *schema.ResourceData, api *management.Management) (err err
 	}
 
 	mtypes := typeAssertToStringArray(Slice(md, "message_types"))
-	if mtypes != nil{
+	if mtypes != nil {
 		if err := api.Guardian.MultiFactor.Phone.UpdateMessageTypes(&management.PhoneMessageTypes{MessageTypes: mtypes}); err != nil {
 			return err
 		}
