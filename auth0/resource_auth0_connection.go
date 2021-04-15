@@ -417,6 +417,22 @@ var connectionSchema = map[string]*schema.Schema{
 					}, false),
 					Description: "Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using an external IdP. Possible values are 'on_each_login' (default value, it configures the connection to automatically update the root attributes from the external IdP with each user login. When this setting is used, root attributes cannot be independently updated), 'on_first_login' (configures the connection to only set the root attributes on first login, allowing them to be independently updated thereafter)",
 				},
+				"non_persistent_attrs": {
+					Type:        schema.TypeSet,
+					Elem:        &schema.Schema{Type: schema.TypeString},
+					Optional:    true,
+					Computed:    true,
+					Description: "If there are user fields that should not be stored in Auth0 databases due to privacy reasons, you can add them to the DenyList here",
+				},
+
+				"should_trust_email_verified_connection": {
+					Type:     schema.TypeString,
+					Optional: true,
+					ValidateFunc: validation.StringInSlice([]string{
+						"never_set_emails_as_verified", "always_set_emails_as_verified",
+					}, false),
+					Description: "Choose how Auth0 sets the email_verified field in the user profile.",
+				},
 
 				// apple options
 				"team_id": {
