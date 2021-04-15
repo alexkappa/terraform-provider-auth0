@@ -52,6 +52,7 @@ func flattenConnectionOptionsGitHub(o *management.ConnectionOptionsGitHub) inter
 		"client_id":                o.GetClientID(),
 		"client_secret":            o.GetClientSecret(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
 		"scopes":                   o.Scopes(),
 	}
 }
@@ -62,6 +63,7 @@ func flattenConnectionOptionsWindowsLive(o *management.ConnectionOptionsWindowsL
 		"client_secret":            o.GetClientSecret(),
 		"scopes":                   o.Scopes(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
 		"strategy_version":         o.GetStrategyVersion(),
 	}
 }
@@ -82,6 +84,7 @@ func flattenConnectionOptionsAuth0(d ResourceData, o *management.ConnectionOptio
 		"custom_scripts":                 o.CustomScripts,
 		"mfa":                            o.MFA,
 		"configuration":                  Map(d, "configuration"), // does not get read back
+		"non_persistent_attrs":           o.GetNonPersistentAttrs(),
 	}
 }
 
@@ -92,6 +95,7 @@ func flattenConnectionOptionsGoogleOAuth2(o *management.ConnectionOptionsGoogleO
 		"allowed_audiences":        o.AllowedAudiences,
 		"scopes":                   o.Scopes(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
 	}
 }
 
@@ -104,6 +108,7 @@ func flattenConnectionOptionsOAuth2(o *management.ConnectionOptionsOAuth2) inter
 		"authorization_endpoint":   o.GetAuthorizationURL(),
 		"scripts":                  o.Scripts,
 		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
 	}
 }
 
@@ -113,6 +118,7 @@ func flattenConnectionOptionsFacebook(o *management.ConnectionOptionsFacebook) i
 		"client_secret":            o.GetClientSecret(),
 		"scopes":                   o.Scopes(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
 	}
 }
 
@@ -124,6 +130,7 @@ func flattenConnectionOptionsApple(o *management.ConnectionOptionsApple) interfa
 		"key_id":                   o.GetKeyID(),
 		"scopes":                   o.Scopes(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
 	}
 }
 
@@ -134,6 +141,7 @@ func flattenConnectionOptionsLinkedin(o *management.ConnectionOptionsLinkedin) i
 		"strategy_version":         o.GetStrategyVersion(),
 		"scopes":                   o.Scopes(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
 	}
 }
 
@@ -144,6 +152,7 @@ func flattenConnectionOptionsSalesforce(o *management.ConnectionOptionsSalesforc
 		"community_base_url":       o.GetCommunityBaseURL(),
 		"scopes":                   o.Scopes(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
 	}
 }
 
@@ -182,6 +191,7 @@ func flattenConnectionOptionsOIDC(o *management.ConnectionOptionsOIDC) interface
 		"userinfo_endpoint":        o.GetUserInfoEndpoint(),
 		"authorization_endpoint":   o.GetAuthorizationEndpoint(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
 	}
 }
 
@@ -199,6 +209,7 @@ func flattenConnectionOptionsEmail(o *management.ConnectionOptionsEmail) interfa
 			"length":    o.OTP.GetLength(),
 		},
 		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
 	}
 }
 
@@ -213,6 +224,7 @@ func flattenConnectionOptionsAD(o *management.ConnectionOptionsAD) interface{} {
 		"disable_cache":            o.GetDisableCache(),
 		"brute_force_protection":   o.GetBruteForceProtection(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
 	}
 }
 
@@ -233,6 +245,7 @@ func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) int
 		"max_groups_to_retrieve":   o.GetMaxGroupsToRetrieve(),
 		"scopes":                   o.Scopes(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
 	}
 }
 
@@ -258,6 +271,7 @@ func flattenConnectionOptionsSAML(o *management.ConnectionOptionsSAML) interface
 		"request_template":         o.GetRequestTemplate(),
 		"user_id_attribute":        o.GetUserIDAttribute(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
 	}
 }
 
@@ -319,10 +333,12 @@ func expandConnection(d ResourceData) *management.Connection {
 }
 
 func expandConnectionOptionsGitHub(d ResourceData) *management.ConnectionOptionsGitHub {
+
 	o := &management.ConnectionOptionsGitHub{
-		ClientID:          String(d, "client_id"),
-		ClientSecret:      String(d, "client_secret"),
-		SetUserAttributes: String(d, "set_user_root_attributes"),
+		ClientID:           String(d, "client_id"),
+		ClientSecret:       String(d, "client_secret"),
+		SetUserAttributes:  String(d, "set_user_root_attributes"),
+		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -333,7 +349,8 @@ func expandConnectionOptionsGitHub(d ResourceData) *management.ConnectionOptions
 func expandConnectionOptionsAuth0(d ResourceData) *management.ConnectionOptions {
 
 	o := &management.ConnectionOptions{
-		PasswordPolicy: String(d, "password_policy"),
+		PasswordPolicy:     String(d, "password_policy"),
+		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
 	}
 
 	List(d, "validation").Elem(func(d ResourceData) {
@@ -388,10 +405,11 @@ func expandConnectionOptionsAuth0(d ResourceData) *management.ConnectionOptions 
 func expandConnectionOptionsGoogleOAuth2(d ResourceData) *management.ConnectionOptionsGoogleOAuth2 {
 
 	o := &management.ConnectionOptionsGoogleOAuth2{
-		ClientID:          String(d, "client_id"),
-		ClientSecret:      String(d, "client_secret"),
-		AllowedAudiences:  Set(d, "allowed_audiences").List(),
-		SetUserAttributes: String(d, "set_user_root_attributes"),
+		ClientID:           String(d, "client_id"),
+		ClientSecret:       String(d, "client_secret"),
+		AllowedAudiences:   Set(d, "allowed_audiences").List(),
+		SetUserAttributes:  String(d, "set_user_root_attributes"),
+		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -401,11 +419,12 @@ func expandConnectionOptionsGoogleOAuth2(d ResourceData) *management.ConnectionO
 func expandConnectionOptionsOAuth2(d ResourceData) *management.ConnectionOptionsOAuth2 {
 
 	o := &management.ConnectionOptionsOAuth2{
-		ClientID:          String(d, "client_id"),
-		ClientSecret:      String(d, "client_secret"),
-		AuthorizationURL:  String(d, "authorization_endpoint"),
-		TokenURL:          String(d, "token_endpoint"),
-		SetUserAttributes: String(d, "set_user_root_attributes"),
+		ClientID:           String(d, "client_id"),
+		ClientSecret:       String(d, "client_secret"),
+		AuthorizationURL:   String(d, "authorization_endpoint"),
+		TokenURL:           String(d, "token_endpoint"),
+		SetUserAttributes:  String(d, "set_user_root_attributes"),
+		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
 	}
 	o.Scripts = Map(d, "scripts")
 
@@ -417,9 +436,10 @@ func expandConnectionOptionsOAuth2(d ResourceData) *management.ConnectionOptions
 func expandConnectionOptionsFacebook(d ResourceData) *management.ConnectionOptionsFacebook {
 
 	o := &management.ConnectionOptionsFacebook{
-		ClientID:          String(d, "client_id"),
-		ClientSecret:      String(d, "client_secret"),
-		SetUserAttributes: String(d, "set_user_root_attributes"),
+		ClientID:           String(d, "client_id"),
+		ClientSecret:       String(d, "client_secret"),
+		SetUserAttributes:  String(d, "set_user_root_attributes"),
+		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -430,11 +450,12 @@ func expandConnectionOptionsFacebook(d ResourceData) *management.ConnectionOptio
 func expandConnectionOptionsApple(d ResourceData) *management.ConnectionOptionsApple {
 
 	o := &management.ConnectionOptionsApple{
-		ClientID:          String(d, "client_id"),
-		ClientSecret:      String(d, "client_secret"),
-		TeamID:            String(d, "team_id"),
-		KeyID:             String(d, "key_id"),
-		SetUserAttributes: String(d, "set_user_root_attributes"),
+		ClientID:           String(d, "client_id"),
+		ClientSecret:       String(d, "client_secret"),
+		TeamID:             String(d, "team_id"),
+		KeyID:              String(d, "key_id"),
+		SetUserAttributes:  String(d, "set_user_root_attributes"),
+		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -445,10 +466,11 @@ func expandConnectionOptionsApple(d ResourceData) *management.ConnectionOptionsA
 func expandConnectionOptionsLinkedin(d ResourceData) *management.ConnectionOptionsLinkedin {
 
 	o := &management.ConnectionOptionsLinkedin{
-		ClientID:          String(d, "client_id"),
-		ClientSecret:      String(d, "client_secret"),
-		StrategyVersion:   Int(d, "strategy_version"),
-		SetUserAttributes: String(d, "set_user_root_attributes"),
+		ClientID:           String(d, "client_id"),
+		ClientSecret:       String(d, "client_secret"),
+		StrategyVersion:    Int(d, "strategy_version"),
+		SetUserAttributes:  String(d, "set_user_root_attributes"),
+		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -459,10 +481,11 @@ func expandConnectionOptionsLinkedin(d ResourceData) *management.ConnectionOptio
 func expandConnectionOptionsSalesforce(d ResourceData) *management.ConnectionOptionsSalesforce {
 
 	o := &management.ConnectionOptionsSalesforce{
-		ClientID:          String(d, "client_id"),
-		ClientSecret:      String(d, "client_secret"),
-		CommunityBaseURL:  String(d, "community_base_url"),
-		SetUserAttributes: String(d, "set_user_root_attributes"),
+		ClientID:           String(d, "client_id"),
+		ClientSecret:       String(d, "client_secret"),
+		CommunityBaseURL:   String(d, "community_base_url"),
+		SetUserAttributes:  String(d, "set_user_root_attributes"),
+		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -473,10 +496,11 @@ func expandConnectionOptionsSalesforce(d ResourceData) *management.ConnectionOpt
 func expandConnectionOptionsWindowsLive(d ResourceData) *management.ConnectionOptionsWindowsLive {
 
 	o := &management.ConnectionOptionsWindowsLive{
-		ClientID:          String(d, "client_id"),
-		ClientSecret:      String(d, "client_secret"),
-		StrategyVersion:   Int(d, "strategy_version"),
-		SetUserAttributes: String(d, "set_user_root_attributes"),
+		ClientID:           String(d, "client_id"),
+		ClientSecret:       String(d, "client_secret"),
+		StrategyVersion:    Int(d, "strategy_version"),
+		SetUserAttributes:  String(d, "set_user_root_attributes"),
+		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -521,6 +545,7 @@ func expandConnectionOptionsEmail(d ResourceData) *management.ConnectionOptionsE
 		},
 		BruteForceProtection: Bool(d, "brute_force_protection"),
 		SetUserAttributes:    String(d, "set_user_root_attributes"),
+		NonPersistentAttrs:   castToListOfStrings(Set(d, "non_persistent_attrs").List()),
 	}
 
 	List(d, "totp").Elem(func(d ResourceData) {
@@ -536,14 +561,15 @@ func expandConnectionOptionsEmail(d ResourceData) *management.ConnectionOptionsE
 func expandConnectionOptionsAD(d ResourceData) *management.ConnectionOptionsAD {
 
 	o := &management.ConnectionOptionsAD{
-		DomainAliases:     Set(d, "domain_aliases").List(),
-		TenantDomain:      String(d, "tenant_domain"),
-		LogoURL:           String(d, "icon_url"),
-		IPs:               Set(d, "ips").List(),
-		CertAuth:          Bool(d, "use_cert_auth"),
-		Kerberos:          Bool(d, "use_kerberos"),
-		DisableCache:      Bool(d, "disable_cache"),
-		SetUserAttributes: String(d, "set_user_root_attributes"),
+		DomainAliases:      Set(d, "domain_aliases").List(),
+		TenantDomain:       String(d, "tenant_domain"),
+		LogoURL:            String(d, "icon_url"),
+		IPs:                Set(d, "ips").List(),
+		CertAuth:           Bool(d, "use_cert_auth"),
+		Kerberos:           Bool(d, "use_kerberos"),
+		DisableCache:       Bool(d, "disable_cache"),
+		SetUserAttributes:  String(d, "set_user_root_attributes"),
+		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
 	}
 
 	// `brute_force_protection` will default to true by the API if we don't
@@ -575,6 +601,7 @@ func expandConnectionOptionsAzureAD(d ResourceData) *management.ConnectionOption
 		LogoURL:             String(d, "icon_url"),
 		IdentityAPI:         String(d, "identity_api"),
 		SetUserAttributes:   String(d, "set_user_root_attributes"),
+		NonPersistentAttrs:  castToListOfStrings(Set(d, "non_persistent_attrs").List()),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -598,6 +625,7 @@ func expandConnectionOptionsOIDC(d ResourceData) *management.ConnectionOptionsOI
 		UserInfoEndpoint:      String(d, "userinfo_endpoint"),
 		TokenEndpoint:         String(d, "token_endpoint"),
 		SetUserAttributes:     String(d, "set_user_root_attributes"),
+		NonPersistentAttrs:    castToListOfStrings(Set(d, "non_persistent_attrs").List()),
 	}
 
 	expandConnectionOptionsScopes(d, o)
@@ -622,6 +650,7 @@ func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSA
 		UserIDAttribute:    String(d, "user_id_attribute"),
 		LogoURL:            String(d, "icon_url"),
 		SetUserAttributes:  String(d, "set_user_root_attributes"),
+		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
 	}
 
 	List(d, "idp_initiated").Elem(func(d ResourceData) {
@@ -649,4 +678,12 @@ func expandConnectionOptionsScopes(d ResourceData, s scoper) {
 	for _, scope := range rm {
 		s.SetScopes(false, scope.(string))
 	}
+}
+
+func castToListOfStrings(interfaces []interface{}) *[]string {
+	var strings []string
+	for _, v := range interfaces {
+		strings = append(strings, v.(string))
+	}
+	return &strings
 }
