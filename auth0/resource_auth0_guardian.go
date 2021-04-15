@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -118,7 +119,11 @@ func updateGuardian(d *schema.ResourceData, m interface{}) (err error) {
 		}
 	}
 	//TODO: Extend for other MFA types
-	if _, ok := d.GetOk("phone"); ok || hasPhoneBlockPresentInNewState(d) {
+	ok, err := factorShouldBeUpdated(d, "phone")
+	if err != nil {
+		return err
+	}
+	if ok {
 		api.Guardian.MultiFactor.Phone.Enable(true)
 		if err := configurePhone(d, api); err != nil {
 			return err
@@ -236,7 +241,11 @@ func readGuardian(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	if _, ok := d.GetOk("phone"); ok || hasPhoneBlockPresentInNewState(d) {
+	ok, err := factorShouldBeUpdated(d, "phone")
+	if err != nil {
+		return err
+	}
+	if ok {
 		phoneData["options"] = []interface{}{md}
 		err = d.Set("phone", []interface{}{phoneData})
 	} else {
@@ -248,9 +257,9 @@ func readGuardian(d *schema.ResourceData, m interface{}) error {
 	return nil
 }
 
-func hasPhoneBlockPresentInNewState(d *schema.ResourceData) bool {
-	if ok := d.HasChange("phone"); ok {
-		_, n := d.GetChange("phone")
+func hasBlockPresentInNewState(d *schema.ResourceData, factor string) bool {
+	if ok := d.HasChange(factor); ok {
+		_, n := d.GetChange(factor)
 		newState := n.([]interface{})
 		return len(newState) > 0
 	}
@@ -297,4 +306,23 @@ func typeAssertToStringArray(from []interface{}) *[]string {
 		stringArray[i] = v.(string)
 	}
 	return &stringArray
+}
+
+func isFactorEnabled(factor string, api *management.Management) (*bool, error) {
+	mfs, err := api.Guardian.MultiFactor.List()
+	if err != nil {
+		return nil, err
+	}
+	for _, mf := range mfs {
+		if *mf.Name == factor {
+			return mf.Enabled, nil
+		}
+	}
+	return nil, fmt.Errorf("factor %s is not among the possible factors", factor)
+}
+
+// Determines if the factor should be updated. This depends on if it is in the state, if it is about to be added to the state.
+func factorShouldBeUpdated(d *schema.ResourceData, factor string) (bool, error) {
+	_, ok := d.GetOk(factor)
+	return ok || hasBlockPresentInNewState(d, factor), nil
 }
