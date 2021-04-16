@@ -1,6 +1,6 @@
 module github.com/alexkappa/terraform-provider-auth0
 
-go 1.15
+go 1.16
 
 require (
 	github.com/hashicorp/go-multierror v1.1.1

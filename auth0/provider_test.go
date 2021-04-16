@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"embed"
 	"os"
 	"testing"
 
@@ -55,4 +56,17 @@ func TestProvider_debugDefaults(t *testing.T) {
 			t.Fatalf("Expected debug to be %v, but got %v", expected, debug)
 		}
 	}
+}
+
+//go:embed fixtures
+var fixtures embed.FS
+
+// Fixture retrieves the contents of an embedded fixture file. If the file is
+// not found Fixture() panics.
+func Fixture(s string) string {
+	b, err := fixtures.ReadFile(s)
+	if err != nil {
+		panic(err)
+	}
+	return string(b)
 }
