@@ -230,22 +230,23 @@ func flattenConnectionOptionsAD(o *management.ConnectionOptionsAD) interface{} {
 
 func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) interface{} {
 	return map[string]interface{}{
-		"client_id":                o.GetClientID(),
-		"client_secret":            o.GetClientSecret(),
-		"app_id":                   o.GetAppID(),
-		"tenant_domain":            o.GetTenantDomain(),
-		"domain":                   o.GetDomain(),
-		"domain_aliases":           o.DomainAliases,
-		"icon_url":                 o.GetLogoURL(),
-		"identity_api":             o.GetIdentityAPI(),
-		"waad_protocol":            o.GetWAADProtocol(),
-		"waad_common_endpoint":     o.GetUseCommonEndpoint(),
-		"use_wsfed":                o.GetUseWSFederation(),
-		"api_enable_users":         o.GetEnableUsersAPI(),
-		"max_groups_to_retrieve":   o.GetMaxGroupsToRetrieve(),
-		"scopes":                   o.Scopes(),
-		"set_user_root_attributes": o.GetSetUserAttributes(),
-		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
+		"client_id":                              o.GetClientID(),
+		"client_secret":                          o.GetClientSecret(),
+		"app_id":                                 o.GetAppID(),
+		"tenant_domain":                          o.GetTenantDomain(),
+		"domain":                                 o.GetDomain(),
+		"domain_aliases":                         o.DomainAliases,
+		"icon_url":                               o.GetLogoURL(),
+		"identity_api":                           o.GetIdentityAPI(),
+		"waad_protocol":                          o.GetWAADProtocol(),
+		"waad_common_endpoint":                   o.GetUseCommonEndpoint(),
+		"use_wsfed":                              o.GetUseWSFederation(),
+		"api_enable_users":                       o.GetEnableUsersAPI(),
+		"max_groups_to_retrieve":                 o.GetMaxGroupsToRetrieve(),
+		"scopes":                                 o.Scopes(),
+		"set_user_root_attributes":               o.GetSetUserAttributes(),
+		"non_persistent_attrs":                   o.GetNonPersistentAttrs(),
+		"should_trust_email_verified_connection": o.GetTrustEmailVerified(),
 	}
 }
 
@@ -602,6 +603,7 @@ func expandConnectionOptionsAzureAD(d ResourceData) *management.ConnectionOption
 		IdentityAPI:         String(d, "identity_api"),
 		SetUserAttributes:   String(d, "set_user_root_attributes"),
 		NonPersistentAttrs:  castToListOfStrings(Set(d, "non_persistent_attrs").List()),
+		TrustEmailVerified:  String(d, "should_trust_email_verified_connection"),
 	}
 
 	expandConnectionOptionsScopes(d, o)
