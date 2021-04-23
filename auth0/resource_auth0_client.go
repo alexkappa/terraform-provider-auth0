@@ -164,10 +164,6 @@ func newClient() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"custom_login_page_preview": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
 			"form_template": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -575,7 +571,6 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("cross_origin_loc", c.CrossOriginLocation)
 	d.Set("custom_login_page_on", c.CustomLoginPageOn)
 	d.Set("custom_login_page", c.CustomLoginPage)
-	d.Set("custom_login_page_preview", c.CustomLoginPagePreview)
 	d.Set("form_template", c.FormTemplate)
 	d.Set("token_endpoint_auth_method", c.TokenEndpointAuthMethod)
 	d.Set("jwt_configuration", flattenClientJwtConfiguration(c.JWTConfiguration))
@@ -642,7 +637,6 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		CrossOriginLocation:            String(d, "cross_origin_loc"),
 		CustomLoginPageOn:              Bool(d, "custom_login_page_on"),
 		CustomLoginPage:                String(d, "custom_login_page"),
-		CustomLoginPagePreview:         String(d, "custom_login_page_preview"),
 		FormTemplate:                   String(d, "form_template"),
 		TokenEndpointAuthMethod:        String(d, "token_endpoint_auth_method"),
 		InitiateLoginURI:               String(d, "initiate_login_uri"),
