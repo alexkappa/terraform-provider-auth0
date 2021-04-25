@@ -1,3 +1,23 @@
+## 0.21.0
+
+ENHANCEMENTS:
+
+* resource/auth0_branding: Add support for brand settings for Universal Login ([#357](https://github.com/alexkappa/terraform-provider-auth0/pull/357))
+* resource/auth0_connection: Add `display_name` to the resource ([#304](https://github.com/alexkappa/terraform-provider-auth0/pull/304))
+* resource/auth0_connection: Add support for `non_persistent_attrs` to the resource ([#376](https://github.com/alexkappa/terraform-provider-auth0/pull/376))
+* resource/auth0_connection: Add support for `should_trust_email_verified_connection` to Azure AD connections. ([#378](https://github.com/alexkappa/terraform-provider-auth0/pull/378))
+* resource/auth0_guardian: Add support for Guardian's phone (SMS/voice) based MFA. ([#371](https://github.com/alexkappa/terraform-provider-auth0/pull/371))
+
+BUG FIXES:
+
+* resource/auth0_client: Remove `custom_login_page_preview` as its an information-only field that should not be managed by Terraform ([#379](https://github.com/alexkappa/terraform-provider-auth0/pull/379))
+* resource/auth0_connection: Fix connection & prompts test to use `display_name` and set `identifier_first`. ([#366](https://github.com/alexkappa/terraform-provider-auth0/pull/366))
+* resource/auth0_tenant: Change to `TypeList` from `TypeSet` as first language listed is seen as the tenant default. ([#369](https://github.com/alexkappa/terraform-provider-auth0/pull/369))
+
+NOTES:
+
+* No longer closing stale tickets/PRs after 5 days of inactivity ([#356](https://github.com/alexkappa/terraform-provider-auth0/pull/356))
+
 ## 0.20.0
 
 ENHANCEMENTS:
