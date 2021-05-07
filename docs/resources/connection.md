@@ -123,8 +123,8 @@ With the `auth0` connection strategy, `options` supports the following arguments
 
 With the `google-oauth2` connection strategy, `options` supports the following arguments:
 
-* `client_id` - (Optional) Facebook client ID.
-* `client_secret` - (Optional) Facebook client secret.
+* `client_id` - (Optional) Google client ID.
+* `client_secret` - (Optional) Google client secret.
 * `allowed_audiences` - (Optional) List of allowed audiences.
 * `scopes` - (Optional) Scopes.
 * `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
@@ -155,6 +155,7 @@ With the `facebook` connection strategy, `options` supports the following argume
 * `client_secret` - (Optional) Facebook client secret.
 * `scopes` - (Optional) Scopes.
 * `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
+* `non_persistent_attrs` - (Optional) If there are user fields that should not be stored in Auth0 databases due to privacy reasons, you can add them to the denylist. See [here](https://auth0.com/docs/security/denylist-user-attributes) for more info.
 
 **Example**:
 
@@ -180,6 +181,7 @@ With the `apple` connection strategy, `options` supports the following arguments
 * `key_id` - (Optional) Key ID.
 * `scopes` - (Optional) Scopes.
 * `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
+* `non_persistent_attrs` - (Optional) If there are user fields that should not be stored in Auth0 databases due to privacy reasons, you can add them to the denylist. See [here](https://auth0.com/docs/security/denylist-user-attributes) for more info.
 
 **Example**:
 
@@ -206,6 +208,7 @@ With the `linkedin` connection strategy, `options` supports the following argume
 * `strategy_version` - (Optional) Version 1 is deprecated, use version 2.
 * `scopes` - (Optional) Scopes.
 * `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
+* `non_persistent_attrs` - (Optional) If there are user fields that should not be stored in Auth0 databases due to privacy reasons, you can add them to the denylist. See [here](https://auth0.com/docs/security/denylist-user-attributes) for more info.
 
 **Example**:
 
@@ -229,6 +232,7 @@ With the `github` connection strategy, `options` supports the following argument
 * `client_id` - (Optional) GitHub client ID.
 * `client_secret` - (Optional) GitHub client secret.
 * `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
+* `non_persistent_attrs` - (Optional) If there are user fields that should not be stored in Auth0 databases due to privacy reasons, you can add them to the denylist. See [here](https://auth0.com/docs/security/denylist-user-attributes) for more info.
 
 **Example**:
 
@@ -253,6 +257,7 @@ With the `salesforce`, `salesforce-community` and `salesforce-sandbox` connectio
 * `community_base_url` - (Optional) String.
 * `scopes` - (Optional) Scopes.
 * `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
+* `non_persistent_attrs` - (Optional) If there are user fields that should not be stored in Auth0 databases due to privacy reasons, you can add them to the denylist. See [here](https://auth0.com/docs/security/denylist-user-attributes) for more info.
 
 **Example**:
 
@@ -282,6 +287,7 @@ With the `oidc` connection strategy, `options` supports the following arguments:
 * `token_endpoint` - (Optional)
 * `userinfo_endpoint` - (Optional)
 * `authorization_endpoint` - (Optional)
+* `non_persistent_attrs` - (Optional) If there are user fields that should not be stored in Auth0 databases due to privacy reasons, you can add them to the denylist. See [here](https://auth0.com/docs/security/denylist-user-attributes) for more info.
 
 ### OAuth2
 
@@ -293,7 +299,8 @@ With the `oauth2` connection strategy, `options` supports the following argument
 * `token_endpoint` - (Optional)
 * `authorization_endpoint` - (Optional)
 * `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
-  
+* `non_persistent_attrs` - (Optional) If there are user fields that should not be stored in Auth0 databases due to privacy reasons, you can add them to the denylist. See [here](https://auth0.com/docs/security/denylist-user-attributes) for more info.
+
 **Example**:
 
 ```hcl
@@ -331,6 +338,8 @@ With the `waad` connection strategy, `options` supports the following arguments:
 * `waad_protocol` - (Optional)
 * `waad_common_endpoint` - (Optional) Indicates whether or not to use the common endpoint rather than the default endpoint. Typically enabled if you're using this for a multi-tenant application in Azure AD.
 * `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
+* `non_persistent_attrs` - (Optional) If there are user fields that should not be stored in Auth0 databases due to privacy reasons, you can add them to the denylist. See [here](https://auth0.com/docs/security/denylist-user-attributes) for more info.
+* `should_trust_email_verified_connection` - (Optional) Determines how Auth0 sets the email_verified field in the user profile. Can either be set to `never_set_emails_as_verified` or `always_set_emails_as_verified`.
 
 ### Twilio / SMS
 
@@ -401,6 +410,7 @@ With the `samlp` connection strategy, `options` supports the following arguments
 * `request_template` - (Optional) Template that formats the SAML request
 * `user_id_attribute` - (Optional) Attribute in the SAML token that will be mapped to the user_id property in Auth0.
 * `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
+* `non_persistent_attrs` - (Optional) If there are user fields that should not be stored in Auth0 databases due to privacy reasons, you can add them to the denylist. See [here](https://auth0.com/docs/security/denylist-user-attributes) for more info.
 
 **Example**:
 ```hcl
@@ -423,6 +433,32 @@ resource "auth0_connection" "samlp" {
 			baz = "baa"
 		}
 	}
+}
+```
+
+### Windowslive
+
+With the `windowslive` connection strategy, `options` supports the following arguments:
+
+* `client_id` - (Optional) API key.
+* `client_secret` - (Optional) secret key.
+* `strategy_version` - (Optional) Version 1 is deprecated, use version 2.
+* `scopes` - (Optional) Scopes.
+* `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
+* `non_persistent_attrs` - (Optional) If there are user fields that should not be stored in Auth0 databases due to privacy reasons, you can add them to the denylist. See [here](https://auth0.com/docs/security/denylist-user-attributes) for more info.
+
+**Example**:
+
+```hcl
+resource "auth0_connection" "windowslive" {
+  name = "Windowslive-Connection"
+  strategy = "windowslive"
+  options {
+    client_id = "<client-id>"
+    client_secret = "<client-secret>"
+    strategy_version = 2
+    scopes = [ "signin", "graph_user" ]
+  }
 }
 ```
 

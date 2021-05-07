@@ -136,7 +136,7 @@ func newTenant() *schema.Resource {
 				ValidateFunc: validation.FloatAtLeast(0.01),
 			},
 			"enabled_locales": {
-				Type:     schema.TypeSet,
+				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Optional: true,
 				Computed: true,
@@ -316,7 +316,7 @@ func buildTenant(d *schema.ResourceData) *management.Tenant {
 		SessionLifetime:     Float64(d, "session_lifetime"),
 		SandboxVersion:      String(d, "sandbox_version"),
 		IdleSessionLifetime: Float64(d, "idle_session_lifetime", IsNewResource(), HasChange()),
-		EnabledLocales:      Set(d, "enabled_locales").List(),
+		EnabledLocales:      List(d, "enabled_locales").List(),
 		ChangePassword:      expandTenantChangePassword(d),
 		GuardianMFAPage:     expandTenantGuardianMFAPage(d),
 		ErrorPage:           expandTenantErrorPage(d),

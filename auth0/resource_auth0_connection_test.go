@@ -202,6 +202,8 @@ func TestAccConnectionAD(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.domain_aliases.3506632655", "example.com"),
 					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.domain_aliases.3154807651", "api.example.com"),
 					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.set_user_root_attributes", "on_each_login"),
+					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.non_persistent_attrs.180730300", "ethnicity"),
+					resource.TestCheckResourceAttr("auth0_connection.ad", "options.0.non_persistent_attrs.4212941087", "gender"),
 				),
 			},
 		},
@@ -221,6 +223,7 @@ resource "auth0_connection" "ad" {
 		]
 		ips = [ "192.168.1.1", "192.168.1.2" ]
 		set_user_root_attributes = "on_each_login"
+		non_persistent_attrs = ["ethnicity","gender"]
 	}
 }
 `
@@ -251,6 +254,7 @@ func TestAccConnectionAzureAD(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.scopes.1268340351", "ext_profile"),
 					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.scopes.541325467", "ext_groups"),
 					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.set_user_root_attributes", "on_each_login"),
+					resource.TestCheckResourceAttr("auth0_connection.azure_ad", "options.0.should_trust_email_verified_connection", "never_set_emails_as_verified"),
 				),
 			},
 		},
@@ -281,6 +285,7 @@ resource "auth0_connection" "azure_ad" {
 			"ext_profile"
 		]
 		set_user_root_attributes = "on_each_login"
+		should_trust_email_verified_connection = "never_set_emails_as_verified"
 	}
 }
 `
@@ -316,6 +321,8 @@ func TestAccConnectionOIDC(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.4080487570", "profile"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.scopes.881205744", "email"),
 					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.set_user_root_attributes", "on_each_login"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.non_persistent_attrs.4212941087", "gender"),
+					resource.TestCheckResourceAttr("auth0_connection.oidc", "options.0.non_persistent_attrs.2145794573", "hair_color"),
 				),
 			},
 			{
@@ -346,6 +353,7 @@ const testAccConnectionOIDCConfig = `
 
 resource "auth0_connection" "oidc" {
 	name     = "Acceptance-Test-OIDC-{{.random}}"
+	display_name     = "Acceptance-Test-OIDC-{{.random}}"
 	strategy = "oidc"
 	options {
 		client_id     = "123456"
@@ -363,6 +371,7 @@ resource "auth0_connection" "oidc" {
 		authorization_endpoint = "https://api.login.yahoo.com/oauth2/request_auth"
 		scopes                 = [ "openid", "email", "profile" ]
 		set_user_root_attributes = "on_each_login"
+		non_persistent_attrs = ["gender","hair_color"]
 	}
 }
 `
@@ -371,6 +380,7 @@ const testAccConnectionOIDCConfigUpdate = `
 
 resource "auth0_connection" "oidc" {
 	name     = "Acceptance-Test-OIDC-{{.random}}"
+	display_name     = "Acceptance-Test-OIDC-{{.random}}"
 	strategy = "oidc"
 	options {
 		client_id     = "1234567"
@@ -1010,6 +1020,74 @@ resource "auth0_connection" "github" {
 }
 `
 
+func TestAccConnectionWindowslive(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccConnectionWindowsliveConfig, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.windowslive", "name", "Acceptance-Test-Windowslive-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "strategy", "windowslive"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.client_id", "client_id"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.client_secret", "client_secret"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.strategy_version", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.scopes.#", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.scopes.2458861461", "signin"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.scopes.3904585843", "graph_user"),
+				),
+			},
+			{
+				Config: random.Template(testAccConnectionWindowsliveConfigUpdate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.windowslive", "name", "Acceptance-Test-Windowslive-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "strategy", "windowslive"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.client_id", "client_id_update"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.client_secret", "client_secret_update"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.strategy_version", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.scopes.#", "1"),
+					resource.TestCheckResourceAttr("auth0_connection.windowslive", "options.0.scopes.2458861461", "signin"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionWindowsliveConfig = `
+
+resource "auth0_connection" "windowslive" {
+	name = "Acceptance-Test-Windowslive-{{.random}}"
+	is_domain_connection = false
+	strategy = "windowslive"
+	options {
+		client_id = "client_id"
+		client_secret = "client_secret"
+		strategy_version = 2
+		scopes = ["signin", "graph_user"]
+	}
+}
+`
+
+const testAccConnectionWindowsliveConfigUpdate = `
+
+resource "auth0_connection" "windowslive" {
+	name = "Acceptance-Test-Windowslive-{{.random}}"
+	is_domain_connection = false
+	strategy = "windowslive"
+	options {
+		client_id = "client_id_update"
+		client_secret = "client_secret_update"
+		strategy_version = 2
+		scopes = ["signin"]
+	}
+}
+`
+
 func TestAccConnectionConfiguration(t *testing.T) {
 
 	rand := random.String(6)
@@ -1204,6 +1282,7 @@ func TestAccConnectionSAML(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_connection.my_connection", "name", "Acceptance-Test-SAML-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "strategy", "samlp"),
+					random.TestCheckResourceAttr("auth0_connection.my_connection", "display_name", "Acceptance-Test-SAML-{{.random}}", rand),
 				),
 			},
 			{
@@ -1220,6 +1299,7 @@ func TestAccConnectionSAML(t *testing.T) {
 const testConnectionSAMLConfigCreate = `
 resource "auth0_connection" "my_connection" {
 	name = "Acceptance-Test-SAML-{{.random}}"
+	display_name = "Acceptance-Test-SAML-{{.random}}"
 	strategy = "samlp"
 	options {
 		signing_cert = <<EOF
@@ -1273,6 +1353,7 @@ EOF
 const testConnectionSAMLConfigUpdate = `
 resource "auth0_connection" "my_connection" {
 	name = "Acceptance-Test-SAML-{{.random}}"
+	display_name = "Acceptance-Test-SAML-{{.random}}"
 	strategy = "samlp"
 	options {
 		signing_cert = <<EOF

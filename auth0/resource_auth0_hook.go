@@ -29,6 +29,12 @@ func newHook() *schema.Resource {
 				ValidateFunc: validateHookNameFunc(),
 				Description:  "Name of this hook",
 			},
+			"dependencies": {
+				Type:        schema.TypeMap,
+				Elem:        schema.TypeString,
+				Optional:    true,
+				Description: "Dependencies of this hook used by webtask server",
+			},
 			"script": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -50,9 +56,16 @@ func newHook() *schema.Resource {
 					"post-user-registration, post-change-password" +
 					", or send-phone-message",
 			},
+			"secrets": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "The secrets associated with the hook",
+				Elem:        schema.TypeString,
+			},
 			"enabled": {
 				Type:        schema.TypeBool,
 				Optional:    true,
+				Computed:    true,
 				Description: "Whether the hook is enabled, or disabled",
 			},
 		},
@@ -66,6 +79,9 @@ func createHook(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(auth0.StringValue(c.ID))
+	if err := upsertHookSecrets(d, m); err != nil {
+		return err
+	}
 	return readHook(d, m)
 }
 
@@ -83,6 +99,7 @@ func readHook(d *schema.ResourceData, m interface{}) error {
 	}
 
 	d.Set("name", c.Name)
+	d.Set("dependencies", c.Dependencies)
 	d.Set("script", c.Script)
 	d.Set("trigger_id", c.TriggerID)
 	d.Set("enabled", c.Enabled)
@@ -96,7 +113,30 @@ func updateHook(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+	if err = upsertHookSecrets(d, m); err != nil {
+		return err
+	}
 	return readHook(d, m)
+}
+
+func upsertHookSecrets(d *schema.ResourceData, m interface{}) error {
+	if d.IsNewResource() || d.HasChange("secrets") {
+		secrets := Map(d, "secrets")
+		api := m.(*management.Management)
+		hookSecrets := toHookSecrets(secrets)
+		return api.Hook.ReplaceSecrets(d.Id(), hookSecrets)
+	}
+	return nil
+}
+
+func toHookSecrets(val map[string]interface{}) management.HookSecrets {
+	hookSecrets := management.HookSecrets{}
+	for key, value := range val {
+		if strVal, ok := value.(string); ok {
+			hookSecrets[key] = strVal
+		}
+	}
+	return hookSecrets
 }
 
 func deleteHook(d *schema.ResourceData, m interface{}) error {
@@ -115,12 +155,19 @@ func deleteHook(d *schema.ResourceData, m interface{}) error {
 }
 
 func buildHook(d *schema.ResourceData) *management.Hook {
-	return &management.Hook{
+	h := &management.Hook{
 		Name:      String(d, "name"),
 		Script:    String(d, "script"),
 		TriggerID: String(d, "trigger_id", IsNewResource()),
 		Enabled:   Bool(d, "enabled"),
 	}
+
+	deps := Map(d, "dependencies")
+	if deps != nil {
+		h.Dependencies = &deps
+	}
+
+	return h
 }
 
 func validateHookNameFunc() schema.SchemaValidateFunc {
