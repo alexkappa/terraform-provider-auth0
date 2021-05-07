@@ -33,6 +33,11 @@ EOF
   dependencies = {
     auth0 = "2.30.0"
   }
+
+  secrets = {
+    secretKey1 = secretValue1
+    secretKey2 = secretValue2
+  }
 }
 ```
 
