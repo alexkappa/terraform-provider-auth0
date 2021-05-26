@@ -1,3 +1,13 @@
+## Unreleased
+
+ENHANCEMENTS:
+
+* resource/auth0_client: Documentation removal of `custom_login_page_preview` field [#386](https://github.com/alexkappa/terraform-provider-auth0/pull/386)
+
+NOTES:
+
+* Bumped go-auth0 version to v5.17.0 [#398](https://github.com/alexkappa/terraform-provider-auth0/pull/398)
+
 ## 0.21.0
 
 ENHANCEMENTS:
