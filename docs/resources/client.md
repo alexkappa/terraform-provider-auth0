@@ -104,7 +104,6 @@ Arguments accepted by this resource include:
 * `cross_origin_loc` - (Optional) String. URL for the location on your site where the cross-origin verification takes place for the cross-origin auth flow. Used when performing auth in your own domain instead of through the Auth0-hosted login page.
 * `custom_login_page_on` - (Optional) Boolean. Indicates whether or not a custom login page is to be used.
 * `custom_login_page` - (Optional) String. Content of the custom login page.
-* `custom_login_page_preview` - (Optional) String.
 * `form_template` - (Optional) String. Form template for WS-Federation protocol.
 * `addons` - (Optional) List(Resource). Configuration settings for add-ons for this client. For details, see [Add-ons](#add-ons).
 * `token_endpoint_auth_method` - (Optional) String. Defines the requested authentication method for the token endpoint. Options include `none` (public client without a client secret), `client_secret_post` (client uses HTTP POST parameters), `client_secret_basic` (client uses HTTP Basic).
@@ -164,7 +163,7 @@ Arguments accepted by this resource include:
 * `wsfed`- (Optional) String
 * `zendesk`- (Optional) String
 * `zoom`- (Optional) String
-    
+
 ### SAML
 
 `samlp` supports the following arguments:
