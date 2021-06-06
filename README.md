@@ -52,42 +52,7 @@ $ terraform init
 
 See the [Auth0 Provider documentation](https://registry.terraform.io/providers/alexkappa/auth0/latest/docs) for all the available resources.
 
-Developers
-----------
+Contributing
+------------
 
-If you wish to work on the provider, you'll need [Go](http://www.golang.org) installed on your machine (version 1.10+ is *required*). You'll also need to correctly setup a [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding `$GOPATH/bin` to your `$PATH`.
-
-On how to develop custom terraform providers, read the [official guide](https://www.terraform.io/docs/extend/writing-custom-providers.html).
-
-To compile the provider, run `make build`. This will build the provider and install the provider binary in the `$GOPATH/bin` directory.
-
-```sh
-$ make build
-...
-$ $GOPATH/bin/terraform-provider-auth0
-...
-```
-
-In order to test the provider, you can simply run `make test`.
-
-```sh
-$ make test
-```
-
-In order to run the full suite of Acceptance tests, the following environment variables must be set:
-
-```sh
-AUTH0_DOMAIN=<your-auth0-tenant-domain>
-AUTH0_CLIENT_ID=<your-auth0-client-id>
-AUTH0_CLIENT_SECRET=<your-auth0-client-secret>
-```
-
-Then, run `make testacc`. 
-
-*Note:* The acceptance tests make calls to a real Auth0 tenant, and create real resources. Certain tests, for example
-for custom domains (`TestAccCustomDomain`), also require a paid Auth0 subscription to be able to run successfully. 
-
-At the time of writing, the following configuration steps are also required for the test tenant:
-
-* The `Username-Password-Authentication` connection must have _Requires Username_ option enabled for the user tests to 
-successfully run.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
