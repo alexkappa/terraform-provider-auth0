@@ -2,7 +2,7 @@
 
 Before you begin, read through some of the Terraform documentation on [Extending Terraform](https://www.terraform.io/docs/extend/index.html) and [Writing Custom Providers](https://learn.hashicorp.com/collections/terraform/providers).
 
-Finally the [HashiCorp Provider Design Principles](https://www.terraform.io/docs/extend/hashicorp-provider-design-principles.html) should expose the underlying principles for the design choices of this provider.
+Finally the [HashiCorp Provider Design Principles](https://www.terraform.io/docs/extend/hashicorp-provider-design-principles.html) explore the underlying principles for the design choices of this provider.
 
 ## Getting started
 
@@ -40,3 +40,18 @@ for custom domains (`TestAccCustomDomain`), also require a paid Auth0 subscripti
 
 * The `Username-Password-Authentication` connection must have _Requires Username_ option enabled for the user tests to 
 successfully run.
+
+## Releasing
+
+The Auth0 provider folloows the [Versioning and Changelog](https://www.terraform.io/docs/extend/best-practices/versioning.html) guidelines from HashiCorp.
+
+Prepare for the release by updating the [CHANGELOG](CHANGELOG.md). 
+
+To publish a new version, create a new git tag and push it.
+
+```bash
+git tag -a vX.Y.Z
+git push origin vX.Y.Z
+```
+
+This will trigger the [Release](https://github.com/alexkappa/terraform-provider-auth0/actions/workflows/release.yml) GitHub Action which creates a new release.
