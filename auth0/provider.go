@@ -3,6 +3,7 @@ package auth0
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/alexkappa/terraform-provider-auth0/version"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -89,7 +90,8 @@ func Configure(data *schema.ResourceData) (interface{}, error) {
 	return management.New(domain,
 		management.WithClientCredentials(id, secret),
 		management.WithDebug(debug),
-		management.WithUserAgent(userAgent))
+		management.WithUserAgent(userAgent),
+		management.WithTimeout(5*time.Minute))
 }
 
 func Version() string {
