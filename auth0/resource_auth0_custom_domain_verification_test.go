@@ -3,10 +3,10 @@ package auth0
 import (
 	"testing"
 
+	"github.com/alexkappa/terraform-provider-auth0/auth0/internal/digitalocean"
+	"github.com/alexkappa/terraform-provider-auth0/auth0/internal/random"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"github.com/terraform-providers/terraform-provider-auth0/auth0/internal/digitalocean"
-	"github.com/terraform-providers/terraform-provider-auth0/auth0/internal/random"
 )
 
 func TestAccCustomDomainVerification(t *testing.T) {
