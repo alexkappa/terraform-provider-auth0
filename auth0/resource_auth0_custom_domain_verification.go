@@ -1,11 +1,14 @@
 package auth0
 
 import (
+	"fmt"
+	"log"
 	"net/http"
+	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 
-	"gopkg.in/auth0.v5"
 	"gopkg.in/auth0.v5/management"
 )
 
@@ -26,17 +29,27 @@ func newCustomDomainVerification() *schema.Resource {
 				ForceNew: true,
 			},
 		},
+
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(5 * time.Minute),
+		},
 	}
 }
 
 func createCustomDomainVerification(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
-	c, err := api.CustomDomain.Verify(d.Get("custom_domain_id").(string))
-	if err != nil {
-		return err
-	}
-	d.SetId(auth0.StringValue(c.ID))
-	return nil
+	return resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+		c, err := api.CustomDomain.Verify(d.Get("custom_domain_id").(string))
+		if err != nil {
+			return resource.NonRetryableError(err)
+		}
+		if c.GetStatus() != "ready" {
+			return resource.RetryableError(fmt.Errorf("Custom domain has status %q", c.GetStatus()))
+		}
+		log.Printf("[INFO] Custom domain %s verified", c.GetDomain())
+		d.SetId(c.GetID())
+		return resource.NonRetryableError(readCustomDomainVerification(d, m))
+	})
 }
 
 func readCustomDomainVerification(d *schema.ResourceData, m interface{}) error {
@@ -51,9 +64,7 @@ func readCustomDomainVerification(d *schema.ResourceData, m interface{}) error {
 		}
 		return err
 	}
-
-	d.SetId(auth0.StringValue(c.ID))
-	d.Set("custom_domain_id", auth0.StringValue(c.ID))
+	d.Set("custom_domain_id", c.GetID())
 	return nil
 }
 
