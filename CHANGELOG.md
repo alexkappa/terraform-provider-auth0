@@ -1,12 +1,16 @@
-## Unreleased
+## 0.22.0
+
+FEATURES:
+
+* resource/auth0_custom_domain_verification: New resource to verify custom domains ([#228](https://github.com/alexkappa/terraform-provider-auth0/pull/228), [#410](https://github.com/alexkappa/terraform-provider-auth0/pull/410))
 
 ENHANCEMENTS:
 
-* resource/auth0_client: Documentation removal of `custom_login_page_preview` field [#386](https://github.com/alexkappa/terraform-provider-auth0/pull/386)
+* resource/auth0_client: Documentation removal of `custom_login_page_preview` field ([#386](https://github.com/alexkappa/terraform-provider-auth0/pull/386))
 
 NOTES:
 
-* Bumped go-auth0 version to v5.17.0 [#398](https://github.com/alexkappa/terraform-provider-auth0/pull/398)
+* Bumped go-auth0 version to v5.17.0 ([#398](https://github.com/alexkappa/terraform-provider-auth0/pull/398))
 
 ## 0.21.0
 
