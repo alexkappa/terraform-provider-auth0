@@ -262,7 +262,7 @@ var connectionSchema = map[string]*schema.Schema{
 					Type:        schema.TypeString,
 					Optional:    true,
 					Description: "",
-					Deprecated:  "use domain instead",
+					Deprecated:  "Use domain instead",
 				},
 				"domain": {
 					Type:        schema.TypeString,

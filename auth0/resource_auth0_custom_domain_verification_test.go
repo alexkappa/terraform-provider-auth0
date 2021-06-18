@@ -41,13 +41,11 @@ resource "digitalocean_record" "auth0_domain" {
 	type = upper(auth0_custom_domain.my_custom_domain.verification[0].methods[0].name)
 	name = "{{.random}}.auth.uat.alexkappa.com."
 	value = "${auth0_custom_domain.my_custom_domain.verification[0].methods[0].record}."
-	ttl = 60
 }
 
 resource "auth0_custom_domain" "my_custom_domain" {
 	domain = "{{.random}}.auth.uat.alexkappa.com"
 	type = "auth0_managed_certs"
-	verification_method = "txt"
 }
 
 resource "auth0_custom_domain_verification" "my_custom_domain_verification" {

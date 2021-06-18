@@ -15,7 +15,6 @@ With Auth0, you can use a custom domain to maintain a consistent user experience
 resource "auth0_custom_domain" "my_custom_domain" {
 	domain = "login.example.com"
 	type = "auth0_managed_certs"
-	verification_method = "txt"
 }
 
 resource "auth0_custom_domain_verification" "my_custom_domain_verification" {
