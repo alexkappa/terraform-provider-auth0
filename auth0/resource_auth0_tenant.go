@@ -320,7 +320,7 @@ func buildTenant(d *schema.ResourceData) *management.Tenant {
 		ChangePassword:      expandTenantChangePassword(d),
 		GuardianMFAPage:     expandTenantGuardianMFAPage(d),
 		ErrorPage:           expandTenantErrorPage(d),
-		Flags:               expandTenantFlags(d),
+		Flags:               expandTenantFlags(d, IsNewResource(), HasChange()),
 		UniversalLogin:      expandTenantUniversalLogin(d),
 	}
 
