@@ -408,6 +408,61 @@ var connectionSchema = map[string]*schema.Schema{
 					},
 				},
 
+				// custom sms gateway options
+				"provider": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "Defines the custom sms_gateway provider",
+					ValidateFunc: validation.StringInSlice([]string{
+						"sms_gateway",
+					}, false),
+				},
+				"gateway_url": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "Defines a custom sms gateway to use instead of twilio",
+				},
+				"gateway_authentication": {
+					Type:        schema.TypeList,
+					MaxItems:    1,
+					Optional:    true,
+					Description: "Defines the parameters used to generate the auth token for the custom gateway",
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"method": {
+								Type:        schema.TypeString,
+								Optional:    true,
+								Description: "Authentication method (default is bearer token)",
+							},
+							"subject": {
+								Type:        schema.TypeString,
+								Optional:    true,
+								Description: "Subject claim for the HS256 token sent to gateway_url",
+							},
+							"audience": {
+								Type:        schema.TypeString,
+								Optional:    true,
+								Description: "Audience claim for the HS256 token sent to gateway_url",
+							},
+							"secret": {
+								Type:        schema.TypeString,
+								Optional:    true,
+								Description: "Secret used to sign the HS256 token sent to gateway_url",
+							},
+							"secret_base64_encoded": {
+								Type:        schema.TypeBool,
+								Optional:    true,
+								Description: "Specifies whether or not the secret is base64 encoded",
+							},
+						},
+					},
+				},
+				"forward_request_info": {
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Description: "Specifies whether or not request info should be forwarded to sms gateway",
+				},
+
 				"set_user_root_attributes": {
 					Type:     schema.TypeString,
 					Optional: true,

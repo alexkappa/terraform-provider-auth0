@@ -171,6 +171,15 @@ func flattenConnectionOptionsSMS(o *management.ConnectionOptionsSMS) interface{}
 			"time_step": o.OTP.GetTimeStep(),
 			"length":    o.OTP.GetLength(),
 		},
+		"provider":    o.GetProvider(),
+		"gateway_url": o.GetGatewayUrl(),
+		"gateway_authentication": map[string]interface{}{
+			"method":                o.GatewayAuthentication.GetMethod(),
+			"subject":               o.GatewayAuthentication.GetSubject(),
+			"audience":              o.GatewayAuthentication.GetAudience(),
+			"secret_base64_encoded": o.GatewayAuthentication.GetSecretBase64Encoded(),
+		},
+		"forward_request_info": o.GetForwardRequestInfo(),
 	}
 }
 
@@ -519,6 +528,9 @@ func expandConnectionOptionsSMS(d ResourceData) *management.ConnectionOptionsSMS
 		TwilioSID:            String(d, "twilio_sid"),
 		TwilioToken:          String(d, "twilio_token"),
 		MessagingServiceSID:  String(d, "messaging_service_sid"),
+		Provider:             String(d, "provider"),
+		GatewayUrl:           String(d, "gateway_url"),
+		ForwardRequestInfo:   Bool(d, "forward_request_info"),
 		DisableSignup:        Bool(d, "disable_signup"),
 		BruteForceProtection: Bool(d, "brute_force_protection"),
 	}
@@ -527,6 +539,16 @@ func expandConnectionOptionsSMS(d ResourceData) *management.ConnectionOptionsSMS
 		o.OTP = &management.ConnectionOptionsOTP{
 			TimeStep: Int(d, "time_step"),
 			Length:   Int(d, "length"),
+		}
+	})
+
+	List(d, "gateway_authentication").Elem(func(d ResourceData) {
+		o.GatewayAuthentication = &management.ConnectionGatewayAuthentication{
+			Method:              String(d, "method"),
+			Subject:             String(d, "subject"),
+			Audience:            String(d, "audience"),
+			Secret:              String(d, "secret"),
+			SecretBase64Encoded: Bool(d, "secret_base64_encoded"),
 		}
 	})
 
