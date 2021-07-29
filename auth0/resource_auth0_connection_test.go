@@ -760,6 +760,55 @@ resource "auth0_connection" "google_oauth2" {
 }
 `
 
+func TestAccConnectionGoogleApps(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccConnectionGoogleApps, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.google_apps", "name", "Acceptance-Test-Google-Apps-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.google_apps", "strategy", "google-apps"),
+					resource.TestCheckResourceAttr("auth0_connection.google_apps", "options.0.client_id", ""),
+					resource.TestCheckResourceAttr("auth0_connection.google_apps", "options.0.client_secret", ""),
+					resource.TestCheckResourceAttr("auth0_connection.google_apps", "options.0.domain", "example.com"),
+					resource.TestCheckResourceAttr("auth0_connection.google_apps", "options.0.tenant_domain", "example.com"),
+					resource.TestCheckResourceAttr("auth0_connection.google_apps", "options.0.domain_aliases.#", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.google_apps", "options.0.domain_aliases.3506632655", "example.com"),
+					resource.TestCheckResourceAttr("auth0_connection.google_apps", "options.0.domain_aliases.3154807651", "api.example.com"),
+					resource.TestCheckResourceAttr("auth0_connection.google_apps", "options.0.api_enable_users", "true"),
+					resource.TestCheckResourceAttr("auth0_connection.google_apps", "options.0.scopes.#", "2"),
+					resource.TestCheckResourceAttr("auth0_connection.google_apps", "options.0.scopes.1268340351", "ext_profile"),
+					resource.TestCheckResourceAttr("auth0_connection.google_apps", "options.0.scopes.541325467", "ext_groups"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionGoogleApps = `
+
+resource "auth0_connection" "google_apps" {
+	name = "Acceptance-Test-Google-Apps-{{.random}}"
+	is_domain_connection = false
+	strategy = "google-apps"
+	options {
+		client_id = ""
+		client_secret = ""
+		domain = "example.com"
+		tenant_domain = "example.com"
+		domain_aliases = [ "example.com", "api.example.com" ]
+		api_enable_users = true
+		scopes = [ "ext_profile", "ext_groups" ]
+	}
+}
+`
+
 func TestAccConnectionFacebook(t *testing.T) {
 
 	rand := random.String(6)

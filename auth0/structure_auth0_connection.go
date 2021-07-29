@@ -16,6 +16,8 @@ func flattenConnectionOptions(d ResourceData, options interface{}) []interface{}
 		m = flattenConnectionOptionsAuth0(d, o)
 	case *management.ConnectionOptionsGoogleOAuth2:
 		m = flattenConnectionOptionsGoogleOAuth2(o)
+	case *management.ConnectionOptionsGoogleApps:
+		m = flattenConnectionOptionsGoogleApps(o)
 	case *management.ConnectionOptionsOAuth2:
 		m = flattenConnectionOptionsOAuth2(o)
 	case *management.ConnectionOptionsFacebook:
@@ -96,6 +98,21 @@ func flattenConnectionOptionsGoogleOAuth2(o *management.ConnectionOptionsGoogleO
 		"scopes":                   o.Scopes(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
 		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
+	}
+}
+
+func flattenConnectionOptionsGoogleApps(o *management.ConnectionOptionsGoogleApps) interface{} {
+	return map[string]interface{}{
+		"client_id":                o.GetClientID(),
+		"client_secret":            o.GetClientSecret(),
+		"domain":                   o.GetDomain(),
+		"tenant_domain":            o.GetTenantDomain(),
+		"api_enable_users":         o.GetEnableUsersAPI(),
+		"scopes":                   o.Scopes(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
+		"domain_aliases":           o.DomainAliases,
+		"icon_url":                 o.GetLogoURL(),
 	}
 }
 
@@ -295,6 +312,8 @@ func expandConnection(d ResourceData) *management.Connection {
 			c.Options = expandConnectionOptionsAuth0(d)
 		case management.ConnectionStrategyGoogleOAuth2:
 			c.Options = expandConnectionOptionsGoogleOAuth2(d)
+		case management.ConnectionStrategyGoogleApps:
+			c.Options = expandConnectionOptionsGoogleApps(d)
 		case management.ConnectionStrategyOAuth2:
 			c.Options = expandConnectionOptionsOAuth2(d)
 		case management.ConnectionStrategyFacebook:
@@ -417,6 +436,26 @@ func expandConnectionOptionsGoogleOAuth2(d ResourceData) *management.ConnectionO
 
 	return o
 }
+
+func expandConnectionOptionsGoogleApps(d ResourceData) *management.ConnectionOptionsGoogleApps {
+
+	o := &management.ConnectionOptionsGoogleApps{
+		ClientID:           String(d, "client_id"),
+		ClientSecret:       String(d, "client_secret"),
+		Domain:             String(d, "domain"),
+		TenantDomain:       String(d, "tenant_domain"),
+		EnableUsersAPI:     Bool(d, "api_enable_users"),
+		SetUserAttributes:  String(d, "set_user_root_attributes"),
+		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
+		DomainAliases:      Set(d, "domain_aliases").List(),
+		LogoURL:            String(d, "icon_url"),
+	}
+
+	expandConnectionOptionsScopes(d, o)
+
+	return o
+}
+
 func expandConnectionOptionsOAuth2(d ResourceData) *management.ConnectionOptionsOAuth2 {
 
 	o := &management.ConnectionOptionsOAuth2{
