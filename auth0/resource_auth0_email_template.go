@@ -37,6 +37,7 @@ func newEmailTemplate() *schema.Resource {
 					"change_password",
 					"password_reset",
 					"mfa_oob_code",
+					"user_invitation",
 				}, true),
 			},
 			"body": {
