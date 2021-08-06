@@ -62,6 +62,10 @@ resource/auth0_user:
   - '**/*user.go'
   - '**/*user_test.go'
 
+resource/auth0_user_roles:
+  - '**/*user_roles.go'
+  - '**/*user_roles_test.go'
+
 resource_data:
   - '**/resource_data.go'
   - '**/resource_data_test.go'
