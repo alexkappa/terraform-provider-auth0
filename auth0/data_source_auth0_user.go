@@ -7,120 +7,25 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/structure"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 	"gopkg.in/auth0.v5/management"
 )
 
-func datasourceUser() *schema.Resource {
+func newDataUser() *schema.Resource {
+	userSchema := newComputedDataSchema()
+	addOptionalFieldsToSchema(userSchema, "user_id", "email", "connection_name")
+
 	return &schema.Resource{
-		Read: datasourceUserRead,
-
-		Schema: map[string]*schema.Schema{
-			"user_id": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"email": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"connection_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"email_verified": {
-				Type:     schema.TypeBool,
-				Optional: true,
-			},
-			"username": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"phone_number": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"phone_verified": {
-				Type:     schema.TypeBool,
-				Optional: true,
-			},
-			"created_at": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"updated_at": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"identities": {
-				Type: schema.TypeList,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"connection": {
-							Type:     schema.TypeString,
-							Optional: true,
-						},
-						"user_id": {
-							Type:     schema.TypeString,
-							Optional: true,
-						},
-						"provider": {
-							Type:     schema.TypeString,
-							Optional: true,
-						},
-						"is_social": {
-							Type:     schema.TypeBool,
-							Optional: true,
-						},
-					},
-				},
-
-				Optional: true,
-			},
-
-			"user_metadata": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				ValidateFunc:     validation.ValidateJsonString,
-				DiffSuppressFunc: structure.SuppressJsonDiff,
-			},
-			"app_metadata": {
-				Type:             schema.TypeString,
-				Optional:         true,
-				ValidateFunc:     validation.ValidateJsonString,
-				DiffSuppressFunc: structure.SuppressJsonDiff,
-			},
-			"picture": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"nickname": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
-			},
-			"blocked": {
-				Type:     schema.TypeBool,
-				Optional: true,
-			},
-			"family_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"given_name": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-		},
+		Read:   readDataUser,
+		Schema: userSchema,
 	}
 }
 
-func datasourceUserRead(d *schema.ResourceData, m interface{}) error {
+func newComputedDataSchema() map[string]*schema.Schema {
+	userSchema := datasourceSchemaFromResourceSchema(newUser().Schema)
+	return userSchema
+}
+
+func readDataUser(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 
 	email := d.Get("email").(string)

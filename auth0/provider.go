@@ -46,7 +46,7 @@ func init() {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
-			"auth0_user": datasourceUser(),
+			"auth0_user": newDataUser(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"auth0_client":          newClient(),
@@ -62,6 +62,7 @@ func init() {
 			"auth0_email":           newEmail(),
 			"auth0_email_template":  newEmailTemplate(),
 			"auth0_user":            newUser(),
+			"auth0_user_roles":      newUserRoles(),
 			"auth0_tenant":          newTenant(),
 			"auth0_role":            newRole(),
 			"auth0_log_stream":      newLogStream(),
