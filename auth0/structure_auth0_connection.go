@@ -260,6 +260,10 @@ func flattenConnectionOptionsSAML(o *management.ConnectionOptionsSAML) interface
 			"client_protocol":        o.IdpInitiated.GetClientProtocol(),
 			"client_authorize_query": o.IdpInitiated.GetClientAuthorizeQuery(),
 		},
+		"signing_key": map[string]interface{}{
+			"key":  o.GetSigningKey(),
+			"cert": o.GetSigningCert(),
+		},
 		"tenant_domain":            o.GetTenantDomain(),
 		"domain_aliases":           o.DomainAliases,
 		"sign_in_endpoint":         o.GetSignInEndpoint(),
