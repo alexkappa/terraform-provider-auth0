@@ -667,6 +667,13 @@ func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSA
 		}
 	})
 
+	List(d, "signing_key").Elem(func(d ResourceData) {
+		o.SigningKey = &management.ConnectionOptionsSAMLSigningKey{
+			Key:  String(d, "key"),
+			Cert: String(d, "cert"),
+		}
+	})
+
 	return o
 }
 

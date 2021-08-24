@@ -557,6 +557,24 @@ var connectionSchema = map[string]*schema.Schema{
 						},
 					},
 				},
+				"signing_key": {
+					Type:     schema.TypeList,
+					MaxItems: 1,
+					Required: false,
+					Optional: true,
+					Elem: &schema.Resource{
+						Schema: map[string]*schema.Schema{
+							"key": {
+								Type:     schema.TypeString,
+								Optional: true,
+							},
+							"cert": {
+								Type:     schema.TypeString,
+								Optional: true,
+							},
+						},
+					},
+				},
 				"sign_in_endpoint": {
 					Type:        schema.TypeString,
 					Optional:    true,
