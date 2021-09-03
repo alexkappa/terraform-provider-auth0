@@ -65,6 +65,7 @@ func TestAccClient(t *testing.T) {
 					random.TestCheckResourceAttr("auth0_client.my_client", "name", "Acceptance Test - {{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "is_token_endpoint_ip_header_trusted", "true"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "token_endpoint_auth_method", "client_secret_post"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "allowed_clients.0", "https://allowed.example.com"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "refresh_token.#", "1"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "refresh_token.0.leeway", "42"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "refresh_token.0.token_lifetime", "424242"),
@@ -101,6 +102,7 @@ resource "auth0_client" "my_client" {
   oidc_conformant = true
   callbacks = [ "https://example.com/callback" ]
   allowed_origins = [ "https://example.com" ]
+  allowed_clients = [ "https://allowed.example.com" ]
   grant_types = [ "authorization_code", "http://auth0.com/oauth/grant-type/password-realm", "implicit", "password", "refresh_token" ]
   allowed_logout_urls = [ "https://example.com" ]
   web_origins = [ "https://example.com" ]
