@@ -95,7 +95,7 @@ Arguments accepted by this resource include:
 * `allowed_logout_urls` - (Optional) List(String). URLs that Auth0 may redirect to after logout.
 * `grant_types` - (Optional) List(String). Types of grants that this client is authorized to use.
 * `allowed_origins` - (Optional) List(String). URLs that represent valid origins for cross-origin resource sharing. By default, all your callback URLs will be allowed.
-* `allowed_clients` - (Optional) List(String). List of applications ID's that are allowed to make delegation request. By default, all applications are allowed.
+* `allowed_clients` - (Optional) List(String). List of applications ID's that will be allowed to make delegation request. By default, all applications will be allowed.
 * `web_origins` - (Optional) List(String). URLs that represent valid web origins for use with web message response mode.
 * `jwt_configuration` - (Optional) List(Resource). Configuration settings for the JWTs issued for this client. For details, see [JWT Configuration](#jwt-configuration).
 * `refresh_token` - (Optional) List(Resource). Configuration settings for the refresh tokens issued for this client.  For details, see [Refresh Token Configuration](#refresh-token-configuration).
