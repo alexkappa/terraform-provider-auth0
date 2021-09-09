@@ -588,6 +588,37 @@ var connectionSchema = map[string]*schema.Schema{
 					Optional:    true,
 					Description: "Sign Request Algorithm Digest",
 				},
+
+				// Azure AD
+				"ext_nested_groups": {
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Description: "",
+				},
+
+				"ext_groups": {
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Description: "",
+				},
+
+				"basic_profile": {
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Description: "",
+				},
+
+				"ext_profile": {
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Description: "",
+				},
+
+				"use_common_endpoint": {
+					Type:        schema.TypeBool,
+					Optional:    true,
+					Description: "",
+				},
 			},
 		},
 		Description: "Configuration settings for connection options",
