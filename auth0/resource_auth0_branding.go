@@ -112,12 +112,10 @@ func readBranding(d *schema.ResourceData, m interface{}) error {
 	}
 
 	if t.Flags.EnableCustomDomainInEmails != nil && *t.Flags.EnableCustomDomainInEmails {
-		ul, err := api.Branding.UniversalLogin()
-		if err != nil {
+		if err := assignUniversalLogin(d, m); err != nil {
+			d.SetId("")
 			return err
 		}
-
-		d.Set("universal_login", flattenBrandingUniversalLogin(ul))
 	}
 
 	return nil
@@ -193,6 +191,25 @@ func buildBrandingUniversalLogin(d *schema.ResourceData) *management.BrandingUni
 	})
 
 	return b
+}
+
+func assignUniversalLogin(d *schema.ResourceData, m interface{}) error {
+	api := m.(*management.Management)
+	ul, err := api.Branding.UniversalLogin()
+	if err != nil {
+		if mErr, ok := err.(management.Error); ok {
+			// if the custom domain is enabled, but custom universal login pages are not set
+			// management api will return a 404 template not found. If that's the case we can safely ignore the error.
+			// see https://github.com/alexkappa/terraform-provider-auth0/issues/380
+			if mErr.Status() == http.StatusNotFound {
+				return nil
+			}
+		}
+		return err
+	}
+
+	_ = d.Set("universal_login", flattenBrandingUniversalLogin(ul))
+	return nil
 }
 
 func flattenBrandingColors(brandingColors *management.BrandingColors) []interface{} {
