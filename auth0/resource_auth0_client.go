@@ -93,6 +93,20 @@ func newClient() *schema.Resource {
 				Computed: true,
 				Optional: true,
 			},
+			"organization_usage": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"deny", "allow", "require",
+				}, false),
+			},
+			"organization_require_behavior": {
+				Type:     schema.TypeString,
+				Optional: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"no_prompt", "pre_login_prompt",
+				}, false),
+			},
 			"allowed_origins": {
 				Type:     schema.TypeList,
 				Elem:     &schema.Schema{Type: schema.TypeString},
@@ -564,6 +578,8 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("allowed_logout_urls", c.AllowedLogoutURLs)
 	d.Set("allowed_origins", c.AllowedOrigins)
 	d.Set("grant_types", c.GrantTypes)
+	d.Set("organization_usage", c.OrganizationUsage)
+	d.Set("organization_require_behaviour", c.OrganizationRequireBehavior)
 	d.Set("web_origins", c.WebOrigins)
 	d.Set("sso", c.SSO)
 	d.Set("sso_disabled", c.SSODisabled)
@@ -630,6 +646,8 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		AllowedLogoutURLs:              Slice(d, "allowed_logout_urls"),
 		AllowedOrigins:                 Slice(d, "allowed_origins"),
 		GrantTypes:                     Slice(d, "grant_types"),
+		OrganizationUsage:              String(d, "organization_usage"),
+		OrganizationRequireBehavior:    String(d, "organization_require_behaviour"),
 		WebOrigins:                     Slice(d, "web_origins"),
 		SSO:                            Bool(d, "sso"),
 		SSODisabled:                    Bool(d, "sso_disabled"),
