@@ -225,6 +225,8 @@ Arguments accepted by this resource include:
 
 ### Native Social Login
 
+> Note: once this is set it must stay set, with both resources set to "false" in order to change the app_type
+
 `native_social_login` supports the following arguments:
 
 * `apple` (Optional) Resource:

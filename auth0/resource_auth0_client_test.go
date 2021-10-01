@@ -393,6 +393,13 @@ func TestAccClientMobile(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_client.my_client", "native_social_login.0.facebook.0.enabled", "true"),
 				),
 			},
+			{
+				// This just makes sure that you can change the type (where native_social_login cannot be set)
+				Config: random.Template(testAccClientConfigMobileUpdateNonMobile, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_client.my_client", "app_type", "non_interactive"),
+				),
+			},
 		},
 	})
 }
@@ -444,6 +451,23 @@ resource "auth0_client" "my_client" {
 	}
 	facebook {
 		enabled = true
+	}
+  }
+}
+`
+
+const testAccClientConfigMobileUpdateNonMobile = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - Mobile - {{.random}}"
+  app_type = "non_interactive"
+
+  native_social_login {
+	apple {
+		enabled = false
+	}
+	facebook {
+		enabled = false
 	}
   }
 }
