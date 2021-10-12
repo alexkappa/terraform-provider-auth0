@@ -124,6 +124,7 @@ var connectionSchema = map[string]*schema.Schema{
 				},
 				"password_history": {
 					Type:     schema.TypeList,
+					MaxItems: 1,
 					Optional: true,
 					Computed: true,
 					Elem: &schema.Resource{
@@ -726,7 +727,9 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 	d.Set("display_name", c.DisplayName)
 	d.Set("is_domain_connection", c.IsDomainConnection)
 	d.Set("strategy", c.Strategy)
-	d.Set("options", flattenConnectionOptions(d, c.Options))
+	if err := d.Set("options", flattenConnectionOptions(d, c.Options)); err != nil {
+		return err
+	}
 	d.Set("enabled_clients", c.EnabledClients)
 	d.Set("realms", c.Realms)
 	return nil

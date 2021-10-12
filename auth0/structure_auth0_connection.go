@@ -70,19 +70,19 @@ func flattenConnectionOptionsWindowsLive(o *management.ConnectionOptionsWindowsL
 
 func flattenConnectionOptionsAuth0(d ResourceData, o *management.ConnectionOptions) interface{} {
 	return map[string]interface{}{
-		"validation":                     o.Validation,
+		"validation":                     []interface{}{o.Validation},
 		"password_policy":                o.GetPasswordPolicy(),
-		"password_history":               o.PasswordHistory,
-		"password_no_personal_info":      o.PasswordNoPersonalInfo,
-		"password_dictionary":            o.PasswordDictionary,
-		"password_complexity_options":    o.PasswordComplexityOptions,
+		"password_history":               []interface{}{o.PasswordHistory},
+		"password_no_personal_info":      []interface{}{o.PasswordNoPersonalInfo},
+		"password_dictionary":            []interface{}{o.PasswordDictionary},
+		"password_complexity_options":    []interface{}{o.PasswordComplexityOptions},
 		"enabled_database_customization": o.GetEnabledDatabaseCustomization(),
 		"brute_force_protection":         o.GetBruteForceProtection(),
 		"import_mode":                    o.GetImportMode(),
 		"disable_signup":                 o.GetDisableSignup(),
 		"requires_username":              o.GetRequiresUsername(),
 		"custom_scripts":                 o.CustomScripts,
-		"mfa":                            o.MFA,
+		"mfa":                            []interface{}{o.MFA},
 		"configuration":                  Map(d, "configuration"), // does not get read back
 		"non_persistent_attrs":           o.GetNonPersistentAttrs(),
 	}
