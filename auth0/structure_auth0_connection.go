@@ -44,6 +44,9 @@ func flattenConnectionOptions(d ResourceData, options interface{}) []interface{}
 		m = flattenConnectionOptionsSAML(o)
 	}
 
+	if m == nil {
+		return nil
+	}
 	return []interface{}{m}
 }
 
@@ -109,7 +112,7 @@ func flattenConnectionOptionsGoogleOAuth2(o *management.ConnectionOptionsGoogleO
 	return map[string]interface{}{
 		"client_id":                o.GetClientID(),
 		"client_secret":            o.GetClientSecret(),
-		"allowed_audiences":        o.AllowedAudiences,
+		"allowed_audiences":        listOrNil(o.AllowedAudiences),
 		"scopes":                   o.Scopes(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
 		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
@@ -184,10 +187,10 @@ func flattenConnectionOptionsSMS(o *management.ConnectionOptionsSMS) interface{}
 		"messaging_service_sid":  o.GetMessagingServiceSID(),
 		"disable_signup":         o.GetDisableSignup(),
 		"brute_force_protection": o.GetBruteForceProtection(),
-		"totp": map[string]interface{}{
+		"totp": mapToList(map[string]interface{}{
 			"time_step": o.OTP.GetTimeStep(),
 			"length":    o.OTP.GetLength(),
-		},
+		}),
 	}
 }
 
@@ -197,7 +200,7 @@ func flattenConnectionOptionsOIDC(o *management.ConnectionOptionsOIDC) interface
 		"client_secret":  o.GetClientSecret(),
 		"icon_url":       o.GetLogoURL(),
 		"tenant_domain":  o.GetTenantDomain(),
-		"domain_aliases": o.DomainAliases,
+		"domain_aliases": listOrNil(o.DomainAliases),
 
 		"type":                     o.GetType(),
 		"scopes":                   o.Scopes(),
@@ -212,6 +215,13 @@ func flattenConnectionOptionsOIDC(o *management.ConnectionOptionsOIDC) interface
 	}
 }
 
+func listOrNil(l []interface{}) []interface{} {
+	if l == nil {
+		return []interface{}{}
+	}
+	return l
+}
+
 func flattenConnectionOptionsEmail(o *management.ConnectionOptionsEmail) interface{} {
 	return map[string]interface{}{
 		"name":                   o.GetName(),
@@ -221,10 +231,10 @@ func flattenConnectionOptionsEmail(o *management.ConnectionOptionsEmail) interfa
 		"template":               o.GetEmail().GetBody(),
 		"disable_signup":         o.GetDisableSignup(),
 		"brute_force_protection": o.GetBruteForceProtection(),
-		"totp": map[string]interface{}{
+		"totp": mapToList(map[string]interface{}{
 			"time_step": o.OTP.GetTimeStep(),
 			"length":    o.OTP.GetLength(),
-		},
+		}),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
 		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
 	}
@@ -233,9 +243,9 @@ func flattenConnectionOptionsEmail(o *management.ConnectionOptionsEmail) interfa
 func flattenConnectionOptionsAD(o *management.ConnectionOptionsAD) interface{} {
 	return map[string]interface{}{
 		"tenant_domain":            o.GetTenantDomain(),
-		"domain_aliases":           o.DomainAliases,
+		"domain_aliases":           listOrNil(o.DomainAliases),
 		"icon_url":                 o.GetLogoURL(),
-		"ips":                      o.IPs,
+		"ips":                      listOrNil(o.IPs),
 		"use_cert_auth":            o.GetCertAuth(),
 		"use_kerberos":             o.GetKerberos(),
 		"disable_cache":            o.GetDisableCache(),
@@ -252,7 +262,7 @@ func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) int
 		"app_id":                                 o.GetAppID(),
 		"tenant_domain":                          o.GetTenantDomain(),
 		"domain":                                 o.GetDomain(),
-		"domain_aliases":                         o.DomainAliases,
+		"domain_aliases":                         listOrNil(o.DomainAliases),
 		"icon_url":                               o.GetLogoURL(),
 		"identity_api":                           o.GetIdentityAPI(),
 		"waad_protocol":                          o.GetWAADProtocol(),
@@ -272,13 +282,13 @@ func flattenConnectionOptionsSAML(o *management.ConnectionOptionsSAML) interface
 		"signing_cert":     o.GetSigningCert(),
 		"protocol_binding": o.GetProtocolBinding(),
 		"debug":            o.GetDebug(),
-		"idp_initiated": map[string]interface{}{
+		"idp_initiated": mapToList(map[string]interface{}{
 			"client_id":              o.IdpInitiated.GetClientID(),
 			"client_protocol":        o.IdpInitiated.GetClientProtocol(),
 			"client_authorize_query": o.IdpInitiated.GetClientAuthorizeQuery(),
-		},
+		}),
 		"tenant_domain":            o.GetTenantDomain(),
-		"domain_aliases":           o.DomainAliases,
+		"domain_aliases":           listOrNil(o.DomainAliases),
 		"sign_in_endpoint":         o.GetSignInEndpoint(),
 		"sign_out_endpoint":        o.GetSignOutEndpoint(),
 		"signature_algorithm":      o.GetSignatureAlgorithm(),
