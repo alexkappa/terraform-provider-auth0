@@ -76,7 +76,6 @@ func TestAccConnection(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.import_mode", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.disable_signup", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.requires_username", "true"),
-					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.set_user_root_attributes", "on_each_login"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.validation.0.username.0.min", "10"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.validation.0.username.0.max", "40"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.custom_scripts.get_user", "myFunction"),
@@ -90,7 +89,6 @@ func TestAccConnection(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.brute_force_protection", "false"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.mfa.0.return_enroll_settings", "false"),
-					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.set_user_root_attributes", "on_first_login"),
 				),
 			},
 		},
@@ -140,7 +138,6 @@ resource "auth0_connection" "my_connection" {
 			active                 = true
 			return_enroll_settings = true
 		}
-		set_user_root_attributes = "on_each_login"
 	}
 }
 `
@@ -175,7 +172,6 @@ resource "auth0_connection" "my_connection" {
 			active                 = true
 			return_enroll_settings = false
 		}
-		set_user_root_attributes = "on_first_login"
 	}
 }
 `

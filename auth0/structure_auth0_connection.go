@@ -70,22 +70,39 @@ func flattenConnectionOptionsWindowsLive(o *management.ConnectionOptionsWindowsL
 
 func flattenConnectionOptionsAuth0(d ResourceData, o *management.ConnectionOptions) interface{} {
 	return map[string]interface{}{
-		"validation":                     []interface{}{o.Validation},
+		"validation":                     flattenConnectionOptionsAuth0Validation(o.Validation),
 		"password_policy":                o.GetPasswordPolicy(),
-		"password_history":               []interface{}{o.PasswordHistory},
-		"password_no_personal_info":      []interface{}{o.PasswordNoPersonalInfo},
-		"password_dictionary":            []interface{}{o.PasswordDictionary},
-		"password_complexity_options":    []interface{}{o.PasswordComplexityOptions},
+		"password_history":               mapToList(o.PasswordHistory),
+		"password_no_personal_info":      mapToList(o.PasswordNoPersonalInfo),
+		"password_dictionary":            mapToList(o.PasswordDictionary),
+		"password_complexity_options":    mapToList(o.PasswordComplexityOptions),
 		"enabled_database_customization": o.GetEnabledDatabaseCustomization(),
 		"brute_force_protection":         o.GetBruteForceProtection(),
 		"import_mode":                    o.GetImportMode(),
 		"disable_signup":                 o.GetDisableSignup(),
 		"requires_username":              o.GetRequiresUsername(),
 		"custom_scripts":                 o.CustomScripts,
-		"mfa":                            []interface{}{o.MFA},
-		"configuration":                  Map(d, "configuration"), // does not get read back
+		"mfa":                            mapToList(o.MFA),
+		"configuration":                  Map(d, "options.0.configuration"), // does not get read back
 		"non_persistent_attrs":           o.GetNonPersistentAttrs(),
+		"set_user_root_attributes":       o.GetSetUserAttributes(),
 	}
+}
+
+func mapToList(m map[string]interface{}) []interface{} {
+	if m == nil {
+		return nil
+	}
+	return []interface{}{m}
+}
+
+func flattenConnectionOptionsAuth0Validation(validation map[string]interface{}) []interface{} {
+	val := map[string]interface{}{}
+	if username, ok := validation["username"]; ok {
+		val["username"] = []interface{}{username}
+		return []interface{}{val}
+	}
+	return nil
 }
 
 func flattenConnectionOptionsGoogleOAuth2(o *management.ConnectionOptionsGoogleOAuth2) interface{} {
@@ -352,6 +369,7 @@ func expandConnectionOptionsAuth0(d ResourceData) *management.ConnectionOptions 
 	o := &management.ConnectionOptions{
 		PasswordPolicy:     String(d, "password_policy"),
 		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
+		SetUserAttributes:  String(d, "set_user_root_attributes"),
 	}
 
 	List(d, "validation").Elem(func(d ResourceData) {
