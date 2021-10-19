@@ -9,7 +9,7 @@ Auth0 Terraform Provider
 Sponsors
 --------
 
-| <img width="50" src="https://cdn.auth0.com/blog/brand-evolution-logo-Auth0-shield-black-background-Squared.png"> | <div style="text-align: left;">If you want to quickly implement a secure authentication flow with Terraform, create a free plan at [auth0.com/developers](https://a0.to/try-auth0).</div> |
+| <img width="50" src="https://cdn.auth0.com/blog/github-sponsorships/brand-evolution-logo-Auth0-horizontal-Indigo.png"> | <div style="text-align: left;">If you want to quickly implement a secure authentication flow with Terraform, create an Auth0 account at https://a0.to/try-auth0 it's free!</div> |
 | :-: | :- |
 | <img width="50" src="https://placehold.co/50x50?text=?"> | If you or your company relies on this provider and would like to ensure its continuing support please consider [sponsoring](https://github.com/sponsors/alexkappa). |
 
