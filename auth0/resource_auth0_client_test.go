@@ -102,6 +102,8 @@ resource "auth0_client" "my_client" {
   callbacks = [ "https://example.com/callback" ]
   allowed_origins = [ "https://example.com" ]
   grant_types = [ "authorization_code", "http://auth0.com/oauth/grant-type/password-realm", "implicit", "password", "refresh_token" ]
+  organization_usage = "deny"
+  organization_require_behaviour = "no_prompt"
   allowed_logout_urls = [ "https://example.com" ]
   web_origins = [ "https://example.com" ]
   jwt_configuration {
