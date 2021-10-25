@@ -579,7 +579,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("allowed_origins", c.AllowedOrigins)
 	d.Set("grant_types", c.GrantTypes)
 	d.Set("organization_usage", c.OrganizationUsage)
-	d.Set("organization_require_behaviour", c.OrganizationRequireBehavior)
+	d.Set("organization_require_behavior", c.OrganizationRequireBehavior)
 	d.Set("web_origins", c.WebOrigins)
 	d.Set("sso", c.SSO)
 	d.Set("sso_disabled", c.SSODisabled)
@@ -647,7 +647,7 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		AllowedOrigins:                 Slice(d, "allowed_origins"),
 		GrantTypes:                     Slice(d, "grant_types"),
 		OrganizationUsage:              String(d, "organization_usage"),
-		OrganizationRequireBehavior:    String(d, "organization_require_behaviour"),
+		OrganizationRequireBehavior:    String(d, "organization_require_behavior"),
 		WebOrigins:                     Slice(d, "web_origins"),
 		SSO:                            Bool(d, "sso"),
 		SSODisabled:                    Bool(d, "sso_disabled"),
