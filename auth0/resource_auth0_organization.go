@@ -1,8 +1,11 @@
 package auth0
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"gopkg.in/auth0.v5/management"
 )
@@ -57,6 +60,35 @@ func newOrganization() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Metadata associated with the organization, Maximum of 10 metadata properties allowed",
 			},
+			"connections": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"connection_id": {
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"assign_membership_on_login": {
+							Type:     schema.TypeBool,
+							Optional: true,
+						},
+					},
+				},
+				Set: func(v interface{}) int {
+					// The connection_id field determines the uniqueness of each
+					// item in the set.
+					m, ok := v.(map[string]interface{})
+					if !ok {
+						return 0
+					}
+					if v, ok := m["connection_id"].(string); ok {
+						return hashcode.String(v)
+					}
+					return 0
+				},
+			},
 		},
 	}
 }
@@ -68,7 +100,60 @@ func createOrganization(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	d.SetId(o.GetID())
+
+	d.Partial(true)
+	err := assignOrganizationConnections(d, m)
+	if err != nil {
+		return fmt.Errorf("failed assigning organization connections. %w", err)
+	}
+	d.Partial(false)
+
 	return readOrganization(d, m)
+}
+
+func assignOrganizationConnections(d *schema.ResourceData, m interface{}) (err error) {
+
+	api := m.(*management.Management)
+
+	add, rm := Diff(d, "connections")
+
+	add.Elem(func(dd ResourceData) {
+		c := &management.OrganizationConnection{
+			ConnectionID:            String(dd, "connection_id"),
+			AssignMembershipOnLogin: Bool(dd, "assign_membership_on_login"),
+		}
+		log.Printf("[DEBUG] Connection (+) %s", c.GetConnectionID())
+		err = api.Organization.AddConnection(d.Id(), c)
+		if err != nil {
+			return
+		}
+	})
+
+	rm.Elem(func(dd ResourceData) {
+		// Take connectionID before it changed (i.e. removed). Therefore we use
+		// GetChange() instead of the typical Get().
+		connectionID, _ := dd.GetChange("connection_id")
+		log.Printf("[DEBUG] Connection (-) %s", connectionID.(string))
+		err = api.Organization.DeleteConnection(d.Id(), connectionID.(string))
+		if err != nil {
+			return
+		}
+	})
+
+	// Update existing connections if any mutable properties have changed.
+	Set(d, "connections", HasChange()).Elem(func(dd ResourceData) {
+		connectionID := dd.Get("connection_id").(string)
+		c := &management.OrganizationConnection{
+			AssignMembershipOnLogin: Bool(dd, "assign_membership_on_login"),
+		}
+		log.Printf("[DEBUG] Connection (~) %s", connectionID)
+		err = api.Organization.UpdateConnection(d.Id(), connectionID, c)
+		if err != nil {
+			return
+		}
+	})
+
+	return nil
 }
 
 func readOrganization(d *schema.ResourceData, m interface{}) error {
@@ -90,6 +175,21 @@ func readOrganization(d *schema.ResourceData, m interface{}) error {
 	d.Set("branding", flattenOrganizationBranding(o.Branding))
 	d.Set("metadata", o.Metadata)
 
+	l, err := api.Organization.Connections(d.Id())
+	if err != nil {
+		return err
+	}
+
+	d.Set("connections", func() (v []interface{}) {
+		for _, connection := range l.OrganizationConnections {
+			v = append(v, &map[string]interface{}{
+				"connection_id":              connection.ConnectionID,
+				"assign_membership_on_login": connection.AssignMembershipOnLogin,
+			})
+		}
+		return
+	}())
+
 	return nil
 }
 
@@ -100,6 +200,14 @@ func updateOrganization(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+
+	d.Partial(true)
+	err = assignOrganizationConnections(d, m)
+	if err != nil {
+		return fmt.Errorf("failed updating organization connections. %w", err)
+	}
+	d.Partial(false)
+
 	return readOrganization(d, m)
 }
 
