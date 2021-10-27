@@ -40,6 +40,10 @@ resource auth0_organization acme {
 			page_background = "#e3e2ff"
 		}
 	}
+  connections {
+		connection_id = auth0_connection.acme.id
+		assign_membership_on_login = true
+	}
 }
 ```
 
@@ -49,10 +53,23 @@ The following arguments are supported:
 
 * `name` - (Required) The name of this organization
 * `display_name` – (Optional) Friendly name of this organization
-* `branding` – (Optional) Defines how to style the login pages. For details, see [Branding](#branding)
-* `metadata` - (Optional) Metadata associated with the organization, Maximum of 10 metadata properties allowed
+* `branding` – (Optional) Defines how to style the login pages. For details, see
+  [Branding](#branding)
+* `metadata` - (Optional) Metadata associated with the organization, Maximum of
+  10 metadata properties allowed
+* `connections` – (Optional) Connections assigned to the organization. For
+  details, see [Connections](#connections)
 
 ### Branding
 
 * `logo_url` - (Optional) URL of logo to display on login page
 * `colors` - (Optional) Color scheme used to customize the login pages
+
+### Connections
+
+* `connection_id` – (Required) The connection ID of the connection to add to the
+  organization
+* `assign_membership_on_login` – (Optional) When true, all users that log in
+  with this connection will be automatically granted membership in the
+  organization. When false, users must be granted membership in the organization
+  before logging in with this connection.
