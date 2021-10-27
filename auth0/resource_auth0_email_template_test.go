@@ -32,7 +32,7 @@ func TestAccEmailTemplate(t *testing.T) {
 			"auth0": Provider(),
 		},
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccEmailTemplateConfig,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_email_template.my_email_template", "template", "welcome_email"),
