@@ -1,3 +1,7 @@
+## 0.21.2
+
+* **New Resource:** `auth0_organization` ([#458](https://github.com/alexkappa/terraform-provider-auth0/pull/458))
+
 ## 0.21.1
 
 * resource/auth0_client: Documentation removal of `custom_login_page_preview` field [#386](https://github.com/alexkappa/terraform-provider-auth0/pull/386)
