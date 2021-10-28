@@ -1,4 +1,4 @@
-## 0.21.2
+## 0.22.0
 
 * **New Resource:** `auth0_organization` ([#458](https://github.com/alexkappa/terraform-provider-auth0/pull/458))
 
