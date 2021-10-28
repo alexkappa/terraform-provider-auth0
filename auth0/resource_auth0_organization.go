@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
+	"github.com/alexkappa/terraform-provider-auth0/auth0/internal/hash"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"gopkg.in/auth0.v5/management"
 )
@@ -76,18 +76,7 @@ func newOrganization() *schema.Resource {
 						},
 					},
 				},
-				Set: func(v interface{}) int {
-					// The connection_id field determines the uniqueness of each
-					// item in the set.
-					m, ok := v.(map[string]interface{})
-					if !ok {
-						return 0
-					}
-					if v, ok := m["connection_id"].(string); ok {
-						return hashcode.String(v)
-					}
-					return 0
-				},
+				Set: hash.StringKey("connection_id"),
 			},
 		},
 	}
