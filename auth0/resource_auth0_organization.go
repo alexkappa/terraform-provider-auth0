@@ -111,7 +111,7 @@ func assignOrganizationConnections(d *schema.ResourceData, m interface{}) (err e
 			ConnectionID:            String(dd, "connection_id"),
 			AssignMembershipOnLogin: Bool(dd, "assign_membership_on_login"),
 		}
-		log.Printf("[DEBUG] Connection (+) %s", c.GetConnectionID())
+		log.Printf("[DEBUG] (+) auth0_organization.%s.connections.%s", d.Id(), c.GetConnectionID())
 		err = api.Organization.AddConnection(d.Id(), c)
 		if err != nil {
 			return
@@ -122,7 +122,7 @@ func assignOrganizationConnections(d *schema.ResourceData, m interface{}) (err e
 		// Take connectionID before it changed (i.e. removed). Therefore we use
 		// GetChange() instead of the typical Get().
 		connectionID, _ := dd.GetChange("connection_id")
-		log.Printf("[DEBUG] Connection (-) %s", connectionID.(string))
+		log.Printf("[DEBUG] (-) auth0_organization.%s.connections.%s", d.Id(), connectionID.(string))
 		err = api.Organization.DeleteConnection(d.Id(), connectionID.(string))
 		if err != nil {
 			return
@@ -135,7 +135,7 @@ func assignOrganizationConnections(d *schema.ResourceData, m interface{}) (err e
 		c := &management.OrganizationConnection{
 			AssignMembershipOnLogin: Bool(dd, "assign_membership_on_login"),
 		}
-		log.Printf("[DEBUG] Connection (~) %s", connectionID)
+		log.Printf("[DEBUG] (~) auth0_organization.%s.connections.%s", d.Id(), connectionID)
 		err = api.Organization.UpdateConnection(d.Id(), connectionID, c)
 		if err != nil {
 			return
