@@ -340,10 +340,11 @@ func (s *set) List() []interface{} {
 // compares it's changes if any and returns what needs to be added and what
 // needs to be removed.
 func Diff(d ResourceData, key string) (add Iterator, rm Iterator) {
-	if d.IsNewResource() {
-		add = Set(d, key)
-		rm = &set{newResourceDataAtKey(key, d), schema.NewSet(nil, []interface{}{})}
-	}
+	// Zero the add and rm sets. These may be modified if the diff observed any
+	// changes.
+	add = &set{newResourceDataAtKey(key, d), d.Get(key).(*schema.Set)}
+	rm = &set{newResourceDataAtKey(key, d), &schema.Set{}}
+
 	if d.HasChange(key) {
 		o, n := d.GetChange(key)
 		add = &set{newResourceDataAtKey(key, d), n.(*schema.Set).Difference(o.(*schema.Set))}
