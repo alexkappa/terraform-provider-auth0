@@ -161,7 +161,7 @@ func assignRolePermissions(d *schema.ResourceData, m interface{}) error {
 	add, rm := Diff(d, "permissions")
 
 	var addPermissions []*management.Permission
-	for _, addPermission := range add {
+	for _, addPermission := range add.List() {
 		permission := addPermission.(map[string]interface{})
 		addPermissions = append(addPermissions, &management.Permission{
 			Name:                     auth0.String(permission["name"].(string)),
@@ -170,7 +170,7 @@ func assignRolePermissions(d *schema.ResourceData, m interface{}) error {
 	}
 
 	var rmPermissions []*management.Permission
-	for _, rmPermission := range rm {
+	for _, rmPermission := range rm.List() {
 		permission := rmPermission.(map[string]interface{})
 		rmPermissions = append(rmPermissions, &management.Permission{
 			Name:                     auth0.String(permission["name"].(string)),

@@ -63,6 +63,7 @@ func init() {
 			"auth0_log_stream":      newLogStream(),
 			"auth0_branding":        newBranding(),
 			"auth0_guardian":        newGuardian(),
+			"auth0_organization":    newOrganization(),
 		},
 		ConfigureFunc: Configure,
 	}

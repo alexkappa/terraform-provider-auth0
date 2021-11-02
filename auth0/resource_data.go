@@ -339,14 +339,16 @@ func (s *set) List() []interface{} {
 // Diff accesses the value held by key and type asserts it to a set. It then
 // compares it's changes if any and returns what needs to be added and what
 // needs to be removed.
-func Diff(d ResourceData, key string) (add []interface{}, rm []interface{}) {
-	if d.IsNewResource() {
-		add = Set(d, key).List()
-	}
+func Diff(d ResourceData, key string) (add Iterator, rm Iterator) {
+	// Zero the add and rm sets. These may be modified if the diff observed any
+	// changes.
+	add = &set{newResourceDataAtKey(key, d), d.Get(key).(*schema.Set)}
+	rm = &set{newResourceDataAtKey(key, d), &schema.Set{}}
+
 	if d.HasChange(key) {
 		o, n := d.GetChange(key)
-		add = n.(*schema.Set).Difference(o.(*schema.Set)).List()
-		rm = o.(*schema.Set).Difference(n.(*schema.Set)).List()
+		add = &set{newResourceDataAtKey(key, d), n.(*schema.Set).Difference(o.(*schema.Set))}
+		rm = &set{newResourceDataAtKey(key, d), o.(*schema.Set).Difference(n.(*schema.Set))}
 	}
 	return
 }

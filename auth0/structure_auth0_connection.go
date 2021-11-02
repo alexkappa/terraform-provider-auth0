@@ -677,7 +677,7 @@ func expandConnectionOptionsScopes(d ResourceData, s scoper) {
 	for _, scope := range add {
 		s.SetScopes(true, scope.(string))
 	}
-	for _, scope := range rm {
+	for _, scope := range rm.List() {
 		s.SetScopes(false, scope.(string))
 	}
 }
