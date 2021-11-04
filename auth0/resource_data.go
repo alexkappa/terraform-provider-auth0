@@ -288,14 +288,17 @@ func Set(d ResourceData, key string, conditions ...Condition) Iterator {
 
 // Iterator is used to iterate over a list or set.
 //
-// Elem iterates over all elements of the list or set, calling fn with each
+// Elem iterates over all elements of the iterator, calling fn with each
 // iteration. The callback takes a Data interface as argument which is prefixed
 // with its parents key, allowing for convenient nested data access.
 //
-// List returns the underlying list as a Go slice.
+// List returns all elements of the iterator as a Go slice.
+//
+// Len returns the number of elements held by the iterator.
 type Iterator interface {
 	Elem(func(d ResourceData))
 	List() []interface{}
+	Len() int
 }
 
 type list struct {
@@ -311,6 +314,10 @@ func (l *list) Elem(fn func(ResourceData)) {
 
 func (l *list) List() []interface{} {
 	return l.v
+}
+
+func (l *list) Len() int {
+	return len(l.v)
 }
 
 type set struct {
@@ -334,6 +341,10 @@ func (s *set) Elem(fn func(ResourceData)) {
 
 func (s *set) List() []interface{} {
 	return s.s.List()
+}
+
+func (s *set) Len() int {
+	return s.s.Len()
 }
 
 // Diff accesses the value held by key and type asserts it to a set. It then
