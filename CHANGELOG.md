@@ -1,3 +1,7 @@
+## 0.23.0
+
+* **New Resource:** `auth0_action` ([#464](https://github.com/alexkappa/terraform-provider-auth0/pull/464))
+
 ## 0.22.0
 
 * **New Resource:** `auth0_organization` ([#458](https://github.com/alexkappa/terraform-provider-auth0/pull/458))
