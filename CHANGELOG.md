@@ -1,3 +1,9 @@
+## 0.23.1
+
+BUG FIXES:
+
+* resource/auth0_connection: Fix `adfs` connection strategy ([#467](https://github.com/alexkappa/terraform-provider-auth0/pull/467))
+
 ## 0.23.0
 
 * **New Resource:** `auth0_action` ([#464](https://github.com/alexkappa/terraform-provider-auth0/pull/464))
