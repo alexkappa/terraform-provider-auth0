@@ -1,5 +1,8 @@
 ## 0.23.2
 
+ENHANCEMENTS:
+
+* **New Resource:** `auth0_custom_domain_verification` ([#410](https://github.com/alexkappa/terraform-provider-auth0/pull/410))
 * resource/auth0_client: Add support for `allowed_clients` ([#443](https://github.com/alexkappa/terraform-provider-auth0/pull/443))
 
 ## 0.23.1
@@ -10,9 +13,13 @@ BUG FIXES:
 
 ## 0.23.0
 
+ENHANCEMENTS:
+
 * **New Resource:** `auth0_action` ([#464](https://github.com/alexkappa/terraform-provider-auth0/pull/464))
 
 ## 0.22.0
+
+ENHANCEMENTS:
 
 * **New Resource:** `auth0_organization` ([#458](https://github.com/alexkappa/terraform-provider-auth0/pull/458))
 
