@@ -113,7 +113,7 @@ TODO
 
 ## Example Usage
 
-` + "```" + `
+` + "```hcl" + `
 resource "{{.ResourceKey}}" "example" {
   // TODO
 }
