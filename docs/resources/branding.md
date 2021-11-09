@@ -11,7 +11,7 @@ With Auth0, you can setting logo, color to maintain a consistent service brand. 
 
 ## Example Usage
 
-```
+```hcl
 resource "auth0_branding" "my_brand" {
 	logo_url = "https://mycompany.org/logo.png"
 	colors {

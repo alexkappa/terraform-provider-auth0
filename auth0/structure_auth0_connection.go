@@ -40,6 +40,8 @@ func flattenConnectionOptions(d ResourceData, options interface{}) []interface{}
 		m = flattenConnectionOptionsAD(o)
 	case *management.ConnectionOptionsAzureAD:
 		m = flattenConnectionOptionsAzureAD(o)
+	case *management.ConnectionOptionsADFS:
+		m = flattenConnectionOptionsADFS(o)
 	case *management.ConnectionOptionsSAML:
 		m = flattenConnectionOptionsSAML(o)
 	}
@@ -250,6 +252,18 @@ func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) int
 	}
 }
 
+func flattenConnectionOptionsADFS(o *management.ConnectionOptionsADFS) interface{} {
+	return map[string]interface{}{
+		"tenant_domain":            o.GetTenantDomain(),
+		"domain_aliases":           o.DomainAliases,
+		"icon_url":                 o.GetLogoURL(),
+		"adfs_server":              o.GetADFSServer(),
+		"api_enable_users":         o.GetEnableUsersAPI(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
+	}
+}
+
 func flattenConnectionOptionsSAML(o *management.ConnectionOptionsSAML) interface{} {
 	return map[string]interface{}{
 		"signing_cert":     o.GetSigningCert(),
@@ -323,6 +337,8 @@ func expandConnection(d ResourceData) *management.Connection {
 			c.Options = expandConnectionOptionsEmail(d)
 		case management.ConnectionStrategySAML:
 			c.Options = expandConnectionOptionsSAML(d)
+		case management.ConnectionStrategyADFS:
+			c.Options = expandConnectionOptionsADFS(d)
 		default:
 			log.Printf("[WARN]: Unsupported connection strategy %s", s)
 			log.Printf("[WARN]: Raise an issue with the auth0 provider in order to support it:")
@@ -666,6 +682,18 @@ func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSA
 	return o
 }
 
+func expandConnectionOptionsADFS(d ResourceData) *management.ConnectionOptionsADFS {
+	return &management.ConnectionOptionsADFS{
+		TenantDomain:       String(d, "tenant_domain"),
+		DomainAliases:      Slice(d, "domain_aliases"),
+		LogoURL:            String(d, "icon_url"),
+		ADFSServer:         String(d, "adfs_server"),
+		EnableUsersAPI:     Bool(d, "api_enable_users"),
+		SetUserAttributes:  String(d, "set_user_root_attributes"),
+		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
+	}
+}
+
 type scoper interface {
 	Scopes() []string
 	SetScopes(enable bool, scopes ...string)
@@ -677,7 +705,7 @@ func expandConnectionOptionsScopes(d ResourceData, s scoper) {
 	for _, scope := range add {
 		s.SetScopes(true, scope.(string))
 	}
-	for _, scope := range rm {
+	for _, scope := range rm.List() {
 		s.SetScopes(false, scope.(string))
 	}
 }

@@ -1,16 +1,26 @@
+## 0.23.1
+
+BUG FIXES:
+
+* resource/auth0_connection: Fix `adfs` connection strategy ([#467](https://github.com/alexkappa/terraform-provider-auth0/pull/467))
+
+## 0.23.0
+
+* **New Resource:** `auth0_action` ([#464](https://github.com/alexkappa/terraform-provider-auth0/pull/464))
+
 ## 0.22.0
 
-FEATURES:
+* **New Resource:** `auth0_organization` ([#458](https://github.com/alexkappa/terraform-provider-auth0/pull/458))
 
-* resource/auth0_custom_domain_verification: New resource to verify custom domains ([#228](https://github.com/alexkappa/terraform-provider-auth0/pull/228), [#410](https://github.com/alexkappa/terraform-provider-auth0/pull/410))
+## 0.21.1
 
-ENHANCEMENTS:
-
-* resource/auth0_client: Documentation removal of `custom_login_page_preview` field ([#386](https://github.com/alexkappa/terraform-provider-auth0/pull/386))
+* resource/auth0_client: Documentation removal of `custom_login_page_preview` field [#386](https://github.com/alexkappa/terraform-provider-auth0/pull/386)
+* resource/auth0_client: Add `organization_usage` and `organization_require_behavior` parameters to `auth0_client` resource. ([#451](https://github.com/alexkappa/terraform-provider-auth0/pull/451))
 
 NOTES:
 
-* Bumped go-auth0 version to v5.17.0 ([#398](https://github.com/alexkappa/terraform-provider-auth0/pull/398))
+* Bumped go-auth0 version to v5.17.0 [#398](https://github.com/alexkappa/terraform-provider-auth0/pull/398)
+* Build darwin/arm64 binaries for Mac M1 silicon ([#421](https://github.com/alexkappa/terraform-provider-auth0/pull/421))
 
 ## 0.21.0
 

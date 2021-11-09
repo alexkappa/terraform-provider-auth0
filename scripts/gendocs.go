@@ -4,6 +4,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -16,25 +17,25 @@ import (
 
 var args = struct {
 	provider,
-	name,
+	providerName,
 	resource string
 }{}
 
-// func init() {
-// 	flag.StringVar(&args.provider, "provider", "auth0", "provider key")
-// 	flag.StringVar(&args.name, "provider-name", "Auth0", "provider friendly name")
-// 	flag.StringVar(&args.resource, "resource", "", "Resource key")
-// 	flag.Parse()
-// }
+func init() {
+	flag.StringVar(&args.provider, "provider", "auth0", "Provider key")
+	flag.StringVar(&args.providerName, "provider-name", "Auth0", "Provider friendly name")
+	flag.StringVar(&args.resource, "resource", "", "Resource key")
+	flag.Parse()
+}
 
 func main() {
 	buf := bytes.NewBuffer([]byte{})
 	p := auth0.Provider()
 	r := &Resource{
-		ProviderKey:    "auth0",
-		ProviderName:   "Auth0",
-		ResourceKey:    "auth0_global_client",
-		ResourceSchema: p.ResourcesMap["auth0_global_client"],
+		ProviderKey:    args.provider,
+		ProviderName:   args.providerName,
+		ResourceKey:    args.resource,
+		ResourceSchema: p.ResourcesMap[args.resource],
 	}
 	r.GenerateResourceMarkdown(buf)
 	fmt.Print(buf.String())
@@ -112,7 +113,7 @@ TODO
 
 ## Example Usage
 
-` + "```" + `
+` + "```hcl" + `
 resource "{{.ResourceKey}}" "example" {
   // TODO
 }
@@ -126,15 +127,14 @@ The following arguments are supported:
 * ` + "`{{ $key }}`" + ` - {{if $schema.Required}}(Required){{else}}(Optional){{end}} {{ $schema.Description }}
 {{- end}}{{end}}
 {{- if gt (len .NestedFields) 0}}
-## Nested Blocks
 {{- range $fieldName, $nestedFields := .NestedFields}}
 ### ` + "`{{ $fieldName }}`" + `
-#### Arguments
 {{range $key, $schema := $nestedFields}}{{if or $schema.Optional $schema.Required }}
-* ` + "`{{ $key }}`" + ` - {{if $schema.Required}}(Required){{else}}(Optional){{end}} {{ $schema.Description }}
+* ` + "`{{ $key }}`" + ` - {{if $schema.Required}}(Required){{else}}(Optional){{end}} {{ $schema.Description }}.
+
 {{- end}}{{- end}}
-#### Attributes
 {{range $key, $schema := $nestedFields}}{{if and $schema.Computed (not $schema.Optional)}}
+
 * ` + "`{{ $key }}`" + ` - {{ $schema.Description }}
 {{- end}}{{- end -}}
 {{end}}
