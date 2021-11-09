@@ -1290,6 +1290,7 @@ func TestAccConnectionSAML(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.idp_initiated.0.client_authorize_query", "type=code&timeout=60"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.sign_out_endpoint", ""),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.entity_id", "example"),
 				),
 			},
 		},
@@ -1388,6 +1389,7 @@ EOF
 		protocol_binding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Post"
 		signature_algorithm = "rsa-sha256"
 		digest_algorithm = "sha256"
+		entity_id = "example"
 		fields_map = {
 			foo = "bar"
 			baz = "baa"

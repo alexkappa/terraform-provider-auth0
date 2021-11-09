@@ -588,6 +588,11 @@ var connectionSchema = map[string]*schema.Schema{
 					Optional:    true,
 					Description: "Sign Request Algorithm Digest",
 				},
+				"entity_id": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					Description: "Custom Entity ID for the connection",
+				},
 			},
 		},
 		Description: "Configuration settings for connection options",

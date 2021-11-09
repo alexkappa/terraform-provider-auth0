@@ -273,6 +273,7 @@ func flattenConnectionOptionsSAML(o *management.ConnectionOptionsSAML) interface
 		"user_id_attribute":        o.GetUserIDAttribute(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
 		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
+		"entity_id":                o.GetEntityID(),
 	}
 }
 
@@ -653,6 +654,7 @@ func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSA
 		LogoURL:            String(d, "icon_url"),
 		SetUserAttributes:  String(d, "set_user_root_attributes"),
 		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
+		EntityID:           String(d, "entity_id"),
 	}
 
 	List(d, "idp_initiated").Elem(func(d ResourceData) {
