@@ -1,3 +1,7 @@
+## 0.23.2
+
+* resource/auth0_client: Add support for `allowed_clients` ([#443](https://github.com/alexkappa/terraform-provider-auth0/pull/443))
+
 ## 0.23.1
 
 BUG FIXES:
