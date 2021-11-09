@@ -15,7 +15,7 @@ customize and extend Auth0's capabilities with custom logic.
 
 ## Example Usage
 
-```
+```hcl
 resource auth0_action my_action {
 	name = "Example Action"
 	supported_triggers {
@@ -52,7 +52,7 @@ The following arguments are supported:
 
 ### Dependencies
 
-* `name` - (Required) Dependency name. For example lodash.
+* `name` - (Required) Dependency name. For example `lodash`.
 * `version` - (Required) Dependency version. For example `latest` or `4.17.21`.
 
 ### Secrets
