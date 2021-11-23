@@ -164,7 +164,6 @@ func readAction(d *schema.ResourceData, m interface{}) error {
 	d.Set("code", a.Code)
 	d.Set("dependencies", flattenActionDependencies(a.Dependencies))
 	d.Set("runtime", a.Runtime)
-	d.Set("secrets", flattenActionSecrets(a.Secrets))
 
 	if a.DeployedVersion != nil {
 		d.Set("version_id", a.DeployedVersion.GetID())
@@ -257,17 +256,12 @@ func expandAction(d *schema.ResourceData) *management.Action {
 		})
 	})
 
-	if d.IsNewResource() || d.HasChange("secrets") {
-
-		a.Secrets = make([]*management.ActionSecret, 0, Set(d, "secrets").Len())
-
-		Set(d, "secrets").Elem(func(d ResourceData) {
-			a.Secrets = append(a.Secrets, &management.ActionSecret{
-				Name:  String(d, "name"),
-				Value: String(d, "value"),
-			})
+	Set(d, "secrets").Elem(func(d ResourceData) {
+		a.Secrets = append(a.Secrets, &management.ActionSecret{
+			Name:  String(d, "name"),
+			Value: String(d, "value"),
 		})
-	}
+	})
 
 	return a
 }

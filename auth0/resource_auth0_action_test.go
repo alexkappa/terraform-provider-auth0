@@ -22,6 +22,7 @@ func TestAccAction(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_action.my_action", "name", "Test Action {{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_action.my_action", "code", "exports.onExecutePostLogin = async (event, api) => {};"),
+					resource.TestCheckResourceAttr("auth0_action.my_action", "secrets.#", "1"),
 				),
 			},
 			{
@@ -30,6 +31,7 @@ func TestAccAction(t *testing.T) {
 					random.TestCheckResourceAttr("auth0_action.my_action", "name", "Test Action {{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_action.my_action", "code", "exports.onContinuePostLogin = async (event, api) => {};"),
 					resource.TestCheckResourceAttrSet("auth0_action.my_action", "version_id"),
+					resource.TestCheckResourceAttr("auth0_action.my_action", "secrets.#", "1"),
 				),
 			},
 			{
@@ -37,6 +39,7 @@ func TestAccAction(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_action.my_action", "name", "Test Action {{.random}}", rand),
 					resource.TestCheckResourceAttrSet("auth0_action.my_action", "version_id"),
+					resource.TestCheckResourceAttr("auth0_action.my_action", "secrets.#", "0"),
 				),
 			},
 		},
@@ -51,6 +54,10 @@ resource auth0_action my_action {
 		id = "post-login"
 		version = "v2"
 	}
+	secrets {
+		name = "foo"
+		value = "123"
+	}
 	code = "exports.onExecutePostLogin = async (event, api) => {};"
 }
 `
@@ -62,6 +69,10 @@ resource auth0_action my_action {
 	supported_triggers {
 		id = "post-login"
 		version = "v2"
+	}
+	secrets {
+		name = "foo"
+		value = "123456"
 	}
 	code = "exports.onContinuePostLogin = async (event, api) => {};"
 	deploy = true
