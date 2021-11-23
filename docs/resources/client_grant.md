@@ -48,7 +48,7 @@ Arguments accepted by this resource include:
 
 ## Import
 
-Client grants can be imported using the grant ID (Application -> APIs -> Uncollapse the required API)
+Client grants can be imported using the grant ID (Application -> APIs -> Expand the required API)
 
 ```
 $ terraform import auth0_client_grant.example cgr_XXXXXXXXXXXXXXXX
