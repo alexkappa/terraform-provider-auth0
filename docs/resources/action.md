@@ -75,8 +75,12 @@ exported:
 
 ## Import
 
-An action can be imported using the , e.g.
+An action can be imported using the action's ID, e.g. 
 
 ```
 $ terraform import auth0_action.example ...
 ```
+
+~> For security reasons importing `secrets` is not allowed. Therefore it is
+advised to import the action without secrets and adding them back after the 
+action has been imported.
