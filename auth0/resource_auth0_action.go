@@ -3,6 +3,7 @@ package auth0
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/alexkappa/terraform-provider-auth0/auth0/internal/hash"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -189,31 +190,36 @@ func updateAction(d *schema.ResourceData, m interface{}) error {
 }
 
 func deployAction(d *schema.ResourceData, m interface{}) error {
-	if d.Get("deploy").(bool) == true {
-		api := m.(*management.Management)
-		v, err := api.Action.Deploy(d.Id())
-		if err != nil {
-			return err
-		}
-		d.Set("version_id", v.GetID())
 
-		err = resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
+	if d.Get("deploy").(bool) == true {
+
+		api := m.(*management.Management)
+
+		err := resource.Retry(d.Timeout(schema.TimeoutCreate), func() *resource.RetryError {
 
 			a, err := api.Action.Read(d.Id())
 			if err != nil {
 				return resource.NonRetryableError(err)
 			}
 
-			if a.DeployedVersion == nil || a.DeployedVersion.GetID() != v.GetID() {
+			if strings.ToLower(a.GetStatus()) != "built" {
 				return resource.RetryableError(
-					fmt.Errorf("Expected deployed version %q to equal %q",
-						a.DeployedVersion.GetID(),
-						v.GetID()),
+					fmt.Errorf(`Expected action status %q to equal "built"`, a.GetStatus()),
 				)
 			}
 
 			return nil
 		})
+		if err != nil {
+			return fmt.Errorf("Action never reached built state. %w", err)
+		}
+
+		v, err := api.Action.Deploy(d.Id())
+		if err != nil {
+			return err
+		}
+
+		d.Set("version_id", v.GetID())
 	}
 	return nil
 }
