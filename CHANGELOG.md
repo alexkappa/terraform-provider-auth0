@@ -1,3 +1,9 @@
+## 0.24.2
+
+BUG FIXES:
+
+* resource/auth0_action: Deployments proceed only if action status is `built` ([#476](https://github.com/alexkappa/terraform-provider-auth0/pull/476))
+
 ## 0.24.1
 
 BUG FIXES:
