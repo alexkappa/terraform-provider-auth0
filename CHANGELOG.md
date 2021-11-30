@@ -1,3 +1,9 @@
+## 0.24.1
+
+BUG FIXES:
+
+* resource/auth0_action: Secrets would not be created causing deployments to fail ([#473](https://github.com/alexkappa/terraform-provider-auth0/pull/473))
+
 ## 0.24.0
 
 ENHANCEMENTS:
