@@ -1,3 +1,9 @@
+## 0.24.3
+
+BUG FIXES:
+
+* resource/auth0_action: Secrets would not be sent to the management API and the `0.24.1` version didn't address the issue ([#478](https://github.com/alexkappa/terraform-provider-auth0/pull/478))
+
 ## 0.24.2
 
 BUG FIXES:
