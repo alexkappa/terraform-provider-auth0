@@ -262,7 +262,7 @@ func expandAction(d *schema.ResourceData) *management.Action {
 		})
 	})
 
-	Set(d, "secrets").Elem(func(d ResourceData) {
+	List(d, "secrets").Elem(func(d ResourceData) {
 		a.Secrets = append(a.Secrets, &management.ActionSecret{
 			Name:  String(d, "name"),
 			Value: String(d, "value"),
