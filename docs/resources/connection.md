@@ -411,6 +411,7 @@ With the `samlp` connection strategy, `options` supports the following arguments
 * `user_id_attribute` - (Optional) Attribute in the SAML token that will be mapped to the user_id property in Auth0.
 * `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
 * `non_persistent_attrs` - (Optional) If there are user fields that should not be stored in Auth0 databases due to privacy reasons, you can add them to the denylist. See [here](https://auth0.com/docs/security/denylist-user-attributes) for more info.
+* `entity_id` - (Optional) Custom Entity ID for the connection.
 
 **Example**:
 ```hcl
