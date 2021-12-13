@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
 
 	"gopkg.in/auth0.v5"
 	"gopkg.in/auth0.v5/management"
@@ -23,9 +24,21 @@ func newTriggerBinding() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"trigger": {
-				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+				ValidateFunc: validation.StringInSlice([]string{
+					"post-login",
+					"credentials-exchange",
+					"pre-user-registration",
+					"post-user-registration",
+					"post-change-password",
+					"send-phone-message",
+					"iga-approval",
+					"iga-certification",
+					"iga-fulfillment-assignment",
+					"iga-fulfillment-execution",
+				}, false),
 				Description: "The id of the trigger to bind with",
 			},
 			"actions": {
