@@ -5,7 +5,7 @@ description: |-
 With this resource, you can manage your Auth0 log streams.
 ---
 
-# auth0_prompt
+# auth0_log_stream
 
 With this resource, you can manage your Auth0 log streams.
 
