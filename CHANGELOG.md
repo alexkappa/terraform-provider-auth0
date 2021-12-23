@@ -4,6 +4,7 @@ ENHANCEMENTS:
 
 * **New Resource:** `auth0_trigger_binding` a.k.a Action Flow ([#481](https://github.com/alexkappa/terraform-provider-auth0/pull/481))
 * resource/auth0_connection: Add `entity_id` field for SAMLP connections ([#468](https://github.com/alexkappa/terraform-provider-auth0/pull/468))
+* resource/auth0_client_grant: Update import documentation ([#471](https://github.com/alexkappa/terraform-provider-auth0/pull/471))
 
 ## 0.24.3
 

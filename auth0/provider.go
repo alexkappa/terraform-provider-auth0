@@ -66,6 +66,7 @@ func init() {
 			"auth0_guardian":                   newGuardian(),
 			"auth0_organization":               newOrganization(),
 			"auth0_action":                     newAction(),
+			"auth0_trigger_binding":            newTriggerBinding(),
 		},
 		ConfigureFunc: Configure,
 	}
