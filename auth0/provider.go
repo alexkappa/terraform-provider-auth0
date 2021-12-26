@@ -22,14 +22,24 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc("AUTH0_DOMAIN", nil),
 			},
 			"client_id": {
-				Type:        schema.TypeString,
-				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("AUTH0_CLIENT_ID", nil),
+				Type:          schema.TypeString,
+				Optional:      true,
+				DefaultFunc:   schema.EnvDefaultFunc("AUTH0_CLIENT_ID", nil),
+				RequiredWith:  []string{"client_secret"},
+				ConflictsWith: []string{"auth0_token"},
 			},
 			"client_secret": {
-				Type:        schema.TypeString,
-				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("AUTH0_CLIENT_SECRET", nil),
+				Type:          schema.TypeString,
+				Optional:      true,
+				DefaultFunc:   schema.EnvDefaultFunc("AUTH0_CLIENT_SECRET", nil),
+				RequiredWith:  []string{"client_id"},
+				ConflictsWith: []string{"auth0_token"},
+			},
+			"auth0_token": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				DefaultFunc:   schema.EnvDefaultFunc("AUTH0_TOKEN", nil),
+				ConflictsWith: []string{"client_id", "client_secret"},
 			},
 			"debug": {
 				Type:     schema.TypeBool,
@@ -83,8 +93,6 @@ func Provider() *schema.Provider {
 func ConfigureProvider(terraformVersion string) func(data *schema.ResourceData) (interface{}, error) {
 	return func(data *schema.ResourceData) (interface{}, error) {
 		domain := data.Get("domain").(string)
-		id := data.Get("client_id").(string)
-		secret := data.Get("client_secret").(string)
 		debug := data.Get("debug").(bool)
 
 		providerVersion := version.ProviderVersion
@@ -99,9 +107,19 @@ func ConfigureProvider(terraformVersion string) func(data *schema.ResourceData) 
 			terraformVersion,
 		)
 
-		return management.New(
-			domain,
-			management.WithClientCredentials(id, secret),
+		var authenticationOption management.ManagementOption
+		if token, ok := data.GetOk("auth0_token"); ok {
+			authenticationOption = management.WithStaticToken(token.(string))
+		} else {
+			client_id := data.Get("client_id").(string)
+			client_secret := data.Get("client_secret").(string)
+			// if auth0_token is not specified, authenticate with client ID and client secret.
+			// This is safe because of the terraform schema.
+			authenticationOption = management.WithClientCredentials(client_id, client_secret)
+		}
+
+		return management.New(domain,
+			authenticationOption,
 			management.WithDebug(debug),
 			management.WithUserAgent(userAgent),
 		)
