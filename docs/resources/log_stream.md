@@ -5,7 +5,7 @@ description: |-
 With this resource, you can manage your Auth0 log streams.
 ---
 
-# auth0_prompt
+# auth0_log_stream
 
 With this resource, you can manage your Auth0 log streams.
 
@@ -65,3 +65,14 @@ For "splunk" the following arguments are supported:
 
 For "sumo" the following arguments are supported:
 - `sumo_source_address` - (Required) Generated URL for your defined HTTP source in Sumo Logic for collecting streaming data from Auth0
+
+## Import
+
+Existing log stream can be imported using log stream id
+
+
+```hcl
+
+$ terraform import auth0_log_stream.example lst_XXXXXXXXXXXXXXXX
+
+```
