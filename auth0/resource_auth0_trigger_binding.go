@@ -89,6 +89,7 @@ func readTriggerBinding(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
+	d.Set("trigger", d.Id())
 	d.Set("actions", flattenTriggerBindingActions(b.Bindings))
 
 	return nil
