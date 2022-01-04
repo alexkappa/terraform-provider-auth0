@@ -584,6 +584,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("allowed_origins", c.AllowedOrigins)
 	d.Set("allowed_clients", c.AllowedClients)
 	d.Set("grant_types", c.GrantTypes)
+	d.Set("signing_keys", c.SigningKeys)
 	d.Set("organization_usage", c.OrganizationUsage)
 	d.Set("organization_require_behavior", c.OrganizationRequireBehavior)
 	d.Set("web_origins", c.WebOrigins)
