@@ -1,91 +1,91 @@
 resource/auth0_action:
-  - "**/*action.go"
-  - "**/*action_test.go"
+  - '**/*action.go'
+  - '**/*action_test.go'
 
 resource/auth0_branding:
-  - "**/*branding.go"
-  - "**/*branding_test.go"
+  - '**/*branding.go'
+  - '**/*branding_test.go'
 
 resource/auth0_client:
-  - "**/*client.go"
-  - "**/*client_test.go"
+  - '**/*client.go'
+  - '**/*client_test.go'
 
 resource/auth0_client_grant:
-  - "**/*client_grant.go"
-  - "**/*client_grant_test.go"
+  - '**/*client_grant.go'
+  - '**/*client_grant_test.go'
 
 resource/auth0_connection:
-  - "**/*connection.go"
-  - "**/*connection_test.go"
+  - '**/*connection.go'
+  - '**/*connection_test.go'
 
 resource/auth0_custom_domain:
-  - "**/*custom_domain.go"
-  - "**/*custom_domain_test.go"
+  - '**/*custom_domain.go'
+  - '**/*custom_domain_test.go'
 
 resource/auth0_email:
-  - "**/*email.go"
-  - "**/*email_test.go"
+  - '**/*email.go'
+  - '**/*email_test.go'
 
 resource/auth0_email_template:
-  - "**/*email_template.go"
-  - "**/*email_template_test.go"
+  - '**/*email_template.go'
+  - '**/*email_template_test.go'
 
 resource/auth0_global_client:
-  - "**/*global_client.go"
-  - "**/*global_client_test.go"
+  - '**/*global_client.go'
+  - '**/*global_client_test.go'
 
 resource/auth0_guardian:
-  - "**/*guardian.go"
-  - "**/*guardian_test.go"
+  - '**/*guardian.go'
+  - '**/*guardian_test.go'
 
 resource/auth0_hook:
-  - "**/*hook.go"
-  - "**/*hook_test.go"
+  - '**/*hook.go'
+  - '**/*hook_test.go'
 
 resource/auth0_log_stream:
-  - "**/*log_stream.go"
-  - "**/*log_stream_test.go"
+  - '**/*log_stream.go'
+  - '**/*log_stream_test.go'
 
 resource/auth0_organization:
-  - "**/*organization.go"
-  - "**/*organization_test.go"
+  - '**/*organization.go'
+  - '**/*organization_test.go'
 
 resource/auth0_prompt:
-  - "**/*prompt.go"
-  - "**/*prompt_test.go"
+  - '**/*prompt.go'
+  - '**/*prompt_test.go'
 
 resource/auth0_prompt_custom_text:
-  - "**/*prompt_custom_text.go"
-  - "**/*prompt_custom_text_test.go"
+  - '**/*prompt_custom_text.go'
+  - '**/*prompt_custom_text_test.go'
 
 resource/auth0_resource_server:
-  - "**/*resource_server.go"
-  - "**/*resource_server_test.go"
+  - '**/*resource_server.go'
+  - '**/*resource_server_test.go'
 
 resource/auth0_role:
-  - "**/*role.go"
-  - "**/*role_test.go"
+  - '**/*role.go'
+  - '**/*role_test.go'
 
 resource/auth0_rule:
-  - "**/*rule.go"
-  - "**/*rule_test.go"
+  - '**/*rule.go'
+  - '**/*rule_test.go'
 
 resource/auth0_rule_config:
-  - "**/*rule_config.go"
-  - "**/*rule_config_test.go"
+  - '**/*rule_config.go'
+  - '**/*rule_config_test.go'
 
 resource/auth0_tenant:
-  - "**/*tenant.go"
-  - "**/*tenant_test.go"
+  - '**/*tenant.go'
+  - '**/*tenant_test.go'
 
 resource/auth0_trigger_binding:
-  - "**/*trigger_binding.go"
-  - "**/*trigger_binding_test.go"
+  - '**/*trigger_binding.go'
+  - '**/*trigger_binding_test.go'
 
 resource/auth0_user:
-  - "**/*user.go"
-  - "**/*user_test.go"
+  - '**/*user.go'
+  - '**/*user_test.go'
 
 resource_data:
-  - "**/resource_data.go"
-  - "**/resource_data_test.go"
+  - '**/resource_data.go'
+  - '**/resource_data_test.go'
