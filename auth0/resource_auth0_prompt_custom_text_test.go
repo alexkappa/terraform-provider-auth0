@@ -18,16 +18,16 @@ func TestAccPromptCustomText(t *testing.T) {
 				Config: testAccPromptCustomTextCreate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "prompt", "login"),
-					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "login", "en"),
-					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "body", "{\"login\": { \"alertListTitle\": \"Alerts\", \"buttonText\": \"Continue\"}}"),
+					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "language", "en"),
+					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "body", "{\n    \"login\": {\n        \"alertListTitle\": \"Alerts\",\n        \"buttonText\": \"Continue\",\n        \"emailPlaceholder\": \"Email address\"\n    }\n}"),
 				),
 			},
 			{
 				Config: testAccPromptCustomTextUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "prompt", "login"),
-					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "login", "en"),
-					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "body", "{\"login\": { \"alertListTitle\": \"Alerts\", \"buttonText\": \"Continue to Login\"}}"),
+					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "language", "en"),
+					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "body", "{\n    \"login\": {\n        \"alertListTitle\": \"Alerts\",\n        \"buttonText\": \"Continue\",\n        \"emailPlaceholder\": \"Email address\"\n    }\n}"),
 				),
 			},
 		},
@@ -39,15 +39,29 @@ const testAccPromptCustomTextCreate = `
 resource "auth0_prompt_custom_text" "prompt_custom_text" {
   prompt = "login"
   language = "en"
-  body = "{\"login\": { \"alertListTitle\": \"Alerts\", \"buttonText\": \"Continue\"}}""
+  body = <<EOF
+{
+"login": {
+	"alertListTitle": "Alerts",
+	"buttonText": "Continue",
+	"emailPlaceholder": "Email address"}
+}
+EOF
 }
 `
 
 const testAccPromptCustomTextUpdate = `
 
 resource "auth0_prompt_custom_text" "prompt_custom_text" {
-	prompt = "login"
-	language = "en"
-	body = "{\"login\": { \"alertListTitle\": \"Alerts\", \"buttonText\": \"Continue to Login\"}}""
-  }
+  prompt = "login"
+  language = "en"
+  body = <<EOF
+{
+"login": {
+	"alertListTitle": "Alerts",
+	"buttonText": "Continue",
+	"emailPlaceholder": "Email address"}
+}
+EOF
+}
   `
