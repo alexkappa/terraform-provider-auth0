@@ -46,6 +46,7 @@ EOF
 Arguments accepted by this resource include:
 
 * `name` - (Required) Name of the connection.
+* `display_name` - (Optional) Name used in login screen.
 * `is_domain_connection` - (Optional) Indicates whether or not the connection is domain level.
 * `strategy` - (Required) Type of the connection, which indicates the identity provider. Options include `ad`, `adfs`, `amazon`, `aol`, `apple`, `auth0`, `auth0-adldap`, `auth0-oidc`, `baidu`, `bitbucket`, `bitly`, `box`, `custom`, `daccount`, `dropbox`, `dwolla`, `email`, `evernote`, `evernote-sandbox`, `exact`, `facebook`, `fitbit`, `flickr`, `github`, `google-apps`, `google-oauth2`, `guardian`, `instagram`, `ip`, `line`, `linkedin`, `miicard`, `oauth1`, `oauth2`, `office365`, `oidc`, `paypal`, `paypal-sandbox`, `pingfederate`, `planningcenter`, `renren`, `salesforce`, `salesforce-community`, `salesforce-sandbox` `samlp`, `sharepoint`, `shopify`, `sms`, `soundcloud`, `thecity`, `thecity-sandbox`, `thirtysevensignals`, `twitter`, `untappd`, `vkontakte`, `waad`, `weibo`, `windowslive`, `wordpress`, `yahoo`, `yammer`, `yandex`.
 * `options` - (Optional) Configuration settings for connection options. For details, see [Options](#options).
@@ -76,7 +77,6 @@ With the `auth0` connection strategy, `options` supports the following arguments
 * `configuration` - (Optional) A case-sensitive map of key value pairs used as configuration variables for the `custom_script`.
 * `mfa` - (Optional) Configuration settings Options for multifactor authentication. For details, see [MFA Options](#mfa-options).
 * `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
-
 
 #### Validation
 
@@ -128,8 +128,6 @@ With the `google-oauth2` connection strategy, `options` supports the following a
 * `allowed_audiences` - (Optional) List of allowed audiences.
 * `scopes` - (Optional) Scopes.
 * `set_user_root_attributes` - (Optional) Determines whether the 'name', 'given_name', 'family_name', 'nickname', and 'picture' attributes can be independently updated when using the external IdP. Default is `on_each_login` and can be set to `on_first_login`.
-
-
 
 **Example**:
 
@@ -263,13 +261,13 @@ With the `salesforce`, `salesforce-community` and `salesforce-sandbox` connectio
 
 ```hcl
 resource "auth0_connection" "salesforce" {
-	name = "Salesforce-Connection"
-	strategy = "salesforce"
-	options {
-		client_id = "<client-id>"
-		client_secret = "<client-secret>"
-		community_base_url = "https://salesforce.example.com"
-	}
+ name = "Salesforce-Connection"
+ strategy = "salesforce"
+ options {
+  client_id = "<client-id>"
+  client_secret = "<client-secret>"
+  community_base_url = "https://salesforce.example.com"
+ }
 }
 ```
 
@@ -305,21 +303,21 @@ With the `oauth2` connection strategy, `options` supports the following argument
 
 ```hcl
 resource "auth0_connection" "oauth2" {
-	name = "OAuth2-Connection"
-	strategy = "oauth2"
-	options {
-		client_id = "<client-id>"
-		client_secret = "<client-secret>"
-		token_endpoint = "https://auth.example.com/oauth2/token"
+ name = "OAuth2-Connection"
+ strategy = "oauth2"
+ options {
+  client_id = "<client-id>"
+  client_secret = "<client-secret>"
+  token_endpoint = "https://auth.example.com/oauth2/token"
     authorization_endpoint = "https://auth.example.com/oauth2/authorize"
     scripts = {
-			fetchUserProfile = <<EOF
+   fetchUserProfile = <<EOF
 function function(accessToken, ctx, cb) {
   return callback(new Error("Whoops!"))
 }
 EOF
-		}
-	}
+  }
+ }
 }
 ```
 
@@ -414,26 +412,27 @@ With the `samlp` connection strategy, `options` supports the following arguments
 * `entity_id` - (Optional) Custom Entity ID for the connection.
 
 **Example**:
+
 ```hcl
 resource "auth0_connection" "samlp" {
-	name = "SAML-Connection"
-	strategy = "samlp"
-	options {
-		signing_cert = "<signing-certificate>"
-		sign_in_endpoint = "https://saml.provider/sign_in"
-		sign_out_endpoint = "https://saml.provider/sign_out"
-		tenant_domain = "example.com"
-		domain_aliases = ["example.com", "alias.example.com"]
-		binding_method = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Post"
+ name = "SAML-Connection"
+ strategy = "samlp"
+ options {
+  signing_cert = "<signing-certificate>"
+  sign_in_endpoint = "https://saml.provider/sign_in"
+  sign_out_endpoint = "https://saml.provider/sign_out"
+  tenant_domain = "example.com"
+  domain_aliases = ["example.com", "alias.example.com"]
+  binding_method = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Post"
     request_template = "<samlp:AuthnRequest xmlns:samlp=\"urn:oasis:names:tc:SAML:2.0:protocol\"\n@@AssertServiceURLAndDestination@@\n    ID=\"@@ID@@\"\n    IssueInstant=\"@@IssueInstant@@\"\n    ProtocolBinding=\"@@ProtocolBinding@@\" Version=\"2.0\">\n    <saml:Issuer xmlns:saml=\"urn:oasis:names:tc:SAML:2.0:assertion\">@@Issuer@@</saml:Issuer>\n</samlp:AuthnRequest>"
     user_id_attribute = "https://saml.provider/imi/ns/identity-200810"
-		signature_algorithm = "rsa-sha256"
-		digest_algorithm = "sha256"
-		fields_map = {
-			foo = "bar"
-			baz = "baa"
-		}
-	}
+  signature_algorithm = "rsa-sha256"
+  digest_algorithm = "sha256"
+  fields_map = {
+   foo = "bar"
+   baz = "baa"
+  }
+ }
 }
 ```
 
@@ -488,6 +487,6 @@ Attributes exported by this resource include:
 
 Connections can be imported using their id, e.g.
 
-```
-$ terraform import auth0_connection.google con_a17f21fdb24d48a0
+```terminal
+terraform import auth0_connection.google con_a17f21fdb24d48a0
 ```
