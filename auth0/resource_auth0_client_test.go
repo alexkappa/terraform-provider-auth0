@@ -6,10 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alexkappa/terraform-provider-auth0/auth0/internal/random"
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+
+	"github.com/alexkappa/terraform-provider-auth0/auth0/internal/random"
 
 	"gopkg.in/auth0.v5/management"
 )
@@ -379,6 +380,8 @@ func TestAccClientMobile(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_client.my_client", "mobile.0.android.0.app_package_name", "com.example"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "mobile.0.android.0.sha256_cert_fingerprints.#", "1"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "mobile.0.android.0.sha256_cert_fingerprints.0", "DE:AD:BE:EF"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "native_social_login.0.apple.0.enabled", "true"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "native_social_login.0.facebook.0.enabled", "false"),
 				),
 			},
 			{
@@ -387,6 +390,15 @@ func TestAccClientMobile(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_client.my_client", "mobile.0.android.#", "1"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "mobile.0.android.0.app_package_name", "com.example"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "mobile.0.android.0.sha256_cert_fingerprints.#", "0"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "native_social_login.0.apple.0.enabled", "false"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "native_social_login.0.facebook.0.enabled", "true"),
+				),
+			},
+			{
+				// This just makes sure that you can change the type (where native_social_login cannot be set)
+				Config: random.Template(testAccClientConfigMobileUpdateNonMobile, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_client.my_client", "app_type", "non_interactive"),
 				),
 			},
 		},
@@ -397,11 +409,24 @@ const testAccClientConfigMobile = `
 
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - Mobile - {{.random}}"
+  app_type = "native"
   mobile {
     android {
       app_package_name = "com.example"
       sha256_cert_fingerprints = ["DE:AD:BE:EF"]
     }
+	ios {
+	  team_id = "9JA89QQLNQ"
+	  app_bundle_identifier = "com.my.bundle.id"
+	}
+  }
+  native_social_login {
+	apple {
+		enabled = true
+	}
+	facebook {
+		enabled = false
+	}
   }
 }
 `
@@ -410,11 +435,41 @@ const testAccClientConfigMobileUpdate = `
 
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - Mobile - {{.random}}"
+  app_type = "native"
   mobile {
     android {
       app_package_name = "com.example"
       sha256_cert_fingerprints = []
     }
+	ios {
+	  team_id = "1111111111"
+	  app_bundle_identifier = "com.my.auth0.bundle"
+	}
+  }
+  native_social_login {
+	apple {
+		enabled = false
+	}
+	facebook {
+		enabled = true
+	}
+  }
+}
+`
+
+const testAccClientConfigMobileUpdateNonMobile = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - Mobile - {{.random}}"
+  app_type = "non_interactive"
+
+  native_social_login {
+	apple {
+		enabled = false
+	}
+	facebook {
+		enabled = false
+	}
   }
 }
 `

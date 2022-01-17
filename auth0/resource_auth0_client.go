@@ -496,6 +496,42 @@ func newClient() *schema.Resource {
 					v.IsURLWithNoFragment,
 				),
 			},
+			"native_social_login": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Computed: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"apple": {
+							Type:     schema.TypeList,
+							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enabled": {
+										Type:     schema.TypeBool,
+										Optional: true,
+									},
+								},
+							},
+						},
+						"facebook": {
+							Type:     schema.TypeList,
+							Optional: true,
+							MaxItems: 1,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enabled": {
+										Type:     schema.TypeBool,
+										Optional: true,
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"refresh_token": {
 				Type:     schema.TypeList,
 				Optional: true,
@@ -595,6 +631,7 @@ func readClient(d *schema.ResourceData, m interface{}) error {
 	d.Set("custom_login_page", c.CustomLoginPage)
 	d.Set("form_template", c.FormTemplate)
 	d.Set("token_endpoint_auth_method", c.TokenEndpointAuthMethod)
+	d.Set("native_social_login", flattenCustomSocialConfiguration(c.NativeSocialLogin))
 	d.Set("jwt_configuration", flattenClientJwtConfiguration(c.JWTConfiguration))
 	d.Set("refresh_token", flattenClientRefreshTokenConfiguration(c.RefreshToken))
 	d.Set("encryption_key", c.EncryptionKey)
@@ -747,6 +784,24 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		}
 	}
 
+	List(d, "native_social_login").Elem(func(d ResourceData) {
+		c.NativeSocialLogin = &management.ClientNativeSocialLogin{}
+
+		List(d, "apple").Elem(func(d ResourceData) {
+			m := make(MapData)
+			m.Set("enabled", Bool(d, "enabled"))
+
+			c.NativeSocialLogin.Apple = m
+		})
+
+		List(d, "facebook").Elem(func(d ResourceData) {
+			m := make(MapData)
+			m.Set("enabled", Bool(d, "enabled"))
+
+			c.NativeSocialLogin.Facebook = m
+		})
+	})
+
 	List(d, "mobile").Elem(func(d ResourceData) {
 
 		c.Mobile = make(map[string]interface{})
@@ -818,6 +873,27 @@ func rotateClientSecret(d *schema.ResourceData, m interface{}) error {
 
 func clientHasChange(c *management.Client) bool {
 	return c.String() != "{}"
+}
+
+func flattenCustomSocialConfiguration(customSocial *management.ClientNativeSocialLogin) []interface{} {
+	if customSocial != nil {
+		m := make(map[string]interface{})
+
+		if customSocial.Apple != nil {
+			m["apple"] = map[string]interface{}{
+				"enabled": customSocial.Apple["enabled"],
+			}
+		}
+		if customSocial.Facebook != nil {
+			m["facebook"] = map[string]interface{}{
+				"enabled": customSocial.Facebook["enabled"],
+			}
+		}
+
+		return []interface{}{m}
+	}
+
+	return nil
 }
 
 func flattenClientJwtConfiguration(jwt *management.ClientJWTConfiguration) []interface{} {

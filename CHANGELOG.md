@@ -1,3 +1,13 @@
+## 0.25.1
+
+ENHANCEMENTS:
+
+* resource/client: Add the `native_social_login` field for native `app_types` ([#453](https://github.com/alexkappa/terraform-provider-auth0/pull/453))
+
+NOTES:
+
+* Fix role docs [#398](https://github.com/alexkappa/terraform-provider-auth0/pull/398)
+
 ## 0.25.0
 
 ENHANCEMENTS:

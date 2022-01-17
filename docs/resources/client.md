@@ -115,6 +115,7 @@ Arguments accepted by this resource include:
 * `token_endpoint_auth_method` - (Optional) String. Defines the requested authentication method for the token endpoint. Options include `none` (public client without a client secret), `client_secret_post` (client uses HTTP POST parameters), `client_secret_basic` (client uses HTTP Basic).
 * `client_metadata` - (Optional) Map(String)
 * `mobile` - (Optional) List(Resource). Configuration settings for mobile native applications. For details, see [Mobile](#mobile).
+* `native_social_login` - (Optional) List(Resource). Configuration settings to toggle native social login for mobile native applications. For details, see [Native Social Login](#native-social-login)
 
 ### JWT Configuration
 
@@ -222,6 +223,26 @@ Arguments accepted by this resource include:
 * `team_id` - (Optional) String
 * `app_bundle_identifier` - (Optional) String
 
+### Native Social Login
+
+> Note: once this is set it must stay set, with both resources set to "false" in order to change the app_type
+
+`native_social_login` supports the following arguments:
+
+* `apple` (Optional) Resource:
+* `facebook` (Optional) Resources:
+
+#### Apple
+
+`apple` supports the following arguments:
+
+* `enabled` Boolean
+
+#### Facebook
+
+`facebook` supports the following arguments:
+
+* `enabled` Boolean
 ## Attribute Reference
 
 Attributes exported by this resource include:
