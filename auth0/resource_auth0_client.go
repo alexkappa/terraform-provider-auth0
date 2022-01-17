@@ -506,7 +506,6 @@ func newClient() *schema.Resource {
 						"apple": {
 							Type:     schema.TypeList,
 							Optional: true,
-							Computed: true,
 							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -520,7 +519,6 @@ func newClient() *schema.Resource {
 						"facebook": {
 							Type:     schema.TypeList,
 							Optional: true,
-							Computed: true,
 							MaxItems: 1,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -877,19 +875,18 @@ func clientHasChange(c *management.Client) bool {
 	return c.String() != "{}"
 }
 
-func flattenCustomSocialConfiguration(custom_social *management.ClientNativeSocialLogin) []interface{} {
-	// TODO: Implement
-	if custom_social != nil {
+func flattenCustomSocialConfiguration(customSocial *management.ClientNativeSocialLogin) []interface{} {
+	if customSocial != nil {
 		m := make(map[string]interface{})
 
-		if custom_social.Apple != nil {
+		if customSocial.Apple != nil {
 			m["apple"] = map[string]interface{}{
-				"enabled": custom_social.Apple["enabled"],
+				"enabled": customSocial.Apple["enabled"],
 			}
 		}
-		if custom_social.Facebook != nil {
+		if customSocial.Facebook != nil {
 			m["facebook"] = map[string]interface{}{
-				"enabled": custom_social.Facebook["enabled"],
+				"enabled": customSocial.Facebook["enabled"],
 			}
 		}
 

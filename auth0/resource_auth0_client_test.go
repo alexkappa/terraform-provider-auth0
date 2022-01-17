@@ -6,10 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alexkappa/terraform-provider-auth0/auth0/internal/random"
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+
+	"github.com/alexkappa/terraform-provider-auth0/auth0/internal/random"
 
 	"gopkg.in/auth0.v5/management"
 )
@@ -441,8 +442,8 @@ resource "auth0_client" "my_client" {
       sha256_cert_fingerprints = []
     }
 	ios {
-	  team_id = "9JA89QQLNQ"
-	  app_bundle_identifier = "com.my.bundle.id"
+	  team_id = "1111111111"
+	  app_bundle_identifier = "com.my.auth0.bundle"
 	}
   }
   native_social_login {
