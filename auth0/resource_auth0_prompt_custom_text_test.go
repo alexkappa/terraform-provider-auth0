@@ -8,7 +8,6 @@ import (
 )
 
 func TestAccPromptCustomText(t *testing.T) {
-
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
 			"auth0": Provider(),
@@ -19,7 +18,11 @@ func TestAccPromptCustomText(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "prompt", "login"),
 					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "language", "en"),
-					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "body", "{\n    \"login\": {\n        \"alertListTitle\": \"Alerts\",\n        \"buttonText\": \"Continue\",\n        \"emailPlaceholder\": \"Email address\"\n    }\n}"),
+					resource.TestCheckResourceAttr(
+						"auth0_prompt_custom_text.prompt_custom_text",
+						"body",
+						"{\n    \"login\": {\n        \"alertListTitle\": \"Alerts\",\n        \"buttonText\": \"Continue\",\n        \"emailPlaceholder\": \"Email address\"\n    }\n}",
+					),
 				),
 			},
 			{
@@ -27,7 +30,11 @@ func TestAccPromptCustomText(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "prompt", "login"),
 					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "language", "en"),
-					resource.TestCheckResourceAttr("auth0_prompt_custom_text.prompt_custom_text", "body", "{\n    \"login\": {\n        \"alertListTitle\": \"Alerts\",\n        \"buttonText\": \"Continue\",\n        \"emailPlaceholder\": \"Email address\"\n    }\n}"),
+					resource.TestCheckResourceAttr(
+						"auth0_prompt_custom_text.prompt_custom_text",
+						"body",
+						"{\n    \"login\": {\n        \"alertListTitle\": \"Alerts\",\n        \"buttonText\": \"Proceed\",\n        \"emailPlaceholder\": \"Email Address\"\n    }\n}",
+					),
 				),
 			},
 		},
@@ -35,33 +42,33 @@ func TestAccPromptCustomText(t *testing.T) {
 }
 
 const testAccPromptCustomTextCreate = `
-
 resource "auth0_prompt_custom_text" "prompt_custom_text" {
   prompt = "login"
   language = "en"
-  body = <<EOF
-{
-"login": {
-	"alertListTitle": "Alerts",
-	"buttonText": "Continue",
-	"emailPlaceholder": "Email address"}
-}
-EOF
+  body = jsonencode(
+    {
+      "login" : {
+        "alertListTitle" : "Alerts",
+        "buttonText" : "Continue",
+        "emailPlaceholder" : "Email address"
+      }
+    }
+  )
 }
 `
 
 const testAccPromptCustomTextUpdate = `
-
 resource "auth0_prompt_custom_text" "prompt_custom_text" {
   prompt = "login"
   language = "en"
-  body = <<EOF
-{
-"login": {
-	"alertListTitle": "Alerts",
-	"buttonText": "Continue",
-	"emailPlaceholder": "Email address"}
+  body = jsonencode(
+    {
+      "login" : {
+        "alertListTitle" : "Alerts",
+        "buttonText" : "Proceed",
+        "emailPlaceholder" : "Email Address"
+      }
+    }
+  )
 }
-EOF
-}
-  `
+`
