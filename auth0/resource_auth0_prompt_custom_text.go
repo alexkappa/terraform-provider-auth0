@@ -26,7 +26,7 @@ var (
 		"hu", "id", "is", "it", "ja", "ko", "lt", "lv", "nb", "nl", "pl", "pt", "pt-BR", "pt-PT", "ro", "ru", "sk",
 		"sl", "sr", "sv", "th", "tr", "uk", "vi", "zh-CN", "zh-TW",
 	}
-	errEmptyPromptCustomTextID = fmt.Errorf("ID cannot be empty")
+	errEmptyPromptCustomTextID         = fmt.Errorf("ID cannot be empty")
 	errInvalidPromptCustomTextIDFormat = fmt.Errorf("ID must be formated as prompt:language")
 )
 
@@ -121,6 +121,7 @@ func updatePromptCustomText(d *schema.ResourceData, m interface{}) error {
 
 func deletePromptCustomText(d *schema.ResourceData, m interface{}) error {
 	d.SetId("")
+	d.Set("body", "{}")
 	return nil
 }
 
