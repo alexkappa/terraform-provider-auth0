@@ -120,8 +120,11 @@ func updatePromptCustomText(d *schema.ResourceData, m interface{}) error {
 }
 
 func deletePromptCustomText(d *schema.ResourceData, m interface{}) error {
-	d.SetId("")
 	d.Set("body", "{}")
+
+	updatePromptCustomText(d, m)
+
+	d.SetId("")
 	return nil
 }
 
