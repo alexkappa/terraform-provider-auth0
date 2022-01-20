@@ -62,12 +62,15 @@ func newPromptCustomText() *schema.Resource {
 
 func importPromptCustomText(d *schema.ResourceData, _ interface{}) ([]*schema.ResourceData, error) {
 	prompt, language, err := getPromptAndLanguage(d)
+	if err != nil {
+		return []*schema.ResourceData{}, err
+	}
 
 	d.SetId(d.Id())
 	d.Set("prompt", prompt)
 	d.Set("language", language)
 
-	return []*schema.ResourceData{d}, err
+	return []*schema.ResourceData{d}, nil
 }
 
 func createPromptCustomText(d *schema.ResourceData, m interface{}) error {
