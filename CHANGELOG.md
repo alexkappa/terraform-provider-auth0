@@ -1,3 +1,9 @@
+## 0.26.0
+
+ENHANCEMENTS:
+
+* **New Resource:** `auth0_prompt_custom_text` ([#497](https://github.com/alexkappa/terraform-provider-auth0/pull/497))
+
 ## 0.25.1
 
 ENHANCEMENTS:
