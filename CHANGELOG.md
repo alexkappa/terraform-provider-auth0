@@ -1,3 +1,9 @@
+## 0.26.1
+
+BUG FIXES:
+
+* resource/auth0_branding: Fix reading auth0_branding when enable_custom_domain_in_emails flag is true ([#438](https://github.com/alexkappa/terraform-provider-auth0/pull/438))
+
 ## 0.26.0
 
 ENHANCEMENTS:
