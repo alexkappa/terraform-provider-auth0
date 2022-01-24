@@ -9,10 +9,9 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"gopkg.in/auth0.v5/management"
 
 	"github.com/alexkappa/terraform-provider-auth0/auth0/internal/random"
-
-	"gopkg.in/auth0.v5/management"
 )
 
 func init() {
@@ -52,7 +51,6 @@ func init() {
 }
 
 func TestAccClient(t *testing.T) {
-
 	rand := random.String(6)
 
 	resource.Test(t, resource.TestCase{
@@ -82,6 +80,7 @@ func TestAccClient(t *testing.T) {
 					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.samlp.0.audience", "https://example.com/saml"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.samlp.0.map_identities", "false"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.samlp.0.name_identifier_format", "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"),
+					resource.TestCheckResourceAttr("auth0_client.my_client", "addons.0.samlp.0.signing_cert", "-----BEGIN PUBLIC KEY-----\nMIGf...bpP/t3\n+JGNGIRMj1hF1rnb6QIDAQAB\n-----END PUBLIC KEY-----\n"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "client_metadata.foo", "zoo"),
 					resource.TestCheckResourceAttr("auth0_client.my_client", "initiate_login_uri", "https://example.com/login"),
 				),
@@ -91,7 +90,6 @@ func TestAccClient(t *testing.T) {
 }
 
 const testAccClientConfig = `
-
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - {{.random}}"
   description = "Test Application Long Description"
@@ -145,6 +143,7 @@ resource "auth0_client" "my_client" {
         callback = "http://example.com/callback"
         slo_enabled = true
       }
+	  signing_cert = "-----BEGIN PUBLIC KEY-----\nMIGf...bpP/t3\n+JGNGIRMj1hF1rnb6QIDAQAB\n-----END PUBLIC KEY-----\n"
     }
   }
   refresh_token {
@@ -167,7 +166,6 @@ resource "auth0_client" "my_client" {
 `
 
 func TestAccClientZeroValueCheck(t *testing.T) {
-
 	rand := random.String(6)
 
 	resource.Test(t, resource.TestCase{
@@ -199,7 +197,6 @@ func TestAccClientZeroValueCheck(t *testing.T) {
 }
 
 const testAccClientConfigCreate = `
-
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - Zero Value Check - {{.random}}"
   is_first_party = false
@@ -207,7 +204,6 @@ resource "auth0_client" "my_client" {
 `
 
 const testAccClientConfigUpdate = `
-
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - Zero Value Check - {{.random}}"
   is_first_party = true
@@ -215,7 +211,6 @@ resource "auth0_client" "my_client" {
 `
 
 const testAccClientConfigUpdateAgain = `
-
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - Zero Value Check - {{.random}}"
   is_first_party = false
@@ -223,7 +218,6 @@ resource "auth0_client" "my_client" {
 `
 
 func TestAccClientRotateSecret(t *testing.T) {
-
 	rand := random.String(6)
 
 	resource.Test(t, resource.TestCase{
@@ -249,14 +243,12 @@ func TestAccClientRotateSecret(t *testing.T) {
 }
 
 const testAccClientConfigRotateSecret = `
-
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - Rotate Secret - {{.random}}"
 }
 `
 
 const testAccClientConfigRotateSecretUpdate = `
-
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - Rotate Secret - {{.random}}"
   client_secret_rotation_trigger = {
@@ -267,7 +259,6 @@ resource "auth0_client" "my_client" {
 `
 
 func TestAccClientInitiateLoginUri(t *testing.T) {
-
 	rand := random.String(6)
 
 	resource.Test(t, resource.TestCase{
@@ -288,7 +279,6 @@ func TestAccClientInitiateLoginUri(t *testing.T) {
 }
 
 const testAccClientConfigInitiateLoginUriHttp = `
-
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - Initiate Login URI - {{.random}}"
   initiate_login_uri = "http://example.com/login"
@@ -296,7 +286,6 @@ resource "auth0_client" "my_client" {
 `
 
 const testAccClientConfigInitiateLoginUriFragment = `
-
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - Initiate Login URI - {{.random}}"
   initiate_login_uri = "https://example.com/login#fragment"
@@ -304,7 +293,6 @@ resource "auth0_client" "my_client" {
 `
 
 func TestAccClientJwtScopes(t *testing.T) {
-
 	rand := random.String(6)
 
 	resource.Test(t, resource.TestCase{
@@ -337,7 +325,6 @@ func TestAccClientJwtScopes(t *testing.T) {
 }
 
 const testAccClientConfigJwtScopes = `
-
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - JWT Scopes - {{.random}}"
   jwt_configuration {
@@ -350,7 +337,6 @@ resource "auth0_client" "my_client" {
 `
 
 const testAccClientConfigJwtScopesUpdate = `
-
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - JWT Scopes - {{.random}}"
   jwt_configuration {
@@ -365,7 +351,6 @@ resource "auth0_client" "my_client" {
 `
 
 func TestAccClientMobile(t *testing.T) {
-
 	rand := random.String(6)
 
 	resource.Test(t, resource.TestCase{
@@ -406,7 +391,6 @@ func TestAccClientMobile(t *testing.T) {
 }
 
 const testAccClientConfigMobile = `
-
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - Mobile - {{.random}}"
   app_type = "native"
@@ -432,7 +416,6 @@ resource "auth0_client" "my_client" {
 `
 
 const testAccClientConfigMobileUpdate = `
-
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - Mobile - {{.random}}"
   app_type = "native"
@@ -475,7 +458,6 @@ resource "auth0_client" "my_client" {
 `
 
 func TestAccClientMobileValidationError(t *testing.T) {
-
 	rand := random.String(6)
 
 	resource.Test(t, resource.TestCase{
@@ -492,7 +474,6 @@ func TestAccClientMobileValidationError(t *testing.T) {
 }
 
 const testAccClientConfigMobileUpdateError = `
-
 resource "auth0_client" "my_client" {
   name = "Acceptance Test - Mobile - {{.random}}"
   mobile {

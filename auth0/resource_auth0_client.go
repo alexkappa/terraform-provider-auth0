@@ -375,6 +375,10 @@ func newClient() *schema.Resource {
 										Type:     schema.TypeString,
 										Optional: true,
 									},
+									"signing_cert": {
+										Type:     schema.TypeString,
+										Optional: true,
+									},
 								},
 							},
 						},
@@ -756,6 +760,7 @@ func expandClient(d *schema.ResourceData) *management.Client {
 			m.Set("audience", String(d, "audience"))
 			m.Set("authnContextClassRef", String(d, "authn_context_class_ref"))
 			m.Set("binding", String(d, "binding"))
+			m.Set("signingCert", String(d, "signing_cert"))
 			m.Set("createUpnClaim", Bool(d, "create_upn_claim"))
 			m.Set("destination", String(d, "destination"))
 			m.Set("digestAlgorithm", String(d, "digest_algorithm"))
