@@ -1,12 +1,85 @@
-## Unreleased
+## 0.26.1
+
+BUG FIXES:
+
+* resource/auth0_branding: Fix reading auth0_branding when enable_custom_domain_in_emails flag is true ([#438](https://github.com/alexkappa/terraform-provider-auth0/pull/438))
+
+## 0.26.0
 
 ENHANCEMENTS:
 
+* **New Resource:** `auth0_prompt_custom_text` ([#497](https://github.com/alexkappa/terraform-provider-auth0/pull/497))
+
+## 0.25.1
+
+ENHANCEMENTS:
+
+* resource/client: Add the `native_social_login` field for native `app_types` ([#453](https://github.com/alexkappa/terraform-provider-auth0/pull/453))
+
+NOTES:
+
+* Fix role docs [#398](https://github.com/alexkappa/terraform-provider-auth0/pull/398)
+
+## 0.25.0
+
+ENHANCEMENTS:
+
+* **New Resource:** `auth0_trigger_binding` a.k.a Action Flow ([#481](https://github.com/alexkappa/terraform-provider-auth0/pull/481))
+* resource/auth0_connection: Add `entity_id` field for SAMLP connections ([#468](https://github.com/alexkappa/terraform-provider-auth0/pull/468))
+* resource/auth0_client_grant: Update import documentation ([#471](https://github.com/alexkappa/terraform-provider-auth0/pull/471))
+
+## 0.24.3
+
+BUG FIXES:
+
+* resource/auth0_action: Secrets would not be sent to the management API and the `0.24.1` version didn't address the issue ([#478](https://github.com/alexkappa/terraform-provider-auth0/pull/478))
+
+## 0.24.2
+
+BUG FIXES:
+
+* resource/auth0_action: Deployments proceed only if action status is `built` ([#476](https://github.com/alexkappa/terraform-provider-auth0/pull/476))
+
+## 0.24.1
+
+BUG FIXES:
+
+* resource/auth0_action: Secrets would not be created causing deployments to fail ([#473](https://github.com/alexkappa/terraform-provider-auth0/pull/473))
+
+## 0.24.0
+
+ENHANCEMENTS:
+
+* **New Resource:** `auth0_custom_domain_verification` ([#410](https://github.com/alexkappa/terraform-provider-auth0/pull/410))
+* resource/auth0_client: Add support for `allowed_clients` ([#443](https://github.com/alexkappa/terraform-provider-auth0/pull/443))
+
+## 0.23.1
+
+BUG FIXES:
+
+* resource/auth0_connection: Fix `adfs` connection strategy ([#467](https://github.com/alexkappa/terraform-provider-auth0/pull/467))
+
+## 0.23.0
+
+ENHANCEMENTS:
+
+* **New Resource:** `auth0_action` ([#464](https://github.com/alexkappa/terraform-provider-auth0/pull/464))
+
+## 0.22.0
+
+ENHANCEMENTS:
+
+* **New Resource:** `auth0_organization` ([#458](https://github.com/alexkappa/terraform-provider-auth0/pull/458))
+
+## 0.21.1
+
 * resource/auth0_client: Documentation removal of `custom_login_page_preview` field [#386](https://github.com/alexkappa/terraform-provider-auth0/pull/386)
+* resource/auth0_client: Add `organization_usage` and `organization_require_behavior` parameters to `auth0_client` resource. ([#451](https://github.com/alexkappa/terraform-provider-auth0/pull/451))
 
 NOTES:
 
 * Bumped go-auth0 version to v5.17.0 [#398](https://github.com/alexkappa/terraform-provider-auth0/pull/398)
+* Build darwin/arm64 binaries for Mac M1 silicon ([#421](https://github.com/alexkappa/terraform-provider-auth0/pull/421))
 
 ## 0.21.0
 

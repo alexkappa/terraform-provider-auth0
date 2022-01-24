@@ -30,7 +30,7 @@ resource "auth0_guardian" "default" {
 
 Arguments accepted by this resource include:
 
-* `policy` - (Required) String. Policy to use. Available options are `never`, `all-applications` and `confidence-score. The option `confidence-score` means the trigger of MFA will be adaptive. See [Auth0 docs](https://auth0.com/docs/mfa/adaptive-mfa)
+* `policy` - (Required) String. Policy to use. Available options are `never`, `all-applications` and `confidence-score`. The option `confidence-score` means the trigger of MFA will be adaptive. See [Auth0 docs](https://auth0.com/docs/mfa/adaptive-mfa)
 * `phone` - (Optional) List(Resource). Configuration settings for the phone MFA. For details, see [Phone](#phone).
 
 ### Phone
@@ -38,8 +38,7 @@ Arguments accepted by this resource include:
 `phone` supports the following arguments:
 
 * `provider` - (Required) String, Case-sensitive. Provider to use, one of `auth0`, `twilio` or `phone-message-hook`.
-* `message_types` - (Required) List(String). Message types to use, array of `phone` and or `voice`. Adding both to array should enable the user to choose.
-* `secret_access_key` - (Optional) String, Case-sensitive. AWS Secret Key. Will always be encrypted in our database. Used only for AWS.
+* `message_types` - (Required) List(String). Message types to use, array of `sms` and or `voice`. Adding both to array should enable the user to choose.
 * `options`- (Required) List(Resource). Options for the various providers. See [Options](#options).
 
 ### Options

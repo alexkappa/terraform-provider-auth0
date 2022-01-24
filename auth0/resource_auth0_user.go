@@ -314,14 +314,14 @@ func assignUserRoles(d *schema.ResourceData, m interface{}) error {
 	add, rm := Diff(d, "roles")
 
 	var addRoles []*management.Role
-	for _, addRole := range add {
+	for _, addRole := range add.List() {
 		addRoles = append(addRoles, &management.Role{
 			ID: auth0.String(addRole.(string)),
 		})
 	}
 
 	var rmRoles []*management.Role
-	for _, rmRole := range rm {
+	for _, rmRole := range rm.List() {
 		rmRoles = append(rmRoles, &management.Role{
 			ID: auth0.String(rmRole.(string)),
 		})

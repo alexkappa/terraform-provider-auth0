@@ -63,6 +63,5 @@ const testAccCustomDomain = `
 resource "auth0_custom_domain" "my_custom_domain" {
   domain = "{{.random}}.auth.uat.alexkappa.com"
   type = "auth0_managed_certs"
-  verification_method = "txt"
 }
 `

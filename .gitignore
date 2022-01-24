@@ -22,6 +22,7 @@ vendor/
 # .tfstate files
 *.tfstate
 *.tfstate.*
+.terraform.lock.hcl
 
 # Crash log files
 crash.log
@@ -36,5 +37,4 @@ override.tf.json
 # VSCode ###
 .vscode/*
 !.vscode/tasks.json
-!.vscode/launch.json
 *.code-workspace

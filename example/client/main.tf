@@ -46,6 +46,7 @@ resource "auth0_client" "my_client" {
       name_identifier_probes = [
         "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
       ]
+      signing_cert = "-----BEGIN PUBLIC KEY-----\nMIGf...bpP/t3\n+JGNGIRMj1hF1rnb6QIDAQAB\n-----END PUBLIC KEY-----\n"
     }
   }
   mobile {

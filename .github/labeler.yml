@@ -1,3 +1,11 @@
+resource/auth0_action:
+  - '**/*action.go'
+  - '**/*action_test.go'
+
+resource/auth0_branding:
+  - '**/*branding.go'
+  - '**/*branding_test.go'
+
 resource/auth0_client:
   - '**/*client.go'
   - '**/*client_test.go'
@@ -26,6 +34,10 @@ resource/auth0_global_client:
   - '**/*global_client.go'
   - '**/*global_client_test.go'
 
+resource/auth0_guardian:
+  - '**/*guardian.go'
+  - '**/*guardian_test.go'
+
 resource/auth0_hook:
   - '**/*hook.go'
   - '**/*hook_test.go'
@@ -34,9 +46,17 @@ resource/auth0_log_stream:
   - '**/*log_stream.go'
   - '**/*log_stream_test.go'
 
+resource/auth0_organization:
+  - '**/*organization.go'
+  - '**/*organization_test.go'
+
 resource/auth0_prompt:
   - '**/*prompt.go'
   - '**/*prompt_test.go'
+
+resource/auth0_prompt_custom_text:
+  - '**/*prompt_custom_text.go'
+  - '**/*prompt_custom_text_test.go'
 
 resource/auth0_resource_server:
   - '**/*resource_server.go'
@@ -57,6 +77,10 @@ resource/auth0_rule_config:
 resource/auth0_tenant:
   - '**/*tenant.go'
   - '**/*tenant_test.go'
+
+resource/auth0_trigger_binding:
+  - '**/*trigger_binding.go'
+  - '**/*trigger_binding_test.go'
 
 resource/auth0_user:
   - '**/*user.go'

@@ -23,7 +23,10 @@ resource "auth0_client" "my_client" {
   oidc_conformant = false
   callbacks = [ "https://example.com/callback" ]
   allowed_origins = [ "https://example.com" ]
+  allowed_clients = [ "https://allowed.example.com" ]
   grant_types = [ "authorization_code", "http://auth0.com/oauth/grant-type/password-realm", "implicit", "password", "refresh_token" ]
+  organization_usage = "deny"
+  organization_require_behavior = "no_prompt"
   allowed_logout_urls = [ "https://example.com" ]
   web_origins = [ "https://example.com" ]
   jwt_configuration {
@@ -67,6 +70,7 @@ resource "auth0_client" "my_client" {
       name_identifier_probes = [
         "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
       ]
+      signing_cert = "pemcertificate"
     }
   }
   mobile {
@@ -93,7 +97,10 @@ Arguments accepted by this resource include:
 * `callbacks` - (Optional) List(String). URLs that Auth0 may call back to after a user authenticates for the client. Make sure to specify the protocol (https://) otherwise the callback may fail in some cases. With the exception of custom URI schemes for native clients, all callbacks should use protocol https://.
 * `allowed_logout_urls` - (Optional) List(String). URLs that Auth0 may redirect to after logout.
 * `grant_types` - (Optional) List(String). Types of grants that this client is authorized to use.
+* `organization_usage` - (Optional) String. Defines how to proceed during an authentication transaction with regards an organization. Can be `deny` (default), `allow` or `require`.
+* `organization_require_behavior` - (Optional) String. Defines how to proceed during an authentication transaction when `organization_usage = "require"`. Can be `no_prompt` (default) or `pre_login_prompt`.
 * `allowed_origins` - (Optional) List(String). URLs that represent valid origins for cross-origin resource sharing. By default, all your callback URLs will be allowed.
+* `allowed_clients` - (Optional) List(String). List of applications ID's that will be allowed to make delegation request. By default, all applications will be allowed.
 * `web_origins` - (Optional) List(String). URLs that represent valid web origins for use with web message response mode.
 * `jwt_configuration` - (Optional) List(Resource). Configuration settings for the JWTs issued for this client. For details, see [JWT Configuration](#jwt-configuration).
 * `refresh_token` - (Optional) List(Resource). Configuration settings for the refresh tokens issued for this client.  For details, see [Refresh Token Configuration](#refresh-token-configuration).
@@ -109,6 +116,7 @@ Arguments accepted by this resource include:
 * `token_endpoint_auth_method` - (Optional) String. Defines the requested authentication method for the token endpoint. Options include `none` (public client without a client secret), `client_secret_post` (client uses HTTP POST parameters), `client_secret_basic` (client uses HTTP Basic).
 * `client_metadata` - (Optional) Map(String)
 * `mobile` - (Optional) List(Resource). Configuration settings for mobile native applications. For details, see [Mobile](#mobile).
+* `native_social_login` - (Optional) List(Resource). Configuration settings to toggle native social login for mobile native applications. For details, see [Native Social Login](#native-social-login)
 
 ### JWT Configuration
 
@@ -187,6 +195,8 @@ Arguments accepted by this resource include:
 * `mappings` - (Optional) Map(String). Mappings between the Auth0 user profile property name (`name`) and the output attributes on the SAML attribute in the assertion (`value`).
 * `logout` - (Optional) Map(Resource). Configuration settings for logout. For details, see [Logout](#logout).
 * `name_identifier_probes` - (Optional) List(String). Attributes that can be used for Subject/NameID. Auth0 will try each of the attributes of this array in order and use the first value it finds.
+* `signing_cert` - (Optional) String. Optionally indicates the public key certificate used to validate SAML requests. If set, SAML requests will be required to be signed. A sample value would be `-----BEGIN PUBLIC KEY-----\nMIGf...bpP/t3\n+JGNGIRMj1hF1rnb6QIDAQAB\n-----END PUBLIC KEY-----\n`.
+
 
 #### Logout
 
@@ -216,6 +226,26 @@ Arguments accepted by this resource include:
 * `team_id` - (Optional) String
 * `app_bundle_identifier` - (Optional) String
 
+### Native Social Login
+
+> Note: once this is set it must stay set, with both resources set to "false" in order to change the app_type
+
+`native_social_login` supports the following arguments:
+
+* `apple` (Optional) Resource:
+* `facebook` (Optional) Resources:
+
+#### Apple
+
+`apple` supports the following arguments:
+
+* `enabled` Boolean
+
+#### Facebook
+
+`facebook` supports the following arguments:
+
+* `enabled` Boolean
 ## Attribute Reference
 
 Attributes exported by this resource include:

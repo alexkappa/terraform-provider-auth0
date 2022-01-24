@@ -45,8 +45,9 @@ func newCustomDomain() *schema.Resource {
 			},
 			"verification_method": {
 				Type:         schema.TypeString,
-				Required:     true,
+				Optional:     true,
 				ForceNew:     true,
+				Deprecated:   "The method is chosen according to the type of the custom domain. CNAME for auth0_managed_certs, TXT for self_managed_certs",
 				ValidateFunc: validation.StringInSlice([]string{"txt"}, true),
 			},
 			"verification": {
