@@ -19,10 +19,11 @@ resource "auth0_guardian" "default" {
     provider      = "auth0"
     message_types = ["sms"]
     options {
-      enrollment_message   = "{{code}}} is your verification code for {{tenant.friendly_name}}. Please enter this code to verify your enrollment"
+      enrollment_message   = "{{code}} is your verification code for {{tenant.friendly_name}}. Please enter this code to verify your enrollment"
       verification_message = "{{code}} is your verification code for {{tenant.friendly_name}}"
     }
   }
+  email = true
 }
 ```
 
@@ -32,6 +33,7 @@ Arguments accepted by this resource include:
 
 * `policy` - (Required) String. Policy to use. Available options are `never`, `all-applications` and `confidence-score`. The option `confidence-score` means the trigger of MFA will be adaptive. See [Auth0 docs](https://auth0.com/docs/mfa/adaptive-mfa)
 * `phone` - (Optional) List(Resource). Configuration settings for the phone MFA. For details, see [Phone](#phone).
+* `email` - (Optional) Boolean. Indicates whether or not email MFA is enabled.
 
 ### Phone
 

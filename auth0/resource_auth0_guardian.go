@@ -92,6 +92,11 @@ func newGuardian() *schema.Resource {
 					},
 				},
 			},
+			"email": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
 		},
 	}
 }
@@ -103,6 +108,9 @@ func createGuardian(d *schema.ResourceData, m interface{}) error {
 func deleteGuardian(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
 	api.Guardian.MultiFactor.Phone.Enable(false)
+	if err := api.Guardian.MultiFactor.Email.Enable(false); err != nil {
+		return err
+	}
 	d.SetId("")
 	return nil
 }
@@ -118,7 +126,16 @@ func updateGuardian(d *schema.ResourceData, m interface{}) (err error) {
 			err = api.Guardian.MultiFactor.UpdatePolicy(&management.MultiFactorPolicies{p})
 		}
 	}
-	//TODO: Extend for other MFA types
+	if err := updatePhoneFactor(d, api); err != nil {
+		return err
+	}
+	if err := updateEmailFactor(d, api); err != nil {
+		return err
+	}
+	return readGuardian(d, m)
+}
+
+func updatePhoneFactor(d *schema.ResourceData, api *management.Management) error {
 	ok, err := factorShouldBeUpdated(d, "phone")
 	if err != nil {
 		return err
@@ -131,11 +148,20 @@ func updateGuardian(d *schema.ResourceData, m interface{}) (err error) {
 	} else {
 		api.Guardian.MultiFactor.Phone.Enable(false)
 	}
-	return readGuardian(d, m)
+	return nil
+}
+
+func updateEmailFactor(d *schema.ResourceData, api *management.Management) error {
+	if changed := d.HasChange("email"); changed {
+		enabled := d.Get("email").(bool)
+		if err := api.Guardian.MultiFactor.Email.Enable(enabled); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func configurePhone(d *schema.ResourceData, api *management.Management) (err error) {
-
 	md := make(MapData)
 	List(d, "phone").Elem(func(d ResourceData) {
 		md.Set("provider", String(d, "provider", HasChange()))
@@ -241,6 +267,7 @@ func readGuardian(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
+
 	ok, err := factorShouldBeUpdated(d, "phone")
 	if err != nil {
 		return err
@@ -253,6 +280,17 @@ func readGuardian(d *schema.ResourceData, m interface{}) error {
 	}
 	if err != nil {
 		return err
+	}
+
+	factors, err := api.Guardian.MultiFactor.List()
+	if err != nil {
+		return err
+	}
+	for _, v := range factors {
+		switch *v.Name {
+		case "email":
+			d.Set("email", v.Enabled)
+		}
 	}
 	return nil
 }
