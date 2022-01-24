@@ -1,7 +1,6 @@
 package auth0
 
 import (
-	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/validation"
@@ -100,6 +99,7 @@ func newGuardian() *schema.Resource {
 		},
 	}
 }
+
 func createGuardian(d *schema.ResourceData, m interface{}) error {
 	d.SetId(resource.UniqueId())
 	return updateGuardian(d, m)
@@ -107,7 +107,9 @@ func createGuardian(d *schema.ResourceData, m interface{}) error {
 
 func deleteGuardian(d *schema.ResourceData, m interface{}) error {
 	api := m.(*management.Management)
-	api.Guardian.MultiFactor.Phone.Enable(false)
+	if err := api.Guardian.MultiFactor.Phone.Enable(false); err != nil {
+		return err
+	}
 	if err := api.Guardian.MultiFactor.Email.Enable(false); err != nil {
 		return err
 	}
@@ -141,12 +143,16 @@ func updatePhoneFactor(d *schema.ResourceData, api *management.Management) error
 		return err
 	}
 	if ok {
-		api.Guardian.MultiFactor.Phone.Enable(true)
+		if err := api.Guardian.MultiFactor.Phone.Enable(true); err != nil {
+			return err
+		}
 		if err := configurePhone(d, api); err != nil {
 			return err
 		}
 	} else {
-		api.Guardian.MultiFactor.Phone.Enable(false)
+		if err := api.Guardian.MultiFactor.Phone.Enable(false); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -344,19 +350,6 @@ func typeAssertToStringArray(from []interface{}) *[]string {
 		stringArray[i] = v.(string)
 	}
 	return &stringArray
-}
-
-func isFactorEnabled(factor string, api *management.Management) (*bool, error) {
-	mfs, err := api.Guardian.MultiFactor.List()
-	if err != nil {
-		return nil, err
-	}
-	for _, mf := range mfs {
-		if *mf.Name == factor {
-			return mf.Enabled, nil
-		}
-	}
-	return nil, fmt.Errorf("factor %s is not among the possible factors", factor)
 }
 
 // Determines if the factor should be updated. This depends on if it is in the state, if it is about to be added to the state.

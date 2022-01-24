@@ -2,7 +2,7 @@
 layout: "auth0"
 page_title: "Auth0: auth0_guardian"
 description: |-
-  With this reasource, you can configure some of the MFA options
+  With this resource, you can configure some of the MFA options
 ---
 
 # auth0_guardian
