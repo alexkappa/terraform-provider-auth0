@@ -19,8 +19,8 @@ resource "auth0_guardian" "default" {
     provider      = "auth0"
     message_types = ["sms"]
     options {
-      enrollment_message   = "{{code}} is your verification code for {{tenant.friendly_name}}. Please enter this code to verify your enrollment"
-      verification_message = "{{code}} is your verification code for {{tenant.friendly_name}}"
+      enrollment_message   = "{{code}} is your verification code for {{tenant.friendly_name}}. Please enter this code to verify your enrollment."
+      verification_message = "{{code}} is your verification code for {{tenant.friendly_name}}."
     }
   }
   email = true
@@ -44,7 +44,7 @@ Arguments accepted by this resource include:
 * `options`- (Required) List(Resource). Options for the various providers. See [Options](#options).
 
 ### Options
-`options` supports different arguments depending on the provider specificed in [Phone](#phone).
+`options` supports different arguments depending on the provider specified in [Phone](#phone).
 
 ### Auth0
 * `enrollment_message` (Optional) String. This message will be sent whenever a user enrolls a new device for the first time using MFA. Supports liquid syntax, see [Auth0 docs](https://auth0.com/docs/mfa/customize-sms-or-voice-messages).

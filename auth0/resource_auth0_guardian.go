@@ -293,8 +293,7 @@ func readGuardian(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	for _, v := range factors {
-		switch *v.Name {
-		case "email":
+		if v.Name != nil && *v.Name == "email" {
 			d.Set("email", v.Enabled)
 		}
 	}
