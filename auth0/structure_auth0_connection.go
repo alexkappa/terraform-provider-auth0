@@ -300,6 +300,7 @@ func expandConnection(d ResourceData) *management.Connection {
 		IsDomainConnection: Bool(d, "is_domain_connection"),
 		EnabledClients:     Set(d, "enabled_clients").List(),
 		Realms:             Slice(d, "realms", IsNewResource(), HasChange()),
+		ShowAsButton:       Bool(d, "show_as_button"),
 	}
 
 	s := d.Get("strategy").(string)

@@ -51,6 +51,7 @@ Arguments accepted by this resource include:
 * `options` - (Optional) Configuration settings for connection options. For details, see [Options](#options).
 * `enabled_clients` - (Optional) IDs of the clients for which the connection is enabled. If not specified, no clients are enabled.
 * `realms` - (Optional) Defines the realms for which the connection will be used (i.e., email domains). If not specified, the connection name is added as the realm.
+* `show_as_button` - (Optional) Display connection as a button.
 
 ### Options
 

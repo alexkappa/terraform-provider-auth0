@@ -611,6 +611,11 @@ var connectionSchema = map[string]*schema.Schema{
 		Computed:    true,
 		Description: "Defines the realms for which the connection will be used (i.e., email domains). If not specified, the connection name is added as the realm",
 	},
+	"show_as_button": {
+		Type:        schema.TypeBool,
+		Optional:    true,
+		Description: "Display connection as a button",
+	},
 }
 
 func connectionSchemaV0() *schema.Resource {
@@ -734,6 +739,7 @@ func readConnection(d *schema.ResourceData, m interface{}) error {
 	d.Set("options", flattenConnectionOptions(d, c.Options))
 	d.Set("enabled_clients", c.EnabledClients)
 	d.Set("realms", c.Realms)
+	d.Set("show_as_button", c.ShowAsButton)
 	return nil
 }
 
