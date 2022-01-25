@@ -72,6 +72,17 @@ func TestAccLogStreamHTTP(t *testing.T) {
 				),
 			},
 			{
+				Config: random.Template(testAccLogStreamHTTPConfigUpdateJsonObject, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-http-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "http"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_endpoint", "https://example.com/webhook/logs"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_content_type", "application/json; charset=utf-8"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_content_format", "JSONOBJECT"),
+					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "sink.0.http_authorization", "AKIAXXXXXXXXXXXXXXXX"),
+				),
+			},
+			{
 				Config: random.Template(testAccLogStreamHTTPConfigUpdate, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-http-new-{{.random}}", rand),
@@ -107,6 +118,18 @@ resource "auth0_log_stream" "my_log_stream" {
 	  http_endpoint = "https://example.com/logs"
 	  http_content_type = "application/json"
 	  http_content_format = "JSONLINES"
+	  http_authorization = "AKIAXXXXXXXXXXXXXXXX"
+	}
+}
+`
+const testAccLogStreamHTTPConfigUpdateJsonObject = `
+resource "auth0_log_stream" "my_log_stream" {
+	name = "Acceptance-Test-LogStream-http-new-{{.random}}"
+	type = "http"
+	sink {
+	  http_endpoint = "https://example.com/logs"
+	  http_content_type = "application/json"
+	  http_content_format = "JSONOBJECT"
 	  http_authorization = "AKIAXXXXXXXXXXXXXXXX"
 	}
 }

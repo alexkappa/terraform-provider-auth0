@@ -48,7 +48,7 @@ For "eventgrid" the following arguments are supported:
 - `azure_partner_topic` - (Optional, Computed) Name of the Partner Topic to be used with Azure.  Generally should not be specified.
 
 For "http" the following arguments are supported:
-- `http_content_format` - (Required) The format of data sent over HTTP. Options are "JSONLINES" or "JSONARRAY"
+- `http_content_format` - (Required) The format of data sent over HTTP. Options are "JSONLINES", "JSONARRAY" or "JSONOBJECT"
 - `http_content_type` - (Required) The ContentType header to send over HTTP.  Common value is "application/json"
 - `http_endpoint` - (Required) The HTTP endpoint to send streaming logs
 - `http_authorization` - (Required) Sent in the HTTP "Authorization" header with each request
