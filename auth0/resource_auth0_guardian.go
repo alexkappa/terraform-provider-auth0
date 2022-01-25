@@ -146,23 +146,15 @@ func updatePhoneFactor(d *schema.ResourceData, api *management.Management) error
 		if err := api.Guardian.MultiFactor.Phone.Enable(true); err != nil {
 			return err
 		}
-		if err := configurePhone(d, api); err != nil {
-			return err
-		}
-	} else {
-		if err := api.Guardian.MultiFactor.Phone.Enable(false); err != nil {
-			return err
-		}
+		return configurePhone(d, api)
 	}
-	return nil
+	return api.Guardian.MultiFactor.Phone.Enable(false)
 }
 
 func updateEmailFactor(d *schema.ResourceData, api *management.Management) error {
 	if changed := d.HasChange("email"); changed {
 		enabled := d.Get("email").(bool)
-		if err := api.Guardian.MultiFactor.Email.Enable(enabled); err != nil {
-			return err
-		}
+		return api.Guardian.MultiFactor.Email.Enable(enabled)
 	}
 	return nil
 }
