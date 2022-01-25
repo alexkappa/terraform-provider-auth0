@@ -116,6 +116,7 @@ func deleteGuardian(d *schema.ResourceData, m interface{}) error {
 	d.SetId("")
 	return nil
 }
+
 func updateGuardian(d *schema.ResourceData, m interface{}) (err error) {
 	api := m.(*management.Management)
 
