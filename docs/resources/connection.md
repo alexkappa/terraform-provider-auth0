@@ -354,6 +354,40 @@ With the `sms` connection strategy, `options` supports the following arguments:
 * `totp` - (Optional) Configuration options for one-time passwords. For details, see [TOTP](#totp).
 * `messaging_service_sid` - (Optional) SID for Copilot. Used when SMS Source is Copilot.
 
+
+Example of [custom SMS gateway connection](https://auth0.com/docs/authenticate/passwordless/authentication-methods/use-sms-gateway-passwordless):
+
+```hcl
+resource "auth0_connection" "sms" {
+	name = "custom-sms-gateway"
+	is_domain_connection = false
+	strategy = "sms"
+	options {
+		disable_signup = false
+		name = "sms"
+		from = "+15555555555"
+		syntax = "md_with_macros"
+		template = "@@password@@"
+		brute_force_protection = true
+		totp {
+			time_step = 300
+			length = 6
+		}
+		provider = "sms_gateway"
+		gateway_url = "https://somewhere.com/sms-gateway"
+		gateway_authentication {
+			method = "bearer"
+			subject = "test.us.auth0.com:sms"
+			audience = "https://somewhere.com/sms-gateway"
+			secret = "4e2680bb74ec2ae24736476dd37ed6c2"
+			secret_base64_encoded = false
+		}
+		forward_request_info = true
+	}
+}
+
+```
+
 #### TOTP
 
 `totp` supports the following arguments:
