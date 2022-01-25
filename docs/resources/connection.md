@@ -99,7 +99,7 @@ With the `auth0` connection strategy, `options` supports the following arguments
 
 #### Password Dictionary
 
-`passsword_dictionary` supports the following arguments:
+`password_dictionary` supports the following arguments:
 
 * `enable` - (Optional) Indicates whether the password dictionary check is enabled for this connection.
 * `dictionary` - (Optional) Customized contents of the password dictionary. By default, the password dictionary contains a list of the [10,000 most common passwords](https://github.com/danielmiessler/SecLists/blob/master/Passwords/Common-Credentials/10k-most-common.txt); your customized content is used in addition to the default password dictionary. Matching is not case-sensitive.
