@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  custom-domain:
+    build:
+      context: .
+      dockerfile: dockerfiles/wiremock/Dockerfile
+    command: --port 8080 --verbose
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"

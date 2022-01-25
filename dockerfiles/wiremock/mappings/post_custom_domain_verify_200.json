@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/v2/custom-domains/cd_fakecustomdomain/verify"
+  },
+  "response": {
+    "status": 201,
+    "bodyFileName": "custom_domain_verified.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
