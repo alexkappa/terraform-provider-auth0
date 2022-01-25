@@ -5,7 +5,7 @@ description: |-
 With this resource, you can manage your Auth0 log streams.
 ---
 
-# auth0_prompt
+# auth0_log_stream
 
 With this resource, you can manage your Auth0 log streams.
 
@@ -48,7 +48,7 @@ For "eventgrid" the following arguments are supported:
 - `azure_partner_topic` - (Optional, Computed) Name of the Partner Topic to be used with Azure.  Generally should not be specified.
 
 For "http" the following arguments are supported:
-- `http_content_format` - (Required) The format of data sent over HTTP. Options are "JSONLINES" or "JSONARRAY"
+- `http_content_format` - (Required) The format of data sent over HTTP. Options are "JSONLINES", "JSONARRAY" or "JSONOBJECT"
 - `http_content_type` - (Required) The ContentType header to send over HTTP.  Common value is "application/json"
 - `http_endpoint` - (Required) The HTTP endpoint to send streaming logs
 - `http_authorization` - (Required) Sent in the HTTP "Authorization" header with each request
@@ -65,3 +65,14 @@ For "splunk" the following arguments are supported:
 
 For "sumo" the following arguments are supported:
 - `sumo_source_address` - (Required) Generated URL for your defined HTTP source in Sumo Logic for collecting streaming data from Auth0
+
+## Import
+
+Existing log stream can be imported using log stream id
+
+
+```hcl
+
+$ terraform import auth0_log_stream.example lst_XXXXXXXXXXXXXXXX
+
+```

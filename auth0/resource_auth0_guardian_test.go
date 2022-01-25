@@ -86,6 +86,22 @@ func TestAccGuardian(t *testing.T) {
 					resource.TestCheckNoResourceAttr("auth0_guardian.foo", "phone"),
 				),
 			},
+
+			{
+				Config: testAccConfigureEmail,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_guardian.foo", "policy", "all-applications"),
+					resource.TestCheckResourceAttr("auth0_guardian.foo", "email", "true"),
+				),
+			},
+
+			{
+				Config: testAccConfigureEmailUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("auth0_guardian.foo", "policy", "all-applications"),
+					resource.TestCheckResourceAttr("auth0_guardian.foo", "email", "false"),
+				),
+			},
 		},
 	})
 }
@@ -159,5 +175,21 @@ const testAccConfigureNoPhone = `
 
 resource "auth0_guardian" "foo" {
   policy = "all-applications"
+}
+`
+
+const testAccConfigureEmail = `
+
+resource "auth0_guardian" "foo" {
+  policy = "all-applications"
+  email  = true
+}
+`
+
+const testAccConfigureEmailUpdate = `
+
+resource "auth0_guardian" "foo" {
+  policy = "all-applications"
+  email  = false
 }
 `

@@ -595,6 +595,66 @@ resource "auth0_connection" "sms" {
 }
 `
 
+func TestAccConnectionCustomSMS(t *testing.T) {
+
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccConnectionCustomSMSConfig, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_connection.sms", "name", "Acceptance-Test-Custom-SMS-{{.random}}", rand),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "strategy", "sms"),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.totp.#", "1"),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.totp.0.time_step", "300"),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.totp.0.length", "6"),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.gateway_url", "https://somewhere.com/sms-gateway"),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.gateway_authentication.#", "1"),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.gateway_authentication.0.method", "bearer"),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.gateway_authentication.0.subject", "test.us.auth0.com:sms"),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.gateway_authentication.0.audience", "https://somewhere.com/sms-gateway"),
+					resource.TestCheckResourceAttr("auth0_connection.sms", "options.0.gateway_authentication.0.secret", "4e2680bb72ec2ae24836476dd37ed6c2"),
+				),
+			},
+		},
+	})
+}
+
+const testAccConnectionCustomSMSConfig = `
+
+resource "auth0_connection" "sms" {
+	name = "Acceptance-Test-Custom-SMS-{{.random}}"
+	is_domain_connection = false
+	strategy = "sms"
+	options {
+		disable_signup = false
+		name = "sms"
+		from = "+12345678"
+		syntax = "md_with_macros"
+		template = "@@password@@"
+		brute_force_protection = true
+		totp {
+			time_step = 300
+			length = 6
+		}
+		provider = "sms_gateway"
+		gateway_url = "https://somewhere.com/sms-gateway"
+		gateway_authentication {
+			method = "bearer"
+			subject = "test.us.auth0.com:sms"
+			audience = "https://somewhere.com/sms-gateway"
+			secret = "4e2680bb72ec2ae24836476dd37ed6c2"
+			secret_base64_encoded = false
+		}
+		forward_request_info = true
+	}
+}
+`
+
 func TestAccConnectionEmail(t *testing.T) {
 
 	rand := random.String(6)
@@ -1290,6 +1350,7 @@ func TestAccConnectionSAML(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.idp_initiated.0.client_authorize_query", "type=code&timeout=60"),
 					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.sign_out_endpoint", ""),
+					resource.TestCheckResourceAttr("auth0_connection.my_connection", "options.0.entity_id", "example"),
 				),
 			},
 		},
@@ -1388,6 +1449,7 @@ EOF
 		protocol_binding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
 		signature_algorithm = "rsa-sha256"
 		digest_algorithm = "sha256"
+		entity_id = "example"
 		fields_map = {
 			foo = "bar"
 			baz = "baa"

@@ -102,10 +102,11 @@ func newLogStream() *schema.Resource {
 							Type:         schema.TypeString,
 							Optional:     true,
 							RequiredWith: []string{"sink.0.http_endpoint", "sink.0.http_authorization", "sink.0.http_content_type"},
-							Description:  "HTTP Content Format can be JSONLINES or JSONARRAY",
+							Description:  "HTTP Content Format can be JSONLINES, JSONARRAY or JSONOBJECT",
 							ValidateFunc: validation.StringInSlice([]string{
 								"JSONLINES",
 								"JSONARRAY",
+								"JSONOBJECT",
 							}, false),
 						},
 						"http_content_type": {

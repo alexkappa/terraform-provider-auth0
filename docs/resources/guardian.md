@@ -2,7 +2,7 @@
 layout: "auth0"
 page_title: "Auth0: auth0_guardian"
 description: |-
-  With this reasource, you can configure some of the MFA options
+  With this resource, you can configure some of the MFA options
 ---
 
 # auth0_guardian
@@ -19,10 +19,11 @@ resource "auth0_guardian" "default" {
     provider      = "auth0"
     message_types = ["sms"]
     options {
-      enrollment_message   = "{{code}}} is your verification code for {{tenant.friendly_name}}. Please enter this code to verify your enrollment"
-      verification_message = "{{code}} is your verification code for {{tenant.friendly_name}}"
+      enrollment_message   = "{{code}} is your verification code for {{tenant.friendly_name}}. Please enter this code to verify your enrollment."
+      verification_message = "{{code}} is your verification code for {{tenant.friendly_name}}."
     }
   }
+  email = true
 }
 ```
 
@@ -32,6 +33,7 @@ Arguments accepted by this resource include:
 
 * `policy` - (Required) String. Policy to use. Available options are `never`, `all-applications` and `confidence-score`. The option `confidence-score` means the trigger of MFA will be adaptive. See [Auth0 docs](https://auth0.com/docs/mfa/adaptive-mfa)
 * `phone` - (Optional) List(Resource). Configuration settings for the phone MFA. For details, see [Phone](#phone).
+* `email` - (Optional) Boolean. Indicates whether or not email MFA is enabled.
 
 ### Phone
 
@@ -42,7 +44,7 @@ Arguments accepted by this resource include:
 * `options`- (Required) List(Resource). Options for the various providers. See [Options](#options).
 
 ### Options
-`options` supports different arguments depending on the provider specificed in [Phone](#phone).
+`options` supports different arguments depending on the provider specified in [Phone](#phone).
 
 ### Auth0
 * `enrollment_message` (Optional) String. This message will be sent whenever a user enrolls a new device for the first time using MFA. Supports liquid syntax, see [Auth0 docs](https://auth0.com/docs/mfa/customize-sms-or-voice-messages).

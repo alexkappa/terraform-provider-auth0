@@ -40,6 +40,8 @@ func flattenConnectionOptions(d ResourceData, options interface{}) []interface{}
 		m = flattenConnectionOptionsAD(o)
 	case *management.ConnectionOptionsAzureAD:
 		m = flattenConnectionOptionsAzureAD(o)
+	case *management.ConnectionOptionsADFS:
+		m = flattenConnectionOptionsADFS(o)
 	case *management.ConnectionOptionsSAML:
 		m = flattenConnectionOptionsSAML(o)
 	}
@@ -171,6 +173,15 @@ func flattenConnectionOptionsSMS(o *management.ConnectionOptionsSMS) interface{}
 			"time_step": o.OTP.GetTimeStep(),
 			"length":    o.OTP.GetLength(),
 		},
+		"provider":    o.GetProvider(),
+		"gateway_url": o.GetGatewayUrl(),
+		"gateway_authentication": map[string]interface{}{
+			"method":                o.GatewayAuthentication.GetMethod(),
+			"subject":               o.GatewayAuthentication.GetSubject(),
+			"audience":              o.GatewayAuthentication.GetAudience(),
+			"secret_base64_encoded": o.GatewayAuthentication.GetSecretBase64Encoded(),
+		},
+		"forward_request_info": o.GetForwardRequestInfo(),
 	}
 }
 
@@ -250,6 +261,18 @@ func flattenConnectionOptionsAzureAD(o *management.ConnectionOptionsAzureAD) int
 	}
 }
 
+func flattenConnectionOptionsADFS(o *management.ConnectionOptionsADFS) interface{} {
+	return map[string]interface{}{
+		"tenant_domain":            o.GetTenantDomain(),
+		"domain_aliases":           o.DomainAliases,
+		"icon_url":                 o.GetLogoURL(),
+		"adfs_server":              o.GetADFSServer(),
+		"api_enable_users":         o.GetEnableUsersAPI(),
+		"set_user_root_attributes": o.GetSetUserAttributes(),
+		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
+	}
+}
+
 func flattenConnectionOptionsSAML(o *management.ConnectionOptionsSAML) interface{} {
 	return map[string]interface{}{
 		"signing_cert":     o.GetSigningCert(),
@@ -273,6 +296,7 @@ func flattenConnectionOptionsSAML(o *management.ConnectionOptionsSAML) interface
 		"user_id_attribute":        o.GetUserIDAttribute(),
 		"set_user_root_attributes": o.GetSetUserAttributes(),
 		"non_persistent_attrs":     o.GetNonPersistentAttrs(),
+		"entity_id":                o.GetEntityID(),
 	}
 }
 
@@ -323,6 +347,8 @@ func expandConnection(d ResourceData) *management.Connection {
 			c.Options = expandConnectionOptionsEmail(d)
 		case management.ConnectionStrategySAML:
 			c.Options = expandConnectionOptionsSAML(d)
+		case management.ConnectionStrategyADFS:
+			c.Options = expandConnectionOptionsADFS(d)
 		default:
 			log.Printf("[WARN]: Unsupported connection strategy %s", s)
 			log.Printf("[WARN]: Raise an issue with the auth0 provider in order to support it:")
@@ -519,6 +545,9 @@ func expandConnectionOptionsSMS(d ResourceData) *management.ConnectionOptionsSMS
 		TwilioSID:            String(d, "twilio_sid"),
 		TwilioToken:          String(d, "twilio_token"),
 		MessagingServiceSID:  String(d, "messaging_service_sid"),
+		Provider:             String(d, "provider"),
+		GatewayUrl:           String(d, "gateway_url"),
+		ForwardRequestInfo:   Bool(d, "forward_request_info"),
 		DisableSignup:        Bool(d, "disable_signup"),
 		BruteForceProtection: Bool(d, "brute_force_protection"),
 	}
@@ -527,6 +556,16 @@ func expandConnectionOptionsSMS(d ResourceData) *management.ConnectionOptionsSMS
 		o.OTP = &management.ConnectionOptionsOTP{
 			TimeStep: Int(d, "time_step"),
 			Length:   Int(d, "length"),
+		}
+	})
+
+	List(d, "gateway_authentication").Elem(func(d ResourceData) {
+		o.GatewayAuthentication = &management.ConnectionGatewayAuthentication{
+			Method:              String(d, "method"),
+			Subject:             String(d, "subject"),
+			Audience:            String(d, "audience"),
+			Secret:              String(d, "secret"),
+			SecretBase64Encoded: Bool(d, "secret_base64_encoded"),
 		}
 	})
 
@@ -653,6 +692,7 @@ func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSA
 		LogoURL:            String(d, "icon_url"),
 		SetUserAttributes:  String(d, "set_user_root_attributes"),
 		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
+		EntityID:           String(d, "entity_id"),
 	}
 
 	List(d, "idp_initiated").Elem(func(d ResourceData) {
@@ -666,6 +706,18 @@ func expandConnectionOptionsSAML(d ResourceData) *management.ConnectionOptionsSA
 	return o
 }
 
+func expandConnectionOptionsADFS(d ResourceData) *management.ConnectionOptionsADFS {
+	return &management.ConnectionOptionsADFS{
+		TenantDomain:       String(d, "tenant_domain"),
+		DomainAliases:      Slice(d, "domain_aliases"),
+		LogoURL:            String(d, "icon_url"),
+		ADFSServer:         String(d, "adfs_server"),
+		EnableUsersAPI:     Bool(d, "api_enable_users"),
+		SetUserAttributes:  String(d, "set_user_root_attributes"),
+		NonPersistentAttrs: castToListOfStrings(Set(d, "non_persistent_attrs").List()),
+	}
+}
+
 type scoper interface {
 	Scopes() []string
 	SetScopes(enable bool, scopes ...string)
@@ -677,7 +729,7 @@ func expandConnectionOptionsScopes(d ResourceData, s scoper) {
 	for _, scope := range add {
 		s.SetScopes(true, scope.(string))
 	}
-	for _, scope := range rm {
+	for _, scope := range rm.List() {
 		s.SetScopes(false, scope.(string))
 	}
 }

@@ -15,7 +15,7 @@ func TestAccBranding(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: TestAccBrandingConfigCreate,
+				Config: testAccBrandingConfigCreate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "logo_url", "https://mycompany.org/v1/logo.png"),
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "favicon_url", "https://mycompany.org/favicon.ico"),
@@ -25,7 +25,7 @@ func TestAccBranding(t *testing.T) {
 				),
 			},
 			{
-				Config: TestAccBrandingConfigUpdate,
+				Config: testAccBrandingConfigUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "logo_url", "https://mycompany.org/v2/logo.png"),
 					resource.TestCheckResourceAttr("auth0_branding.my_brand", "favicon_url", "https://mycompany.org/favicon.ico"),
@@ -38,7 +38,7 @@ func TestAccBranding(t *testing.T) {
 	})
 }
 
-const TestAccBrandingConfigCreate = `
+const testAccBrandingConfigCreate = `
 resource "auth0_branding" "my_brand" {
 	logo_url = "https://mycompany.org/v1/logo.png"
 	favicon_url = "https://mycompany.org/favicon.ico"
@@ -52,7 +52,7 @@ resource "auth0_branding" "my_brand" {
 }
 `
 
-const TestAccBrandingConfigUpdate = `
+const testAccBrandingConfigUpdate = `
 resource "auth0_branding" "my_brand" {
 	logo_url = "https://mycompany.org/v2/logo.png"
 	favicon_url = "https://mycompany.org/favicon.ico"

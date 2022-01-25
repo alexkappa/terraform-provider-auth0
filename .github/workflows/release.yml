@@ -28,7 +28,8 @@ jobs:
         GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
     - name: Create release notes
-      run: scripts/release-notes.sh ${{ env.VERSION }} > release-notes.md
+      run: |
+        scripts/release-notes.sh ${{ env.VERSION }} | tee release-notes.md
 
     - name: Go release
       uses: goreleaser/goreleaser-action@v1

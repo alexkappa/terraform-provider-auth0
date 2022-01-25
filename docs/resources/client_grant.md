@@ -45,3 +45,11 @@ Arguments accepted by this resource include:
 * `client_id` - (Required) String. ID of the client for this grant.
 * `audience` - (Required) String. Audience or API Identifier for this grant.
 * `scope` - (Required) List(String). Permissions (scopes) included in this grant.
+
+## Import
+
+Client grants can be imported using the grant ID (Application -> APIs -> Expand the required API)
+
+```
+$ terraform import auth0_client_grant.example cgr_XXXXXXXXXXXXXXXX
+```
