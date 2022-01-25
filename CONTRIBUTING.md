@@ -1,17 +1,23 @@
 # Contributing
 
-Before you begin, read through some of the Terraform documentation on [Extending
+Before you begin, read through the Terraform documentation on [Extending
 Terraform](https://www.terraform.io/docs/extend/index.html) and [Writing Custom
 Providers](https://learn.hashicorp.com/collections/terraform/providers).
 
-Finally the [HashiCorp Provider Design
+Finally, the [HashiCorp Provider Design
 Principles](https://www.terraform.io/docs/extend/hashicorp-provider-design-principles.html)
 explore the underlying principles for the design choices of this provider.
+
+## Prerequisites
+
+- [Go 1.13+](https://go.dev/)
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker-Compose](https://docs.docker.com/compose/install/)
 
 ## Getting started
 
 To work on the provider, you'll need [Go](http://www.golang.org) installed on
-your machine (version 1.10+ is *required*). You'll also need to correctly setup
+your machine (version 1.13+ is *required*). You'll also need to correctly set up
 a [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding
 `$GOPATH/bin` to your `$PATH`.
 
@@ -40,11 +46,10 @@ AUTH0_CLIENT_ID=<your-auth0-client-id>
 AUTH0_CLIENT_SECRET=<your-auth0-client-secret>
 ```
 
-Then, run `make testacc`. 
+Then, run `docker-compose up -d && make testacc`. 
 
 **Note:** The acceptance tests make calls to a real Auth0 tenant, and create
-real resources. Certain tests, for example for custom domains
-(`TestAccCustomDomain`), also require a paid Auth0 subscription to be able to
+real resources. Certain tests also require a paid Auth0 subscription to be able to
 run successfully. 
 
 **Note:** At the time of writing, the following configuration steps are also
@@ -56,7 +61,7 @@ required for the test tenant:
 ## Documentation
 
 To make it easier to document new resources a handy script is available. The
-script can output documentation of a resource in markdown format, using the 
+script can output documentation of a resource in Markdown format, using the 
 schema of the resource itself.
 
 ```sh
