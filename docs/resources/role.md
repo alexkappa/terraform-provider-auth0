@@ -51,7 +51,6 @@ resource "auth0_role" "my_role" {
 
 Arguments accepted by this resource include:
 
-* `id` - (Optional) String. ID for this role.
 * `name` - (Required) String. Name for this role.
 * `description` - (Optional) String. Description of the role.
 * `user_ids` - (Optional) List(String). IDs of the users to which the role is assigned.
