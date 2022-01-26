@@ -5,10 +5,25 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 
 	"gopkg.in/auth0.v5/management"
 )
+
+const wiremockHost = "localhost:8080"
+
+func providerWithTestingConfiguration() *schema.Provider {
+	provider := Provider()
+	provider.ConfigureFunc = func(data *schema.ResourceData) (interface{}, error) {
+		return management.New(
+			wiremockHost,
+			management.WithInsecure(),
+			management.WithDebug(true),
+		)
+	}
+	return provider
+}
 
 func Auth0() (*management.Management, error) {
 	c := terraform.NewResourceConfigRaw(nil)

@@ -1,0 +1,16 @@
+{
+  "scenarioName": "Custom Domain Verification",
+  "requiredScenarioState": "Started",
+  "newScenarioState": "Verified",
+  "request": {
+    "method": "GET",
+    "url": "/api/v2/custom-domains/cd_fakecustomdomain"
+  },
+  "response": {
+    "status": 200,
+    "bodyFileName": "custom_domain_with_pending_verification.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

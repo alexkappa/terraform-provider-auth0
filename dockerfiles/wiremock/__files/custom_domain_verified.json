@@ -1,0 +1,16 @@
+{
+  "custom_domain_id": "cd_fakecustomdomain",
+  "domain": "terraform-provider.auth0.com",
+  "primary": true,
+  "status": "ready",
+  "type": "auth0_managed_certs",
+  "verification": {
+    "methods": [
+      {
+        "name": "cname",
+        "record": "terraform-provider-cd-fakecustomdomain.edge.tenants.eu.auth0.com"
+      }
+    ]
+  },
+  "tls_policy": "recommended"
+}

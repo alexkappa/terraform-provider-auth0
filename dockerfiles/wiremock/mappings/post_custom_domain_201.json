@@ -1,0 +1,21 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/api/v2/custom-domains",
+    "bodyPatterns": [
+      {
+        "equalToJson": {
+          "domain": "terraform-provider.auth0.com",
+          "type": "auth0_managed_certs"
+        }
+      }
+    ]
+  },
+  "response": {
+    "status": 201,
+    "bodyFileName": "custom_domain_with_pending_verification.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
