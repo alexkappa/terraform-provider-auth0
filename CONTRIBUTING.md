@@ -11,8 +11,8 @@ explore the underlying principles for the design choices of this provider.
 ## Prerequisites
 
 - [Go 1.13+](https://go.dev/)
-- [Docker](https://docs.docker.com/get-docker/)
-- [Docker-Compose](https://docs.docker.com/compose/install/)
+- [Docker](https://docs.docker.com/get-docker/) - used for running acceptance tests.
+- [Docker-Compose](https://docs.docker.com/compose/install/) - used for running acceptance tests.
 
 ## Getting started
 
@@ -46,11 +46,11 @@ AUTH0_CLIENT_ID=<your-auth0-client-id>
 AUTH0_CLIENT_SECRET=<your-auth0-client-secret>
 ```
 
-Then, run `docker-compose up -d && make testacc`. 
+Then, run `make testacc`. 
 
 **Note:** The acceptance tests make calls to a real Auth0 tenant, and create
 real resources. Certain tests also require a paid Auth0 subscription to be able to
-run successfully. 
+run successfully, e.g. `TestAccCustomDomain` and the ones starting with `TestAccLogStream*`.
 
 **Note:** At the time of writing, the following configuration steps are also
 required for the test tenant:
