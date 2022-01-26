@@ -5,10 +5,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/alexkappa/terraform-provider-auth0/auth0/internal/random"
 	"github.com/hashicorp/go-multierror"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+
+	"github.com/alexkappa/terraform-provider-auth0/auth0/internal/random"
 )
 
 func init() {
@@ -61,7 +62,7 @@ func TestAccLogStreamHTTP(t *testing.T) {
 				),
 			},
 			{
-				Config: random.Template(testAccLogStreamHTTPConfigUpdateFormat, rand),
+				Config: random.Template(testAccLogStreamHTTPConfigUpdateFormatToJSONARRAY, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-http-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "http"),
@@ -72,7 +73,7 @@ func TestAccLogStreamHTTP(t *testing.T) {
 				),
 			},
 			{
-				Config: random.Template(testAccLogStreamHTTPConfigUpdateJsonObject, rand),
+				Config: random.Template(testAccLogStreamHTTPConfigUpdateFormatToJSONOBJECT, rand),
 				Check: resource.ComposeTestCheckFunc(
 					random.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "name", "Acceptance-Test-LogStream-http-{{.random}}", rand),
 					resource.TestCheckResourceAttr("auth0_log_stream.my_log_stream", "type", "http"),
@@ -110,6 +111,33 @@ resource "auth0_log_stream" "my_log_stream" {
 	}
 }
 `
+
+const testAccLogStreamHTTPConfigUpdateFormatToJSONARRAY = `
+resource "auth0_log_stream" "my_log_stream" {
+	name = "Acceptance-Test-LogStream-http-{{.random}}"
+	type = "http"
+	sink {
+	  http_endpoint = "https://example.com/webhook/logs"
+	  http_content_type = "application/json; charset=utf-8"
+	  http_content_format = "JSONARRAY"
+	  http_authorization = "AKIAXXXXXXXXXXXXXXXX"
+	}
+}
+`
+
+const testAccLogStreamHTTPConfigUpdateFormatToJSONOBJECT = `
+resource "auth0_log_stream" "my_log_stream" {
+	name = "Acceptance-Test-LogStream-http-{{.random}}"
+	type = "http"
+	sink {
+	  http_endpoint = "https://example.com/webhook/logs"
+	  http_content_type = "application/json; charset=utf-8"
+	  http_content_format = "JSONOBJECT"
+	  http_authorization = "AKIAXXXXXXXXXXXXXXXX"
+	}
+}
+`
+
 const testAccLogStreamHTTPConfigUpdate = `
 resource "auth0_log_stream" "my_log_stream" {
 	name = "Acceptance-Test-LogStream-http-new-{{.random}}"
@@ -118,30 +146,6 @@ resource "auth0_log_stream" "my_log_stream" {
 	  http_endpoint = "https://example.com/logs"
 	  http_content_type = "application/json"
 	  http_content_format = "JSONLINES"
-	  http_authorization = "AKIAXXXXXXXXXXXXXXXX"
-	}
-}
-`
-const testAccLogStreamHTTPConfigUpdateJsonObject = `
-resource "auth0_log_stream" "my_log_stream" {
-	name = "Acceptance-Test-LogStream-http-new-{{.random}}"
-	type = "http"
-	sink {
-	  http_endpoint = "https://example.com/logs"
-	  http_content_type = "application/json"
-	  http_content_format = "JSONOBJECT"
-	  http_authorization = "AKIAXXXXXXXXXXXXXXXX"
-	}
-}
-`
-const testAccLogStreamHTTPConfigUpdateFormat = `
-resource "auth0_log_stream" "my_log_stream" {
-	name = "Acceptance-Test-LogStream-http-{{.random}}"
-	type = "http"
-	sink {
-	  http_endpoint = "https://example.com/webhook/logs"
-	  http_content_type = "application/json; charset=utf-8"
-	  http_content_format = "JSONARRAY"
 	  http_authorization = "AKIAXXXXXXXXXXXXXXXX"
 	}
 }
@@ -217,7 +221,7 @@ resource "auth0_log_stream" "my_log_stream" {
 }
 `
 
-//This test fails it subscription key is not valid, or Eventgrid Resource Provider is not registered in the subscription
+// This test fails it subscription key is not valid, or Eventgrid Resource Provider is not registered in the subscription
 func TestAccLogStreamEventGrid(t *testing.T) {
 	rand := random.String(6)
 
