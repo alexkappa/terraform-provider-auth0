@@ -4,18 +4,17 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/alexkappa/terraform-provider-auth0/version"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/meta"
-
 	"gopkg.in/auth0.v5"
 	"gopkg.in/auth0.v5/management"
+
+	"github.com/alexkappa/terraform-provider-auth0/version"
 )
 
-var provider *schema.Provider
-
-func init() {
-	provider = &schema.Provider{
+// Provider returns a *schema.Provider.
+func Provider() *schema.Provider {
+	provider := &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"domain": {
 				Type:        schema.TypeString,
@@ -69,45 +68,39 @@ func init() {
 			"auth0_action":                     newAction(),
 			"auth0_trigger_binding":            newTriggerBinding(),
 		},
-		ConfigureFunc: Configure,
 	}
-}
 
-func Provider() *schema.Provider {
+	provider.ConfigureFunc = ConfigureProvider(provider.TerraformVersion)
+
 	return provider
 }
 
-func Configure(data *schema.ResourceData) (interface{}, error) {
+// ConfigureProvider will configure the *schema.Provider so that *management.Management
+// client is stored and passed into the subsequent resources as the meta parameter.
+func ConfigureProvider(terraformVersion string) func(data *schema.ResourceData) (interface{}, error) {
+	return func(data *schema.ResourceData) (interface{}, error) {
+		domain := data.Get("domain").(string)
+		id := data.Get("client_id").(string)
+		secret := data.Get("client_secret").(string)
+		debug := data.Get("debug").(bool)
 
-	domain := data.Get("domain").(string)
-	id := data.Get("client_id").(string)
-	secret := data.Get("client_secret").(string)
-	debug := data.Get("debug").(bool)
+		providerVersion := version.ProviderVersion
+		sdkVersion := auth0.Version
+		terraformSDKVersion := meta.SDKVersionString()
 
-	userAgent := fmt.Sprintf("Terraform-Provider-Auth0/%s (Go-Auth0-SDK/%s; Terraform-SDK/%s; Terraform/%s)",
-		Version(),
-		SDKVersion(),
-		TerraformSDKVersion(),
-		TerraformVersion())
+		userAgent := fmt.Sprintf(
+			"Terraform-Provider-Auth0/%s (Go-Auth0-SDK/%s; Terraform-SDK/%s; Terraform/%s)",
+			providerVersion,
+			sdkVersion,
+			terraformSDKVersion,
+			terraformVersion,
+		)
 
-	return management.New(domain,
-		management.WithClientCredentials(id, secret),
-		management.WithDebug(debug),
-		management.WithUserAgent(userAgent))
-}
-
-func Version() string {
-	return version.ProviderVersion
-}
-
-func SDKVersion() string {
-	return auth0.Version
-}
-
-func TerraformVersion() string {
-	return provider.TerraformVersion
-}
-
-func TerraformSDKVersion() string {
-	return meta.SDKVersionString()
+		return management.New(
+			domain,
+			management.WithClientCredentials(id, secret),
+			management.WithDebug(debug),
+			management.WithUserAgent(userAgent),
+		)
+	}
 }

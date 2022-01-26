@@ -11,41 +11,18 @@ import (
 	"gopkg.in/auth0.v5/management"
 )
 
-func providerWithWiremock() *schema.Provider {
-	return &schema.Provider{
-		ResourcesMap: map[string]*schema.Resource{
-			"auth0_client":                     newClient(),
-			"auth0_global_client":              newGlobalClient(),
-			"auth0_client_grant":               newClientGrant(),
-			"auth0_connection":                 newConnection(),
-			"auth0_custom_domain":              newCustomDomain(),
-			"auth0_custom_domain_verification": newCustomDomainVerification(),
-			"auth0_resource_server":            newResourceServer(),
-			"auth0_rule":                       newRule(),
-			"auth0_rule_config":                newRuleConfig(),
-			"auth0_hook":                       newHook(),
-			"auth0_prompt":                     newPrompt(),
-			"auth0_prompt_custom_text":         newPromptCustomText(),
-			"auth0_email":                      newEmail(),
-			"auth0_email_template":             newEmailTemplate(),
-			"auth0_user":                       newUser(),
-			"auth0_tenant":                     newTenant(),
-			"auth0_role":                       newRole(),
-			"auth0_log_stream":                 newLogStream(),
-			"auth0_branding":                   newBranding(),
-			"auth0_guardian":                   newGuardian(),
-			"auth0_organization":               newOrganization(),
-			"auth0_action":                     newAction(),
-			"auth0_trigger_binding":            newTriggerBinding(),
-		},
-		ConfigureFunc: func(data *schema.ResourceData) (interface{}, error) {
-			return management.New(
-				"localhost:8080",
-				management.WithInsecure(),
-				management.WithDebug(true),
-			)
-		},
+const wiremockHost = "localhost:8080"
+
+func providerWithTestingConfiguration() *schema.Provider {
+	provider := Provider()
+	provider.ConfigureFunc = func(data *schema.ResourceData) (interface{}, error) {
+		return management.New(
+			wiremockHost,
+			management.WithInsecure(),
+			management.WithDebug(true),
+		)
 	}
+	return provider
 }
 
 func Auth0() (*management.Management, error) {

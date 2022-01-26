@@ -10,7 +10,7 @@ import (
 func TestAccCustomDomainVerification(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		Providers: map[string]terraform.ResourceProvider{
-			"auth0": providerWithWiremock(),
+			"auth0": providerWithTestingConfiguration(),
 		},
 		Steps: []resource.TestStep{
 			{
