@@ -22,7 +22,7 @@ test: fmtcheck
 	@echo $(PKGS) | \
 		xargs -t -n4 go test $(TESTARGS) -timeout=30s -parallel=4 -run ^$(TESTS)$
 
-testacc: fmtcheck
+testacc: fmtcheck dev-up
 	@TF_ACC=1 go test $(PKGS) -v $(TESTARGS) -timeout 120m -coverprofile=$(COVERS) -run ^$(TESTS)$
 
 vet:
@@ -46,4 +46,7 @@ errcheck:
 docgen:
 	go run scripts/gendocs.go -resource auth0_<resource>
 
-.PHONY: build test testacc vet fmt fmtcheck errcheck docgen
+dev-up:
+	@docker-compose up -d
+
+.PHONY: build test testacc vet fmt fmtcheck errcheck docgen dev-up
