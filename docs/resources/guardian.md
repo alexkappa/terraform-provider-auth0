@@ -35,6 +35,7 @@ Arguments accepted by this resource include:
 * `policy` - (Required) String. Policy to use. Available options are `never`, `all-applications` and `confidence-score`. The option `confidence-score` means the trigger of MFA will be adaptive. See [Auth0 docs](https://auth0.com/docs/mfa/adaptive-mfa)
 * `phone` - (Optional) List(Resource). Configuration settings for the phone MFA. For details, see [Phone](#phone).
 * `email` - (Optional) Boolean. Indicates whether or not email MFA is enabled.
+* `OTP` - (Optional) Boolean. Indicates whether or not one time password MFA is enabled.
 
 ### Phone
 
