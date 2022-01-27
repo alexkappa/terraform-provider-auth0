@@ -24,6 +24,7 @@ resource "auth0_guardian" "default" {
     }
   }
   email = true
+  otp = true
 }
 ```
 
