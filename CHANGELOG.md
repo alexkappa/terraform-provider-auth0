@@ -1,3 +1,19 @@
+## 0.26.2
+
+ENHANCEMENTS:
+
+* resource/auth0_log_stream: Add support for JSONOBJECT format ([#445](https://github.com/alexkappa/terraform-provider-auth0/pull/445))
+* resource/auth0_guardian: Add email mfa factor ([#499](https://github.com/alexkappa/terraform-provider-auth0/pull/499))
+* resource/auth0_client: Add `signing_cert` option to SAMLP addon ([#426](https://github.com/alexkappa/terraform-provider-auth0/pull/426))
+* resource/auth0_connection: Add support for custom SMS gateways ([#417](https://github.com/alexkappa/terraform-provider-auth0/pull/417))
+* Add HTTP mocks to acceptance tests for external dependencies, specifically for domain name verification ([#501](https://github.com/alexkappa/terraform-provider-auth0/pull/501))
+* resource/auth0_connection: Add `google-apps` connection strategy ([#422](https://github.com/alexkappa/terraform-provider-auth0/pull/422))
+
+NOTES:
+
+* Fixed typos in SAMLP connection docs ([#448](https://github.com/alexkappa/terraform-provider-auth0/pull/448), [#449](https://github.com/alexkappa/terraform-provider-auth0/pull/449))
+* Removed `role_id` from auth0_role documentation ([#415](https://github.com/alexkappa/terraform-provider-auth0/pull/415))
+
 ## 0.26.1
 
 BUG FIXES:
