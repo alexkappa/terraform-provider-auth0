@@ -19,7 +19,7 @@ data auth0_client test {
 const testAccDataClientConfigById = `
 %v
 data auth0_client test {
-  client_id = auth0_client.test.client_id
+  client_id = auth0_client.my_client.client_id
 }
 `
 
