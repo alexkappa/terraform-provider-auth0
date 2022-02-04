@@ -69,7 +69,8 @@ func Provider() *schema.Provider {
 			"auth0_trigger_binding":            newTriggerBinding(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"auth0_client": newDataClient(),
+			"auth0_client":        newDataClient(),
+			"auth0_global_client": newDataGlobalClient(),
 		},
 	}
 
