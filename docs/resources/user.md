@@ -40,7 +40,7 @@ Arguments accepted by this resource include:
 * `connection_name` - (Required) String. Name of the connection from which the user information was sourced.
 * `username` - (Optional) String. Username of the user. Only valid if the connection requires a username.
 * `nickname` - (Optional) String. Preferred nickname or alias of the user.
-* `password` - (Optional) String, Case-sensitive. Initial password for this user. Used for non-SMS connections.
+* `password` - (Optional) String, Case-sensitive. Initial password for this user. Required for non-passwordless connections (SMS and email).
 * `email` - (Optional) String. Email address of the user.
 * `email_verified` - (Optional) Boolean. Indicates whether or not the email address has been verified.
 * `verify_email` - (Optional) Boolean. Indicates whether or not the user will receive a verification email after creation. Overrides behavior of `email_verified` parameter.
