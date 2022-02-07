@@ -96,6 +96,11 @@ func newGuardian() *schema.Resource {
 				Optional: true,
 				Default:  false,
 			},
+			"otp": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
 		},
 	}
 }
@@ -111,6 +116,9 @@ func deleteGuardian(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	if err := api.Guardian.MultiFactor.Email.Enable(false); err != nil {
+		return err
+	}
+	if err := api.Guardian.MultiFactor.OTP.Enable(false); err != nil {
 		return err
 	}
 	d.SetId("")
@@ -135,6 +143,9 @@ func updateGuardian(d *schema.ResourceData, m interface{}) (err error) {
 	if err := updateEmailFactor(d, api); err != nil {
 		return err
 	}
+	if err := updateOTPFactor(d, api); err != nil {
+		return err
+	}
 	return readGuardian(d, m)
 }
 
@@ -156,6 +167,14 @@ func updateEmailFactor(d *schema.ResourceData, api *management.Management) error
 	if changed := d.HasChange("email"); changed {
 		enabled := d.Get("email").(bool)
 		return api.Guardian.MultiFactor.Email.Enable(enabled)
+	}
+	return nil
+}
+
+func updateOTPFactor(d *schema.ResourceData, api *management.Management) error {
+	if changed := d.HasChange("otp"); changed {
+		enabled := d.Get("otp").(bool)
+		return api.Guardian.MultiFactor.OTP.Enable(enabled)
 	}
 	return nil
 }
@@ -286,8 +305,13 @@ func readGuardian(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 	for _, v := range factors {
-		if v.Name != nil && *v.Name == "email" {
-			d.Set("email", v.Enabled)
+		if v.Name != nil {
+			if *v.Name == "email" {
+				d.Set("email", v.Enabled)
+			}
+			if *v.Name == "otp" {
+				d.Set("otp", v.Enabled)
+			}
 		}
 	}
 	return nil
