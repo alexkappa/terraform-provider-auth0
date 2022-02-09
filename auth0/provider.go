@@ -26,19 +26,19 @@ func Provider() *schema.Provider {
 				Optional:      true,
 				DefaultFunc:   schema.EnvDefaultFunc("AUTH0_CLIENT_ID", nil),
 				RequiredWith:  []string{"client_secret"},
-				ConflictsWith: []string{"auth0_token"},
+				ConflictsWith: []string{"api_token"},
 			},
 			"client_secret": {
 				Type:          schema.TypeString,
 				Optional:      true,
 				DefaultFunc:   schema.EnvDefaultFunc("AUTH0_CLIENT_SECRET", nil),
 				RequiredWith:  []string{"client_id"},
-				ConflictsWith: []string{"auth0_token"},
+				ConflictsWith: []string{"api_token"},
 			},
-			"auth0_token": {
+			"api_token": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				DefaultFunc:   schema.EnvDefaultFunc("AUTH0_TOKEN", nil),
+				DefaultFunc:   schema.EnvDefaultFunc("api_token", nil),
 				ConflictsWith: []string{"client_id", "client_secret"},
 			},
 			"debug": {
@@ -92,9 +92,6 @@ func Provider() *schema.Provider {
 // client is stored and passed into the subsequent resources as the meta parameter.
 func ConfigureProvider(terraformVersion string) func(data *schema.ResourceData) (interface{}, error) {
 	return func(data *schema.ResourceData) (interface{}, error) {
-		domain := data.Get("domain").(string)
-		debug := data.Get("debug").(bool)
-
 		providerVersion := version.ProviderVersion
 		sdkVersion := auth0.Version
 		terraformSDKVersion := meta.SDKVersionString()
@@ -107,15 +104,17 @@ func ConfigureProvider(terraformVersion string) func(data *schema.ResourceData) 
 			terraformVersion,
 		)
 
-		var authenticationOption management.ManagementOption
-		if token, ok := data.GetOk("auth0_token"); ok {
-			authenticationOption = management.WithStaticToken(token.(string))
-		} else {
-			client_id := data.Get("client_id").(string)
-			client_secret := data.Get("client_secret").(string)
-			// if auth0_token is not specified, authenticate with client ID and client secret.
-			// This is safe because of the terraform schema.
-			authenticationOption = management.WithClientCredentials(client_id, client_secret)
+		domain := data.Get("domain").(string)
+		debug := data.Get("debug").(bool)
+		clientID := data.Get("client_id").(string)
+		clientSecret := data.Get("client_secret").(string)
+		apiToken := data.Get("api_token").(string)
+
+		authenticationOption := management.WithStaticToken(apiToken)
+		// if api_token is not specified, authenticate with client ID and client secret.
+		// This is safe because of the provider schema.
+		if apiToken == "" {
+			authenticationOption = management.WithClientCredentials(clientID, clientSecret)
 		}
 
 		return management.New(domain,

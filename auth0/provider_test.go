@@ -2,14 +2,13 @@ package auth0
 
 import (
 	"errors"
-	"fmt"
 	"os"
+	"sort"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"github.com/stretchr/testify/assert"
 
 	"gopkg.in/auth0.v5/management"
 )
@@ -94,13 +93,13 @@ func TestProvider_configValidation(t *testing.T) {
 		},
 		{
 			name:           "conflicting auth0 client and management token without domain",
-			resourceConfig: map[string]interface{}{"client_id": "test", "client_secret": "test", "auth0_token": "test"},
+			resourceConfig: map[string]interface{}{"client_id": "test", "client_secret": "test", "api_token": "test"},
 			environment:    map[string]string{},
 			expectedErrors: []error{
 				errors.New("\"domain\": required field is not set"),
-				errors.New("\"client_id\": conflicts with auth0_token"),
-				errors.New("\"client_secret\": conflicts with auth0_token"),
-				errors.New("\"auth0_token\": conflicts with client_id"),
+				errors.New("\"client_id\": conflicts with api_token"),
+				errors.New("\"client_secret\": conflicts with api_token"),
+				errors.New("\"api_token\": conflicts with client_id"),
 			},
 		},
 		{
@@ -111,7 +110,7 @@ func TestProvider_configValidation(t *testing.T) {
 		},
 		{
 			name:           "valid auth0 token",
-			resourceConfig: map[string]interface{}{"domain": "valid_domain", "auth0_token": "test"},
+			resourceConfig: map[string]interface{}{"domain": "valid_domain", "api_token": "test"},
 			environment:    map[string]string{},
 			expectedErrors: nil,
 		},
@@ -127,13 +126,33 @@ func TestProvider_configValidation(t *testing.T) {
 			c := terraform.NewResourceConfigRaw(test.resourceConfig)
 			p := Provider()
 
-			r, errs := p.Validate(c)
-			assert.Equal(t, test.expectedErrors, errs)
-			fmt.Println(r, errs)
+			_, errs := p.Validate(c)
+			assertErrorsSliceEqual(t, test.expectedErrors, errs)
 
 			for k := range test.environment {
 				os.Unsetenv(k)
 			}
 		})
+	}
+}
+
+func sortErrors(errs []error) {
+	sort.Slice(errs, func(i, j int) bool {
+		return errs[i].Error() < errs[j].Error()
+	})
+}
+
+func assertErrorsSliceEqual(t *testing.T, expected, actual []error) {
+	if len(expected) != len(actual) {
+		t.Fatalf("actual did not match expected. len(expected) != len(actual). expected: %v, actual: %v", expected, actual)
+	}
+
+	sortErrors(expected)
+	sortErrors(actual)
+
+	for i := range expected {
+		if expected[i].Error() != actual[i].Error() {
+			t.Fatalf("actual did not match expected. expected[%d] != actual[%d]. expected: %v, actual: %v", i, i, expected, actual)
+		}
 	}
 }
