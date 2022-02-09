@@ -38,7 +38,7 @@ func Provider() *schema.Provider {
 			"api_token": {
 				Type:          schema.TypeString,
 				Optional:      true,
-				DefaultFunc:   schema.EnvDefaultFunc("api_token", nil),
+				DefaultFunc:   schema.EnvDefaultFunc("AUTH0_API_TOKEN", nil),
 				ConflictsWith: []string{"client_id", "client_secret"},
 			},
 			"debug": {
