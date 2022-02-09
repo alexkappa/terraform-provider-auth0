@@ -30,7 +30,7 @@ provider "auth0" {
 * `client_id` - (Optional) Your Auth0 client ID. It can also be sourced from the `AUTH0_CLIENT_ID` environment variable.
 * `client_secret` - (Optional) Your Auth0 client secret. It can also be sourced from the `AUTH0_CLIENT_SECRET` environment variable.
 * `api_token` - (Optional) Your Auth0 [management api access token](https://auth0.com/docs/security/tokens/access-tokens/management-api-access-tokens).
-  It can also be sourced from the `AUTH0_TOKEN` environment variable. Can be
+  It can also be sourced from the `AUTH0_API_TOKEN` environment variable. Can be
   used instead of `client_id` + `client_secret`. If both are specified,
   `management_token` will be used over `client_id` + `client_secret` fields.
 * `debug` - (Optional) Indicates whether or not to turn on debug mode.
