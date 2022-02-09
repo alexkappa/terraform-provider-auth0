@@ -114,6 +114,12 @@ func TestProvider_configValidation(t *testing.T) {
 			environment:    map[string]string{},
 			expectedErrors: nil,
 		},
+		{
+			name:           "valid auth0 token from environment",
+			resourceConfig: map[string]interface{}{"domain": "valid_domain"},
+			environment:    map[string]string{"AUTH0_API_TOKEN": "test"},
+			expectedErrors: nil,
+		},
 	}
 
 	for _, test := range testCases {
