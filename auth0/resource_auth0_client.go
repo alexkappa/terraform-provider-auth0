@@ -690,7 +690,7 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		InitiateLoginURI:               String(d, "initiate_login_uri"),
 	}
 
-	if l := List(d, "signing_keys", IsNewResource()); l != nil {
+	if l := List(d, "signing_keys", IsNewResource(), HasChange()); l != nil {
 		c.SigningKeys = []map[string]string{}
 		for _, v := range l.List() {
 			mapString := make(map[string]string)
