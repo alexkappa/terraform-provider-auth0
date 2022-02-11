@@ -19,6 +19,7 @@ func newDataClient() *schema.Resource {
 func newClientSchema() map[string]*schema.Schema {
 	clientSchema := datasourceSchemaFromResourceSchema(newClient().Schema)
 	delete(clientSchema, "client_secret_rotation_trigger")
+	delete(clientSchema, "client_secret")
 	addOptionalFieldsToSchema(clientSchema, "name", "client_id")
 	return clientSchema
 }
