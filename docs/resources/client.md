@@ -21,6 +21,7 @@ resource "auth0_client" "my_client" {
   is_token_endpoint_ip_header_trusted = true
   token_endpoint_auth_method = "client_secret_post"
   oidc_conformant = false
+  initiate_login_uri = "https://example.com/login"
   callbacks = [ "https://example.com/callback" ]
   allowed_origins = [ "https://example.com" ]
   allowed_clients = [ "https://allowed.example.com" ]
@@ -94,6 +95,7 @@ Arguments accepted by this resource include:
 * `is_first_party` - (Optional) Boolean. Indicates whether or not this client is a first-party client.
 * `is_token_endpoint_ip_header_trusted` - (Optional) Boolean. Indicates whether or not the token endpoint IP header is trusted.
 * `oidc_conformant` - (Optional) Boolean. Indicates whether or not this client will conform to strict OIDC specifications.
+* `initiate_login_uri` - (Optional) String. Initiate login uri, must be https.
 * `callbacks` - (Optional) List(String). URLs that Auth0 may call back to after a user authenticates for the client. Make sure to specify the protocol (https://) otherwise the callback may fail in some cases. With the exception of custom URI schemes for native clients, all callbacks should use protocol https://.
 * `allowed_logout_urls` - (Optional) List(String). URLs that Auth0 may redirect to after logout.
 * `grant_types` - (Optional) List(String). Types of grants that this client is authorized to use.
