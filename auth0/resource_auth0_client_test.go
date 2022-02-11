@@ -447,3 +447,44 @@ resource "auth0_client" "my_client" {
   }
 }
 `
+
+func TestAccClientSigningKeys(t *testing.T) {
+	rand := random.String(6)
+
+	resource.Test(t, resource.TestCase{
+		Providers: map[string]terraform.ResourceProvider{
+			"auth0": Provider(),
+		},
+		Steps: []resource.TestStep{
+			{
+				Config: random.Template(testAccClientSigningKeysCreate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					random.TestCheckResourceAttr("auth0_client.my_client", "name", "Acceptance Test - Signing Keys - {{.random}}", rand),
+					resource.TestCheckResourceAttrSet("auth0_client.my_client", "signing_keys.0.cert"),
+				),
+			},
+			{
+				Config: random.Template(testAccClientSigningKeysUpdate, rand),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("auth0_client.my_client", "signing_keys.0.cert"),
+				),
+			},
+		},
+	})
+}
+
+const testAccClientSigningKeysCreate = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - Signing Keys - {{.random}}"
+  is_first_party = false
+}
+`
+
+const testAccClientSigningKeysUpdate = `
+
+resource "auth0_client" "my_client" {
+  name = "Acceptance Test - Signing Keys - {{.random}}"
+  is_first_party = true
+}
+`

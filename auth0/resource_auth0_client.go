@@ -1,6 +1,7 @@
 package auth0
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -543,6 +544,27 @@ func newClient() *schema.Resource {
 					},
 				},
 			},
+			"signing_keys": {
+				Type:     schema.TypeList,
+				Computed: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"cert": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"pkcs7": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"subject": {
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -666,6 +688,20 @@ func expandClient(d *schema.ResourceData) *management.Client {
 		FormTemplate:                   String(d, "form_template"),
 		TokenEndpointAuthMethod:        String(d, "token_endpoint_auth_method"),
 		InitiateLoginURI:               String(d, "initiate_login_uri"),
+	}
+
+	if l := List(d, "signing_keys", IsNewResource()); l != nil {
+		c.SigningKeys = []map[string]string{}
+		for _, v := range l.List() {
+			mapString := make(map[string]string)
+
+			for key, value := range v.(map[string]interface{}) {
+				strKey := fmt.Sprintf("%v", key)
+				strValue := fmt.Sprintf("%v", value)
+				mapString[strKey] = strValue
+			}
+			c.SigningKeys = append(c.SigningKeys, mapString)
+		}
 	}
 
 	List(d, "refresh_token", IsNewResource(), HasChange()).Elem(func(d ResourceData) {
