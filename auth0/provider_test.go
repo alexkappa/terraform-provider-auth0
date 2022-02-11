@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"sort"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -77,24 +78,22 @@ func TestProvider_debugDefaults(t *testing.T) {
 func TestProvider_configValidation(t *testing.T) {
 	testCases := []struct {
 		name           string
-		environment    map[string]string
 		resourceConfig map[string]interface{}
 		expectedErrors []error
 	}{
 		{
 			name:           "missing client id",
-			environment:    map[string]string{"AUTH0_DOMAIN": "test", "AUTH0_CLIENT_SECRET": "test"},
+			resourceConfig: map[string]interface{}{"domain": "test", "client_secret": "test"},
 			expectedErrors: []error{errors.New("\"client_secret\": all of `client_id,client_secret` must be specified")},
 		},
 		{
 			name:           "missing client secret",
-			environment:    map[string]string{"AUTH0_DOMAIN": "test", "AUTH0_CLIENT_ID": "test"},
+			resourceConfig: map[string]interface{}{"domain": "test", "client_id": "test"},
 			expectedErrors: []error{errors.New("\"client_id\": all of `client_id,client_secret` must be specified")},
 		},
 		{
 			name:           "conflicting auth0 client and management token without domain",
 			resourceConfig: map[string]interface{}{"client_id": "test", "client_secret": "test", "api_token": "test"},
-			environment:    map[string]string{},
 			expectedErrors: []error{
 				errors.New("\"domain\": required field is not set"),
 				errors.New("\"client_id\": conflicts with api_token"),
@@ -105,40 +104,30 @@ func TestProvider_configValidation(t *testing.T) {
 		{
 			name:           "valid auth0 client",
 			resourceConfig: map[string]interface{}{"domain": "valid_domain", "client_id": "test", "client_secret": "test"},
-			environment:    map[string]string{},
 			expectedErrors: nil,
 		},
 		{
 			name:           "valid auth0 token",
 			resourceConfig: map[string]interface{}{"domain": "valid_domain", "api_token": "test"},
-			environment:    map[string]string{},
-			expectedErrors: nil,
-		},
-		{
-			name:           "valid auth0 token from environment",
-			resourceConfig: map[string]interface{}{"domain": "valid_domain"},
-			environment:    map[string]string{"AUTH0_API_TOKEN": "test"},
 			expectedErrors: nil,
 		},
 	}
 
+	originalEnviroment := os.Environ()
+	os.Clearenv()
 	for _, test := range testCases {
 		t.Run(test.name, func(t *testing.T) {
-			for k, v := range test.environment {
-				os.Unsetenv(k)
-				os.Setenv(k, v)
-			}
-
 			c := terraform.NewResourceConfigRaw(test.resourceConfig)
 			p := Provider()
 
 			_, errs := p.Validate(c)
 			assertErrorsSliceEqual(t, test.expectedErrors, errs)
-
-			for k := range test.environment {
-				os.Unsetenv(k)
-			}
 		})
+	}
+
+	for _, e := range originalEnviroment {
+		environmentPair := strings.Split(e, "=")
+		os.Setenv(environmentPair[0], environmentPair[1])
 	}
 }
 
