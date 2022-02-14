@@ -3,7 +3,7 @@
 ENHANCEMENTS:
 
 * Added ability to authenticate with [management API tokens](https://auth0.com/docs/secure/tokens/access-tokens/management-api-access-tokens) ([#487](https://github.com/alexkappa/terraform-provider-auth0/pull/487))
-* Added client data source ([#512](https://github.com/alexkappa/terraform-provider-auth0/pull/512))
+* Added client data source ([#511](https://github.com/alexkappa/terraform-provider-auth0/pull/511))
 * Added global client data source ([#512](https://github.com/alexkappa/terraform-provider-auth0/pull/512))
 
 NOTES:
