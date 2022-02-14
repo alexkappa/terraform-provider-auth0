@@ -42,6 +42,7 @@ func TestAccDataClientByName(t *testing.T) {
 					resource.TestCheckResourceAttr("data.auth0_client.test", "name", fmt.Sprintf("Acceptance Test - %v", rand)),
 					resource.TestCheckResourceAttr("data.auth0_client.test", "app_type", "non_interactive"), // Arbitrary property selection
 					resource.TestCheckNoResourceAttr("data.auth0_client.test", "client_secret_rotation_trigger"),
+					resource.TestCheckNoResourceAttr("data.auth0_client.test", "client_secret"),
 				),
 			},
 		},
@@ -66,6 +67,7 @@ func TestAccDataClientById(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.auth0_client.test", "id"),
 					resource.TestCheckResourceAttrSet("data.auth0_client.test", "name"),
 					resource.TestCheckNoResourceAttr("data.auth0_client.test", "client_secret_rotation_trigger"),
+					resource.TestCheckNoResourceAttr("data.auth0_client.test", "client_secret"),
 				),
 			},
 		},

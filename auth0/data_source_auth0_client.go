@@ -10,15 +10,18 @@ import (
 )
 
 func newDataClient() *schema.Resource {
-	clientSchema := datasourceSchemaFromResourceSchema(newClient().Schema)
-	delete(clientSchema, "client_secret_rotation_trigger")
-
-	addOptionalFieldsToSchema(clientSchema, "name", "client_id")
-
 	return &schema.Resource{
 		Read:   readDataClient,
-		Schema: clientSchema,
+		Schema: newClientSchema(),
 	}
+}
+
+func newClientSchema() map[string]*schema.Schema {
+	clientSchema := datasourceSchemaFromResourceSchema(newClient().Schema)
+	delete(clientSchema, "client_secret_rotation_trigger")
+	delete(clientSchema, "client_secret")
+	addOptionalFieldsToSchema(clientSchema, "name", "client_id")
+	return clientSchema
 }
 
 func readDataClient(d *schema.ResourceData, m interface{}) error {
